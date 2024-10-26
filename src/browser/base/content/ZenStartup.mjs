@@ -35,6 +35,11 @@
         // Disable smooth scroll
         gBrowser.tabContainer.arrowScrollbox.smoothScroll = false;
 
+        // register contextual identity engine
+        if (!Weave.Service.engineManager.get('contextualidentities')) {
+          Weave.Service.engineManager.register(ZenContextualIdentityEngine);
+        }
+
         ZenWorkspaces.init();
         gZenUIManager.init();
         gZenVerticalTabsManager.init();

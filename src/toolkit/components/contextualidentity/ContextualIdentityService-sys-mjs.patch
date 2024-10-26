@@ -1,0 +1,53 @@
+diff --git a/toolkit/components/contextualidentity/ContextualIdentityService.sys.mjs b/toolkit/components/contextualidentity/ContextualIdentityService.sys.mjs
+index 32f3577c93709a694d1f723acccccad87aa1e5f9..ecd836c9a054cfddbb8c6462a8e8dd2f8e90b4e9 100644
+--- a/toolkit/components/contextualidentity/ContextualIdentityService.sys.mjs
++++ b/toolkit/components/contextualidentity/ContextualIdentityService.sys.mjs
+@@ -713,6 +713,48 @@ _ContextualIdentityService.prototype = {
+ 
+     return data;
+   },
++
++  createWithId (userContextId, name, icon, color) {
++    this.ensureDataReady();
++
++    if (this._identities.some(identity => identity.userContextId === userContextId)) {
++      throw new Error(`Contextual identity with userContextId ${userContextId} already exists.`);
++    }
++
++    if (userContextId >= MAX_USER_CONTEXT_ID) {
++      throw new Error(
++          `Unable to create a new userContext with id '${userContextId}'`
++      );
++    }
++
++    if (!name.trim()) {
++      throw new Error(
++          "Contextual identity names cannot contain only whitespace."
++      );
++    }
++
++    let identity = {
++      userContextId,
++      public: true,
++      icon,
++      color,
++      name,
++    };
++
++    if (userContextId > this._lastUserContextId && userContextId < MAX_USER_CONTEXT_ID) {
++      this._lastUserContextId = userContextId;
++    }
++
++    this._identities.push(identity);
++    this.saveSoon();
++    Services.obs.notifyObservers(
++        this.getIdentityObserverOutput(identity),
++        "contextual-identity-created"
++    );
++
++    return Cu.cloneInto(identity, {});
++  },
++
+ };
+ 
+ let path = PathUtils.join(

@@ -1075,4 +1075,9 @@ Preferences.addAll([
     type: 'bool',
     default: true,
   },
+  {
+    id: 'services.sync.engine.contextualidentities',
+    type: 'bool',
+    default: true,
+  },
 ]);

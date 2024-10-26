@@ -10,6 +10,7 @@
         content/browser/zen-components/ZenWorkspaces.mjs        (content/zen-components/src/ZenWorkspaces.mjs)
         content/browser/zen-components/ZenWorkspacesStorage.mjs (content/zen-components/src/ZenWorkspacesStorage.mjs)
         content/browser/zen-components/ZenWorkspacesSync.mjs    (content/zen-components/src/ZenWorkspacesSync.mjs)
+        content/browser/zen-components/ZenContextualIdentitiesSync.mjs    (content/zen-components/src/ZenContextualIdentitiesSync.mjs)
         content/browser/zen-components/ZenSidebarManager.mjs    (content/zen-components/src/ZenSidebarManager.mjs)
         content/browser/zen-components/ZenProfileDialogUI.mjs   (content/zen-components/src/ZenProfileDialogUI.mjs)
         content/browser/zen-components/ZenKeyboardShortcuts.mjs (content/zen-components/src/ZenKeyboardShortcuts.mjs)

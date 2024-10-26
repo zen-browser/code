@@ -49,7 +49,7 @@ else
   export LDFLAGS="-Wl,-O3 -march=x86-64-v3"
   export RUSTFLAGS="-Clink-args=--icf=safe -C target-feature=+avx2 -C codegen-units=1 -Ctarget-cpu=x86-64-v3"    
 fi
-export POLLY="-mllvm -polly -mllvm -polly-2nd-level-tiling -mllvm -polly-loopfusion-greedy -mllvm -polly-pattern-matching-based-opts -mllvm -polly-position=before-vectorizer -mllvm -polly-vectorizer=stripmine"
+#export POLLY="-mllvm -polly -mllvm -polly-2nd-level-tiling -mllvm -polly-loopfusion-greedy -mllvm -polly-pattern-matching-based-opts -mllvm -polly-position=before-vectorizer -mllvm -polly-vectorizer=stripmine"
 export VERBOSE=1
 
 if test "$ZEN_CROSS_COMPILING"; then

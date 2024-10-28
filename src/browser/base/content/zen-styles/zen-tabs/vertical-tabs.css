@@ -542,15 +542,19 @@
     & #TabsToolbar {
       z-index: 100 !important;
       width: 250px !important;
-      background-color: var(--zen-dialog-background);
-      border-top-color: var(--zen-colors-border);
+
+      background: var(--zen-main-browser-background) !important;
+      background-attachment: fixed !important;
+      background-size: 2000px !important; /* Dont ask me why */
+
+      box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.2);
+
       position: absolute;
       transition: 0 !important;
       /*animation: zen-vtabs-animation 0.3s ease-in-out;*/
       -moz-window-dragging: no-drag;
       overflow: hidden;
       transition: width 0.2s !important;
-      border-right: 1px solid var(--zen-colors-border);
 
       & .tab-throbber,
       & .tab-icon-pending,
@@ -590,11 +594,7 @@
     }
 
     &[zen-right-side='true'] #TabsToolbar {
-      animation: zen-sidebar-panel-animation-right 0.3s ease-in-out;
-
       right: 0;
-      border-right: 0;
-      border-left: 1px solid var(--zen-colors-border);
       border-top-left-radius: var(--zen-border-radius);
       border-top-right-radius: 0;
     }

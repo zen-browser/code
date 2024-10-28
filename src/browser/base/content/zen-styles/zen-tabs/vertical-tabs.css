@@ -7,6 +7,10 @@
     height: 100%;
   }
 
+  #TabsToolbar {
+    padding: var(--zen-toolbox-padding);
+  }
+
   #TabsToolbar > * {
     justify-content: center;
   }
@@ -16,7 +20,7 @@
   }
 
   #browser {
-    --zen-toolbox-padding: 5px;
+    --zen-toolbox-padding: var(--zen-element-separation);
   }
 
   #navigator-toolbox {
@@ -91,7 +95,6 @@
       animation: zen-slide-in 0.2s ease-in-out;
 
       max-width: unset !important;
-      padding: 0 !important;
 
       position: relative;
 
@@ -185,7 +188,6 @@
       #navigator-toolbox[zen-expanded='true']:not([zen-user-hover='true'])
     ) {
     --zen-toolbox-min-width: fit-content;
-    padding: var(--zen-toolbox-padding);
     padding-left: 0;
     padding-top: 0;
 
@@ -242,9 +244,6 @@
 
     &:not([zen-right-side='true']):not([zen-user-hover='true']) {
       padding-right: 0;
-      & #titlebar {
-        padding-left: var(--zen-toolbox-padding);
-      }
     }
 
     & #TabsToolbar-customization-target {
@@ -300,7 +299,6 @@
               box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.15) !important;
             }
           }
-          margin-inline: var(--tab-block-margin);
         }
 
         &:not([pinned]):is(:hover, [visuallyselected]) .tab-close-button {
@@ -313,18 +311,19 @@
         .tab-sharing-icon-overlay,
         .tab-icon-overlay {
           &:not([pinned]) {
-            margin-inline-end: var(--toolbarbutton-inner-padding) !important;
-            margin-inline-start: calc(var(--toolbarbutton-inner-padding) / 4) !important;
+            margin-inline-end: var(--toolbarbutton-inner-padding);
+            /* for no reason this button shifts its position 1px to left. Fix it by applying margin */
+            margin-inline-start: 1px;
           }
         }
       }
     }
 
     @media (-moz-bool-pref: 'zen.view.compact') and (-moz-bool-pref: 'zen.view.compact.hide-toolbar') and (not (-moz-bool-pref: 'zen.view.compact.hide-tabbar')) {
-      & {
-        margin-top: var(--zen-element-separation) !important;
-      }
+    & {
+      margin-top: var(--zen-element-separation) !important;
     }
+  }
   }
 
   /* Mark: toolbox as collapsed */
@@ -340,8 +339,7 @@
         )
     ) {
     /* Important: When changin this value, make sure expand on hover doesn't break! */
-    --zen-toolbox-max-width: 49px; /* 1px more because the browser view has one pixel of padding to avoid the border being cut off */
-    --zen-toolbox-padding: 8px;
+    --zen-toolbox-max-width: 50px; /* 1px more because the browser view has one pixel of padding to avoid the border being cut off */
     max-width: var(--zen-toolbox-max-width) !important;
     min-width: var(--zen-toolbox-max-width) !important;
 
@@ -367,8 +365,15 @@
 
     & #tabbrowser-arrowscrollbox-periphery {
       & > toolbarbutton {
+        padding: var(--toolbarbutton-inner-padding);
+
+        & image {
+          height: 16px;
+          width: 16px;
+          padding: 0 !important;
+        }
+
         margin: 0 auto !important;
-        padding: 0 !important;
       }
 
       &::before {
@@ -394,7 +399,6 @@
     }
 
     & #TabsToolbar-customization-target {
-      padding-bottom: var(--zen-toolbox-padding);
 
       &::after {
         bottom: -1px !important;
@@ -402,7 +406,7 @@
     }
 
     & #tabbrowser-tabs {
-      --tab-min-width: 36px !important;
+      --tab-min-width: 38px !important;
 
       & .tabbrowser-tab {
         margin: 0 auto;
@@ -423,11 +427,6 @@
           & .tab-label-container {
             display: none;
           }
-
-          & .tab-icon-image,
-          & .tab-icon-pending {
-            margin-inline-end: 0 !important;
-          }
         }
       }
 
@@ -446,12 +445,12 @@
               #tabbrowser-tabs[secondarytext-unsupported],
               :root:not([uidensity='compact']) #tabbrowser-tabs:not([secondarytext-unsupported]) .tabbrowser-tab:hover
             )
-            .tab-icon-stack[indicator-replaces-favicon]
-            > :not(&),
+          .tab-icon-stack[indicator-replaces-favicon]
+          > :not(&),
           :root:not([uidensity='compact'])
-            #tabbrowser-tabs:not([secondarytext-unsupported])
-            .tabbrowser-tab:not(:hover)
-            &[indicator-replaces-favicon] {
+          #tabbrowser-tabs:not([secondarytext-unsupported])
+          .tabbrowser-tab:not(:hover)
+          &[indicator-replaces-favicon] {
             opacity: 1 !important;
           }
         }
@@ -502,118 +501,115 @@
 
   /* Mark: Expand on hover */
   @media (-moz-bool-pref: 'zen.view.sidebar-expanded.on-hover') and (not ((-moz-bool-pref: 'zen.view.compact') and (-moz-bool-pref: 'zen.view.compact.hide-tabbar'))) {
-    #zen-sidebar-splitter {
-      display: none !important;
+  #zen-sidebar-splitter {
+    display: none !important;
+  }
+
+  #navigator-toolbox {
+    z-index: 1;
+  }
+
+  #TabsToolbar {
+    z-index: 1;
+    background-repeat: no-repeat !important;
+    background-position: center center !important;
+    background-size: cover !important;
+
+    border-top: 1px solid transparent;
+
+    height: 100%;
+
+    border-top-right-radius: var(--zen-border-radius);
+    width: var(--zen-toolbox-max-width);
+
+    & .tabbrowser-tab {
+      transition: 0s !important;
     }
+  }
 
-    #navigator-toolbox {
-      z-index: 1;
-    }
+  #navigator-toolbox[zen-has-hover],
+  #navigator-toolbox:focus-within,
+  #navigator-toolbox[movingtab],
+  #navigator-toolbox[flash-popup],
+  #navigator-toolbox[has-popup-menu],
+  #navigator-toolbox:has(.tabbrowser-tab:active),
+  #navigator-toolbox:has(*[open='true']:not(tab):not(#zen-sidepanel-button)) {
+    --zen-toolbox-max-width: 50px;
+    max-width: var(--zen-toolbox-max-width) !important;
+    min-width: var(--zen-toolbox-max-width) !important;
+    padding: 0 !important;
 
-    #TabsToolbar {
-      z-index: 1;
-      background-repeat: no-repeat !important;
-      background-position: center center !important;
-      background-size: cover !important;
+    & #TabsToolbar {
+      z-index: 100 !important;
+      width: 250px !important;
+      background-color: var(--zen-dialog-background);
+      border-top-color: var(--zen-colors-border);
+      position: absolute;
+      transition: 0 !important;
+      /*animation: zen-vtabs-animation 0.3s ease-in-out;*/
+      -moz-window-dragging: no-drag;
+      overflow: hidden;
+      transition: width 0.2s !important;
+      border-right: 1px solid var(--zen-colors-border);
 
-      border-top: 1px solid transparent;
-
-      height: 100%;
-
-      border-top-right-radius: var(--zen-border-radius);
-      width: var(--zen-toolbox-max-width);
-
-      & .tabbrowser-tab {
-        transition: 0s !important;
+      & .tab-throbber,
+      & .tab-icon-pending,
+      & .tab-sharing-icon-overlay,
+      & .tab-icon-overlay {
+        transition: 0.1s !important;
       }
     }
 
-    #navigator-toolbox[zen-has-hover],
-    #navigator-toolbox:focus-within,
-    #navigator-toolbox[movingtab],
-    #navigator-toolbox[flash-popup],
-    #navigator-toolbox[has-popup-menu],
-    #navigator-toolbox:has(.tabbrowser-tab:active),
-    #navigator-toolbox:has(*[open='true']:not(tab):not(#zen-sidepanel-button)) {
-      --zen-toolbox-max-width: 49px;
-      max-width: var(--zen-toolbox-max-width) !important;
-      min-width: var(--zen-toolbox-max-width) !important;
-      padding: 0 !important;
+    /* Make pinned tabs stay in a single line */
+    #vertical-pinned-tabs-container {
+      display: flex;
+      flex-direction: column;
+      gap: 0 !important;
 
-      & #TabsToolbar {
-        z-index: 100 !important;
-        width: 250px !important;
-        
-        background: var(--zen-main-browser-background) !important;
-        background-attachment: fixed !important;
-        background-size: 2000px !important; /* Dont ask me why */
+      position: relative;
 
-        box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.2);
-
-        position: absolute;
-        padding: var(--zen-toolbox-padding);
-        padding-top: 0;
-        transition: 0 !important;
-        /*animation: zen-vtabs-animation 0.3s ease-in-out;*/
-        -moz-window-dragging: no-drag;
-        overflow: hidden;
-        transition: width 0.2s !important;
+      & .tabbrowser-tab {
+        & .tab-label-container {
+          display: flex;
+        }
 
         & .tab-throbber,
         & .tab-icon-pending,
         & .tab-icon-image,
         & .tab-sharing-icon-overlay,
         & .tab-icon-overlay {
-          transition: 0.1s !important;
+          margin-inline-end: var(--toolbarbutton-inner-padding) !important;
         }
-      }
 
-      /* Make pinned tabs stay in a single line */
-      #vertical-pinned-tabs-container {
-        display: flex;
-        flex-direction: column;
-        gap: 0 !important;
+        &:not(:hover):not([selected]):not([multiselected]) .tab-background {
+          box-shadow: none;
 
-        position: relative;
-
-        & .tabbrowser-tab {
-          & .tab-label-container {
-            display: flex;
-          }
-
-          & .tab-throbber,
-          & .tab-icon-pending,
-          & .tab-icon-image,
-          & .tab-sharing-icon-overlay,
-          & .tab-icon-overlay {
-            margin-inline-end: var(--toolbarbutton-inner-padding) !important;
-          }
-
-          &:not(:hover):not([selected]):not([multiselected]) .tab-background {
-            box-shadow: none;
-
-            background: transparent !important;
-          }
+          background: transparent !important;
         }
-      }
-
-      &[zen-right-side='true'] #TabsToolbar {
-        right: 0;
-        border-top-left-radius: var(--zen-border-radius);
-        border-top-right-radius: 0;
-      }
-
-      #navigator-toolbox:not(&)
-        #TabsToolbar
-        #tabbrowser-tabs[closebuttons='activetab']
-        .tabbrowser-tab
-        .tab-content[class]
-        > .tab-close-button[class] {
-        display: none !important;
-        visibility: hidden !important;
       }
     }
+
+    &[zen-right-side='true'] #TabsToolbar {
+      animation: zen-sidebar-panel-animation-right 0.3s ease-in-out;
+
+      right: 0;
+      border-right: 0;
+      border-left: 1px solid var(--zen-colors-border);
+      border-top-left-radius: var(--zen-border-radius);
+      border-top-right-radius: 0;
+    }
+
+    #navigator-toolbox:not(&)
+    #TabsToolbar
+    #tabbrowser-tabs[closebuttons='activetab']
+    .tabbrowser-tab
+    .tab-content[class]
+    > .tab-close-button[class] {
+      display: none !important;
+      visibility: hidden !important;
+    }
   }
+}
 
   /* Mark: Move sidebar to the right */
   #browser:has(#navigator-toolbox[zen-right-side='true']) {
@@ -699,6 +695,7 @@
       }
 
       margin-top: 10px;
+      padding: 0 2px;
       position: relative;
 
       &::before {
@@ -712,6 +709,11 @@
         left: 50%;
         transform: translateX(-50%);
       }
+    }
+  }
+  @media (-moz-bool-pref: 'zen.view.compact') {
+    #TabsToolbar {
+      margin-top: 0;
     }
   }
 }

@@ -86,6 +86,9 @@ yay -S zen-browser-avx2-bin
 
 ##### Other Linux distributions (AppImage with automated system integration)
 
+- `native` tarball install:
+`bash <(curl -s https://raw.githubusercontent.com/zen-browser/desktop/dev/scripts/install.sh)`
+
 - `zsync` is required for the Update feature of the script below
 
 ```sh

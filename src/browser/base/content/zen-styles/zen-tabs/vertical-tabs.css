@@ -711,9 +711,4 @@
       }
     }
   }
-  @media (-moz-bool-pref: 'zen.view.compact') {
-    #TabsToolbar {
-      margin-top: 0;
-    }
-  }
 }

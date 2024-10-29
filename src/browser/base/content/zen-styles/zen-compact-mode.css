@@ -2,6 +2,11 @@
 
 @media (-moz-bool-pref: 'zen.view.compact') {
   :root:not([customizing]):not([inDOMFullscreen='true']) {
+
+    #TabsToolbar {
+      padding-top: 0;
+    }
+
     @media (-moz-bool-pref: 'zen.view.compact.hide-tabbar') {
       #zen-sidebar-web-panel-wrapper:has(#zen-sidebar-web-panel[pinned='true']) {
         margin-left: calc(var(--zen-sidebar-web-panel-spacing) * 2) !important;

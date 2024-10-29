@@ -365,15 +365,8 @@
 
     & #tabbrowser-arrowscrollbox-periphery {
       & > toolbarbutton {
-        padding: var(--toolbarbutton-inner-padding);
-
-        & image {
-          height: 16px;
-          width: 16px;
-          padding: 0 !important;
-        }
-
         margin: 0 auto !important;
+        padding: 0 !important;
       }
 
       &::before {

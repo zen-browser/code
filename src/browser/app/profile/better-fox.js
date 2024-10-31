@@ -24,9 +24,9 @@
 //pref("content.notify.interval", 100000); // (.10s); alt=500000 (.50s)
 
 /** GFX ***/
-pref("gfx.canvas.accelerated.cache-items", 32768);
-pref("gfx.canvas.accelerated.cache-size", 4096);
-pref("gfx.content.skia-font-cache-size", 80);
+//pref("gfx.canvas.accelerated.cache-items", 32768);
+//pref("gfx.canvas.accelerated.cache-size", 4096);
+//pref("gfx.content.skia-font-cache-size", 80);
 
 /** DISK CACHE ***/
 pref("browser.cache.jsbc_compression_level", 3);

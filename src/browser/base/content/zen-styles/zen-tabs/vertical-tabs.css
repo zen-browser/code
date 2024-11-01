@@ -620,7 +620,7 @@
         z-index: 100 !important;
         width: 250px !important;
         
-        background: var(--zen-main-browser-background) !important;
+        background: rgb(from var(--zen-main-browser-background) r g b / 1)!important;
         background-attachment: fixed !important;
         background-size: 2000px !important; /* Dont ask me why */
 

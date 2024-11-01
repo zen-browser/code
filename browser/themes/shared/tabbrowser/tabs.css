@@ -1,0 +1,7 @@
+/* ... (previous content) */
+
+#tabbrowser-tabs[positionpinnedtabs] > #tabbrowser-arrowscrollbox > .tabbrowser-tab[pinned] {
+  /* Remove absolute positioning */
+}
+
+/* ... (rest of the file content) */

@@ -114,6 +114,7 @@ pref("toolkit.telemetry.updatePing.enabled", false, locked);
 pref("toolkit.telemetry.bhrPing.enabled", false, locked);
 pref("toolkit.telemetry.firstShutdownPing.enabled", false, locked);
 pref("toolkit.telemetry.coverage.opt-out", true, locked);
+pref("toolkit.telemetry.hybridContent.enabled", true, locked);
 pref("toolkit.coverage.opt-out", true, locked);
 pref("toolkit.coverage.endpoint.base", "", locked);
 pref("browser.newtabpage.activity-stream.feeds.telemetry", false, locked);

@@ -75,24 +75,44 @@ pref('zen.welcomeScreen.enabled', true);
 pref('zen.welcomeScreen.seen', false);
 pref('zen.tabs.vertical', true);
 pref('zen.tabs.vertical.right-side', false);
-pref('zen.tabs.show-newtab-under', false);
+pref('zen.tabs.show-newtab-under', true);
 pref('zen.theme.accent-color', "#aac7ff");
-pref('zen.theme.border-radius', 8); // In pixels
 pref('zen.theme.content-element-separation', 6); // In pixels
-pref('zen.theme.toolbar-themed', true);
 pref('zen.theme.pill-button', false);
 pref('zen.theme.gradient', true);
-pref('zen.view.compact', false);
 pref('zen.view.experimental-rounded-view', true);
 
+#ifdef XP_MACOSX
+pref('zen.theme.border-radius', 10); // In pixels
+#else
+#ifdef XP_WIN
+pref('zen.theme.border-radius', 6); // In pixels
+#else
+pref('zen.theme.border-radius', 8); // In pixels
+#endif
+#endif
+
+pref('zen.theme.color-prefs.use-workspace-colors', true);
 pref('zen.theme.color-prefs.amoled', false);
 pref('zen.theme.color-prefs.colorful', false);
 
+pref('zen.view.compact', false);
 pref('zen.view.compact.hide-tabbar', true);
 pref('zen.view.compact.hide-toolbar', false);
 pref('zen.view.compact.toolbar-flash-popup', true);
 pref('zen.view.compact.toolbar-flash-popup.duration', 800);
 pref('zen.view.compact.toolbar-hide-after-hover.duration', 1000);
+pref('zen.view.compact.color-toolbar', true);
+pref('zen.view.compact.color-sidebar', true);
+
+pref('zen.glance.enabled', true);
+pref('zen.glance.hold-duration', 300); // in ms
+
+#ifdef XP_MACOSX
+pref('zen.glance.activation-method', 'alt'); // ctrl, alt, shift, none, hold
+#else
+pref('zen.glance.activation-method', 'ctrl'); // ctrl, alt, shift, none, hold
+#endif
 
 pref('zen.view.sidebar-height-throttle', 200); // in ms
 pref('zen.view.sidebar-expanded', true);
@@ -166,7 +186,8 @@ pref('browser.migrate.opera.enabled', true);
 // DNS
 // pref('network.trr.mode', 5);
 
-pref('xpinstall.signatures.required', false);
+// security: They must enable this themselves, to avoid people downloading malware
+//pref('xpinstall.signatures.required', false);
 
 // Experimental Zen Features
 // Strategy to use for bytecode cache (Thanks https://github.com/gunir)
@@ -243,3 +264,5 @@ pref("network.fetchpriority.enabled", true);
 // No Proxy should be default, Use system proxy allows antivirus, virus or system proxy to MITM or slowing down Zen
 pref("network.proxy.type", 0);
 
+// for the new layout:
+pref('browser.download.autohideButton', false);

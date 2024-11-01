@@ -1,8 +1,8 @@
 diff --git a/toolkit/profile/nsToolkitProfileService.cpp b/toolkit/profile/nsToolkitProfileService.cpp
-index 6e40f51cfc6e76fbd63d87fe7a416481fe9bb2f6..3bc78e3077264387415a06a52a3a8fbc56339484 100644
+index 0587b214ddcf4b12877ca3698ca7d4308b2f0af3..3846515a4fa7b849233de6026f55152478c04f03 100644
 --- a/toolkit/profile/nsToolkitProfileService.cpp
 +++ b/toolkit/profile/nsToolkitProfileService.cpp
-@@ -234,7 +234,7 @@ void RemoveProfileFiles(nsIToolkitProfile* aProfile, bool aInBackground) {
+@@ -229,7 +229,7 @@ void RemoveProfileFiles(nsIToolkitProfile* aProfile, bool aInBackground) {
  }
  
  nsToolkitProfile::nsToolkitProfile(const nsACString& aName, nsIFile* aRootDir,
@@ -11,7 +11,7 @@ index 6e40f51cfc6e76fbd63d87fe7a416481fe9bb2f6..3bc78e3077264387415a06a52a3a8fbc
                                     const nsACString& aStoreID = VoidCString(),
                                     bool aShowProfileSelector = false)
      : mName(aName),
-@@ -244,7 +244,8 @@ nsToolkitProfile::nsToolkitProfile(const nsACString& aName, nsIFile* aRootDir,
+@@ -239,7 +239,8 @@ nsToolkitProfile::nsToolkitProfile(const nsACString& aName, nsIFile* aRootDir,
        mShowProfileSelector(aShowProfileSelector),
        mLock(nullptr),
        mIndex(0),
@@ -21,7 +21,7 @@ index 6e40f51cfc6e76fbd63d87fe7a416481fe9bb2f6..3bc78e3077264387415a06a52a3a8fbc
    NS_ASSERTION(aRootDir, "No file!");
  
    RefPtr<nsToolkitProfile> prev =
-@@ -259,6 +260,10 @@ nsToolkitProfile::nsToolkitProfile(const nsACString& aName, nsIFile* aRootDir,
+@@ -254,6 +255,10 @@ nsToolkitProfile::nsToolkitProfile(const nsACString& aName, nsIFile* aRootDir,
    // If this profile isn't in the database already add it.
    if (!aFromDB) {
      nsINIParser* db = &nsToolkitProfileService::gService->mProfileDB;
@@ -32,7 +32,7 @@ index 6e40f51cfc6e76fbd63d87fe7a416481fe9bb2f6..3bc78e3077264387415a06a52a3a8fbc
      db->SetString(mSection.get(), "Name", mName.get());
  
      bool isRelative = false;
-@@ -268,6 +273,7 @@ nsToolkitProfile::nsToolkitProfile(const nsACString& aName, nsIFile* aRootDir,
+@@ -263,6 +268,7 @@ nsToolkitProfile::nsToolkitProfile(const nsACString& aName, nsIFile* aRootDir,
  
      db->SetString(mSection.get(), "IsRelative", isRelative ? "1" : "0");
      db->SetString(mSection.get(), "Path", descriptor.get());
@@ -40,7 +40,7 @@ index 6e40f51cfc6e76fbd63d87fe7a416481fe9bb2f6..3bc78e3077264387415a06a52a3a8fbc
      if (!mStoreID.IsVoid()) {
        db->SetString(mSection.get(), "StoreID",
                      PromiseFlatCString(mStoreID).get());
-@@ -466,6 +472,8 @@ nsToolkitProfile::SetShowProfileSelector(bool aShowProfileSelector) {
+@@ -462,6 +468,8 @@ nsToolkitProfile::SetShowProfileSelector(bool aShowProfileSelector) {
  #endif
  }
  
@@ -49,14 +49,13 @@ index 6e40f51cfc6e76fbd63d87fe7a416481fe9bb2f6..3bc78e3077264387415a06a52a3a8fbc
  nsresult nsToolkitProfile::RemoveInternal(bool aRemoveFiles,
                                            bool aInBackground) {
    NS_ASSERTION(nsToolkitProfileService::gService, "Whoa, my service is gone.");
-@@ -1158,8 +1166,15 @@ nsresult nsToolkitProfileService::Init() {
+@@ -1145,8 +1153,14 @@ nsresult nsToolkitProfileService::Init() {
        }
      }
  
 -    currentProfile = new nsToolkitProfile(name, rootDir, localDir, true,
 -                                          storeID, showProfileSelector);
 +    nsAutoCString zenProfileAvatar;
-+
 +    rv = mProfileDB.GetString(profileID.get(), "ZenAvatarPath", zenProfileAvatar);
 +    if (NS_FAILED(rv)) {
 +      NS_ERROR("Malformed profiles.ini: ZenAvatarPath= not found");
@@ -67,7 +66,7 @@ index 6e40f51cfc6e76fbd63d87fe7a416481fe9bb2f6..3bc78e3077264387415a06a52a3a8fbc
  
      // If a user has modified the ini file path it may make for a valid profile
      // path but not match what we would have serialised and so may not match
-@@ -1384,7 +1399,7 @@ nsresult nsToolkitProfileService::CreateDefaultProfile(
+@@ -1375,7 +1389,7 @@ nsresult nsToolkitProfileService::CreateDefaultProfile(
    if (mUseDevEditionProfile) {
      name.AssignLiteral(DEV_EDITION_NAME);
    } else if (mUseDedicatedProfile) {
@@ -76,12 +75,12 @@ index 6e40f51cfc6e76fbd63d87fe7a416481fe9bb2f6..3bc78e3077264387415a06a52a3a8fbc
    } else {
      name.AssignLiteral(DEFAULT_NAME);
    }
-@@ -2180,7 +2195,7 @@ nsToolkitProfileService::CreateProfile(nsIFile* aRootDir,
+@@ -2185,7 +2199,7 @@ nsresult nsToolkitProfileService::CreateProfile(nsIFile* aRootDir,
+   rv = CreateTimesInternal(rootDir);
    NS_ENSURE_SUCCESS(rv, rv);
  
-   nsCOMPtr<nsIToolkitProfile> profile =
--      new nsToolkitProfile(aName, rootDir, localDir, false);
-+      new nsToolkitProfile(aName, rootDir, localDir, false, ""_ns);
+-  profile = new nsToolkitProfile(aName, rootDir, localDir, false);
++  profile = new nsToolkitProfile(aName, rootDir, localDir, false, ""_ns);
  
    if (aName.Equals(DEV_EDITION_NAME)) {
      mDevEditionDefault = profile;

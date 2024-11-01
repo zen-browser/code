@@ -1,5 +1,4 @@
 #browser,
-#appcontent,
 #tabbrowser-tabpanels {
   background: transparent !important;
 }
@@ -33,7 +32,6 @@
   width: 100%;
 }
 
-:root:not([inDOMFullscreen='true']) #appcontent,
 #sidebar-box {
   /** Sidebar is already hidden in full screen mode */
   border: none;
@@ -75,6 +73,11 @@
   }
 }
 
+#zen-appcontent-wrapper {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
 #tabbrowser-tabbox {
   display: flex;
   flex-direction: row;
@@ -83,4 +86,10 @@
 
 .titlebar-buttonbox-container {
   height: 100%;
+}
+
+@media (-moz-platform: macos) {
+  .titlebar-buttonbox-container {
+    margin-inline-end: 8px;
+  }
 }

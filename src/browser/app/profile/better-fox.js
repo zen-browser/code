@@ -70,11 +70,6 @@ pref("browser.download.start_downloads_in_tmp_dir", true);
 pref("browser.helperApps.deleteTempFileOnExit", true);
 pref("browser.uitour.enabled", false);
 
-/** OCSP & CERTS / HPKP ***/
-pref("security.OCSP.enabled", 0);
-pref("security.remote_settings.crlite_filters.enabled", true);
-pref("security.pki.crlite_mode", 2);
-
 /** SSL / TLS ***/
 pref("security.ssl.treat_unsafe_negotiation_as_broken", true);
 pref("browser.xul.error_pages.expert_bad_cert", true);
@@ -106,12 +101,6 @@ pref("privacy.userContext.ui.enabled", true);
 /** SAFE BROWSING ***/
 pref("browser.safebrowsing.downloads.remote.enabled", false);
 
-/** MOZILLA ***/
-pref("permissions.default.desktop-notification", 2);
-pref("permissions.default.geo", 2);
-pref("permissions.manager.defaultsUrl", "");
-pref("webchannel.allowObject.urlWhitelist", "");
-
 /** TELEMETRY ***/
 pref("datareporting.policy.dataSubmissionEnabled", false, locked);
 pref("datareporting.healthreport.uploadEnabled", false, locked);
@@ -141,9 +130,6 @@ pref("browser.tabs.crashReporting.sendReport", false);
 pref("browser.crashReports.unsubmittedCheck.autoSubmit2", false);
 
 /** DETECTION ***/
-pref("captivedetect.canonicalURL", "");
-pref("network.captive-portal-service.enabled", false);
-pref("network.connectivity-service.enabled", false);
 pref("dom.private-attribution.submission.enabled", false);
 
 /****************************************************************************

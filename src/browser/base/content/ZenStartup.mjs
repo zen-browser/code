@@ -73,7 +73,7 @@
       tabs.style.maxHeight = '0px'; // reset to 0
       const toolbarRect = toolbarItems.getBoundingClientRect();
       // -5 for the controls padding
-      let totalHeight = toolbarRect.height - (this.contentElementSeparation * 2) - 5;
+      let totalHeight = toolbarRect.height - (this.contentElementSeparation) - 10;
       // remove the height from other elements that aren't hidden
       const otherElements = document.querySelectorAll('#tabbrowser-tabs > *:not([hidden="true"])');
       for (let tab of otherElements) {

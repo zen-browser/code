@@ -5,15 +5,20 @@
     position: relative;
 
     box-shadow: 0 0 1px 1px light-dark(rgba(0, 0, 0, 0.1), var(--zen-colors-border));
-    & .browserContainer {
+    
+    & .browserContainer,
+    #zen-glance-browser browser {
       overflow: hidden;
       border-radius: var(--zen-webview-border-radius, var(--zen-border-radius));
     }
+  }
 
-    @media (-moz-bool-pref: 'zen.view.experimental-rounded-view') {
-      &.deck-selected .browserContainer {
-        mix-blend-mode: multiply;
-      }
+  @media (-moz-bool-pref: 'zen.view.experimental-rounded-view') {
+    #tabbrowser-tabpanels,
+    #zen-glance-browser {
+      mix-blend-mode: multiply;
+      -moz-osx-font-smoothing: grayscale;
+      isolation: isolate;
     }
   }
 }

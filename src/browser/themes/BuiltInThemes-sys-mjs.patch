@@ -11,15 +11,6 @@ index c2d5dd7a18895ae8b4afbf386f122e7899c48cda..377d904bbf5adc92bf7cb0aa4c4c6417
      );
      let activeBuiltInTheme = this.builtInThemeMap.get(activeThemeID);
  
-@@ -82,7 +82,7 @@ class _BuiltInThemes {
-       lazy.AddonManager.maybeInstallBuiltinAddon(
-         activeThemeID,
-         activeBuiltInTheme.version,
--        `resource://builtin-themes/${activeBuiltInTheme.path}`
-+        `${activeBuiltInTheme.path}`
-       );
-     }
-   }
 @@ -166,7 +166,7 @@ class _BuiltInThemes {
    async _uninstallExpiredThemes() {
      const activeThemeID = Services.prefs.getStringPref(

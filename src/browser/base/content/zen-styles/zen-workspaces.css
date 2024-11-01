@@ -79,7 +79,7 @@
     }
   }
 
-  :root:has(#navigator-toolbox:not([zen-has-hover='true'])) &[as-button='true'] {
+  &[as-button='true'] {
     margin: auto;
     padding: var(--toolbarbutton-inner-padding) !important;
     width: calc(2 * var(--toolbarbutton-inner-padding) + 16px) !important;
@@ -168,7 +168,7 @@
 
 #PanelUI-zen-workspaces panelmultiview panelview {
   position: relative;
-  padding: 15px;
+  padding: 10px;
   width: var(--panel-width);
 }
 
@@ -323,7 +323,7 @@
     top: 50%;
     transform: translateY(-50%);
     left: -2px;
-    width: 3px;
+    width: 2px;
     height: 16px;
     background-color: var(--toolbarbutton-icon-fill-attention);
     border-radius: 5px;
@@ -340,9 +340,8 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 4px;
+  height: 2px;
   background-color: var(--toolbarbutton-icon-fill-attention);
-  border-radius: 5px;
 }
 
 .zen-workspace-last-place-drop-target.dragover {

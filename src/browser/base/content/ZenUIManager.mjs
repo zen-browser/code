@@ -47,7 +47,9 @@ var gZenUIManager = {
 
   onPopupShowing(showEvent) {
     for (const el of this._popupTrackingElements) {
-      if (!el.contains(event.explicitOriginalTarget)) {
+      // target may be inside a shadow root, not directly under the element
+      // we also ignore menus inside panels
+      if (!el.contains(showEvent.explicitOriginalTarget) || (showEvent.explicitOriginalTarget && showEvent.explicitOriginalTarget?.closest('panel'))) {
         continue;
       }
       document.removeEventListener('mousemove', this.__removeHasPopupAttribute);
@@ -115,7 +117,6 @@ var gZenVerticalTabsManager = {
     const onHover = Services.prefs.getBoolPref('zen.view.sidebar-expanded.on-hover');
     const expanded = Services.prefs.getBoolPref('zen.view.sidebar-expanded');
     const sidebar = this.navigatorToolbox;
-  
 
     if (onHover) {
       // if the sidebar is not expanded, and hover detection is enabled, show the sidebar

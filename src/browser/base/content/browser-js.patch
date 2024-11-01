@@ -1,5 +1,5 @@
 diff --git a/browser/base/content/browser.js b/browser/base/content/browser.js
-index a29d7a84e84651ea0bdc9be8e4ac650bde2e048a..bc22e55a66686fbae95047686f845f71a0c3aae9 100644
+index ccd83c15d0d73a1e53bdbfdfbe6fed43a26c961d..f18a6abf7debb97539a4cdf8422315b4dff08adb 100644
 --- a/browser/base/content/browser.js
 +++ b/browser/base/content/browser.js
 @@ -32,6 +32,7 @@ ChromeUtils.defineESModuleGetters(this, {
@@ -10,7 +10,7 @@ index a29d7a84e84651ea0bdc9be8e4ac650bde2e048a..bc22e55a66686fbae95047686f845f71
    DevToolsSocketStatus:
      "resource://devtools/shared/security/DevToolsSocketStatus.sys.mjs",
    DownloadUtils: "resource://gre/modules/DownloadUtils.sys.mjs",
-@@ -629,6 +630,15 @@ XPCOMUtils.defineLazyPreferenceGetter(
+@@ -632,6 +633,15 @@ XPCOMUtils.defineLazyPreferenceGetter(
    false
  );
  
@@ -26,27 +26,19 @@ index a29d7a84e84651ea0bdc9be8e4ac650bde2e048a..bc22e55a66686fbae95047686f845f71
  customElements.setElementCreationCallback("screenshots-buttons", () => {
    Services.scriptloader.loadSubScript(
      "chrome://browser/content/screenshots/screenshots-buttons.js",
-@@ -3435,6 +3445,10 @@ var XULBrowserWindow = {
+@@ -3438,6 +3448,11 @@ var XULBrowserWindow = {
      AboutReaderParent.updateReaderButton(gBrowser.selectedBrowser);
      TranslationsParent.onLocationChange(gBrowser.selectedBrowser);
  
 +    gZenViewSplitter.onLocationChange(gBrowser.selectedBrowser);
 +    ZenWorkspaces.onLocationChange(gBrowser.selectedBrowser);
 +    gZenTabUnloader.onLocationChange(gBrowser.selectedBrowser);
++    gZenGlanceManager.onLocationChange(gBrowser.selectedBrowser);
 +
      PictureInPicture.updateUrlbarToggle(gBrowser.selectedBrowser);
  
      if (!gMultiProcessBrowser) {
-@@ -4769,7 +4783,7 @@ function setToolbarVisibility(
-       );
-     }
- 
--    const overlapAttr = "BookmarksToolbarOverlapsBrowser";
-+    const overlapAttr = "BookmarksToolbarOverlapsBrowser__ignore"; // Original string was "BookmarksToolbarOverlapsBrowser" but it's not used and it only bugs the UI.
-     switch (isVisible) {
-       case true:
-       case "always":
-@@ -7609,6 +7623,12 @@ var gDialogBox = {
+@@ -7289,6 +7304,12 @@ var gDialogBox = {
      parentElement.showModal();
      this._didOpenHTMLDialog = true;
  

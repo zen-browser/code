@@ -1,13 +1,13 @@
 diff --git a/browser/components/controlcenter/content/identityPanel.inc.xhtml b/browser/components/controlcenter/content/identityPanel.inc.xhtml
-index 0344fcb566e8e0bedd92b0d45e42aea38de5c329..0d5296700590dd0c8a90929976b8cbc5370e7b47 100644
+index 768768c7d44860e1725f41594da9bcc8c92f4a1d..c04b0d54a41fbf8a22b516524809186d29842b21 100644
 --- a/browser/components/controlcenter/content/identityPanel.inc.xhtml
 +++ b/browser/components/controlcenter/content/identityPanel.inc.xhtml
-@@ -30,7 +30,7 @@
+@@ -28,7 +28,7 @@
        <toolbarseparator/>
        <vbox class="panel-subview-body">
          <toolbarbutton id="identity-popup-security-button"
--                       class="identity-popup-security-connection subviewbutton subviewbutton-iconic"
-+                       class="identity-popup-security-connection subviewbutton"
-                        oncommand="gIdentityHandler.showSecuritySubView();">
+-                       class="identity-popup-security-connection subviewbutton subviewbutton-iconic">
++                       class="identity-popup-security-connection subviewbutton">
            <image class="identity-popup-security-connection-icon toolbarbutton-icon"></image>
            <hbox class="toolbarbutton-text" flex="1">
+             <label class="identity-popup-connection-not-secure"

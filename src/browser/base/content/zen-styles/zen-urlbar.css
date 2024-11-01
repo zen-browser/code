@@ -36,7 +36,7 @@
 }
 
 #urlbar:not([focused='true']):not([breakout-extend="true"]) > #urlbar-background {
-  background: color-mix(in srgb, light-dark(#fff, var(--zen-colors-secondary)) 65%, transparent 35%) !important;
+  background: color-mix(in srgb, light-dark(#fff, var(--zen-colors-tertiary)) 60%, transparent 40%) !important;
   backdrop-filter: blur(10px);
 }
 

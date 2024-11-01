@@ -18,9 +18,9 @@
       <html:div id="zen-theme-builder-wrapper"></html:div>
 
       <box class="indent">
-            <checkbox id="zenLooksAndFeelUseThemedToolbar"
-            data-l10n-id="zen-look-and-feel-themed-toolbar"
-            preference="zen.theme.toolbar-themed"/>
+            <checkbox id="zenLooksAndFeelUseWorkspaceColors"
+                  data-l10n-id="zen-look-and-feel-use-workspace-colors"
+                  preference="zen.theme.color-prefs.use-workspace-colors"/>
       </box>
 
       <hbox id="zenLooksAndFeelGradientPickerParent"></hbox>
@@ -236,6 +236,12 @@
             <checkbox id="zenLooksAndFeelEnableToolbarFlashPopup"
                       data-l10n-id="zen-look-and-feel-compact-toolbar-flash-popup"
                       preference="zen.view.compact.toolbar-flash-popup"/>
+            <checkbox id="zenLooksAndFeelEnableThemedToolbarCompactMode"
+                      data-l10n-id="zen-look-and-feel-compact-toolbar-themed"
+                      preference="zen.view.compact.color-toolbar"/>
+            <checkbox id="zenLooksAndFeelEnableThemedSidebarCompactMode"
+                      data-l10n-id="zen-look-and-feel-compact-sidebar-themed"
+                      preference="zen.view.compact.color-sidebar"/>
       </vbox>
 </groupbox>
 
@@ -258,6 +264,36 @@
                   data-l10n-id="zen-side-panels-close-on-blur"
                   preference="zen.sidebar.close-on-blur"/>
       </hbox>
+</groupbox>
+
+<hbox id="zenGlanceCategory"
+      class="subcategory"
+      hidden="true"
+      data-category="paneZenLooks">
+<html:h1 data-l10n-id="zen-glance-title"/>
+</hbox>
+
+<groupbox id="zenGlanceGroup" data-category="paneZenLooks" hidden="true" class="highlighting-group">
+      <label><html:h2 data-l10n-id="zen-glance-header"/></label>
+      <description class="description-deemphasized" data-l10n-id="zen-glance-description" />
+
+      <checkbox id="zenLooksAndFeelGlanceEnabled"
+            data-l10n-id="zen-glance-enabled"
+            preference="zen.glance.enabled"/>
+      <hbox align="center">
+            <label id="zenGlanceTriggerLabel" data-l10n-id="zen-glance-trigger-label"/>
+            <menulist id="zenGlanceTrigger" preference="zen.glance.activation-method">
+                  <menupopup>
+                        <menuitem data-l10n-id="zen-glance-trigger-ctrl-click" value="ctrl"/>
+                        <menuitem data-l10n-id="zen-glance-trigger-alt-click" value="alt"/>
+                        <menuitem data-l10n-id="zen-glance-trigger-shift-click" value="shift"/>
+#ifdef XP_MACOSX
+                        <menuitem data-l10n-id="zen-glance-trigger-meta-click" value="meta"/>
+#endif
+                        <menuitem data-l10n-id="zen-glance-trigger-mantain-click" value="mantain" disabled="true"/>
+                  </menupopup>
+            </menulist>
+        </hbox>
 </groupbox>
 
 <hbox id="zenSplitViewCategory"

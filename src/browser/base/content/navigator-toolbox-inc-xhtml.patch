@@ -1,5 +1,5 @@
 diff --git a/browser/base/content/navigator-toolbox.inc.xhtml b/browser/base/content/navigator-toolbox.inc.xhtml
-index 18b91c95b88d11ddb257de03f12bc3e4cc75a96a..f117cfa7c9d1f9eb537cebbef42a9d2d945d53ac 100644
+index 12fa0cf79aade28581016adf96df85386dabdcef..4c8c2f791b29da0308d1a24778c1e7f5a9bb7293 100644
 --- a/browser/base/content/navigator-toolbox.inc.xhtml
 +++ b/browser/base/content/navigator-toolbox.inc.xhtml
 @@ -2,7 +2,7 @@
@@ -11,7 +11,7 @@ index 18b91c95b88d11ddb257de03f12bc3e4cc75a96a..f117cfa7c9d1f9eb537cebbef42a9d2d
  
    <vbox id="titlebar">
      <!-- Menu -->
-@@ -32,10 +32,11 @@
+@@ -32,13 +32,14 @@
  
        <hbox class="titlebar-spacer" type="pre-tabs"/>
  
@@ -20,10 +20,13 @@ index 18b91c95b88d11ddb257de03f12bc3e4cc75a96a..f117cfa7c9d1f9eb537cebbef42a9d2d
          <toolbartabstop/>
          <hbox id="TabsToolbar-customization-target" flex="1">
            <toolbarbutton id="firefox-view-button"
-+                        hidden="true"
                           class="toolbarbutton-1 chromeclass-toolbar-additional"
                           data-l10n-id="toolbar-button-firefox-view-2"
                           role="button"
++                         hidden="true"
+                          aria-pressed="false"
+                          oncommand="FirefoxViewHandler.openTab();"
+                          onmousedown="FirefoxViewHandler.openToolbarMouseEvent(event);"
 @@ -50,7 +51,7 @@
                  aria-multiselectable="true"
                  setfocus="false"
@@ -33,12 +36,12 @@ index 18b91c95b88d11ddb257de03f12bc3e4cc75a96a..f117cfa7c9d1f9eb537cebbef42a9d2d
                  stopwatchid="FX_TAB_CLICK_MS">
              <hbox class="tab-drop-indicator" hidden="true"/>
  # If the name (tabbrowser-arrowscrollbox) or structure of this changes
-@@ -66,7 +67,7 @@
-                                   tooltip="dynamic-shortcut-tooltip"
-                                   data-l10n-id="tabs-toolbar-new-tab"/>
-             </html:div>
--            <arrowscrollbox id="tabbrowser-arrowscrollbox" orient="horizontal" flex="1" style="min-width: 1px;" clicktoscroll="" scrolledtostart="" scrolledtoend="">
-+            <arrowscrollbox id="tabbrowser-arrowscrollbox" orient="vertical" style="min-width: 1px;" clicktoscroll="" scrolledtostart="" scrolledtoend="">
+@@ -59,7 +60,7 @@
+ # the current structure that we may want to revisit.
+             <html:div id="vertical-pinned-tabs-container"></html:div>
+             <html:div id="vertical-pinned-tabs-container-separator"></html:div>
+-            <arrowscrollbox id="tabbrowser-arrowscrollbox" orient="horizontal" flex="1" clicktoscroll="" scrolledtostart="" scrolledtoend="">
++            <arrowscrollbox id="tabbrowser-arrowscrollbox" orient="vertical" flex="1" clicktoscroll="" scrolledtostart="" scrolledtoend="">
                <tab is="tabbrowser-tab" class="tabbrowser-tab" selected="true" visuallyselected="" fadein=""/>
                <hbox id="tabbrowser-arrowscrollbox-periphery">
                  <toolbartabstop/>
@@ -55,15 +58,7 @@ index 18b91c95b88d11ddb257de03f12bc3e4cc75a96a..f117cfa7c9d1f9eb537cebbef42a9d2d
      </toolbar>
  
    </vbox>
-@@ -471,6 +473,7 @@
- 
-       <toolbarbutton id="fxa-toolbar-menu-button" class="toolbarbutton-1 chromeclass-toolbar-additional subviewbutton-nav"
-                      badged="true"
-+                     hidden="true"
-                      delegatesanchor="true"
-                      onmousedown="gSync.toggleAccountPanel(this, event)"
-                      onkeypress="gSync.toggleAccountPanel(this, event)"
-@@ -522,6 +525,7 @@
+@@ -531,6 +534,7 @@
                       consumeanchor="PanelUI-button"
                       data-l10n-id="appmenu-menu-button-closed2"/>
      </toolbaritem>

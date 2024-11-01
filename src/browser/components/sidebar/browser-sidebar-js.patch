@@ -1,8 +1,8 @@
 diff --git a/browser/components/sidebar/browser-sidebar.js b/browser/components/sidebar/browser-sidebar.js
-index c68a32794996348d95f3b1ee363be2eec587065e..3a163c75ac10a204754648dfd1332c79895799c7 100644
+index 4a124003976684e014435854aef69ce29da541d2..61ce44751c36eea3e5ae2ddcc62e42c01459629b 100644
 --- a/browser/components/sidebar/browser-sidebar.js
 +++ b/browser/components/sidebar/browser-sidebar.js
-@@ -521,7 +521,7 @@ var SidebarController = {
+@@ -578,7 +578,7 @@ var SidebarController = {
     */
    setPosition() {
      // First reset all ordinals to match DOM ordering.
@@ -11,12 +11,11 @@ index c68a32794996348d95f3b1ee363be2eec587065e..3a163c75ac10a204754648dfd1332c79
      [...browser.children].forEach((node, i) => {
        node.style.order = i + 1;
      });
-@@ -535,9 +535,11 @@ var SidebarController = {
+@@ -592,9 +592,10 @@ var SidebarController = {
        let boxOrdinal = this._box.style.order;
-       this._box.style.order = appcontent.style.order;
+       this._box.style.order = tabbox.style.order;
  
--      appcontent.style.order = boxOrdinal;
-+      // appcontent.style.order = boxOrdinal;
+-      tabbox.style.order = boxOrdinal;
        // the launcher should be on the right of the sidebar-box
 -      sidebarContainer.style.order = parseInt(this._box.style.order) + 1;
 +      this._box.style.order = browser.children.length + 2;
@@ -25,7 +24,7 @@ index c68a32794996348d95f3b1ee363be2eec587065e..3a163c75ac10a204754648dfd1332c79
        // Indicate we've switched ordering to the box
        this._box.setAttribute("positionend", true);
        sidebarMain.setAttribute("positionend", true);
-@@ -546,6 +548,9 @@ var SidebarController = {
+@@ -603,6 +604,9 @@ var SidebarController = {
        this._box.removeAttribute("positionend");
        sidebarMain.removeAttribute("positionend");
        sidebarContainer.removeAttribute("positionend");

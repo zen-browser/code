@@ -19,6 +19,8 @@
         content/browser/zen-components/ZenPinnedTabManager.mjs  (content/zen-components/src/ZenPinnedTabManager.mjs)
         content/browser/zen-components/ZenCommonUtils.mjs       (content/zen-components/src/ZenCommonUtils.mjs)
         content/browser/zen-components/ZenGradientGenerator.mjs (content/zen-components/src/ZenGradientGenerator.mjs)
+        content/browser/zen-components/ZenGlanceManager.mjs     (content/zen-components/src/ZenGlanceManager.mjs)
+        content/browser/zen-components/ZenActorsManager.mjs     (content/zen-components/src/ZenActorsManager.mjs)
 
         content/browser/zen-styles/zen-theme.css                (content/zen-styles/zen-theme.css)
         content/browser/zen-styles/zen-buttons.css              (content/zen-styles/zen-buttons.css)
@@ -32,6 +34,7 @@
         content/browser/zen-styles/zen-sidebar.css              (content/zen-styles/zen-sidebar.css)
         content/browser/zen-styles/zen-toolbar.css              (content/zen-styles/zen-toolbar.css)
         content/browser/zen-styles/zen-decks.css                (content/zen-styles/zen-decks.css)
+        content/browser/zen-styles/zen-glance.css               (content/zen-styles/zen-glance.css)
         content/browser/zen-styles/zen-browser-container.css    (content/zen-styles/zen-browser-container.css)
         content/browser/zen-styles/zen-workspaces.css           (content/zen-styles/zen-workspaces.css)
         content/browser/zen-styles/zen-profile-dialog.css       (content/zen-styles/zen-profile-dialog.css)
@@ -54,3 +57,5 @@
         # Actors
         content/browser/zen-components/actors/ZenThemeMarketplaceParent.sys.mjs (content/zen-components/src/actors/ZenThemeMarketplaceParent.sys.mjs)
         content/browser/zen-components/actors/ZenThemeMarketplaceChild.sys.mjs  (content/zen-components/src/actors/ZenThemeMarketplaceChild.sys.mjs)
+        content/browser/zen-components/actors/ZenGlanceChild.sys.mjs            (content/zen-components/src/actors/ZenGlanceChild.sys.mjs)
+        content/browser/zen-components/actors/ZenGlanceParent.sys.mjs           (content/zen-components/src/actors/ZenGlanceParent.sys.mjs)

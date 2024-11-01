@@ -1,21 +1,8 @@
 diff --git a/browser/themes/BuiltInThemeConfig.sys.mjs b/browser/themes/BuiltInThemeConfig.sys.mjs
-index 7cfea4b705a1338b1eb5c4f255808aeac4bdb819..cf7dc720a3bd2b14535d57262ad2297f9478eddc 100644
+index f738f7f1e37d20d9d9158f052572334714475107..f4b0e9a7077076f2fbe8ac17fa6aadf586c6b37c 100644
 --- a/browser/themes/BuiltInThemeConfig.sys.mjs
 +++ b/browser/themes/BuiltInThemeConfig.sys.mjs
-@@ -22,24 +22,17 @@ export const BuiltInThemeConfig = new Map([
-   [
-     "firefox-compact-light@mozilla.org",
-     {
--      version: "1.2",
-+      version: "1.3",
-       path: "resource://builtin-themes/light/",
-     },
-   ],
-   [
-     "firefox-compact-dark@mozilla.org",
-     {
--      version: "1.2",
-+      version: "1.3",
+@@ -33,13 +33,6 @@ export const BuiltInThemeConfig = new Map([
        path: "resource://builtin-themes/dark/",
      },
    ],

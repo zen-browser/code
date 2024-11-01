@@ -1,11 +1,11 @@
 diff --git a/browser/base/content/browser-init.js b/browser/base/content/browser-init.js
-index bee5309c04775adff8652bfe6c54b2d466e821ac..cfeaf7cf2e98c35e76bdd5451f90b004a04d4474 100644
+index 9df41bb3c82919839ee1408aa4d177ea7ee40a56..e37c64fa2c2ea39762be4285a1a7055463ded537 100644
 --- a/browser/base/content/browser-init.js
 +++ b/browser/base/content/browser-init.js
-@@ -143,13 +143,15 @@ var gBrowserInit = {
-     gNavToolbox.palette = document.getElementById(
-       "BrowserToolbarPalette"
-     ).content;
+@@ -152,13 +152,15 @@ var gBrowserInit = {
+       // tell CUI to ignore this element when it builds the toolbar areas
+       elem.setAttribute("skipintoolbarset", "true");
+     }
 +    ZenCustomizableUI.init(window);
      for (let area of CustomizableUI.areas) {
        let type = CustomizableUI.getAreaType(area);
@@ -16,16 +16,16 @@ index bee5309c04775adff8652bfe6c54b2d466e821ac..cfeaf7cf2e98c35e76bdd5451f90b004
        }
      }
 +    ZenCustomizableUI.registerToolbarNodes(window);
-     BrowserSearch.initPlaceHolder();
- 
-     // Hack to ensure that the various initial pages favicon is loaded
-@@ -239,6 +241,10 @@ var gBrowserInit = {
+     for (let elem of nonRemovables) {
+       elem.setAttribute("removable", "false");
+       elem.removeAttribute("skipintoolbarset");
+@@ -253,6 +255,10 @@ var gBrowserInit = {
      gPrivateBrowsingUI.init();
      BrowserSearch.init();
      BrowserPageActions.init();
 +
-+    Services.scriptloader.loadSubScript("chrome://browser/content/ZenStartup.mjs", window);
-+    Services.scriptloader.loadSubScript("chrome://browser/content/zenThemeModifier.js", window);
++Services.scriptloader.loadSubScript("chrome://browser/content/ZenStartup.mjs", window);
++Services.scriptloader.loadSubScript("chrome://browser/content/zenThemeModifier.js", window);
 +
      if (gToolbarKeyNavEnabled) {
        ToolbarKeyboardNavigator.init();

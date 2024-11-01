@@ -1,19 +1,14 @@
 diff --git a/toolkit/themes/shared/menulist-shared.css b/toolkit/themes/shared/menulist-shared.css
-index fa7e68c7b71b28c6dc1b2f67a9868f9ad4090034..9d082381e2d491d63647f8047a748354918686fe 100644
+index 5dd5549674570170a694afbd9ea4526e52e3192a..187fcb57183df6a0ab3701ab79c46d86c5e984b3 100644
 --- a/toolkit/themes/shared/menulist-shared.css
 +++ b/toolkit/themes/shared/menulist-shared.css
-@@ -14,12 +14,13 @@
+@@ -14,7 +14,8 @@
  
  :host(:not([native])) {
    appearance: none;
--  background-color: var(--button-bgcolor, ButtonFace);
+-  background-color: var(--button-background-color);
 +  background-color: var(--zen-colors-tertiary, ButtonFace);
-   color: var(--button-color, ButtonText);
++  border: 1px solid var(--input-border-color, ThreeDShadow);
+   color: var(--button-text-color);
    border-radius: 4px;
    padding-block: 4px;
-   padding-inline: 12px 8px;
-   margin: 5px 2px 3px;
-+  border: 1px solid var(--input-border-color, ThreeDShadow);
- }
- 
- :host(:not([native])[size="medium"]) {

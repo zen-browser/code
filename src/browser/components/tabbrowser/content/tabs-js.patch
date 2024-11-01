@@ -1,8 +1,17 @@
 diff --git a/browser/components/tabbrowser/content/tabs.js b/browser/components/tabbrowser/content/tabs.js
-index 137f1a3854f10aca0d0e3233a82c1c18fbdc2823..419e0ad674b76454e6e3e1ed4ae1a85488137940 100644
+index f3a2f226a9056c5a75023281fdeb704cec49b4a6..6864f4011676e2c114bacc4b55adca470b97b2a8 100644
 --- a/browser/components/tabbrowser/content/tabs.js
 +++ b/browser/components/tabbrowser/content/tabs.js
-@@ -840,7 +840,7 @@
+@@ -894,7 +894,7 @@
+             let postTransitionCleanup = () => {
+               tab.removeAttribute("tabdrop-samewindow");
+ 
+-              this._finishAnimateTabMove();
++              this._finishAnimateTabMove(true);
+               if (dropIndex !== false) {
+                 gBrowser.moveTabTo(tab, dropIndex);
+                 if (incrementDropIndex) {
+@@ -904,7 +904,7 @@
  
                gBrowser.syncThrobberAnimations(tab);
              };
@@ -11,7 +20,7 @@ index 137f1a3854f10aca0d0e3233a82c1c18fbdc2823..419e0ad674b76454e6e3e1ed4ae1a854
                postTransitionCleanup();
              } else {
                let onTransitionEnd = transitionendEvent => {
-@@ -1411,7 +1411,7 @@
+@@ -1480,7 +1480,7 @@
            let rect = ele => {
              return window.windowUtils.getBoundsWithoutFlushing(ele);
            };
@@ -20,11 +29,11 @@ index 137f1a3854f10aca0d0e3233a82c1c18fbdc2823..419e0ad674b76454e6e3e1ed4ae1a854
            if (tab && rect(tab).width <= this._tabClipWidth) {
              this.setAttribute("closebuttons", "activetab");
            } else {
-@@ -1430,10 +1430,12 @@
+@@ -1499,10 +1499,12 @@
  
      _handleTabSelect(aInstant) {
        let selectedTab = this.selectedItem;
--      if (this.hasAttribute("overflow")) {
+-      if (this.overflowing) {
 -        this.arrowScrollbox.ensureElementIsVisible(selectedTab, aInstant);
 -      }
 +      this.arrowScrollbox.ensureElementIsVisible(selectedTab, aInstant);
@@ -36,7 +45,7 @@ index 137f1a3854f10aca0d0e3233a82c1c18fbdc2823..419e0ad674b76454e6e3e1ed4ae1a854
        selectedTab._notselectedsinceload = false;
      }
  
-@@ -1477,7 +1479,7 @@
+@@ -1550,7 +1552,7 @@
          if (isEndTab && !this._hasTabTempMaxWidth) {
            return;
          }
@@ -45,7 +54,7 @@ index 137f1a3854f10aca0d0e3233a82c1c18fbdc2823..419e0ad674b76454e6e3e1ed4ae1a854
          // Force tabs to stay the same width, unless we're closing the last tab,
          // which case we need to let them expand just enough so that the overall
          // tabbar width is the same.
-@@ -1492,7 +1494,7 @@
+@@ -1565,7 +1567,7 @@
          let tabsToReset = [];
          for (let i = numPinned; i < tabs.length; i++) {
            let tab = tabs[i];
@@ -54,10 +63,10 @@ index 137f1a3854f10aca0d0e3233a82c1c18fbdc2823..419e0ad674b76454e6e3e1ed4ae1a854
            if (!isEndTab) {
              // keep tabs the same width
              tab.style.transition = "none";
-@@ -1558,9 +1560,9 @@
+@@ -1630,9 +1632,9 @@
+       let verticalTabsContainer = document.getElementById(
          "vertical-pinned-tabs-container"
        );
-       let newTabButton = document.getElementById("newtab-button-container");
 -      let numPinned = gBrowser._numPinnedTabs;
 +      let numPinned = gBrowser._numVisiblePinTabs;
  
@@ -66,25 +75,16 @@ index 137f1a3854f10aca0d0e3233a82c1c18fbdc2823..419e0ad674b76454e6e3e1ed4ae1a854
          let tabs = this._getVisibleTabs();
          for (let i = 0; i < numPinned; i++) {
            tabs[i].style.marginInlineStart = "";
-@@ -1568,7 +1570,7 @@
-         }
-       }
- 
--      newTabButton.toggleAttribute("showborder", gBrowser._numPinnedTabs !== 0);
-+      newTabButton.toggleAttribute("showborder", gBrowser._numVisiblePinTabs !== 0);
-       this.style.removeProperty("--tab-overflow-pinned-tabs-width");
-     }
- 
-@@ -1589,7 +1591,7 @@
+@@ -1660,7 +1662,7 @@
  
      _positionPinnedTabs() {
        let tabs = this._getVisibleTabs();
 -      let numPinned = gBrowser._numPinnedTabs;
 +      let numPinned = gBrowser._numVisiblePinTabs;
        let absPositionHorizontalTabs =
-         this.hasAttribute("overflow") &&
-         tabs.length > numPinned &&
-@@ -1672,7 +1674,7 @@
+         this.overflowing && tabs.length > numPinned && numPinned > 0;
+ 
+@@ -1934,7 +1936,7 @@
        }
  
        let pinned = draggedTab.pinned;
@@ -93,7 +93,18 @@ index 137f1a3854f10aca0d0e3233a82c1c18fbdc2823..419e0ad674b76454e6e3e1ed4ae1a854
        let tabs = this._getVisibleTabs().slice(
          pinned ? 0 : numPinned,
          pinned ? numPinned : undefined
-@@ -1949,9 +1951,9 @@
+@@ -2059,8 +2061,8 @@
+       }
+     }
+ 
+-    _finishAnimateTabMove() {
+-      if (!this.hasAttribute("movingtab")) {
++    _finishAnimateTabMove(always = false) {
++      if (!this.hasAttribute("movingtab") && !always) {
+         return;
+       }
+ 
+@@ -2218,9 +2220,9 @@
        function newIndex(aTab, index) {
          // Don't allow mixing pinned and unpinned tabs.
          if (aTab.pinned) {

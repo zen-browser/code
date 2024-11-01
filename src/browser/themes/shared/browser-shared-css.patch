@@ -2,14 +2,6 @@ diff --git a/browser/themes/shared/browser-shared.css b/browser/themes/shared/br
 index f2171eb033a1143870f4708c63f565fabb535c4b..4280bc4b0f7cdbd94179fa2111f8001a331ea42b 100644
 --- a/browser/themes/shared/browser-shared.css
 +++ b/browser/themes/shared/browser-shared.css
-@@ -179,7 +179,6 @@ body {
-   appearance: none;
- 
-   /* Toolbar / content area border */
--  border-bottom: 0.01px solid var(--chrome-content-separator-color);
- 
-   background-color: var(--toolbox-non-lwt-bgcolor);
-   color: var(--toolbox-non-lwt-textcolor);
 @@ -188,7 +187,6 @@ body {
    transition: background-color var(--inactive-window-transition);
  

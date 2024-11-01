@@ -36,4 +36,7 @@ else
     export RUSTFLAGS="-C target-feature=+v8.3a -C codegen-units=1 -Ctarget-cpu=apple-m1"
 fi
 export VERBOSE=1
-#export POLLY="-mllvm -polly -mllvm -polly-2nd-level-tiling -mllvm -polly-loopfusion-greedy -mllvm -polly-pattern-matching-based-opts -mllvm -polly-position=before-vectorizer -mllvm -polly-vectorizer=stripmine"
+
+# Enable polly for macos, since they have a more stable set of GPU drivers,
+# unlike Linux, which has a lot of different drivers.
+export POLLY="-mllvm -polly -mllvm -polly-2nd-level-tiling -mllvm -polly-loopfusion-greedy -mllvm -polly-pattern-matching-based-opts -mllvm -polly-position=before-vectorizer -mllvm -polly-vectorizer=stripmine"

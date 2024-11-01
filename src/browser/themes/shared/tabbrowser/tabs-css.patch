@@ -3,9 +3,9 @@ index 9f7331f2f00a8b0de6ce28a7029358a86eeb8873..2dc56a8455df9009bd1f524b377b8fdf
 --- a/browser/themes/shared/tabbrowser/tabs.css
 +++ b/browser/themes/shared/tabbrowser/tabs.css
 @@ -15,7 +15,7 @@
-   --tab-border-radius: 4px;
-   --tab-shadow-max-size: 6px;
-   --tab-block-margin: 4px;
+   --tab-icon-end-margin: 5.5px;
+   --tab-icon-overlay-fill: light-dark(black, white);
+   --tab-icon-overlay-stroke: light-dark(white, black);
 -  --tab-loading-fill: #0A84FF;
 +  --tab-loading-fill: var(--zen-primary-color);
    --tab-hover-background-color: color-mix(in srgb, currentColor 11%, transparent);
@@ -24,8 +24,8 @@ index 9f7331f2f00a8b0de6ce28a7029358a86eeb8873..2dc56a8455df9009bd1f524b377b8fdf
 @@ -952,7 +951,7 @@ sidebar-main[expanded] > #vertical-tabs > #tabbrowser-tabs[orient="vertical"] >
    toolbarbutton:not(#firefox-view-button),
    toolbarpaletteitem:not(#wrapper-firefox-view-button)
- ) + #tabbrowser-tabs {
--  border-inline-start: 1px solid color-mix(in srgb, currentColor 25%, transparent);
+ ) ~ #tabbrowser-tabs {
+-  border-inline-start: var(--tabstrip-inner-border);
 +  border-inline-start: transparent;
    padding-inline-start: calc(var(--tab-overflow-pinned-tabs-width) + 2px);
    margin-inline-start: 2px;
@@ -35,6 +35,6 @@ index 9f7331f2f00a8b0de6ce28a7029358a86eeb8873..2dc56a8455df9009bd1f524b377b8fdf
  }
  
 -#tabbrowser-tabs[hasadjacentnewtabbutton]:not([overflow]) ~ #new-tab-button,
- #tabbrowser-tabs[orient="vertical"] > #tabbrowser-arrowscrollbox > #tabbrowser-arrowscrollbox-periphery > #tabs-newtab-button,
- #tabbrowser-tabs[overflow] > #tabbrowser-arrowscrollbox > #tabbrowser-arrowscrollbox-periphery > #tabs-newtab-button,
- #tabbrowser-tabs:not([hasadjacentnewtabbutton]) > #tabbrowser-arrowscrollbox > #tabbrowser-arrowscrollbox-periphery > #tabs-newtab-button,
+ #tabbrowser-tabs[orient="horizontal"] > #vertical-tabs-newtab-button,
+ #tabbrowser-tabs[orient="vertical"]:not([overflow]) > #vertical-tabs-newtab-button,
+ #tabbrowser-arrowscrollbox[overflowing] > #tabbrowser-arrowscrollbox-periphery > #tabs-newtab-button,

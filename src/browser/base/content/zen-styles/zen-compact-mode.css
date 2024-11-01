@@ -28,7 +28,7 @@
 
       #navigator-toolbox {
         --zen-toolbox-max-width: 54px !important;
-        --zen-compact-float: calc(var(--zen-element-separation) + 1px);
+        --zen-compact-float: calc(var(--zen-element-separation) - 1px);
         position: absolute;
         z-index: 9;
         transition: transform 0.2s ease-in-out, opacity 0.2s ease-in-out;
@@ -41,6 +41,7 @@
         padding-top: 0 !important;
 
         #browser:has(#navigator-toolbox[zen-right-side='true']) & {
+          --zen-compact-float: calc(var(--zen-element-separation) + 1px);
           padding-left: unset !important;
           padding-right: var(--zen-compact-float) !important;
           left: calc(100% - var(--zen-element-separation));
@@ -49,13 +50,17 @@
       }
 
       #titlebar {
-        background: var(--zen-main-browser-background) !important;
-        background-attachment: fixed !important;
-        background-size: 2000px !important; /* Dont ask me why */
-        box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.2);
-        border-radius: var(--zen-border-radius);
+        box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.1);
+        border-radius: calc(var(--zen-border-radius) - 2px);
         padding: var(--zen-toolbox-padding) !important;
         position: relative;
+        background: var(--zen-dialog-background);
+
+        @media (-moz-bool-pref: 'zen.view.compact.color-sidebar') {
+          background: var(--zen-main-browser-background) !important;
+          background-attachment: fixed !important;
+          background-size: 2000px !important; /* Dont ask me why */
+        }
       }
       /* Mark: toolbox as collapsed */
       #zen-tabbox-wrapper > #navigator-toolbox:not(#navigator-toolbox:is(#navigator-toolbox[zen-expanded='true'])) {
@@ -124,11 +129,14 @@
         transition: all 0.1s ease-in-out;
         width: calc(100% - ((var(--zen-element-separation) + var(--zen-compact-toolbar-offset)) * 2));
         opacity: 0;
+        background: var(--zen-dialog-background);
 
-        background-attachment: fixed;
-        backdrop-filter: blur(5px);
-        background: var(--zen-main-browser-background);
-        background-size: 100% 2000px;
+        @media (-moz-bool-pref: 'zen.view.compact.color-toolbar') {
+          background-attachment: fixed;
+          backdrop-filter: blur(5px);
+          background: var(--zen-main-browser-background);
+          background-size: 100% 2000px;
+        }
       }
 
       #zen-appcontent-navbar-container:hover,

@@ -10,9 +10,8 @@ index bfebde683d00b0acf26509139a0f662029d37c72..976b553f49e40b7ed02743d79ccc102f
 +  "name": "Zen Dark",
    "description": "A theme with a dark color scheme.",
 -  "author": "Mozilla",
--  "version": "1.2",
 +  "author": "Zen",
-+  "version": "1.3",
+   "version": "1.3.2",
  
    "icons": { "32": "icon.svg" },
  

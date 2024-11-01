@@ -645,6 +645,7 @@ var gZenLooksAndFeel = {
         colorElemParen.setAttribute('selected', 'true');
       }
       colorElemParen.addEventListener('click', () => {
+        Services.prefs.setBoolPref('zen.theme.color-prefs.use-workspace-colors', false);
         Services.prefs.setStringPref('zen.theme.accent-color', color);
       });
       colorElemParen.appendChild(colorElem);
@@ -674,9 +675,13 @@ var gZenWorkspacesSettings = {
     };
     Services.prefs.addObserver('zen.workspaces.enabled', this);
     Services.prefs.addObserver('zen.tab-unloader.enabled', tabsUnloaderPrefListener);
+    Services.prefs.addObserver('zen.glance.enabled', tabsUnloaderPrefListener); // We can use the same listener for both prefs
+    Services.prefs.addObserver('zen.glance.activation-method', tabsUnloaderPrefListener);
     window.addEventListener('unload', () => {
       Services.prefs.removeObserver('zen.workspaces.enabled', this);
       Services.prefs.removeObserver('zen.tab-unloader.enabled', tabsUnloaderPrefListener);
+      Services.prefs.removeObserver('zen.glance.enabled', tabsUnloaderPrefListener);
+      Services.prefs.removeObserver('zen.glance.activation-method', tabsUnloaderPrefListener);
     });
   },
 
@@ -966,11 +971,6 @@ var gZenCKSSettings = {
 
 Preferences.addAll([
   {
-    id: 'zen.theme.toolbar-themed',
-    type: 'bool',
-    default: true,
-  },
-  {
     id: 'zen.sidebar.enabled',
     type: 'bool',
     default: true,
@@ -1074,5 +1074,30 @@ Preferences.addAll([
     id: 'zen.tabs.show-newtab-under',
     type: 'bool',
     default: false,
+  },
+  {
+    id: "zen.glance.activation-method",
+    type: "string",
+    default: "ctrl", 
+  },
+  {
+    id: "zen.glance.enabled",
+    type: "bool",
+    default: true,
+  },
+  {
+    id: "zen.theme.color-prefs.use-workspace-colors",
+    type: "bool",
+    default: false,
+  },
+  {
+    id: "zen.view.compact.color-toolbar",
+    type: "bool",
+    default: true,
+  },
+  {
+    id: "zen.view.compact.color-sidebar",
+    type: "bool",
+    default: true,
   }
 ]);

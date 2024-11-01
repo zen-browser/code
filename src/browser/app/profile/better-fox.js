@@ -21,7 +21,7 @@
  * SECTION: FASTFOX                                                         *
 ****************************************************************************/
 /** GENERAL ***/
-//pref("content.notify.interval", 100000); // (.10s); alt=500000 (.50s)
+pref("content.notify.interval", 100000); // (.10s); alt=500000 (.50s)
 
 /** GFX ***/
 pref("gfx.canvas.accelerated.cache-items", 32768);
@@ -49,6 +49,17 @@ pref("network.dnsCacheExpiration", 3600);
 pref("network.http.max-persistent-connections-per-proxy", 48); // default=32
 pref("network.websocket.max-connections", 400); // default=200
 pref("network.ssl_tokens_cache_capacity", 32768);
+
+/** NEW ADDITIONS TO NETWORK ***/
+pref("network.http.pipelining", true);
+pref("network.http.pipelining.maxrequests", 32);
+pref("network.http.proxy.pipelining", true);
+pref("network.dns.disableIPv6", true);
+pref("plugin.expose_full_path", true);
+pref("nglayout.initialpaint.delay", 0);
+pref("content.notify.backoffcount", 5);
+pref("ui.submenuDelay", 0);
+pref("browser.cache.memory.capacity", 32768);
 
 /** MIXED CONTENT + CROSS-SITE ***/
 pref("pdfjs.enableScripting", false);
@@ -118,6 +129,7 @@ pref("toolkit.coverage.opt-out", true, locked);
 pref("toolkit.coverage.endpoint.base", "", locked);
 pref("browser.newtabpage.activity-stream.feeds.telemetry", false, locked);
 pref("browser.newtabpage.activity-stream.telemetry", false, locked);
+pref("browser.ping-centre.telemetry", false, locked);
 
 /** EXPERIMENTS ***/
 pref("app.shield.optoutstudies.enabled", false, locked);
@@ -177,6 +189,7 @@ pref("extensions.pocket.enabled", false);
 /** DOWNLOADS ***/
 pref("browser.download.always_ask_before_handling_new_types", true);
 pref("browser.download.manager.addToRecentDocs", false);
+pref("browser.download.animateNotifications", false);
 
 /** PDF ***/
 pref("browser.download.open_pdf_attachments_inline", true);

@@ -226,3 +226,9 @@
 #zenSplitViewModifier:not([has-enabled-realloc])[toast] #zenSplitViewModifierEnabledToast {
   display: revert;
 }
+
+/* Indicator for splitted tabs */
+.tabbrowser-tab.split:not(:hover) .tab-close-button {
+  display: unset!important;
+  list-style-image: url(chrome://browser/skin/zen-icons/split.svg)!important;
+}

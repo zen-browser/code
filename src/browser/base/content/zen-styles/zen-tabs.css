@@ -11,3 +11,18 @@
     display: none !important;
   }
 }
+
+/* Improve Audio Icon */
+/*Remove the circle*/
+.tab-icon-overlay:not([crashed]):is([soundplaying]) {
+    list-style-image: url(chrome://global/skin/media/audio.svg)!important;
+    background-color: unset !important;
+    border: unset !important;
+    border-radius: unset !important;
+}
+
+/* Fill red for muted */
+.tab-icon-overlay[muted], .tab-icon-overlay[activemedia-blocked] {
+   list-style-image: url(chrome://global/skin/media/audio-muted.svg)!important;
+   fill: red!important;
+}

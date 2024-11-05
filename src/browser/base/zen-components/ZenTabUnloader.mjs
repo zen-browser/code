@@ -133,9 +133,91 @@
         return;
       }
       this.insertIntoContextMenu();
+      this.greedierDiscard();
       this.observer = new ZenTabsObserver();
       this.intervalUnloader = new ZenTabsIntervalUnloader(this);
       this.observer.addTabsListener(this.onTabEvent.bind(this));
+    }
+
+    greedierDiscard() {
+        function greedierDiscard(aTab, aForceDiscard) {
+            "use strict";
+            let browser=aTab.linkedBrowser;
+
+            //if (!this._mayDiscardBrowser(aTab, aForceDiscard)) {
+            //  return false;
+            //}
+
+            // Reset sharing state.
+            if (aTab._sharingState) {
+                this.resetBrowserSharing(browser);
+            }
+
+            webrtcUI.forgetStreamsFromBrowserContext(browser.browsingContext);
+
+            // Set browser parameters for when browser is restored.  Also remove
+            // listeners and set up lazy restore data in SessionStore. This must
+            // be done before browser is destroyed and removed from the document.
+            aTab._browserParams= {
+                uriIsAboutBlank: false,
+                remoteType: browser.remoteType,
+                usingPreloadedContent: false,
+            }
+
+            ;
+
+            SessionStore.resetBrowserToLazyState(aTab);
+
+            // Remove the tab's filter and progress listener.
+            let filter=this._tabFilters.get(aTab);
+            let listener=this._tabListeners.get(aTab);
+            browser.webProgress.removeProgressListener(filter);
+            filter.removeProgressListener(listener);
+            listener.destroy();
+
+            this._tabListeners.delete(aTab);
+            this._tabFilters.delete(aTab);
+
+            // Reset the findbar and remove it if it is attached to the tab.
+            if (aTab._findBar) {
+                aTab._findBar.close(true);
+                aTab._findBar.remove();
+                delete aTab._findBar;
+            }
+
+            // Remove potentially stale attributes.
+            let attributesToRemove=[ "activemedia-blocked",
+            "busy",
+            "pendingicon",
+            "progress",
+            "soundplaying",
+            ];
+            let removedAttributes=[];
+
+            for (let attr of attributesToRemove) {
+                if (aTab.hasAttribute(attr)) {
+                    removedAttributes.push(attr);
+                    aTab.removeAttribute(attr);
+                }
+            }
+
+            if (removedAttributes.length) {
+                this._tabAttrModified(aTab, removedAttributes);
+            }
+
+            browser.destroy();
+            this.getPanel(browser).remove();
+            aTab.removeAttribute("linkedpanel");
+
+            this._createLazyBrowser(aTab);
+
+            let evt=new CustomEvent("TabBrowserDiscarded", {
+                bubbles: true
+            });
+            aTab.dispatchEvent(evt);
+            return true;
+        }
+        gBrowser.discardBrowser = greedierDiscard;
     }
 
     onTabEvent(action, event) {

@@ -39,9 +39,26 @@
 }
 
 
-@supports (-moz-osx-font-smoothing: auto) {
-  #zen-main-app-wrapper {
+@media (-moz-platform: macos) {
+  #navigator-toolbox {
     appearance: -moz-window-titlebar !important;
+  }
+  
+  #zen-appcontent-wrapper {
+      appearance: -moz-window-titlebar !important;
+  }
+  
+  #zen-sidebar-splitter {
+      appearance: -moz-window-titlebar !important;
+      opacity: 1 !important;
+  }
+  
+  #browser {
+      background: var(--zen-main-browser-background) !important;
+  }
+
+  #zen-main-app-wrapper {
+      background: transparent !important;
   }
 }
 

@@ -1,23 +1,22 @@
 :root:not([inDOMFullscreen='true']):not([chromehidden~='location']):not([chromehidden~='toolbar']) {
-  & #tabbrowser-tabbox #tabbrowser-tabpanels .browserSidebarContainer {
-    width: -moz-available;
-    border-radius: var(--zen-webview-border-radius, var(--zen-border-radius));
-    position: relative;
+    & #tabbrowser-tabbox #tabbrowser-tabpanels .browserSidebarContainer {
+        width: -moz-available;
+        border-radius: var(--zen-webview-border-radius, var(--zen-border-radius));
+        position: relative;
 
-    box-shadow: 0 0 1px 1px light-dark(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.3));
-    border: 1px solid light-dark(transparent, rgba(255,255,255,.08));
-    
-    & .browserContainer {
-      overflow: hidden;
-      border-radius: var(--zen-webview-border-radius, var(--zen-border-radius));
-    }
-  }
+        box-shadow: 0 0 1px 1px light-dark(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.3));
+        border: 1px solid light-dark(transparent, rgba(255, 255, 255, .08));
 
-  @media (-moz-bool-pref: 'zen.view.experimental-rounded-view') {
-    #tabbrowser-tabpanels {
-      mix-blend-mode: multiply;
-      -moz-osx-font-smoothing: grayscale;
-      isolation: isolate;
+        & .browserContainer {
+            overflow: hidden;
+            border-radius: var(--zen-webview-border-radius, var(--zen-border-radius));
+        }
     }
-  }
+
+    @media (-moz-bool-pref: 'zen.view.experimental-rounded-view') {
+        #zen-glance-overlay[hidden='false'] {
+            mix-blend-mode: multiply;
+            -moz-osx-font-smoothing: grayscale;
+        }
+    }
 }

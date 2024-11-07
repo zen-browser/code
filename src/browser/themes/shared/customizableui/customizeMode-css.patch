@@ -1,0 +1,20 @@
+diff --git a/browser/themes/shared/customizableui/customizeMode.css b/browser/themes/shared/customizableui/customizeMode.css
+index 622eff11b121abd354b48359951a1f8d6612380c..6d753dea4ffb4d84a57a8ab496130faa764a63c0 100644
+--- a/browser/themes/shared/customizableui/customizeMode.css
++++ b/browser/themes/shared/customizableui/customizeMode.css
+@@ -392,6 +392,15 @@ toolbarpaletteitem {
+   transform: scaleX(-1);
+ }
+ 
++/* 
++  Added for zen browser
++  This is a hack to hide the density button in the customize mode
++  In order to not confuse the user with the density options
++*/
++#customization-uidensity-button {
++  display: none !important;
++}
++
+ #customization-panelWrapper,
+ #customization-panelWrapper > .panel-arrowcontent,
+ #customization-panelHolder {

@@ -22,6 +22,7 @@ finish-args:
   - --filesystem=xdg-download:rw
   - --device=all
   - --talk-name=org.freedesktop.FileManager1
+  - --talk-name=org.freedesktop.portal.Desktop
   - --talk-name=org.freedesktop.ScreenSaver
   - --own-name=org.mozilla.zen.*
   - --own-name=org.mpris.MediaPlayer2.firefox.*

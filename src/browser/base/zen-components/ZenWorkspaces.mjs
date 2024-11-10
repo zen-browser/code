@@ -12,6 +12,7 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     direction: null
   };
   _hoveringSidebar = false;
+  _lastScrollTime = 0;
 
   async init() {
     if (!this.shouldHaveWorkspaces) {
@@ -57,7 +58,7 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
 
   initializeWorkspaceNavigation() {
     this._setupAppCommandHandlers();
-    this._setupHoverDetection();
+    this._setupSidebarHandlers();
   }
 
   _setupAppCommandHandlers() {
@@ -90,7 +91,7 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     }
   }
 
-  _setupHoverDetection() {
+  _setupSidebarHandlers() {
     const toolbox = document.getElementById('navigator-toolbox');
 
     toolbox.addEventListener('mouseenter', () => {
@@ -100,6 +101,30 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     toolbox.addEventListener('mouseleave', () => {
       this._hoveringSidebar = false;
     });
+
+    const scrollCooldown = 500; // Milliseconds to wait before allowing another scroll
+    const scrollThreshold = 5; // Minimum scroll delta to trigger workspace change
+
+    toolbox.addEventListener('wheel', async (event) => {
+      if (!this.workspaceEnabled) return;
+      // Only process horizontal scroll (deltaX)
+      if (!event.deltaX) return;
+
+      const currentTime = Date.now();
+      if (currentTime - this._lastScrollTime < scrollCooldown) {
+        return;
+      }
+
+      // Only process if the horizontal scroll is significant enough
+      if (Math.abs(event.deltaX) < scrollThreshold) {
+        return;
+      }
+
+      // Change workspace based on scroll direction
+      const direction = event.deltaX > 0 ? -1 : 1;
+      await this.changeWorkspaceShortcut(direction);
+      this._lastScrollTime = currentTime;
+    }, { passive: true });
   }
 
   initializeGestureHandlers() {

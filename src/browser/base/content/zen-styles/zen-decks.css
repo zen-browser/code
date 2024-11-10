@@ -49,7 +49,7 @@
 }
 
 #tabbrowser-tabbox {
-  --zen-split-row-gap: calc(var(--zen-element-separation) + 2px);
+  --zen-split-row-gap: calc(var(--zen-element-separation) + 1px);
   --zen-split-column-gap: calc(var(--zen-element-separation) + 1px);
 }
 
@@ -100,21 +100,22 @@
 
 .zen-split-view-splitter {
   visibility: inherit;
-  cursor: ew-resize;
   -moz-subtree-hidden-only-visually: 0;
   position: absolute;
   pointer-events: all;
 }
 
+
 .zen-split-view-splitter[orient='vertical'] {
   width: var(--zen-split-row-gap);
   margin-left: calc(var(--zen-split-row-gap) / -2);
+  cursor: ew-resize;
 }
 
 .zen-split-view-splitter[orient='horizontal'] {
   height: var(--zen-split-column-gap);
   margin-top: calc(var(--zen-split-column-gap) / -2);
-  cursor: n-resize;
+  cursor: ns-resize;
 }
 
 #zen-split-views-box:not([hidden='true']) {

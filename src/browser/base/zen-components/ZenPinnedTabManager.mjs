@@ -39,7 +39,7 @@
   class ZenPinnedTabManager extends ZenPreloadedFeature {
 
     init() {
-      if (!this.enabled) {
+      if (!this.enabled || PrivateBrowsingUtils.isWindowPrivate(window)) {
         return;
       }
       this.observer = new ZenPinnedTabsObserver();
@@ -51,7 +51,7 @@
     }
 
     async initTabs() {
-      if (!this.enabled) {
+      if (!this.enabled || PrivateBrowsingUtils.isWindowPrivate(window)) {
         return;
       }
       await ZenPinnedTabsStorage.init();
@@ -81,10 +81,10 @@
         // Enhance pins with favicons
         const enhancedPins = await Promise.all(pins.map(async pin => {
           try {
-            const faviconData = await PlacesUtils.promiseFaviconData(pin.url);
+            const image = await this.getFaviconAsBase64(pin.url);
             return {
               ...pin,
-              iconUrl: faviconData?.uri?.spec || null
+              iconUrl: image || null
             };
           } catch(ex) {
             // If favicon fetch fails, continue without icon
@@ -142,23 +142,30 @@
           continue; // Skip pins that already have tabs
         }
 
-        let newTab = gBrowser.addTrustedTab(pin.url, {
+        let params = {
           skipAnimation: true,
-          userContextId: pin.containerTabId || 0,
           allowInheritPrincipal: false,
+          skipBackgroundNotify: true,
+          userContextId: pin.containerTabId || 0,
           createLazyBrowser: true,
           skipLoad: true,
-        });
+          noInitialLabel: false
+        };
 
-        // Set the favicon from cache
-        if (!!pin.iconUrl) {
-          // TODO: Figure out if there is a better way -
-          //  calling gBrowser.setIcon messes shit up and should be avoided. I think this works for now.
-          newTab.setAttribute("image", pin.iconUrl);
+        // Create and initialize the tab
+        let newTab = gBrowser.addTrustedTab(pin.url, params);
+
+        // Set initial label/title
+        if (pin.title) {
+          gBrowser.setInitialTabTitle(newTab, pin.title);
+        }
+
+        // Set the icon if we have it cached
+        if (pin.iconUrl) {
+          gBrowser.setIcon(newTab, pin.iconUrl);
         }
 
         newTab.setAttribute("zen-pin-id", pin.uuid);
-        gBrowser.setInitialTabTitle(newTab, pin.title);
 
         if (pin.workspaceUuid) {
           newTab.setAttribute("zen-workspace-id", pin.workspaceUuid);
@@ -168,13 +175,32 @@
           newTab.setAttribute("zen-essential", "true");
         }
 
+        // Initialize browser state if needed
+        if (!newTab.linkedBrowser._remoteAutoRemoved) {
+          let state = {
+            entries: [{
+              url: pin.url,
+              title: pin.title,
+              triggeringPrincipal_base64: E10SUtils.SERIALIZED_SYSTEMPRINCIPAL
+            }],
+            userContextId: pin.containerTabId || 0,
+            image: pin.iconUrl
+          };
+
+          SessionStore.setTabState(newTab, state);
+        }
+
         gBrowser.pinTab(newTab);
+
+        newTab.initialize();
       }
 
       // Restore active tab
       if (!activeTab.closing) {
         gBrowser.selectedTab = activeTab;
       }
+
+      gBrowser._updateTabBarForPinnedTabs();
     }
 
     _onPinnedTabEvent(action, event) {
@@ -370,36 +396,51 @@
 
     async _resetTabToStoredState(tab) {
       const id = tab.getAttribute("zen-pin-id");
-
       if (!id) {
         return;
       }
 
       const pin = this._pinsCache.find(pin => pin.uuid === id);
+      if (!pin) {
+        return;
+      }
 
-      if (pin) {
-        const tabState = SessionStore.getTabState(tab);
-        const state = JSON.parse(tabState);
-        let icon = undefined;
-        try {
-          icon = await PlacesUtils.promiseFaviconData(pin.url);
-        } catch (e) {
-          console.warn("Error trying to get favicon for pinned tab", e);
-        }
+      const tabState = SessionStore.getTabState(tab);
+      const state = JSON.parse(tabState);
 
-        state.entries = [{
-          url: pin.url,
-          title: pin.title,
-          triggeringPrincipal_base64: lazy.E10SUtils.SERIALIZED_SYSTEMPRINCIPAL
-        }];
-        if (icon instanceof Ci.nsIURI || typeof icon === "string") {
-          state.image = icon;
-        } else {
-          state.image = null;
-        }
-        state.index = 0;
+      state.entries = [{
+        url: pin.url,
+        title: pin.title,
+        triggeringPrincipal_base64: lazy.E10SUtils.SERIALIZED_SYSTEMPRINCIPAL
+      }];
 
-        SessionStore.setTabState(tab, state);
+      state.image = pin.iconUrl || null;
+      state.index = 0;
+
+      SessionStore.setTabState(tab, state);
+    }
+
+    async getFaviconAsBase64(pageUrl) {
+      try {
+        // Get the favicon data
+        const faviconData = await PlacesUtils.promiseFaviconData(pageUrl);
+
+        // The data comes as an array buffer, we need to convert it to base64
+        // First create a byte array from the data
+        const array = new Uint8Array(faviconData.data);
+
+        // Convert to base64
+        const base64String = btoa(
+            Array.from(array)
+                .map(b => String.fromCharCode(b))
+                .join('')
+        );
+
+        // Return as a proper data URL
+        return `data:${faviconData.mimeType};base64,${base64String}`;
+      } catch (ex) {
+        console.error("Failed to get favicon:", ex);
+        return null;
       }
     }
 

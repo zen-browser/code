@@ -102,7 +102,7 @@ class ZenBrowserManagerSidebar extends ZenDOMOperatedFeature {
     this._isDragging = true;
 
     const isHorizontal = mouseDownEvent.target.getAttribute('orient') === 'horizontal';
-    setCursor(isHorizontal ? 'n-resize' : 'ew-resize');
+    setCursor(isHorizontal ? 'ns-resize' : 'ew-resize');
     const reverse = ['left', 'top'].includes(mouseDownEvent.target.getAttribute('side'));
     const direction = isHorizontal ? 'height' : 'width';
     const axis = isHorizontal ? 'Y' : 'X';

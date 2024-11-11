@@ -181,6 +181,9 @@ pref('zen.essentials.enabled', true);
 // Zen Watermark
 pref('zen.watermark.enabled', true, sticky);
 
+// Zen Urlbar
+pref('zen.urlbar.disable-initial-focus', false);
+
 // Smooth scrolling
 pref('apz.overscroll.enabled', true); // not DEFAULT on Linux
 pref('general.smoothScroll', true); // DEFAULT

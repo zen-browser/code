@@ -1,5 +1,5 @@
 diff --git a/browser/components/tabbrowser/content/tabbrowser.js b/browser/components/tabbrowser/content/tabbrowser.js
-index 14de79b543cf07b04d06ef5a3f94d9aa988ea39a..d2cd8709007b6d36b055ffff45b103a55f8656ee 100644
+index 14de79b543cf07b04d06ef5a3f94d9aa988ea39a..439879a6b9c8cc69c569edb6318fe338e14216df 100644
 --- a/browser/components/tabbrowser/content/tabbrowser.js
 +++ b/browser/components/tabbrowser/content/tabbrowser.js
 @@ -462,11 +462,26 @@
@@ -170,7 +170,18 @@ index 14de79b543cf07b04d06ef5a3f94d9aa988ea39a..d2cd8709007b6d36b055ffff45b103a5
          tab.initialize();
        }
  
-@@ -4148,6 +4210,13 @@
+@@ -3831,6 +3893,10 @@
+         return;
+       }
+ 
++      for (tab of selectedTabs) {
++        gZenPinnedTabManager._removePinnedAttributes(tab, true);
++      }
++
+       this.removeTabs(selectedTabs);
+     },
+ 
+@@ -4148,6 +4214,13 @@
          TelemetryStopwatch.start("FX_TAB_CLOSE_TIME_NO_ANIM_MS", aTab);
        }
  
@@ -184,7 +195,7 @@ index 14de79b543cf07b04d06ef5a3f94d9aa988ea39a..d2cd8709007b6d36b055ffff45b103a5
        // Handle requests for synchronously removing an already
        // asynchronously closing tab.
        if (!animate && aTab.closing) {
-@@ -4163,6 +4232,10 @@
+@@ -4163,6 +4236,10 @@
        // state).
        let tabWidth = window.windowUtils.getBoundsWithoutFlushing(aTab).width;
  
@@ -195,7 +206,7 @@ index 14de79b543cf07b04d06ef5a3f94d9aa988ea39a..d2cd8709007b6d36b055ffff45b103a5
        if (
          !this._beginRemoveTab(aTab, {
            closeWindowFastpath: true,
-@@ -4311,7 +4384,7 @@
+@@ -4311,7 +4388,7 @@
  
        var closeWindow = false;
        var newTab = false;
@@ -204,7 +215,7 @@ index 14de79b543cf07b04d06ef5a3f94d9aa988ea39a..d2cd8709007b6d36b055ffff45b103a5
          closeWindow =
            closeWindowWithLastTab != null
              ? closeWindowWithLastTab
-@@ -5123,10 +5196,10 @@
+@@ -5123,10 +5200,10 @@
        SessionStore.deleteCustomTabValue(aTab, "hiddenBy");
      },
  
@@ -217,7 +228,7 @@ index 14de79b543cf07b04d06ef5a3f94d9aa988ea39a..d2cd8709007b6d36b055ffff45b103a5
          aTab.selected ||
          aTab.closing ||
          // Tabs that are sharing the screen, microphone or camera cannot be hidden.
-@@ -7042,6 +7115,7 @@
+@@ -7042,6 +7119,7 @@
              aWebProgress.isTopLevel
            ) {
              this.mTab.setAttribute("busy", "true");
@@ -225,7 +236,7 @@ index 14de79b543cf07b04d06ef5a3f94d9aa988ea39a..d2cd8709007b6d36b055ffff45b103a5
              gBrowser._tabAttrModified(this.mTab, ["busy"]);
              this.mTab._notselectedsinceload = !this.mTab.selected;
              gBrowser.syncThrobberAnimations(this.mTab);
-@@ -7874,7 +7948,7 @@ var TabContextMenu = {
+@@ -7874,7 +7952,7 @@ var TabContextMenu = {
      );
      contextUnpinSelectedTabs.hidden =
        !this.contextTab.pinned || !multiselectionContext;
@@ -234,3 +245,11 @@ index 14de79b543cf07b04d06ef5a3f94d9aa988ea39a..d2cd8709007b6d36b055ffff45b103a5
      // Move Tab items
      let contextMoveTabOptions = document.getElementById(
        "context_moveTabOptions"
+@@ -8136,6 +8214,7 @@ var TabContextMenu = {
+     if (this.contextTab.multiselected) {
+       gBrowser.removeMultiSelectedTabs();
+     } else {
++      gZenPinnedTabManager._removePinnedAttributes(this.contextTab, true);
+       gBrowser.removeTab(this.contextTab, { animate: true });
+     }
+   },

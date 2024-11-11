@@ -953,7 +953,7 @@ class ZenViewSplitter extends ZenDOMOperatedFeature {
       });
     }
 
-    setCursor(isVertical ? 'ew-resize' : 'n-resize');
+    setCursor(isVertical ? 'ew-resize' : 'ns-resize');
     document.addEventListener('mousemove', dragFunc);
     document.addEventListener('mouseup', () => {
       document.removeEventListener('mousemove', dragFunc);

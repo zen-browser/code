@@ -212,6 +212,9 @@
             <menuitem id="context_zenIgnoreUnloadTab"
                       data-lazy-l10n-id="tab-zen-ignore-unload"
                       oncommand="gZenTabUnloader.ignoreUnloadTab();"/>
+             <menuitem id="context_zenUnloadAllTabs"
+                      data-lazy-l10n-id="tab-zen-unloadalltabs"
+                      oncommand="gZenTabUnloader.unloadAllTabs();"/>
           </menupopup>
         </menu>
       `);
@@ -227,6 +230,15 @@
       const tabs = TabContextMenu.contextTab.multiselected ? gBrowser.selectedTabs : [TabContextMenu.contextTab];
       for (let i = 0; i < tabs.length; i++) {
         if (this.canUnloadTab(tabs[i], Date.now(), [], true)) {
+          this.unload(tabs[i]);
+        }
+      }
+    }
+    
+    unloadAllTabs() {
+      const tabs = gBrowser.tabs;
+      for (let i = 0; i < tabs.length; i++) {
+        if (this.canUnloadTab(tabs[i], Date.now(), [], true) && tabs[i] != gBrowser.selectedTab) {
           this.unload(tabs[i]);
         }
       }

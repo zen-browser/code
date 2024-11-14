@@ -20,12 +20,12 @@ on:
 
 jobs:
   windows-build:
-    name: Build Windows - ${{ matrix.generic == true && 'Generic' || 'Specific' }}
+    name: Build Windows - ${{ matrix.arch == 'x86_64' && 'Generic' || matrix.arch == 'x86_64-v3' && 'Specific' || matrix.arch == 'aarch64' && 'ARM64' }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        generic: [true, false]
+        arch: [x86_64, x86_64-v3, aarch64]
     
     steps:
       - name: Free Disk Space (Ubuntu)
@@ -125,7 +125,11 @@ jobs:
           curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain 1.79
           source $HOME/.cargo/env
 
-          rustup target add x86_64-pc-windows-msvc
+          if test "${{ matrix.arch }}" = "aarch64"; then
+            rustup target add aarch64-pc-windows-msvc
+          else
+            rustup target add x86_64-pc-windows-msvc
+          fi
           cargo install cargo-download
           cargo download -x windows=0.58.0
           #? https://github.com/mozilla/sccache#known-caveats
@@ -136,7 +140,8 @@ jobs:
 
       - name: Import
         env:
-          SURFER_COMPAT: ${{ matrix.generic == true }}
+          SURFER_COMPAT: ${{ matrix.arch == 'x86_64' }}
+          ARM64_BUILD: ${{ matrix.arch == 'aarch64' }}
         run: pnpm surfer import --verbose
 
       - name: Build language packs
@@ -147,7 +152,7 @@ jobs:
         if: ${{ !inputs.generate-gpo }}
         with:
           path: ~/artifact
-          name: windows-profdata-${{ matrix.generic == true && 'generic' || 'specific' }}
+          name: windows-profdata-${{ matrix.arch == 'x86_64' && 'generic' || matrix.arch == 'x86_64-v3' && 'specific' || matrix.arch == 'aarch64' && 'arm64' }}
 
       - name: Show artifact info
         if: ${{ !inputs.generate-gpo }}
@@ -161,7 +166,8 @@ jobs:
 
       - name: Build
         env:
-          SURFER_COMPAT: ${{ matrix.generic == true }}
+          SURFER_COMPAT: ${{ matrix.arch == 'x86_64' }}
+          ARM64_BUILD: ${{ matrix.arch == 'aarch64' }}
         run: |
           set -x
           dos2unix configs/windows/mozconfig
@@ -174,12 +180,14 @@ jobs:
 
       - name: Package
         env:
-          SURFER_COMPAT: ${{ matrix.generic == true }}
+          SURFER_COMPAT: ${{ matrix.arch == 'x86_64' }}
+          ARM64_BUILD: ${{ matrix.arch == 'aarch64' }}
         run: |
           set -x
           export SURFER_PLATFORM="win32"
           pnpm package
-          mv ./dist/zen-$(pnpm surfer get version | xargs).en-US.win64.zip zen.win64.zip
+          ls ./dist
+          mv ./dist/zen-$(pnpm surfer get version | xargs).en-US.win64${{ matrix.arch == 'aarch64' && '-aarch64' || '' }}.zip zen.win64.zip
           ls ./dist
           ls .
 
@@ -197,55 +205,60 @@ jobs:
       - name: Rename artifacts
         if: ${{ !inputs.generate-gpo }}
         run: |
-          mv ./zen.win64.zip zen.win-${{ matrix.generic == true && 'generic' || 'specific' }}.zip
-          mv ./dist/output.mar windows${{ matrix.generic == true && '-generic' || '' }}.mar
-          mv ./dist/zen.installer.exe ./zen.installer${{ matrix.generic == true && '-generic' || '' }}.exe
+          mv ./zen.win64.zip zen.win-${{ matrix.arch == 'x86_64' && 'generic' || matrix.arch == 'x86_64-v3' && 'specific' || matrix.arch == 'aarch64' && 'arm64' }}.zip
+          mv ./dist/output.mar windows${{ matrix.arch == 'x86_64' && '-generic' || matrix.arch == 'x86_64-v3' && '' || matrix.arch == 'aarch64' && '-arm64' }}.mar
+          mv ./dist/zen.installer.exe ./zen.installer${{ matrix.arch == 'x86_64' && '-generic' || matrix.arch == 'x86_64-v3' && '' || matrix.arch == 'aarch64' && '-arm64' }}.exe
 
       - name: Upload PGO build
         uses: actions/upload-artifact@v4
         if: ${{ inputs.generate-gpo }}
         with:
-          name: ${{ matrix.generic == true && 'generic' || 'specific' }}-${{ inputs.profile-data-path-archive }}
+          name: ${{ matrix.arch == 'x86_64' && 'generic' || matrix.arch == 'x86_64-v3' && 'specific' || matrix.arch == 'aarch64' && 'arm64' }}-${{ inputs.profile-data-path-archive }}
           path: ./zen.win64-pgo-stage-1.zip
 
       - name: Remove unnecessary files from obj
         if: ${{ !inputs.generate-gpo }}
         run: |
           set -x
-          find engine/obj-x86_64-pc-windows-msvc/ -mindepth 1 -maxdepth 1 -type d -not -name 'dist' -exec rm -rf {} \;
-          find engine/obj-x86_64-pc-windows-msvc/ -mindepth 1 -maxdepth 1 -type f -not -name 'dist' -exec rm -f {} \;
+          if test "${{ matrix.arch }}" = "aarch64"; then
+            find engine/obj-aarch64-pc-windows-msvc/ -mindepth 1 -maxdepth 1 -type d -not -name 'dist' -exec rm -rf {} \;
+            find engine/obj-aarch64-pc-windows-msvc/ -mindepth 1 -maxdepth 1 -type f -not -name 'dist' -exec rm -f {} \;
+          else
+            find engine/obj-x86_64-pc-windows-msvc/ -mindepth 1 -maxdepth 1 -type d -not -name 'dist' -exec rm -rf {} \;
+            find engine/obj-x86_64-pc-windows-msvc/ -mindepth 1 -maxdepth 1 -type f -not -name 'dist' -exec rm -f {} \;
+          fi
           
       - name: Upload dist object
         if: ${{ !inputs.generate-gpo }}
         uses: actions/upload-artifact@v4
         with:
-          name: windows-x64-obj-${{ matrix.generic == true && 'generic' || 'specific' }}
-          path: engine/obj-x86_64-pc-windows-msvc/
+          name: windows-x64-obj-${{ matrix.arch == 'x86_64' && 'generic' || matrix.arch == 'x86_64-v3' && 'specific' || matrix.arch == 'aarch64' && 'arm64' }}
+          path: engine/obj-${{ matrix.arch == 'aarch64' && 'aarch64' || 'x86_64' }}-pc-windows-msvc/
 
       - name: Upload zip file if twilight branch
         if: ${{ inputs.release-branch == 'twilight' && !inputs.generate-gpo }}
         uses: actions/upload-artifact@v4
         with:
-          name: zen.win-${{ matrix.generic == true && 'generic' || 'specific' }}.zip
-          path: ./zen.win-${{ matrix.generic == true && 'generic' || 'specific' }}.zip
+          name: zen.win-${{ matrix.arch == 'x86_64' && 'generic' || matrix.arch == 'x86_64-v3' && 'specific' || matrix.arch == 'aarch64' && 'arm64' }}.zip
+          path: ./zen.win-${{ matrix.arch == 'x86_64' && 'generic' || matrix.arch == 'x86_64-v3' && 'specific' || matrix.arch == 'aarch64' && 'arm64' }}.zip
 
       - name: Upload installer if twilight branch
         if: ${{ inputs.release-branch == 'twilight' && !inputs.generate-gpo }}
         uses: actions/upload-artifact@v4
         with:
-          name: zen.installer${{ matrix.generic == true && '-generic' || '' }}.exe
-          path: ./zen.installer${{ matrix.generic == true && '-generic' || '' }}.exe
+          name: zen.installer${{ matrix.arch == 'x86_64' && '-generic' || matrix.arch == 'x86_64-v3' && '' || matrix.arch == 'aarch64' && '-arm64' }}.exe
+          path: ./zen.installer${{ matrix.arch == 'x86_64' && '-generic' || matrix.arch == 'x86_64-v3' && '' || matrix.arch == 'aarch64' && '-arm64' }}.exe
 
       - name: Upload mar if twilight branch
         if: ${{ inputs.release-branch == 'twilight' && !inputs.generate-gpo }}
         uses: actions/upload-artifact@v4
         with:
-          name: windows${{ matrix.generic == true && '-generic' || '' }}.mar
-          path: ./windows${{ matrix.generic == true && '-generic' || '' }}.mar
+          name: windows${{ matrix.arch == 'x86_64' && '-generic' || matrix.arch == 'x86_64-v3' && '' || matrix.arch == 'aarch64' && '-arm64' }}.mar
+          path: ./windows${{ matrix.arch == 'x86_64' && '-generic' || matrix.arch == 'x86_64-v3' && '' || matrix.arch == 'aarch64' && '-arm64' }}.mar
 
       - name: Upload update manifests if twilight branch
         if: ${{ inputs.release-branch == 'twilight' && !inputs.generate-gpo }}
         uses: actions/upload-artifact@v4
         with:
-          name: windows_update_manifest_${{ matrix.generic == true && 'generic' || 'specific' }}
+          name: windows_update_manifest_${{ matrix.arch == 'x86_64' && 'generic' || matrix.arch == 'x86_64-v3' && 'specific' || matrix.arch == 'aarch64' && 'arm64' }}
           path: ./dist/update

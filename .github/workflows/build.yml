@@ -62,7 +62,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           submodules: recursive
-          token: ${{ secrets.DEPLOY_KEY }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
 
       - name: Check if correct branch
@@ -103,7 +103,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           submodules: recursive
-          token: ${{ secrets.DEPLOY_KEY }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install pnpm
         run: npm install -g pnpm
@@ -164,7 +164,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           submodules: recursive
-          token: ${{ secrets.DEPLOY_KEY }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install pnpm
         run: npm install -g pnpm
@@ -214,7 +214,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           submodules: recursive
-          token: ${{ secrets.DEPLOY_KEY }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup git
         run: |
@@ -332,7 +332,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           submodules: recursive
-          token: ${{ secrets.DEPLOY_KEY }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install dependencies
         run: |
@@ -398,7 +398,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           submodules: recursive
-          token: ${{ secrets.DEPLOY_KEY }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Git Pull
         run: |
@@ -414,7 +414,7 @@ jobs:
         with:
           repository: zen-browser/updates-server
           path: updates-server
-          token: ${{ secrets.DEPLOY_KEY }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Download object files
         run: |
@@ -484,7 +484,7 @@ jobs:
         uses: 'marvinpinto/action-automatic-releases@latest'
         if: ${{ inputs.update_branch == 'alpha' }}
         with:
-          repo_token: '${{ secrets.DEPLOY_KEY }}'
+          repo_token: '${{ secrets.GITHUB_TOKEN }}'
           automatic_release_tag: ${{ needs.build-data.outputs.version }}
           prerelease: false
           title: 'Alpha build - ${{ needs.build-data.outputs.version }} (${{ needs.build-data.outputs.build_date }})'
@@ -521,7 +521,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: zen-browser/release-utils
-          token: ${{ secrets.DEPLOY_KEY }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install dependencies
         run: |
@@ -544,7 +544,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: zen-browser/flatpak
-          token: ${{ secrets.DEPLOY_KEY }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           path: flatpak
 
       - name: Move releases.xml
@@ -578,7 +578,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: flathub/io.github.zen_browser.zen
-          token: ${{ secrets.DEPLOY_KEY }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Download linux generic build
         uses: actions/download-artifact@v4
@@ -589,7 +589,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           path: zen-browser
-          token: ${{ secrets.DEPLOY_KEY }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Download flatpak archive
         run: |
@@ -632,7 +632,7 @@ jobs:
           GIT_TRACE: 1
           GIT_CURL_VERBOSE: 1
         with:
-          token: ${{ secrets.DEPLOY_KEY }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: 🚀 Update to version ${{ needs.build-data.outputs.version }}
           title: 🚀 Update to version ${{ needs.build-data.outputs.version }}
           body: |
@@ -641,7 +641,7 @@ jobs:
             @${{ github.actor }} please review and merge this PR.
           branch: update-to-${{ needs.build-data.outputs.version }}
           base: master
-          git-token: ${{ secrets.DEPLOY_KEY }}
+          git-token: ${{ secrets.GITHUB_TOKEN }}
           delete-branch: true
 
   release-homebrew:
@@ -666,5 +666,5 @@ jobs:
       - name: Bump zen-browser
         uses: Homebrew/actions/bump-packages@master
         with:
-          token: ${{ secrets.DEPLOY_KEY }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           casks: zen-browser

@@ -17,11 +17,11 @@ on:
 
 jobs:
   windows-profile-build:
-    name: Windows Profile Build - ${{ matrix.generic == true && 'generic' || 'specific' }}
+    name: Windows Profile Build - ${{ matrix.arch == 'x86_64' && 'generic' || matrix.arch == 'x86_64-v3' && 'specific' || matrix.arch == 'aarch64' && 'arm64' }}
     strategy:
       fail-fast: false
       matrix:
-        generic: [true, false]
+        arch: [x86_64, x86_64-v3, aarch64]
     runs-on: windows-latest
     # Script edited from https://github.com/Floorp-Projects/Floorp/blob/ESR115/.github/workflows/window-generate-profile-data-and-jarlog.yml
     steps:
@@ -47,7 +47,7 @@ jobs:
         name: Download artifact
         with:
           path: C:\artifact
-          name: ${{ matrix.generic == true && 'generic' || 'specific' }}-zen-windows-x86_64-profile-data-and-jarlog.zip
+          name: ${{ matrix.arch == 'x86_64' && 'generic' || matrix.arch == 'x86_64-v3' && 'specific' || matrix.arch == 'aarch64' && 'arm64' }}-zen-windows-x86_64-profile-data-and-jarlog.zip
 
       - name: Unpack artifact
         run: |
@@ -101,4 +101,4 @@ jobs:
           path: |
             merged.profdata
             en-US.log
-          name: windows-profdata-${{ matrix.generic == true && 'generic' || 'specific' }}
+          name: windows-profdata-${{ matrix.arch == 'x86_64' && 'generic' || matrix.arch == 'x86_64-v3' && 'specific' || matrix.arch == 'aarch64' && 'arm64' }}

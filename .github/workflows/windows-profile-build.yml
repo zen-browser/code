@@ -47,7 +47,7 @@ jobs:
         name: Download artifact
         with:
           path: C:\artifact
-          name: ${{ matrix.arch == 'x86_64' && 'generic' || matrix.arch == 'x86_64-v3' && 'specific' || matrix.arch == 'aarch64' && 'arm64' }}-zen-windows-profile-data-and-jarlog.zip
+          name: ${{ matrix.arch == 'x86_64' && 'generic' || matrix.arch == 'x86_64-v3' && 'specific' || matrix.arch == 'aarch64' && 'generic' }}-zen-windows-profile-data-and-jarlog.zip
 
       - name: Unpack artifact
         run: |

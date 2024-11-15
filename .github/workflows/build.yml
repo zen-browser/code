@@ -265,7 +265,7 @@ jobs:
     with:
       build-version: ${{ needs.build-data.outputs.version }}
       generate-gpo: true
-      profile-data-path-archive: zen-windows-x86_64-profile-data-and-jarlog.zip
+      profile-data-path-archive: zen-windows-profile-data-and-jarlog
       release-branch: ${{ inputs.update_branch }}
 
   windows-step-2:

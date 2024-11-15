@@ -3,7 +3,7 @@ if test "$ZEN_CROSS_COMPILING"; then
 
   export WINSYSROOT="$(echo ~)/win-cross/vs2022"
 
-  export MIDL="$(echo ~)/win-cross/wine/bin/widl"
+  # export MIDL="$(echo ~)/win-cross/wine/bin/widl"
   export WINE="$(echo ~)/win-cross/wine/bin/wine64"
   export WINEDEBUG=-all
 
@@ -23,7 +23,7 @@ if test "$ZEN_CROSS_COMPILING"; then
     export WIN32_REDIST_DIR="$(echo ~)/win-cross/vs2022/VC/Redist/MSVC/14.38.33135/x64/Microsoft.VC143.CRT"
   fi
 
-  export MIDL="$TOOLS/wine/bin/widl"
+  # export MIDL="$TOOLS/wine/bin/widl"
   export MOZ_STUB_INSTALLER=1
   export WINEDEBUG=-all
   export WINE="$TOOLS/wine/bin/wine64"

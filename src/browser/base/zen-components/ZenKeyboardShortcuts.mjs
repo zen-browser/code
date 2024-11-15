@@ -812,6 +812,20 @@ class ZenKeyboardShortcutsVersioner {
         }
       }
     }
+    if (version < 4) {
+      data.push(
+        new KeyShortcut(
+          'zen-split-view-rearrange',
+          'Z',
+          '',
+          ZEN_SPLIT_VIEW_SHORTCUTS_GROUP,
+          KeyShortcutModifiers.fromObject({ accel: true, alt: true }),
+          'code:gZenViewSplitter.enableTabRearrangeView()',
+          'zen-split-view-shortcut-rearrange'
+        )
+      );
+    }
+
     return data;
   }
 }

@@ -218,6 +218,7 @@ class ZenViewSplitter extends ZenDOMOperatedFeature {
   }
 
   enableTabRearrangeView() {
+    if (this.currentView < 0) return;
     if (this.rearrangeViewEnabled) return;
     this.rearrangeViewEnabled = true;
     this.rearrangeViewView = this.currentView;

@@ -48,12 +48,12 @@ if test "$SURFER_COMPAT" = "true"; then
 elif test "$ARM64_BUILD" = "true"; then
   ac_add_options --target=aarch64-pc-windows-msvc
 
-  ac_add_options --enable-optimize="-O3 -mtune=cortex-a55 -march=armv8.2-a+simd"
+  ac_add_options --enable-optimize="-O2 -mtune=cortex-a55 -march=armv8.2-a+simd"
 
-  export CFLAGS="-O3 -march=armv8.2-a+simd -mtune=cortex-a55"
-  export CPPFLAGS="-O3 -march=armv8.2-a+simd -mtune=cortex-a55"
-  export CXXFLAGS="-O3 -march=armv8.2-a+simd -mtune=cortex-a55"
-  export LDFLAGS="-Wl,-O3 -march=armv8.2-a+simd -mtune=cortex-a55"
+  export CFLAGS="-O2 -march=armv8.2-a+simd -mtune=cortex-a55"
+  export CPPFLAGS="-O2 -march=armv8.2-a+simd -mtune=cortex-a55"
+  export CXXFLAGS="-O2 -march=armv8.2-a+simd -mtune=cortex-a55"
+  export LDFLAGS="-Wl,-O2 -march=armv8.2-a+simd -mtune=cortex-a55"
   export RUSTFLAGS="-C target-feature=+v8.2a -C codegen-units=1 -Ctarget-cpu=cortex-a55"
 else
   ac_add_options --target=x86_64-pc-windows-msvc

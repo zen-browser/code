@@ -199,7 +199,10 @@ class ZenViewSplitter extends ZenDOMOperatedFeature {
   }
 
   afterRearangeAction() {
-    document.getElementById("zenSplitViewModifier").hidePopup();
+    let splitViewMenu = document.getElementById("zenSplitViewModifier");
+    if (splitViewMenu) {
+      splitViewMenu.hidePopup();
+    }
     ConfirmationHint.show(document.getElementById("zen-split-views-box"), "zen-split-view-modifier-enabled-toast", {
       descriptionId: "zen-split-view-modifier-enabled-toast-description",
       showDescription: true,

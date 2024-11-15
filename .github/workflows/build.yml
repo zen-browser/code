@@ -432,9 +432,11 @@ jobs:
           if [[ $RELEASE_BRANCH == 'alpha' ]]; then
             cp -a ../.github/workflows/object/windows-x64-signed-generic/update_manifest/.  updates/
             cp -a ../.github/workflows/object/windows-x64-signed-specific/update_manifest/.  updates/
+            cp -a ../.github/workflows/object/windows-x64-signed-arm64/update_manifest/.  updates/
           else
             cp -a ../windows_update_manifest_generic/.  updates/
             cp -a ../windows_update_manifest_specific/.  updates/
+            cp -a ../windows_update_manifest_arm64/.  updates/
           fi
 
           cp -a ../macos_update_manifest_aarch64/.  updates/
@@ -466,10 +468,12 @@ jobs:
             linux-generic.mar
             windows-generic.mar
             windows.mar
+            windows-arm64.mar
             macos-x64.mar
             macos-aarch64.mar
             zen.installer.exe
             zen.installer-generic.exe
+            zen.installer-arm64.exe
             zen.macos-x64.dmg
             zen.macos-aarch64.dmg
           automatic_release_tag: 'twilight'
@@ -498,14 +502,17 @@ jobs:
             zen-specific.AppImage.zsync
             .github/workflows/object/windows-x64-signed-generic/zen.win-generic.zip
             .github/workflows/object/windows-x64-signed-specific/zen.win-specific.zip
+            .github/workflows/object/windows-x64-signed-arm64/zen.win-arm64.zip
             linux.mar
             linux-generic.mar
             .github/workflows/object/windows-x64-signed-generic/windows-generic.mar
             .github/workflows/object/windows-x64-signed-specific/windows.mar
+            .github/workflows/object/windows-x64-signed-arm64/windows-arm64.mar
             macos-x64.mar
             macos-aarch64.mar
             .github/workflows/object/windows-x64-signed-specific/zen.installer.exe
             .github/workflows/object/windows-x64-signed-generic/zen.installer-generic.exe
+            .github/workflows/object/windows-x64-signed-arm64/zen.installer-arm64.exe
             zen.macos-x64.dmg
             zen.macos-aarch64.dmg
 

@@ -142,8 +142,7 @@ jobs:
 
       - name: Import
         env:
-          SURFER_COMPAT: ${{ matrix.arch == 'x86_64' }}
-          ARM64_BUILD: ${{ matrix.arch == 'aarch64' }}
+          SURFER_COMPAT: ${{ matrix.arch }}
         run: pnpm surfer import --verbose
 
       - name: Build language packs
@@ -168,8 +167,7 @@ jobs:
 
       - name: Build
         env:
-          SURFER_COMPAT: ${{ matrix.arch == 'x86_64' }}
-          ARM64_BUILD: ${{ matrix.arch == 'aarch64' }}
+          SURFER_COMPAT: ${{ matrix.arch }}
         run: |
           set -x
           dos2unix configs/windows/mozconfig
@@ -182,8 +180,7 @@ jobs:
 
       - name: Package
         env:
-          SURFER_COMPAT: ${{ matrix.arch == 'x86_64' }}
-          ARM64_BUILD: ${{ matrix.arch == 'aarch64' }}
+          SURFER_COMPAT: ${{ matrix.arch }}
         run: |
           set -x
           export SURFER_PLATFORM="win32"

@@ -28,7 +28,8 @@
           "linux": "linux.mar",
           "macos-x64": "macos-x64.mar",
           "windows-compat": "windows-generic.mar",
-          "linux-compat": "linux-generic.mar"
+          "linux-compat": "linux-generic.mar",
+          "windows-arm64": "windows-arm64.mar"
         }
       }
     },
@@ -48,7 +49,8 @@
           "linux": "linux.mar",
           "macos-x64": "macos-x64.mar",
           "windows-compat": "windows-generic.mar",
-          "linux-compat": "linux-generic.mar"
+          "linux-compat": "linux-generic.mar",
+          "windows-arm64": "windows-arm64.mar"
         }
       }
     }

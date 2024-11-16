@@ -205,8 +205,8 @@ jobs:
         if: ${{ !inputs.generate-gpo }}
         run: |
           mv ./zen.win64.zip zen.win-${{ matrix.arch == 'x86_64' && 'generic' || matrix.arch == 'x86_64-v3' && 'specific' || matrix.arch == 'aarch64' && 'arm64' }}.zip
-          mv ./dist/output.mar windows${{ matrix.arch == 'x86_64' && '-generic' || matrix.arch == 'x86_64-v3' && '' || matrix.arch == 'aarch64' && '-arm64' }}.mar
-          mv ./dist/zen.installer.exe ./zen.installer${{ matrix.arch == 'x86_64' && '-generic' || matrix.arch == 'x86_64-v3' && '' || matrix.arch == 'aarch64' && '-arm64' }}.exe
+          mv ./dist/output.mar windows${{ matrix.arch == 'x86_64' && '-generic' || matrix.arch == 'aarch64' && '-arm64' || '' }}.mar
+          mv ./dist/zen.installer.exe ./zen.installer${{ matrix.arch == 'x86_64' && '-generic' || matrix.arch == 'aarch64' && '-arm64' || '' }}.exe
 
       - name: Upload PGO build
         uses: actions/upload-artifact@v4
@@ -245,15 +245,15 @@ jobs:
         if: ${{ inputs.release-branch == 'twilight' && !inputs.generate-gpo }}
         uses: actions/upload-artifact@v4
         with:
-          name: zen.installer${{ matrix.arch == 'x86_64' && '-generic' || matrix.arch == 'x86_64-v3' && '' || matrix.arch == 'aarch64' && '-arm64' }}.exe
-          path: ./zen.installer${{ matrix.arch == 'x86_64' && '-generic' || matrix.arch == 'x86_64-v3' && '' || matrix.arch == 'aarch64' && '-arm64' }}.exe
+          name: zen.installer${{ matrix.arch == 'x86_64' && '-generic' || matrix.arch == 'aarch64' && '-arm64' ||  '' }}.exe
+          path: ./zen.installer${{ matrix.arch == 'x86_64' && '-generic' || matrix.arch == 'aarch64' && '-arm64' || '' }}.exe
 
       - name: Upload mar if twilight branch
         if: ${{ inputs.release-branch == 'twilight' && !inputs.generate-gpo }}
         uses: actions/upload-artifact@v4
         with:
-          name: windows${{ matrix.arch == 'x86_64' && '-generic' || matrix.arch == 'x86_64-v3' && '' || matrix.arch == 'aarch64' && '-arm64' }}.mar
-          path: ./windows${{ matrix.arch == 'x86_64' && '-generic' || matrix.arch == 'x86_64-v3' && '' || matrix.arch == 'aarch64' && '-arm64' }}.mar
+          name: windows${{ matrix.arch == 'x86_64' && '-generic' || matrix.arch == 'aarch64' && '-arm64' || '' }}.mar
+          path: ./windows${{ matrix.arch == 'x86_64' && '-generic' || matrix.arch == 'aarch64' && '-arm64' || '' }}.mar
 
       - name: Upload update manifests if twilight branch
         if: ${{ inputs.release-branch == 'twilight' && !inputs.generate-gpo }}

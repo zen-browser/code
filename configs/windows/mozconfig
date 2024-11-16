@@ -3,7 +3,6 @@ if test "$ZEN_CROSS_COMPILING"; then
 
   export WINSYSROOT="$(echo ~)/win-cross/vs2022"
 
-  # export MIDL="$(echo ~)/win-cross/wine/bin/widl"
   export WINE="$(echo ~)/win-cross/wine/bin/wine64"
   export WINEDEBUG=-all
 
@@ -12,21 +11,12 @@ if test "$ZEN_CROSS_COMPILING"; then
 
   export CROSS_BUILD=1
   CROSS_COMPILE=1
-  TOOLS=$(echo ~)/win-cross
 
   if test "$ARM64_BUILD" = "true"; then
-    # ARM64 UCRT DLL is currently missing due to an SDK bug but is built into the OS on W10+
-    # export WIN_UCRT_REDIST_DIR="$(echo ~)/win-cross/vs2022/Windows Kits/10/Redist/10.0.22621.0/ucrt/DLLs/arm64"
     export WIN32_REDIST_DIR="$(echo ~)/win-cross/vs2022/VC/Redist/MSVC/14.38.33135/arm64/Microsoft.VC143.CRT"
   else
-    export WIN_UCRT_REDIST_DIR="$(echo ~)/win-cross/vs2022/Windows Kits/10/Redist/10.0.22621.0/ucrt/DLLs/x64"
     export WIN32_REDIST_DIR="$(echo ~)/win-cross/vs2022/VC/Redist/MSVC/14.38.33135/x64/Microsoft.VC143.CRT"
   fi
-
-  # export MIDL="$TOOLS/wine/bin/widl"
-  export MOZ_STUB_INSTALLER=1
-  export WINEDEBUG=-all
-  export WINE="$TOOLS/wine/bin/wine64"
 
 fi
 

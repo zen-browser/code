@@ -17,7 +17,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           submodules: 'recursive'
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.DEPLOY_KEY }}
 
       - name: Update submodules
         run: |

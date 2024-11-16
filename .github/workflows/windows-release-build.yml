@@ -186,7 +186,6 @@ jobs:
           set -x
           export SURFER_PLATFORM="win32"
           pnpm package
-          ls ./dist
           mv ./dist/zen-$(pnpm surfer get version | xargs).en-US.win64${{ matrix.arch == 'aarch64' && '-aarch64' || '' }}.zip zen.win64.zip
           ls ./dist
           ls .

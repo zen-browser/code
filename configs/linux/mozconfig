@@ -31,7 +31,9 @@ if test "$ZEN_RELEASE"; then
     export MOZ_PGO=1
     ac_add_options MOZ_PGO=1
 
-    if test "$SURFER_COMPAT" = "true"; then
+    if test "$SURFER_COMPAT" = "x86_64"; then
+        ac_add_options --target=x86_64-pc-linux
+
         # Optimization flags for SURFER_COMPAT
         ac_add_options --enable-optimize="-O3 -march=x86-64"
 
@@ -40,7 +42,19 @@ if test "$ZEN_RELEASE"; then
         export CXXFLAGS="$CXXFLAGS -O3 -flto=thin -ffp-contract=fast -march=x86-64"
         export LDFLAGS="$LDFLAGS -Wl,-O3 -Wl,-mllvm,-fp-contract=fast -march=x86-64"
         export RUSTFLAGS="$RUSTFLAGS -C target-cpu=x86-64 -C codegen-units=1 -Clink-args=--icf=safe"
+    elif test "$SURFER_COMPAT" = "aarch64"; then
+        ac_add_options --target=aarch64-linux-gnu
+
+        ac_add_options --enable-optimize="-O3 -march=armv8-a"
+
+        export CFLAGS="$CFLAGS -O3 -march=armv8-a"
+        export CPPFLAGS="$CPPFLAGS -O3 -march=armv8-a"
+        export CXXFLAGS="$CXXFLAGS -O3 -march=armv8-a"
+        export LDFLAGS="$LDFLAGS -Wl,-O3 -march=armv8-a"
+        export RUSTFLAGS="$RUSTFLAGS -C target-cpu=armv8-a -C codegen-units=1 -Clink-args=--icf=safe"
     else
+        ac_add_options --target=x86_64-pc-linux
+
         # Optimization flags for general release
         ac_add_options --enable-wasm-avx
         ac_add_options --enable-optimize="-O3 -march=x86-64-v3 -msse3 -mssse3 -msse4.1 -msse4.2 -mavx -maes -mpopcnt -mpclmul"
@@ -58,6 +72,5 @@ if test "$ZEN_RELEASE"; then
 fi
 
 # Common options
-ac_add_options --target=x86_64-pc-linux
 ac_add_options --enable-alsa
 ac_add_options --enable-pulseaudio

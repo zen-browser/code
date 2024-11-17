@@ -119,7 +119,6 @@ jobs:
 
       - name: Setup Surfer
         run: |
-          npm i -g @zen-browser/surfer
           npm uninstall -g @zen-browser/surfer
           npm install github:omove/surfer
 

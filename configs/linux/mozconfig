@@ -44,6 +44,7 @@ if test "$ZEN_RELEASE"; then
         export RUSTFLAGS="$RUSTFLAGS -C target-cpu=x86-64 -C codegen-units=1 -Clink-args=--icf=safe"
     elif test "$SURFER_COMPAT" = "aarch64"; then
         ac_add_options --target=aarch64-linux-gnu
+        ac_add_options --disable-eme
 
         ac_add_options --enable-optimize="-O3 -march=armv8-a"
 

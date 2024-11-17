@@ -26,6 +26,7 @@ ac_add_options --disable-bits-download
  
 if test "$SURFER_COMPAT" = "x86_64"; then
   ac_add_options --target=x86_64-pc-windows-msvc
+  ac_add_options --enable-eme=widevine
 
   ac_add_options --enable-optimize="-O3 -w -ftree-vectorize"
 
@@ -36,6 +37,7 @@ if test "$SURFER_COMPAT" = "x86_64"; then
   export RUSTFLAGS="-Clink-args=--icf=safe -C codegen-units=1 -Ctarget-cpu=x86-64"
 elif test "$SURFER_COMPAT" = "aarch64"; then
   ac_add_options --target=aarch64-pc-windows-msvc
+  ac_add_options --enable-eme=widevine
 
   ac_add_options --enable-optimize="-O2 -mtune=cortex-a55 -march=armv8.2-a+simd"
 
@@ -46,6 +48,7 @@ elif test "$SURFER_COMPAT" = "aarch64"; then
   export RUSTFLAGS="-C target-feature=+v8.2a -C codegen-units=1 -Ctarget-cpu=cortex-a55"
 else
   ac_add_options --target=x86_64-pc-windows-msvc
+  ac_add_options --enable-eme=widevine
 
   ac_add_options --enable-optimize="-O2 -msse3 -mssse3 -msse4.1 -msse4.2 -mavx -mavx2 -mfma -maes -ftree-vectorize -Xclang -w"
   ac_add_options --enable-wasm-avx
@@ -71,4 +74,3 @@ if test "$ZEN_CROSS_COMPILING"; then
   fi
 
 fi
-ac_add_options --enable-eme=widevine

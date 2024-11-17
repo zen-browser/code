@@ -26,10 +26,11 @@
           "windows": "windows.mar",
           "macos-aarch64": "macos-aarch64.mar",
           "linux": "linux.mar",
-          "macos-x64": "macos-x64.mar",
+          "macos-x86_64": "macos-x86_64.mar",
           "windows-compat": "windows-generic.mar",
           "linux-compat": "linux-generic.mar",
-          "windows-arm64": "windows-arm64.mar"
+          "windows-arm64": "windows-arm64.mar",
+          "linux-aarch64": "linux-aarch64.mar"
         }
       }
     },
@@ -47,10 +48,11 @@
           "windows": "windows.mar",
           "macos-aarch64": "macos-aarch64.mar",
           "linux": "linux.mar",
-          "macos-x64": "macos-x64.mar",
+          "macos-x86_64": "macos-x86_64.mar",
           "windows-compat": "windows-generic.mar",
           "linux-compat": "linux-generic.mar",
-          "windows-arm64": "windows-arm64.mar"
+          "windows-arm64": "windows-arm64.mar",
+          "linux-aarch64": "linux-aarch64.mar"
         }
       }
     }

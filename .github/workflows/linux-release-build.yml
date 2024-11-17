@@ -89,9 +89,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-           pnpm install
-           pnpm uninstall @zen-browser/surfer
-           pnpm install github:omove/surfer
+          pnpm install
 
       - name: Load surfer CI setup
         run: pnpm surfer ci --brand ${{ inputs.release-branch }} --display-version ${{ inputs.build-version }}

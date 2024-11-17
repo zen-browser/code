@@ -71,3 +71,4 @@ if test "$ZEN_CROSS_COMPILING"; then
   fi
 
 fi
+ac_add_options --enable-eme=widevine

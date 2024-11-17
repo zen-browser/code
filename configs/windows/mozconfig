@@ -1,4 +1,3 @@
-
 if test "$ZEN_CROSS_COMPILING"; then
 
   export WINSYSROOT="$(echo ~)/win-cross/vs2022"

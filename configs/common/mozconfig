@@ -89,7 +89,6 @@ ac_add_options --enable-raw
 ac_add_options --enable-webrtc
 ac_add_options --enable-jxl
 ac_add_options --enable-av1
-ac_add_options --enable-eme=widevine
 
 ac_add_options --with-unsigned-addon-scopes=app,system
 

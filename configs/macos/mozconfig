@@ -1,6 +1,3 @@
-
-# SURFER_COMPAT has a different meaning here, in macOS it means that the build is for
-# x86_64, not ARM64. 
 unset MOZ_STDCXX_COMPAT
 
 ac_add_options --disable-dmd
@@ -8,7 +5,7 @@ ac_add_options --disable-dmd
 export MOZ_MACBUNDLE_ID=${appId}
 export MOZ_MACBUNDLE_NAME="Zen Browser.app"
 
-if test "$SURFER_COMPAT" = "true"; then
+if test "$SURFER_COMPAT" = "x86_64"; then
     export MOZ_PGO=1
     ac_add_options MOZ_PGO=1
     ac_add_options --target=x86_64-apple-darwin

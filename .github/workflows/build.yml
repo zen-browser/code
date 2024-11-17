@@ -176,13 +176,12 @@ jobs:
           echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
 
       - name: Install dependencies
-        run: pnpm install
+        run: |
+          pnpm install
 
       - name: Setup surfer
         run: |
           npm i -g @zen-browser/surfer
-          npm uninstall -g @zen-browser/surfer
-          npm install github:omove/surfer
 
       - name: Activate surfer CLI
         run: |

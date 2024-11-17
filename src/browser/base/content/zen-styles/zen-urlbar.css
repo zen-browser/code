@@ -5,7 +5,7 @@
 }
 
 #urlbar {
-  --toolbarbutton-border-radius: 6px;
+  --toolbarbutton-border-radius: 10px;
   --urlbarView-separator-color: var(--zen-colors-border);
   --urlbarView-hover-background: var(--toolbarbutton-hover-background);
   --urlbarView-highlight-background: var(--toolbarbutton-hover-background);
@@ -195,28 +195,28 @@ button.popup-notification-dropmarker {
  */
 
 #notification-popup-box {
-  border-radius: 6px !important;
+  border-radius: 10px !important;
 }
 
 /* Border radius on hover */
 #urlbar .urlbar-page-action,
 #urlbar #tracking-protection-icon-container,
 #urlbar:not([breakout-extend='true']) #identity-box:is(:not(.chromeUI), [pageproxystate='invalid']) #identity-icon-box {
-  border-radius: 6px !important;
+  border-radius: 10px !important;
 }
 
 /* Border radius of boxes on the left */
 #identity-box:has(#identity-permission-box:is([hasPermissions], [hasSharingIcon])):not([pageproxystate='invalid'])
   #identity-icon-box {
-  border-top-left-radius: 6px !important;
-  border-bottom-left-radius: 6px !important;
+  border-top-left-radius: 10px !important;
+  border-bottom-left-radius: 10px !important;
   border-top-right-radius: 0 !important;
   border-bottom-right-radius: 0 !important;
 }
 
 /* Extensions or similar */
 #urlbar:not([breakout-extend='true']) #identity-box.chromeUI:not([pageproxystate='invalid']) #identity-icon-box {
-  border-radius: 6px 6px 6px 6px !important;
+  border-radius: 10px !important;
 }
 
 /* Notification Stack */
@@ -275,6 +275,6 @@ button.popup-notification-dropmarker {
 }*/
 
 #PersonalToolbar:not([collapsed='true']) {
-  padding-bottom: 6px;
+  padding-bottom: 10px;
   padding-left: 0 !important;
 }

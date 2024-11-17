@@ -68,9 +68,9 @@
       return this._enabled;
     }
 
-    async _refreshPinnedTabs() {
+    async _refreshPinnedTabs({ init = false } = {}) {
       await this._initializePinsCache();
-      this._initializePinnedTabs();
+      this._initializePinnedTabs(init);
     }
 
     async _initializePinsCache() {
@@ -109,7 +109,7 @@
       return this._pinsCache;
     }
 
-    _initializePinnedTabs() {
+    _initializePinnedTabs(init = false) {
       const pins = this._pinsCache;
       if (!pins?.length) {
         return;
@@ -130,6 +130,10 @@
           // This is a valid pinned tab that matches a pin
           pinnedTabsByUUID.set(pinId, tab);
           pinsToCreate.delete(pinId);
+
+          if(lazy.zenPinnedTabRestorePinnedTabsToPinnedUrl && init) {
+            this._resetTabToStoredState(tab);
+          }
         } else {
           // This is a pinned tab that no longer has a corresponding pin
           gBrowser.removeTab(tab);

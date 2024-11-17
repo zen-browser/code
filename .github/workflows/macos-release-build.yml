@@ -22,7 +22,7 @@ jobs:
         include:
           - arch: aarch64
             os: macos-14
-          - arch: x64
+          - arch: x86_64
             os: macos-13
 
     steps:
@@ -110,7 +110,7 @@ jobs:
 
       - name: Import
         env:
-          SURFER_COMPAT: ${{ matrix.arch == 'x64' }}
+          SURFER_COMPAT: ${{ matrix.arch }}
         run: |
           pnpm surfer import --verbose
 
@@ -119,9 +119,9 @@ jobs:
 
       - name: build Zen
         env:
-          SURFER_COMPAT: ${{ matrix.arch == 'x64' }}
+          SURFER_COMPAT: ${{ matrix.arch }}
         run: |
-          if test "${{ matrix.arch }}" = "x64"; then
+          if test "${{ matrix.arch }}" = "x86_64"; then
             export ZEN_DISABLE_LTO=1
           fi
           sh .github/workflows/src/release-build.sh
@@ -138,7 +138,7 @@ jobs:
 
       - name: Package
         env:
-          SURFER_COMPAT: ${{ matrix.arch == 'x64' }}
+          SURFER_COMPAT: ${{ matrix.arch }}
         run: |
           export MACOS_APPLE_DEVELOPER_ID="${{ secrets.macOS_AppleDeveloperId }}"
           pnpm package

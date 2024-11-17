@@ -88,7 +88,10 @@ jobs:
           echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
 
       - name: Install dependencies
-        run: pnpm install
+        run: |
+           pnpm install
+           pnpm uninstall @zen-browser/surfer
+           pnpm install github:omove/surfer
 
       - name: Load surfer CI setup
         run: pnpm surfer ci --brand ${{ inputs.release-branch }} --display-version ${{ inputs.build-version }}
@@ -101,6 +104,12 @@ jobs:
           # Install a rust version compatible with LLVM 18
           curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain 1.79
           source $HOME/.cargo/env
+
+          if test "${{ matrix.arch }}" = "aarch64"; then
+            rustup target add aarch64-unknown-linux-gnu
+          else
+            rustup target add x86_64-unknown-linux-gnu
+          fi
 
       - name: Import
         env:

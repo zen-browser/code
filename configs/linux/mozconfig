@@ -46,13 +46,13 @@ if test "$ZEN_RELEASE"; then
     elif test "$SURFER_COMPAT" = "aarch64"; then
         ac_add_options --target=aarch64-linux-gnu
 
-        ac_add_options --enable-optimize="-O3 -march=armv8-a"
+        ac_add_options --enable-optimize="-O3"
 
-        export CFLAGS="$CFLAGS -O3 -march=armv8-a"
-        export CPPFLAGS="$CPPFLAGS -O3 -march=armv8-a"
-        export CXXFLAGS="$CXXFLAGS -O3 -march=armv8-a"
-        export LDFLAGS="$LDFLAGS -Wl,-O3 -march=armv8-a"
-        export RUSTFLAGS="$RUSTFLAGS -C target-cpu=armv8-a -C codegen-units=1 -Clink-args=--icf=safe"
+        export CFLAGS="$CFLAGS -O3"
+        export CPPFLAGS="$CPPFLAGS -O3"
+        export CXXFLAGS="$CXXFLAGS -O3"
+        export LDFLAGS="$LDFLAGS -Wl,-O3"
+        export RUSTFLAGS="$RUSTFLAGS -C codegen-units=1 -Clink-args=--icf=safe"
     else
         ac_add_options --target=x86_64-pc-linux
         ac_add_options --enable-eme=widevine

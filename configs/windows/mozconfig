@@ -12,7 +12,7 @@ if test "$ZEN_CROSS_COMPILING"; then
   export CROSS_BUILD=1
   CROSS_COMPILE=1
 
-  if test "$ARM64_BUILD" = "true"; then
+  if test "$SURFER_COMPAT" = "aarch64"; then
     export WIN32_REDIST_DIR="$(echo ~)/win-cross/vs2022/VC/Redist/MSVC/14.38.33135/arm64/Microsoft.VC143.CRT"
   else
     export WIN32_REDIST_DIR="$(echo ~)/win-cross/vs2022/VC/Redist/MSVC/14.38.33135/x64/Microsoft.VC143.CRT"
@@ -25,7 +25,7 @@ fi
 ac_add_options --disable-maintenance-service
 ac_add_options --disable-bits-download
  
-if test "$SURFER_COMPAT" = "true"; then
+if test "$SURFER_COMPAT" = "x86_64"; then
   ac_add_options --target=x86_64-pc-windows-msvc
 
   ac_add_options --enable-optimize="-O3 -w -ftree-vectorize"
@@ -35,7 +35,7 @@ if test "$SURFER_COMPAT" = "true"; then
   export CXXFLAGS="-flto=thin -mtune=haswell -march=x86-64 -O2 -Qvec -w"
   export LDFLAGS="-Wl,-O2"
   export RUSTFLAGS="-Clink-args=--icf=safe -C codegen-units=1 -Ctarget-cpu=x86-64"
-elif test "$ARM64_BUILD" = "true"; then
+elif test "$SURFER_COMPAT" = "aarch64"; then
   ac_add_options --target=aarch64-pc-windows-msvc
 
   ac_add_options --enable-optimize="-O2 -mtune=cortex-a55 -march=armv8.2-a+simd"

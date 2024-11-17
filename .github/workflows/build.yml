@@ -320,7 +320,7 @@ jobs:
       release-branch: ${{ inputs.update_branch }}
 
   appimage:
-    name: AppImage build - Linux ${{ matrix.arch == 'x86_64' && 'generic' || matrix.arch == 'x86_64-v3' && 'specific'  }}
+    name: AppImage build - Linux ${{ matrix.arch == 'x86_64' && 'generic' || matrix.arch == 'x86_64-v3' && 'specific' }}
     permissions:
       contents: write
     runs-on: ubuntu-latest

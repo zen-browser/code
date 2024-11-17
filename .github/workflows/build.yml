@@ -322,13 +322,13 @@ jobs:
       release-branch: ${{ inputs.update_branch }}
 
   appimage:
-    name: AppImage build - Linux ${{ matrix.generic == true && 'generic' || 'specific' }}
+    name: AppImage build - Linux ${{ matrix.arch == 'x86_64' && 'generic' || matrix.arch == 'x86_64-v3' && 'specific' || matrix.arch == 'aarch64' && 'aarch64' }}
     permissions:
       contents: write
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        generic: [true, false]
+        arch: [x86_64, x86_64-v3, aarch64]
     needs: [linux]
     steps:
       - name: Install Node.js
@@ -350,7 +350,7 @@ jobs:
       - name: Download linux build
         uses: actions/download-artifact@v4
         with:
-          name: zen.linux-${{ matrix.generic == true && 'generic' || 'specific' }}.tar.bz2
+          name: zen.linux-${{ matrix.arch == 'x86_64' && 'generic' || matrix.arch == 'x86_64-v3' && 'specific' || matrix.arch == 'aarch64' && 'aarch64' }}.tar.bz2
 
       - name: Execute AppImage build
         run: |
@@ -374,23 +374,24 @@ jobs:
           ls -al
           find .
           ls -al "$APPDIR"
-          ARCH=x86_64 ./appimagetool-x86_64.AppImage --comp zstd --mksquashfs-opt -Xcompression-level --mksquashfs-opt 10 \
-          -u "gh-releases-zsync|$GITHUB_REPOSITORY_OWNER|desktop|latest|zen-${{ matrix.generic == true && 'generic' || 'specific' }}.AppImage.zsync" \
-          "$APPDIR" zen-${{ matrix.generic == true && 'generic' || 'specific' }}.AppImage
+          ARCH=${{ matrix.arch == 'aarch64' && 'aarch64' || 'x86_64' }}
+          $ARCH ./appimagetool-x86_64.AppImage --comp zstd --mksquashfs-opt -Xcompression-level --mksquashfs-opt 10 \
+          -u "gh-releases-zsync|$GITHUB_REPOSITORY_OWNER|desktop|latest|zen-${{ matrix.arch == 'x86_64' && 'generic' || matrix.arch == 'x86_64-v3' && 'specific' || matrix.arch == 'aarch64' && 'aarch64' }}.AppImage.zsync" \
+          "$APPDIR" zen-${{ matrix.arch == 'x86_64' && 'generic' || matrix.arch == 'x86_64-v3' && 'specific' || matrix.arch == 'aarch64' && 'aarch64' }}.AppImage
           mkdir dist
           mv zen*AppImage* dist/.
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: zen-${{ matrix.generic == true && 'generic' || 'specific' }}.AppImage
-          path: ./dist/zen-${{ matrix.generic == true && 'generic' || 'specific' }}.AppImage
+          name: zen-${{ matrix.arch == 'x86_64' && 'generic' || matrix.arch == 'x86_64-v3' && 'specific' || matrix.arch == 'aarch64' && 'aarch64' }}.AppImage
+          path: ./dist/zen-${{ matrix.arch == 'x86_64' && 'generic' || matrix.arch == 'x86_64-v3' && 'specific' || matrix.arch == 'aarch64' && 'aarch64' }}.AppImage
 
       - name: Upload artifact (ZSync)
         uses: actions/upload-artifact@v4
         with:
-          name: zen-${{ matrix.generic == true && 'generic' || 'specific' }}.AppImage.zsync
-          path: ./dist/zen-${{ matrix.generic == true && 'generic' || 'specific' }}.AppImage.zsync
+          name: zen-${{ matrix.arch == 'x86_64' && 'generic' || matrix.arch == 'x86_64-v3' && 'specific' || matrix.arch == 'aarch64' && 'aarch64' }}.AppImage.zsync
+          path: ./dist/zen-${{ matrix.arch == 'x86_64' && 'generic' || matrix.arch == 'x86_64-v3' && 'specific' || matrix.arch == 'aarch64' && 'aarch64' }}.AppImage.zsync
 
   release:
     if: ${{ inputs.create_release || inputs.update_branch == 'twilight' }}
@@ -435,6 +436,7 @@ jobs:
           mkdir -p updates
           cp -a ../linux_update_manifest_generic/.  updates/
           cp -a ../linux_update_manifest_specific/.  updates/
+          cp -a ../linux_update_manifest_aarch64/.  updates/
 
           if [[ $RELEASE_BRANCH == 'alpha' ]]; then
             cp -a ../.github/workflows/object/windows-x64-signed-generic/update_manifest/.  updates/
@@ -503,24 +505,28 @@ jobs:
             zen.source.tar.gz
             zen.linux-generic.tar.bz2
             zen.linux-specific.tar.bz2
+            zen.linux-aarch64.tar.bz2
             zen-generic.AppImage
             zen-generic.AppImage.zsync
             zen-specific.AppImage
             zen-specific.AppImage.zsync
+            zen-aarch64.AppImage
+            zen-aarch64.AppImage.zsync
             .github/workflows/object/windows-x64-signed-generic/zen.win-generic.zip
             .github/workflows/object/windows-x64-signed-specific/zen.win-specific.zip
             .github/workflows/object/windows-x64-signed-arm64/zen.win-arm64.zip
             linux.mar
             linux-generic.mar
+            linux-aarch64.mar
             .github/workflows/object/windows-x64-signed-generic/windows-generic.mar
             .github/workflows/object/windows-x64-signed-specific/windows.mar
             .github/workflows/object/windows-x64-signed-arm64/windows-arm64.mar
-            macos-x64.mar
+            macos-x86_64.mar
             macos-aarch64.mar
             .github/workflows/object/windows-x64-signed-specific/zen.installer.exe
             .github/workflows/object/windows-x64-signed-generic/zen.installer-generic.exe
             .github/workflows/object/windows-x64-signed-arm64/zen.installer-arm64.exe
-            zen.macos-x64.dmg
+            zen.macos-x86_64.dmg
             zen.macos-aarch64.dmg
 
   prepare-flatpak:

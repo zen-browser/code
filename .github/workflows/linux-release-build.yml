@@ -20,8 +20,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        generic: [true, false]
-    name: Build Linux - ${{ matrix.generic == true && 'Generic' || 'Specific' }}
+        arch: [x86_64, x86_64-v3, aarch64]
+    name: Build Linux - ${{ matrix.arch == 'x86_64' && 'Generic' || matrix.arch == 'x86_64-v3' && 'Specific' || matrix.arch == 'aarch64' && 'aarch64' }}
 
     steps:
       - name: Free Disk Space (Ubuntu)
@@ -104,7 +104,7 @@ jobs:
 
       - name: Import
         env:
-          SURFER_COMPAT: ${{ matrix.generic == true }}
+          SURFER_COMPAT: ${{ matrix.arch }}
         run: pnpm surfer import
 
       - name: Build language packs
@@ -118,40 +118,40 @@ jobs:
 
       - name: Build
         env:
-          SURFER_COMPAT: ${{ matrix.generic == true }}
+          SURFER_COMPAT: ${{ matrix.arch }}
         continue-on-error: true
         run: sh .github/workflows/src/release-build.sh
 
       - name: Build again if it failed
         if: failure()
         env:
-          SURFER_COMPAT: ${{ matrix.generic == true }}
+          SURFER_COMPAT: ${{ matrix.arch }}
         run: sh .github/workflows/src/release-build.sh
 
       - name: Package
         env:
-          SURFER_COMPAT: ${{ matrix.generic == true }}
+          SURFER_COMPAT: ${{ matrix.arch }}
         run: pnpm package
 
       - name: Rename artifacts
         run: |
-          mv dist/zen-*.tar.bz2 "zen.linux-${{ matrix.generic == true && 'generic' || 'specific' }}.tar.bz2"
-          mv dist/output.mar linux${{ matrix.generic == true && '-generic' || '' }}.mar
+          mv dist/zen-*.tar.bz2 "zen.linux-${{ matrix.arch == 'x86_64' && 'generic' || matrix.arch == 'x86_64-v3' && 'specific' || matrix.arch == 'aarch64' && 'aarch64' }}.tar.bz2"
+          mv dist/output.mar linux${{ matrix.arch == 'x86_64' && '-generic' || matrix.arch == 'aarch64' && '-aarch64' || '' }}.mar
 
       - name: Upload binary
         uses: actions/upload-artifact@v4
         with:
-          name: zen.linux-${{ matrix.generic == true && 'generic' || 'specific' }}.tar.bz2
-          path: ./zen.linux-${{ matrix.generic == true && 'generic' || 'specific' }}.tar.bz2
+          name: zen.linux-${{ matrix.arch == 'x86_64' && 'generic' || matrix.arch == 'x86_64-v3' && 'specific' || matrix.arch == 'aarch64' && 'aarch64' }}.tar.bz2
+          path: ./zen.linux-${{ matrix.arch == 'x86_64' && 'generic' || matrix.arch == 'x86_64-v3' && 'specific' || matrix.arch == 'aarch64' && 'aarch64' }}.tar.bz2
 
       - name: Upload mar
         uses: actions/upload-artifact@v4
         with:
-          name: linux${{ matrix.generic == true && '-generic' || '' }}.mar
-          path: ./linux${{ matrix.generic == true && '-generic' || '' }}.mar
+          name: linux${{ matrix.arch == 'x86_64' && '-generic' || matrix.arch == 'aarch64' && '-aarch64' || '' }}.mar
+          path: ./linux${{ matrix.arch == 'x86_64' && '-generic' || matrix.arch == 'aarch64' && '-aarch64' || '' }}.mar
 
       - name: Upload update manifests
         uses: actions/upload-artifact@v4
         with:
-          name: linux_update_manifest_${{ matrix.generic == true && 'generic' || 'specific' }}
+          name: linux_update_manifest_${{ matrix.arch == 'x86_64' && 'generic' || matrix.arch == 'x86_64-v3' && 'specific' || matrix.arch == 'aarch64' && 'aarch64' }}
           path: ./dist/update

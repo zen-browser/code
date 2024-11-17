@@ -33,6 +33,7 @@ if test "$ZEN_RELEASE"; then
 
     if test "$SURFER_COMPAT" = "x86_64"; then
         ac_add_options --target=x86_64-pc-linux
+        ac_add_options --enable-eme=widevine
 
         # Optimization flags for SURFER_COMPAT
         ac_add_options --enable-optimize="-O3 -march=x86-64"
@@ -44,7 +45,6 @@ if test "$ZEN_RELEASE"; then
         export RUSTFLAGS="$RUSTFLAGS -C target-cpu=x86-64 -C codegen-units=1 -Clink-args=--icf=safe"
     elif test "$SURFER_COMPAT" = "aarch64"; then
         ac_add_options --target=aarch64-linux-gnu
-        ac_add_options --disable-eme
 
         ac_add_options --enable-optimize="-O3 -march=armv8-a"
 
@@ -55,6 +55,7 @@ if test "$ZEN_RELEASE"; then
         export RUSTFLAGS="$RUSTFLAGS -C target-cpu=armv8-a -C codegen-units=1 -Clink-args=--icf=safe"
     else
         ac_add_options --target=x86_64-pc-linux
+        ac_add_options --enable-eme=widevine
 
         # Optimization flags for general release
         ac_add_options --enable-wasm-avx

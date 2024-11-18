@@ -115,7 +115,8 @@ jobs:
           echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
 
       - name: Install dependencies
-        run: pnpm install
+        run: |
+          pnpm install
 
       - name: Setup Surfer
         run: |

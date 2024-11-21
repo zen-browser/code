@@ -105,3 +105,16 @@
     margin-inline-end: 8px;
   }
 }
+
+@media(-moz-gtk-csd-reversed-placement){
+    #zen-sidebar-top-buttons .titlebar-buttonbox-container {
+        padding-top: 5px;
+        padding-left: 6px
+    }
+}
+@media(-moz-gtk-csd-reversed-placement){
+    #nav-bar .titlebar-buttonbox-container {
+        padding-top: 5px; 
+        padding-left: 6px;
+    }
+}

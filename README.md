@@ -86,6 +86,9 @@ yay -S zen-browser-avx2-bin
 
 ##### Other Linux distributions (AppImage with automated system integration)
 
+- `native` tarball install:
+```sudo bash <(curl -s https://updates.zen-browser.app/install.sh)```
+
 - `zsync` is required for the Update feature of the script below
 
 ```sh
@@ -98,7 +101,7 @@ To upgrade the browser to a newer version, use the embedded update functionality
 
 ## 👨‍💻 Development and Contributing
 
-Some components used by @zen-browser as an attempt to make firefox forks a better place, and for other to enjoy the beauty of OSS. You can find them [here](https://github.com/zen-browser/components).
+Some components used by @zen-browser as an attempt to make firefox forks a better place, and for other to enjoy the beauty of OSS. You can find them [here](https://github.com/zen-browser/desktop/tree/dev/src/browser/base/zen-components).
 
 #### `Run Locally`
 

@@ -293,6 +293,7 @@
       setTimeout(() => {
         window.requestAnimationFrame(() => {
           this.browserWrapper.setAttribute("animate-full-end", true);
+          this.overlay.classList.remove("zen-glance-overlay");
           setTimeout(() => {
             this.animatingFullOpen = false;
             this.closeGlance({ noAnimation: true });

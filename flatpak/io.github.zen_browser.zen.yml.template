@@ -1,13 +1,13 @@
 app-id: io.github.zen_browser.zen
 runtime: org.freedesktop.Platform
-runtime-version: '23.08'
+runtime-version: '24.08'
 sdk: org.freedesktop.Sdk
 base: org.mozilla.firefox.BaseApp
-base-version: '23.08'
+base-version: '24.08'
 add-extensions:
   org.freedesktop.Platform.ffmpeg-full:
     directory: lib/ffmpeg
-    version: 23.08
+    version: '24.08'
     add-ld-path: .
 command: launch-script.sh
 finish-args:
@@ -28,6 +28,7 @@ finish-args:
   - --system-talk-name=org.freedesktop.NetworkManager
   - --talk-name=org.a11y.Bus
   - --env=GTK_PATH=/app/lib/gtkmodules
+  - --env=MESA_SHADER_CACHE_DIR=$XDG_RUNTIME_DIR/app/$FLATPAK_ID/cache/mesa_shader_cache_db 
 modules:
   - name: zen_browser
     buildsystem: simple

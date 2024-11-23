@@ -1,0 +1,32 @@
+diff --git a/browser/components/tabbrowser/content/tab.js b/browser/components/tabbrowser/content/tab.js
+index 60061540d79843281f3ee2ce905824b224da6f46..c01f8a7f18921588ecdc635c281cf01041ef627b 100644
+--- a/browser/components/tabbrowser/content/tab.js
++++ b/browser/components/tabbrowser/content/tab.js
+@@ -39,6 +39,7 @@
+             </hbox>
+           </vbox>
+           <image class="tab-close-button close-icon" role="button" data-l10n-id="tabbrowser-close-tabs-button" data-l10n-args='{"tabCount": 1}' keyNav="false"/>
++          <image class="tab-reset-button reset-icon" role="button" data-l10n-id="tabbrowser-reset-tabs-button" data-l10n-args='{"tabCount": 1}' keyNav="false"/>
+         </hbox>
+       </stack>
+       `;
+@@ -447,6 +448,7 @@
+         this.style.MozUserFocus = "ignore";
+       } else if (
+         event.target.classList.contains("tab-close-button") ||
++        event.target.classList.contains("tab-reset-button") ||
+         event.target.classList.contains("tab-icon-overlay")
+       ) {
+         eventMaySelectTab = false;
+@@ -549,6 +551,11 @@
+         // (see tabbrowser-tabs 'click' handler).
+         gBrowser.tabContainer._blockDblClick = true;
+       }
++
++      if (event.target.classList.contains("tab-reset-button")) {
++        gZenPinnedTabManager._resetTabToStoredState(this);
++        gBrowser.tabContainer._blockDblClick = true;
++      }
+     }
+ 
+     on_dblclick(event) {

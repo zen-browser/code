@@ -2,7 +2,7 @@
   const lazy = {};
 
   class ZenPinnedTabsObserver {
-    static ALL_EVENTS = ['TabPinned', 'TabUnpinned', 'TabClose'];
+    static ALL_EVENTS = ['TabPinned', 'TabUnpinned'];
 
     #listeners = [];
 
@@ -36,7 +36,7 @@
     }
   }
 
-  class ZenPinnedTabManager extends ZenPreloadedFeature {
+  class ZenPinnedTabManager extends ZenDOMOperatedFeature {
 
     init() {
       if (!this.enabled) {
@@ -48,19 +48,22 @@
       this.observer.addPinnedTabListener(this._onPinnedTabEvent.bind(this));
 
       this._zenClickEventListener = this._onTabClick.bind(this);
+      ZenWorkspaces.addChangeListeners(this.onWorkspaceChange.bind(this));
+
     }
 
-    async initTabs() {
-      if (!this.enabled) {
+    async onWorkspaceChange(newWorkspace, onInit) {
+      if (!this.enabled || PrivateBrowsingUtils.isWindowPrivate(window)) {
         return;
       }
-      await ZenPinnedTabsStorage.init();
+
+      await this._refreshPinnedTabs(newWorkspace,{ init: onInit });
     }
 
     get enabled() {
       if (typeof this._enabled === 'undefined') {
         this._enabled = !(
-          document.documentElement.hasAttribute('privatebrowsingmode') ||
+          PrivateBrowsingUtils.isWindowPrivate(window) ||
           document.documentElement.getAttribute('chromehidden')?.includes('toolbar') ||
           document.documentElement.getAttribute('chromehidden')?.includes('menubar')
         );
@@ -68,9 +71,12 @@
       return this._enabled;
     }
 
-    async _refreshPinnedTabs() {
+    async _refreshPinnedTabs(currentWorkspace,{ init = false } = {}) {
+      if(init) {
+        await ZenPinnedTabsStorage.init();
+      }
       await this._initializePinsCache();
-      this._initializePinnedTabs();
+      await this._initializePinnedTabs(init,currentWorkspace);
     }
 
     async _initializePinsCache() {
@@ -81,10 +87,10 @@
         // Enhance pins with favicons
         const enhancedPins = await Promise.all(pins.map(async pin => {
           try {
-            const faviconData = await PlacesUtils.promiseFaviconData(pin.url);
+            const image = await this.getFaviconAsBase64(pin.url);
             return {
               ...pin,
-              iconUrl: faviconData?.uri?.spec || null
+              iconUrl: image || null
             };
           } catch(ex) {
             // If favicon fetch fails, continue without icon
@@ -109,11 +115,13 @@
       return this._pinsCache;
     }
 
-    _initializePinnedTabs() {
+    async _initializePinnedTabs(init = false, currentWorkspace) {
       const pins = this._pinsCache;
       if (!pins?.length) {
         return;
       }
+
+      const workspaces = await ZenWorkspaces._workspaces();
 
       const activeTab = gBrowser.selectedTab;
       const pinnedTabsByUUID = new Map();
@@ -130,6 +138,10 @@
           // This is a valid pinned tab that matches a pin
           pinnedTabsByUUID.set(pinId, tab);
           pinsToCreate.delete(pinId);
+
+          if (lazy.zenPinnedTabRestorePinnedTabsToPinnedUrl && init) {
+            this._resetTabToStoredState(tab);
+          }
         } else {
           // This is a pinned tab that no longer has a corresponding pin
           gBrowser.removeTab(tab);
@@ -142,23 +154,34 @@
           continue; // Skip pins that already have tabs
         }
 
-        let newTab = gBrowser.addTrustedTab(pin.url, {
+        if (!this._shouldShowPin(pin, currentWorkspace, workspaces)) {
+          continue; // Skip pins not relevant to current workspace
+        }
+
+        let params = {
           skipAnimation: true,
-          userContextId: pin.containerTabId || 0,
           allowInheritPrincipal: false,
+          skipBackgroundNotify: true,
+          userContextId: pin.containerTabId || 0,
           createLazyBrowser: true,
           skipLoad: true,
-        });
+          noInitialLabel: false
+        };
 
-        // Set the favicon from cache
-        if (!!pin.iconUrl) {
-          // TODO: Figure out if there is a better way -
-          //  calling gBrowser.setIcon messes shit up and should be avoided. I think this works for now.
-          newTab.setAttribute("image", pin.iconUrl);
+        // Create and initialize the tab
+        let newTab = gBrowser.addTrustedTab(pin.url, params);
+
+        // Set initial label/title
+        if (pin.title) {
+          gBrowser.setInitialTabTitle(newTab, pin.title);
+        }
+
+        // Set the icon if we have it cached
+        if (pin.iconUrl) {
+          gBrowser.setIcon(newTab, pin.iconUrl);
         }
 
         newTab.setAttribute("zen-pin-id", pin.uuid);
-        gBrowser.setInitialTabTitle(newTab, pin.title);
 
         if (pin.workspaceUuid) {
           newTab.setAttribute("zen-workspace-id", pin.workspaceUuid);
@@ -168,13 +191,68 @@
           newTab.setAttribute("zen-essential", "true");
         }
 
+        // Initialize browser state if needed
+        if (!newTab.linkedBrowser._remoteAutoRemoved) {
+          let state = {
+            entries: [{
+              url: pin.url,
+              title: pin.title,
+              triggeringPrincipal_base64: E10SUtils.SERIALIZED_SYSTEMPRINCIPAL
+            }],
+            userContextId: pin.containerTabId || 0,
+            image: pin.iconUrl
+          };
+
+          SessionStore.setTabState(newTab, state);
+        }
+
         gBrowser.pinTab(newTab);
+
+
+        newTab.initialize();
       }
 
       // Restore active tab
       if (!activeTab.closing) {
         gBrowser.selectedTab = activeTab;
       }
+
+      gBrowser._updateTabBarForPinnedTabs();
+    }
+
+    _shouldShowPin(pin, currentWorkspace, workspaces) {
+      const isEssential = pin.isEssential;
+      const pinWorkspaceUuid = pin.workspaceUuid;
+      const pinContextId = pin.containerTabId ? pin.containerTabId.toString() : "0";
+      const workspaceContextId = currentWorkspace.containerTabId?.toString() || "0";
+      const containerSpecificEssentials = ZenWorkspaces.containerSpecificEssentials;
+
+      // Handle essential pins
+      if (isEssential) {
+        if (!containerSpecificEssentials) {
+          return true; // Show all essential pins when containerSpecificEssentials is false
+        }
+
+        if (workspaceContextId !== "0") {
+          // In workspaces with default container: Show essentials that match the container
+          return pinContextId === workspaceContextId;
+        } else {
+          // In workspaces without a default container: Show essentials that aren't in container-specific workspaces
+          // or have userContextId="0" or no userContextId
+          return !pinContextId || pinContextId === "0" || !workspaces.workspaces.some(
+              workspace => workspace.containerTabId === parseInt(pinContextId, 10)
+          );
+        }
+      }
+
+      // For non-essential pins
+      if (!pinWorkspaceUuid) {
+        // Pins without a workspace belong to all workspaces (if that's your desired behavior)
+        return true;
+      }
+
+      // Show if pin belongs to current workspace
+      return pinWorkspaceUuid === currentWorkspace.uuid;
     }
 
     _onPinnedTabEvent(action, event) {
@@ -192,9 +270,6 @@
             tab.removeEventListener("click", tab._zenClickEventListener);
             delete tab._zenClickEventListener;
           }
-          break;
-        case "TabClose":
-          this._removePinnedAttributes(tab);
           break;
         default:
           console.warn('ZenPinnedTabManager: Unhandled tab event', action);
@@ -244,7 +319,8 @@
       pin.userContextId = userContextId ? parseInt(userContextId, 10) : 0;
 
       await ZenPinnedTabsStorage.savePin(pin);
-      await this._refreshPinnedTabs();
+      const currentWorkspace = await ZenWorkspaces.getActiveWorkspace();
+      await this._refreshPinnedTabs(currentWorkspace);
     }
 
     async _setPinnedAttributes(tab) {
@@ -280,25 +356,27 @@
         tab.removeAttribute("zen-pinned-entry");
         return;
       }
-
-      await this._refreshPinnedTabs();
+      const currentWorkspace = await ZenWorkspaces.getActiveWorkspace();
+      await this._refreshPinnedTabs(currentWorkspace);
     }
 
-    async _removePinnedAttributes(tab) {
+    async _removePinnedAttributes(tab, isClosing = false) {
       if(!tab.getAttribute("zen-pin-id")) {
         return;
       }
 
       await ZenPinnedTabsStorage.removePin(tab.getAttribute("zen-pin-id"));
 
-      tab.removeAttribute("zen-pin-id");
+      if(!isClosing) {
+        tab.removeAttribute("zen-pin-id");
 
-      if(!tab.hasAttribute("zen-workspace-id") && ZenWorkspaces.workspaceEnabled) {
-        const workspace = await ZenWorkspaces.getActiveWorkspace();
-        tab.setAttribute("zen-workspace-id", workspace.uuid);
+        if (!tab.hasAttribute("zen-workspace-id") && ZenWorkspaces.workspaceEnabled) {
+          const workspace = await ZenWorkspaces.getActiveWorkspace();
+          tab.setAttribute("zen-workspace-id", workspace.uuid);
+        }
       }
-
-      await this._refreshPinnedTabs();
+      const currentWorkspace = await ZenWorkspaces.getActiveWorkspace();
+      await this._refreshPinnedTabs(currentWorkspace);
     }
 
     _initClosePinnedTabShortcut() {
@@ -323,6 +401,7 @@
 
       switch (behavior) {
         case 'close':
+          this._removePinnedAttributes(selectedTab, true);
           gBrowser.removeTab(selectedTab, { animate: true });
           break;
         case 'reset-unload-switch':
@@ -370,36 +449,51 @@
 
     async _resetTabToStoredState(tab) {
       const id = tab.getAttribute("zen-pin-id");
-
       if (!id) {
         return;
       }
 
       const pin = this._pinsCache.find(pin => pin.uuid === id);
+      if (!pin) {
+        return;
+      }
 
-      if (pin) {
-        const tabState = SessionStore.getTabState(tab);
-        const state = JSON.parse(tabState);
-        let icon = undefined;
-        try {
-          icon = await PlacesUtils.promiseFaviconData(pin.url);
-        } catch (e) {
-          console.warn("Error trying to get favicon for pinned tab", e);
-        }
+      const tabState = SessionStore.getTabState(tab);
+      const state = JSON.parse(tabState);
 
-        state.entries = [{
-          url: pin.url,
-          title: pin.title,
-          triggeringPrincipal_base64: lazy.E10SUtils.SERIALIZED_SYSTEMPRINCIPAL
-        }];
-        if (icon instanceof Ci.nsIURI || typeof icon === "string") {
-          state.image = icon;
-        } else {
-          state.image = null;
-        }
-        state.index = 0;
+      state.entries = [{
+        url: pin.url,
+        title: pin.title,
+        triggeringPrincipal_base64: lazy.E10SUtils.SERIALIZED_SYSTEMPRINCIPAL
+      }];
 
-        SessionStore.setTabState(tab, state);
+      state.image = pin.iconUrl || null;
+      state.index = 0;
+
+      SessionStore.setTabState(tab, state);
+    }
+
+    async getFaviconAsBase64(pageUrl) {
+      try {
+        // Get the favicon data
+        const faviconData = await PlacesUtils.promiseFaviconData(pageUrl);
+
+        // The data comes as an array buffer, we need to convert it to base64
+        // First create a byte array from the data
+        const array = new Uint8Array(faviconData.data);
+
+        // Convert to base64
+        const base64String = btoa(
+            Array.from(array)
+                .map(b => String.fromCharCode(b))
+                .join('')
+        );
+
+        // Return as a proper data URL
+        return `data:${faviconData.mimeType};base64,${base64String}`;
+      } catch (ex) {
+        console.error("Failed to get favicon:", ex);
+        return null;
       }
     }
 
@@ -455,9 +549,10 @@
                       oncommand="gZenPinnedTabManager.removeEssentials();"/>
         `);
 
-      document.getElementById('context_pinTab')?.after(element);
+      document.getElementById('context_pinTab')?.before(element);
     }
 
+    // TODO: remove this as it's not possible to know the base pinned url any more as it's now stored in tab state
     resetPinnedTabData(tabData) {
       if (lazy.zenPinnedTabRestorePinnedTabsToPinnedUrl && tabData.pinned && tabData.zenPinnedEntry) {
         tabData.entries = [JSON.parse(tabData.zenPinnedEntry)];

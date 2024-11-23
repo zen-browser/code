@@ -48,6 +48,11 @@
   color: inherit;
 }
 
+.PanelUI-zen-profiles-item:active {
+  background: var(--panel-item-active-bgcolor);
+  color: inherit;
+}
+
 .PanelUI-zen-profiles-item::after {
   content: '';
   background-image: url('chrome://global/skin/icons/arrow-right.svg');

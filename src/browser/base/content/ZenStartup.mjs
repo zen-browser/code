@@ -1,12 +1,7 @@
 {
   const lazy = {};
   XPCOMUtils.defineLazyPreferenceGetter(lazy, 'sidebarHeightThrottle', 'zen.view.sidebar-height-throttle', 500);
-  XPCOMUtils.defineLazyPreferenceGetter(
-    lazy,
-    'disableInitialUrlBarFocus',
-    'zen.urlbar.disable-initial-focus',
-    false
-  );
+  XPCOMUtils.defineLazyPreferenceGetter(lazy, 'disableInitialUrlBarFocus', 'zen.urlbar.disable-initial-focus', false);
   var ZenStartup = {
     init() {
       this.logHeader();
@@ -41,55 +36,16 @@
         // Disable smooth scroll
         gBrowser.tabContainer.arrowScrollbox.smoothScroll = false;
 
-        gZenPinnedTabManager.initTabs();
         ZenWorkspaces.init();
         gZenUIManager.init();
         gZenVerticalTabsManager.init();
         gZenCompactModeManager.init();
 
-        XPCOMUtils.defineLazyPreferenceGetter(
-          this,
-          'contentElementSeparation',
-          'zen.theme.content-element-separation',
-          0
-        );
-
         document.l10n.setAttributes(document.getElementById('tabs-newtab-button'), 'tabs-toolbar-new-tab');
-
-        function throttle(f, delay) {
-          let timer = 0;
-          return function (...args) {
-            clearTimeout(timer);
-            timer = setTimeout(() => f.apply(this, args), delay);
-          };
-        }
-
-        new ResizeObserver(throttle(this._updateTabsToolbar.bind(this), lazy.sidebarHeightThrottle)).observe(
-          document.getElementById('tabbrowser-tabs')
-        );
       } catch (e) {
         console.error('ZenThemeModifier: Error initializing browser layout', e);
       }
       this.closeWatermark();
-    },
-
-    _updateTabsToolbar() {
-      // Set tabs max-height to the "toolbar-items" height
-      const toolbarItems = document.getElementById('tabbrowser-tabs');
-      const tabs = document.getElementById('tabbrowser-arrowscrollbox');
-      tabs.style.maxHeight = '0px'; // reset to 0
-      const toolbarRect = toolbarItems.getBoundingClientRect();
-      let height = toolbarRect.height;
-      // -5 for the controls padding
-      let totalHeight = toolbarRect.height - (this.contentElementSeparation * 2) - 5;
-      // remove the height from other elements that aren't hidden
-      const otherElements = document.querySelectorAll('#tabbrowser-tabs > *:not([hidden="true"])');
-      for (let tab of otherElements) {
-        if (tabs === tab) continue;
-        totalHeight -= tab.getBoundingClientRect().height;
-      }
-      tabs.style.maxHeight = totalHeight + 'px';
-      //console.info('ZenThemeModifier: set tabs max-height to', totalHeight + 'px');
     },
 
     openWatermark() {

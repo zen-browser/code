@@ -5,18 +5,17 @@
     position: relative;
 
     box-shadow: 0 0 1px 1px light-dark(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.5));
+    border-radius: var(--zen-border-radius);
+    overflow: hidden;
+    margin: 1px;
     
-    & .browserContainer {
-      overflow: hidden;
-      border-radius: var(--zen-webview-border-radius, var(--zen-border-radius));
+    #browser:has(#navigator-toolbox[zen-right-side='true']) & {
+      margin-right: 0;
+      margin-left: var(--zen-element-separation);
     }
-  }
 
-  @media (-moz-bool-pref: 'zen.view.experimental-rounded-view') {
-    #tabbrowser-tabpanels {
-      mix-blend-mode: multiply;
-      -moz-osx-font-smoothing: grayscale;
-      isolation: isolate;
+    :root[zen-no-padding='true'] &:not([zen-split="true"]) {
+      border-radius: 0 !important;
     }
   }
 }

@@ -36,9 +36,7 @@
 
 .zen-sidebar-panel-button image {
   border-radius: 10px !important;
-  background: var(--toolbarbutton-hover-background);
   border: 2px solid transparent;
-  transition: background 0.1s ease-in-out;
 }
 
 .zen-sidebar-panel-button:hover image {
@@ -146,7 +144,7 @@
 }
 
 #zen-sidebar-web-panel-wrapper {
-  margin: 0 calc(var(--zen-element-separation) / 2) var(--zen-element-separation) var(--zen-element-separation);
+  margin: var(--zen-element-separation) calc(var(--zen-element-separation) / 2) var(--zen-element-separation) var(--zen-element-separation);
 }
 
 #zen-sidebar-web-panel[pinned='true'] {
@@ -163,7 +161,7 @@
 #zen-sidebar-web-header,
 #zen-sidebar-panels-wrapper {
   width: 100%;
-  min-height: 50px;
+  min-height: var(--zen-toolbar-height) !important;
   display: flex;
   align-items: center;
   padding: 0 5px;
@@ -174,6 +172,8 @@
   position: relative;
   color-scheme: var(--toolbar-color-scheme);
   -moz-window-dragging: no-drag;
+
+  --toolbarbutton-inner-padding: var(--zen-toolbar-button-inner-padding) !important;
 }
 
 #zen-sidebar-web-header {
@@ -225,7 +225,7 @@
 }
 
 #zen-sidebar-web-panel-title {
-  font-size: 1em;
+  font-size: .9em;
   font-weight: 600;
   margin: 0 10px;
   padding: 0;
@@ -248,6 +248,12 @@
 
 #zen-sidebar-web-panel[pinned][hidden] {
   animation: better-sidebar-pinned-hide 0.15s ease-in-out forwards !important;
+}
+
+:root:has(#navigator-toolbox:not([zen-right-side='true'])) {
+  #zen-sidebar-web-panel-wrapper:not(:has(#zen-sidebar-web-panel[pinned='true'])) {
+    margin-left: 0 !important;
+  }
 }
 
 /** UNPINNED **/

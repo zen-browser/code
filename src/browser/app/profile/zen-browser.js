@@ -86,13 +86,6 @@ pref('zen.view.show-newtab-button-border-top', true);
 pref('zen.view.show-newtab-button-top', false);
 
 #ifdef XP_MACOSX
-// Disable for macos in the meantime until @HarryHeres finds a solution for hight DPI screens
-pref('zen.view.experimental-rounded-view', false);
-#else
-pref('zen.view.experimental-rounded-view', true);
-#endif
-
-#ifdef XP_MACOSX
 pref('zen.theme.border-radius', 10); // In pixels
 #else
 #ifdef XP_WIN
@@ -125,12 +118,14 @@ pref('zen.glance.activation-method', 'ctrl'); // ctrl, alt, shift, none, hold
 #endif
 
 pref('zen.view.sidebar-height-throttle', 200); // in ms
-pref('zen.view.sidebar-expanded', true);
-pref('zen.view.sidebar-expanded.on-hover', false);
 pref('zen.view.sidebar-expanded.max-width', 400);
 
 pref('zen.view.show-bottom-border', false);
-pref('zen.view.sidebar-collapsed.hide-mute-button', true);
+pref('zen.view.use-single-toolbar', false);
+
+#ifndef XP_MACOSX
+pref('zen.view.hide-window-controls', true);
+#endif
 
 pref('zen.tabs.dim-pending', true);
 pref('zen.tabs.newtab-on-middle-click', true);
@@ -177,6 +172,7 @@ pref('zen.workspaces.icons', '["⌚","⌛","⏪","⏫","⏬","⏰","⏳","⚽","
 pref('services.sync.prefs.sync.zen.workspaces.icons', true);
 pref('services.sync.engine.workspaces', false);
 pref('zen.essentials.enabled', true);
+pref('zen.workspaces.container-specific-essentials-enabled', false);
 
 // Zen Watermark
 pref('zen.watermark.enabled', true, sticky);

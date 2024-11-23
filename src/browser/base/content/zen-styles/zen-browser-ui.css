@@ -9,19 +9,6 @@
   --inactive-titlebar-opacity: 1;
 }
 
-:root:not([inDOMFullscreen='true']):not([chromehidden~='location']):not([chromehidden~='toolbar']) {
-  & #tabbrowser-tabpanels {
-    padding-right: var(--zen-element-separation);
-    padding-bottom: var(--zen-element-separation);
-    padding-left: 1px; /* Shadow offset */
-
-    #browser:has(#navigator-toolbox[zen-right-side='true']) & {
-      padding-right: 0;
-      padding-left: var(--zen-element-separation);
-    }
-  }
-}
-
 :root:is([inDOMFullscreen='true'], [chromehidden~='location'], [chromehidden~='toolbar']) {
   #navigator-toolbox,
   #zen-sidebar-splitter {
@@ -88,6 +75,18 @@
 #zen-appcontent-wrapper {
   max-width: 100%;
   overflow-x: hidden;
+}
+
+:root:not([inDOMFullscreen='true']):not([chromehidden~='location']):not([chromehidden~='toolbar']) {
+  & #zen-appcontent-wrapper {
+    margin: var(--zen-element-separation);
+    margin-left: 0;
+    margin-top: 0;
+  }
+
+  & #browser:has(#navigator-toolbox[zen-right-side='true']) #zen-appcontent-wrapper {
+    margin-right: 0;
+  }
 }
 
 #tabbrowser-tabbox {

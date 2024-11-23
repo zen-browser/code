@@ -1,2 +1,20 @@
 @media not (-moz-bool-pref: 'zen.tabs.vertical') {
+  #browser,
+  #navigator-toolbox {
+    flex-direction: row;
+
+    max-width: unset !important;
+    width: 100% !important;
+  }
+
+  #zen-sidebar-splitter {
+    display: none !important;
+  }
+
+  #tabbrowser-arrowscrollbox {
+    max-height: unset !important;
+  }
+
+  #titlebar {
+  }
 }

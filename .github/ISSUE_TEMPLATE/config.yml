@@ -1,1 +1,5 @@
-blank_issues_enabled: false
+blank_issues_enabled: false 
+contact_links:
+  - name: Feature Request
+    url: https://github.com/zen-browser/desktop/discussions
+    about: Please use GitHub discussions for feature requests.

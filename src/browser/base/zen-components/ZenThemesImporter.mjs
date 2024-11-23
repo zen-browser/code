@@ -316,5 +316,4 @@ gZenActorsManager.addJSWindowActor("ZenThemeMarketplace", {
     },
   },
   matches: ["https://*.zen-browser.app/*", "about:preferences"],
-  allFrames: true,
 });

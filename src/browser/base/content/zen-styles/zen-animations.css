@@ -194,26 +194,6 @@
   }
 }
 
-@keyframes zen-workspaces-button-active-collapsed-left {
-  from {
-    left: -20px;
-  }
-
-  to {
-    left: -2px;
-  }
-}
-
-@keyframes zen-workspaces-button-active-collapsed-right {
-  from {
-    right: -20px;
-  }
-
-  to {
-    right: -2px;
-  }
-}
-
 /* Mark: Zen Glance */
 @keyframes zen-glance-overlay-animation {
   from {

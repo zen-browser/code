@@ -1,5 +1,5 @@
 diff --git a/browser/base/content/navigator-toolbox.inc.xhtml b/browser/base/content/navigator-toolbox.inc.xhtml
-index 12fa0cf79aade28581016adf96df85386dabdcef..846add9b040abf0f7378ebaaadef007013f5a1ec 100644
+index 12fa0cf79aade28581016adf96df85386dabdcef..85859842c85f5c131900ce49d69b117237ffc592 100644
 --- a/browser/base/content/navigator-toolbox.inc.xhtml
 +++ b/browser/base/content/navigator-toolbox.inc.xhtml
 @@ -2,7 +2,7 @@
@@ -27,15 +27,7 @@ index 12fa0cf79aade28581016adf96df85386dabdcef..846add9b040abf0f7378ebaaadef0070
                           aria-pressed="false"
                           oncommand="FirefoxViewHandler.openTab();"
                           onmousedown="FirefoxViewHandler.openToolbarMouseEvent(event);"
-@@ -50,16 +51,21 @@
-                 aria-multiselectable="true"
-                 setfocus="false"
-                 tooltip="tabbrowser-tab-tooltip"
--                orient="horizontal"
-+                orient="vertical"
-                 stopwatchid="FX_TAB_CLICK_MS">
-             <hbox class="tab-drop-indicator" hidden="true"/>
- # If the name (tabbrowser-arrowscrollbox) or structure of this changes
+@@ -57,9 +58,14 @@
  # significantly, there is an optimization in
  # DisplayPortUtils::MaybeCreateDisplayPortInFirstScrollFrameEncountered based
  # the current structure that we may want to revisit.

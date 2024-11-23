@@ -54,8 +54,9 @@
     transform: translate(var(--initial-x), var(--initial-y));
     width: var(--initial-width);
     height: var(--initial-height);
-    position: absolute;
+    position: fixed;
     border-radius: var(--zen-border-radius);
+    overflow: hidden;
     opacity: 0;
     top: 0;
     left: 0;

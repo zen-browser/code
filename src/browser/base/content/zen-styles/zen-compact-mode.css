@@ -7,19 +7,12 @@
         margin-left: calc(var(--zen-sidebar-web-panel-spacing) * 2) !important;
       }
 
-      #zen-sidebar-top-buttons-customization-target {
-        padding-inline-start: calc(var(--zen-toolbox-padding) - var(--toolbarbutton-outer-padding)) !important;
+      #zen-appcontent-wrapper {
+        margin-left: var(--zen-element-separation) !important;
       }
 
-      /* Set the extra paddings */
-      #tabbrowser-tabpanels {
-        :root:not([inDOMFullscreen='true']) #browser:has(#navigator-toolbox[zen-right-side='true']) & {
-          padding-right: var(--zen-element-separation) !important;
-        }
-
-        :root:not([inDOMFullscreen='true']) #browser:has(#navigator-toolbox:not([zen-right-side='true'])) & {
-          padding-left: var(--zen-element-separation) !important;
-        }
+      #zen-sidebar-top-buttons-customization-target {
+        padding-inline-start: calc(var(--zen-toolbox-padding) - var(--toolbarbutton-outer-padding)) !important;
       }
 
       #zen-sidebar-splitter {
@@ -33,19 +26,26 @@
         z-index: 9;
         transition: transform 0.2s ease-in-out, opacity 0.2s ease-in-out;
         right: calc(100% - var(--zen-element-separation));
-        top: 0;
+        top: var(--zen-element-separation);
         bottom: var(--zen-element-separation);
         opacity: 0;
         padding-left: var(--zen-compact-float) !important;
         padding-bottom: 0 !important;
         padding-top: 0 !important;
+      }
 
-        #browser:has(#navigator-toolbox[zen-right-side='true']) & {
+      & #browser:has(#navigator-toolbox[zen-right-side='true']) {
+        & #navigator-toolbox {
           --zen-compact-float: calc(var(--zen-element-separation) + 1px);
           padding-left: unset !important;
           padding-right: var(--zen-compact-float) !important;
           left: calc(100% - var(--zen-element-separation));
           right: unset;
+        }
+
+        & .browserSidebarContainer {
+          margin-left: 0 !important;
+          margin-right: var(--zen-element-separation) !important;
         }
       }
 
@@ -62,16 +62,6 @@
           background-attachment: fixed !important;
           background-size: 2000px !important; /* Dont ask me why */
           backdrop-filter: blur(5px) !important;
-        }
-      }
-      /* Mark: toolbox as collapsed */
-      #zen-tabbox-wrapper > #navigator-toolbox:not(#navigator-toolbox:is(#navigator-toolbox[zen-expanded='true'])) {
-        max-width: calc(var(--zen-toolbox-max-width) + var(--zen-compact-float)) !important;
-        min-width: calc(var(--zen-toolbox-max-width) + var(--zen-compact-float)) !important;
-
-        & #titlebar {
-          padding-left: 0 !important;
-          padding-right: 0 !important;
         }
       }
 
@@ -105,11 +95,8 @@
         --zen-toolbox-top-align: var(--zen-element-separation);
       }
 
-      &:not([inDOMFullscreen='true']) #tabbrowser-tabpanels {
-        padding-top: var(--zen-element-separation) !important;
-      }
-
       #sidebar-box,
+      #titlebar,
       #zen-sidebar-web-panel-wrapper:has(#zen-sidebar-web-panel:not([pinned='true'])) {
         margin-top: var(--zen-element-separation) !important;
       }

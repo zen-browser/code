@@ -288,64 +288,64 @@
   }
 
   #zen-sidebar-icons-wrapper {
-  background: transparent;
-  gap: 5px;
-  align-items: center;
-  flex-direction: column-reverse;
-  padding-top: var(--zen-element-separation);
+    background: transparent;
+    gap: 5px;
+    align-items: center;
+    flex-direction: column-reverse;
+    padding-top: var(--zen-element-separation);
 
-  & > toolbarbutton:not(#zen-workspaces-button) {
-    padding: 0 !important;
+    & > toolbarbutton:not(#zen-workspaces-button) {
+      padding: 0 !important;
+    }
   }
-}
 
-/* Left side behavior when sidebar is collapsed and hover expansion is disabled */
-@media not (-moz-bool-pref: 'zen.view.sidebar-expanded.on-hover') and (not (-moz-bool-pref: 'zen.view.sidebar-expanded')) {
-  #zen-sidebar-icons-wrapper {
-    flex-direction: column-reverse !important;
+  /* Left side behavior when sidebar is collapsed and hover expansion is disabled */
+  @media not (-moz-bool-pref: 'zen.view.sidebar-expanded.on-hover') and (not (-moz-bool-pref: 'zen.view.sidebar-expanded')) {
+    #zen-sidebar-icons-wrapper {
+      flex-direction: column-reverse !important;
+    }
   }
-}
 
-/* Right side behavior when sidebar is collapsed and hover expansion is disabled */
-@media not (-moz-bool-pref: 'zen.view.sidebar-expanded.on-hover') and (not (-moz-bool-pref: 'zen.view.sidebar-expanded')) {
-  [zen-right-side="true"] #zen-sidebar-icons-wrapper {
-    flex-direction: column !important;
+  /* Right side behavior when sidebar is collapsed and hover expansion is disabled */
+  @media not (-moz-bool-pref: 'zen.view.sidebar-expanded.on-hover') and (not (-moz-bool-pref: 'zen.view.sidebar-expanded')) {
+    [zen-right-side="true"] #zen-sidebar-icons-wrapper {
+      flex-direction: column !important;
+    }
   }
-}
 
-/* Left side behavior with hover expansion enabled but not currently hovered */
-#navigator-toolbox:not(
-  #navigator-toolbox:is(
-    #navigator-toolbox[zen-user-hover='true'][zen-has-hover],
-    #navigator-toolbox[zen-user-hover='true']:focus-within,
-    #navigator-toolbox[zen-user-hover='true'][movingtab],
-    #navigator-toolbox[zen-user-hover='true'][flash-popup],
-    #navigator-toolbox[zen-user-hover='true'][has-popup-menu],
-    #navigator-toolbox[zen-user-hover='true']:has(*[open='true']:not(tab):not(.zen-compact-mode-ignore)),
-    #navigator-toolbox[zen-expanded='true']:not([zen-user-hover='true'])
-  )
-) {
-  #zen-sidebar-icons-wrapper {
-    flex-direction: column-reverse !important;
+  /* Left side behavior with hover expansion enabled but not currently hovered */
+  #navigator-toolbox:not(
+    #navigator-toolbox:is(
+      #navigator-toolbox[zen-user-hover='true'][zen-has-hover],
+      #navigator-toolbox[zen-user-hover='true']:focus-within,
+      #navigator-toolbox[zen-user-hover='true'][movingtab],
+      #navigator-toolbox[zen-user-hover='true'][flash-popup],
+      #navigator-toolbox[zen-user-hover='true'][has-popup-menu],
+      #navigator-toolbox[zen-user-hover='true']:has(*[open='true']:not(tab):not(.zen-compact-mode-ignore)),
+      #navigator-toolbox[zen-expanded='true']:not([zen-user-hover='true'])
+    )
+  ) {
+    #zen-sidebar-icons-wrapper {
+      flex-direction: column-reverse !important;
+    }
   }
-}
 
-/* Right side behavior with hover expansion enabled but not currently hovered */
-#navigator-toolbox[zen-right-side="true"]:not(
-  #navigator-toolbox:is(
-    #navigator-toolbox[zen-user-hover='true'][zen-has-hover],
-    #navigator-toolbox[zen-user-hover='true']:focus-within,
-    #navigator-toolbox[zen-user-hover='true'][movingtab],
-    #navigator-toolbox[zen-user-hover='true'][flash-popup],
-    #navigator-toolbox[zen-user-hover='true'][has-popup-menu],
-    #navigator-toolbox[zen-user-hover='true']:has(*[open='true']:not(tab):not(.zen-compact-mode-ignore)),
-    #navigator-toolbox[zen-expanded='true']:not([zen-user-hover='true'])
-  )
-) {
-  #zen-sidebar-icons-wrapper {
-    flex-direction: column !important;
+  /* Right side behavior with hover expansion enabled but not currently hovered */
+  #navigator-toolbox[zen-right-side="true"]:not(
+    #navigator-toolbox:is(
+      #navigator-toolbox[zen-user-hover='true'][zen-has-hover],
+      #navigator-toolbox[zen-user-hover='true']:focus-within,
+      #navigator-toolbox[zen-user-hover='true'][movingtab],
+      #navigator-toolbox[zen-user-hover='true'][flash-popup],
+      #navigator-toolbox[zen-user-hover='true'][has-popup-menu],
+      #navigator-toolbox[zen-user-hover='true']:has(*[open='true']:not(tab):not(.zen-compact-mode-ignore)),
+      #navigator-toolbox[zen-expanded='true']:not([zen-user-hover='true'])
+    )
+  ) {
+    #zen-sidebar-icons-wrapper {
+      flex-direction: column !important;
+    }
   }
-}
 
   #newtab-button-container {
     display: none !important;

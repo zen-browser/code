@@ -116,6 +116,8 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
       if (!this.workspaceEnabled) return;
       // Only process horizontal scroll (deltaX)
       if (!event.deltaX) return;
+      // Only Process non-Gesture scrolls
+      if (event.deltaMode !== 1) return;
 
       const currentTime = Date.now();
       if (currentTime - this._lastScrollTime < scrollCooldown) {
@@ -192,7 +194,7 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     this._swipeState.cumulativeDelta += event.delta;
 
     // Determine swipe direction based on cumulative delta
-    if (Math.abs(this._swipeState.cumulativeDelta) > 0.25) {
+    if (Math.abs(this._swipeState.cumulativeDelta) > 0.04) {
       this._swipeState.direction = this._swipeState.cumulativeDelta > 0 ? 'right' : 'left';
     }
 
@@ -200,28 +202,35 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
 
   async _handleSwipeEnd(event) {
     if (!this.workspaceEnabled || !this._swipeState?.isGestureActive) return;
-
     event.preventDefault();
     event.stopPropagation();
-
+  
     if (this._swipeState.direction) {
       const workspaces = (await this._workspaces()).workspaces;
       const currentIndex = workspaces.findIndex(w => w.uuid === this.activeWorkspace);
-
+  
       if (currentIndex !== -1) {
         const isRTL = document.documentElement.matches(':-moz-locale-dir(rtl)');
         const moveForward = (this._swipeState.direction === 'right') !== isRTL;
-
-        let targetIndex;
-        if (moveForward) {
-          targetIndex = (currentIndex + 1) % workspaces.length;
+  
+        let targetIndex = moveForward
+          ? currentIndex + 1 
+          : currentIndex - 1;
+  
+        if (Services.prefs.getBoolPref('zen.workspaces.loop-swipe-scrolling', false)) {
+          // Add length to handle negative indices and clamp within bounds
+          targetIndex = (targetIndex + workspaces.length) % workspaces.length;
         } else {
-          targetIndex = (currentIndex - 1 + workspaces.length) % workspaces.length;
+          // Clamp within bounds for to remove looping
+          targetIndex = Math.max(0, Math.min(workspaces.length - 1, targetIndex));
         }
-
-        await this.changeWorkspace(workspaces[targetIndex]);
+  
+        if (targetIndex !== currentIndex) {
+          await this.changeWorkspace(workspaces[targetIndex]);
+        }
       }
     }
+  
 
     // Reset swipe state
     this._swipeState = {

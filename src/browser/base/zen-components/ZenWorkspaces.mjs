@@ -109,8 +109,8 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
       this._hoveringSidebar = false;
     });
 
-    const scrollCooldown = 500; // Milliseconds to wait before allowing another scroll
-    const scrollThreshold = 5; // Minimum scroll delta to trigger workspace change
+    const scrollCooldown = 300; // Milliseconds to wait before allowing another scroll
+    const scrollThreshold = 3; // Minimum scroll delta to trigger workspace change
 
     toolbox.addEventListener('wheel', async (event) => {
       if (!this.workspaceEnabled) return;
@@ -118,7 +118,7 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
       if (!event.deltaX) return;
       // Only Process non-Gesture scrolls
       if (event.deltaMode !== 1) return;
-      
+
       const currentTime = Date.now();
       if (currentTime - this._lastScrollTime < scrollCooldown) {
         return;
@@ -216,12 +216,16 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
 
         let targetIndex;
         if (moveForward) {
-          targetIndex = (currentIndex + 1) % workspaces.length;
+          targetIndex = (currentIndex + 1);
         } else {
-          targetIndex = (currentIndex - 1 + workspaces.length) % workspaces.length;
+          targetIndex = (currentIndex - 1);
         }
+        targetIndex =  Math.max(0, Math.min(workspaces.length-1, targetIndex));
 
-        await this.changeWorkspace(workspaces[targetIndex]);
+        
+        if (targetIndex !== currentIndex) {
+          await this.changeWorkspace(workspaces[targetIndex]);
+        }
       }
     }
 

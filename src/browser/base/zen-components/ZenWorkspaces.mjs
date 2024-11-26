@@ -116,7 +116,9 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
       if (!this.workspaceEnabled) return;
       // Only process horizontal scroll (deltaX)
       if (!event.deltaX) return;
-
+      // Only Process non-Gesture scrolls
+      if (event.deltaMode !== 1) return;
+      
       const currentTime = Date.now();
       if (currentTime - this._lastScrollTime < scrollCooldown) {
         return;

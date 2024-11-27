@@ -997,9 +997,14 @@ Preferences.addAll([
     default: true,
   },
   {
-    id: 'zen.workspaces.loop-swipe-scrolling',
+    id: 'zen.workspaces.wrap-around-navigation',
     type: 'bool',
     default: true,
+  },
+  {
+    id: 'zen.workspaces.scroll-modifier-key',
+    type: "string",
+    default: "ctrl", 
   },
   {
     id: 'zen.pinned-tab-manager.restore-pinned-tabs-to-pinned-url',

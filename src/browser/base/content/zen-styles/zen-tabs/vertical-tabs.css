@@ -644,6 +644,10 @@
   @media (-moz-bool-pref: 'zen.tabs.show-newtab-vertical') {
     #tabs-newtab-button {
       display: flex !important;
+      & .toolbarbutton-text {
+        align-items: center;
+        padding-top: 0;
+      }
     }
 
     #tabbrowser-arrowscrollbox-periphery {

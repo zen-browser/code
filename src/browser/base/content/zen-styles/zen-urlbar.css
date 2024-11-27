@@ -28,6 +28,7 @@
 
 #urlbar-background {
   background: var(--zen-dialog-background);
+  outline: none !important;
 }
 
 #urlbar[focused='true'] > #urlbar-background {
@@ -42,7 +43,7 @@
 #urlbar-background {
   border: transparent !important;
   margin: 1px;
-  box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.1) !important;
 }
 
 #urlbar[focused='true']:not([suppress-focus-border]) > #urlbar-background,
@@ -101,8 +102,8 @@
 
 .urlbar-page-action,
 #tracking-protection-icon-container {
-  width: calc(var(--urlbar-min-height) - 4 * var(--urlbar-container-padding)) !important;
-  height: calc(var(--urlbar-min-height) - 4 * var(--urlbar-container-padding)) !important;
+  width: calc(var(--urlbar-min-height) - 6 * var(--urlbar-container-padding)) !important;
+  height: calc(var(--urlbar-min-height) - 6 * var(--urlbar-container-padding)) !important;
   margin-top: auto !important;
   margin-bottom: auto !important;
 }

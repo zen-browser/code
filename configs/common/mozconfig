@@ -35,7 +35,6 @@ if test "$ZEN_RELEASE"; then
   ac_add_options --disable-debug-js-modules
   ac_add_options --disable-tests
   
-  ac_add_options --disable-jprof
   ac_add_options --disable-vtune
 
   ac_add_options --enable-rust-simd

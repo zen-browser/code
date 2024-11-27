@@ -219,7 +219,7 @@ var gZenVerticalTabsManager = {
     }
 
     const appContentNavbarContaienr = document.getElementById('zen-appcontent-navbar-container');
-    if ((!isRightSide && this.isWindowsStyledButtons) || (isRightSide && !this.isWindowsStyledButtons)) {
+    if ((!isRightSide && this.isWindowsStyledButtons) || (isRightSide && !this.isWindowsStyledButtons) || isCompactMode) {
       appContentNavbarContaienr.setAttribute('should-hide', 'true');
     } else {
       appContentNavbarContaienr.removeAttribute('should-hide');

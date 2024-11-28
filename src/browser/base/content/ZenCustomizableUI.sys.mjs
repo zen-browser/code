@@ -45,6 +45,7 @@ export var ZenCustomizableUI = new (class {
         customizationtarget="zen-sidebar-top-buttons-customization-target"
         mode="icons">
         <hbox id="zen-sidebar-top-buttons-customization-target" class="customization-target" flex="1">
+          <toolbarbutton hidden="true" removable="true" class="chromeclass-toolbar-additional toolbarbutton-1 zen-sidebar-action-button" id="zen-expand-sidebar-button" data-l10n-id="sidebar-zen-expand" cui-areatype="toolbar" oncommand="gZenVerticalTabsManager.toggleExpand();"></toolbarbutton>
           <toolbarbutton removable="true" class="toolbarbutton-1 zen-sidebar-action-button zen-compact-mode-ignore" id="zen-sidepanel-button" data-l10n-id="sidebar-zen-sidepanel" onclick="gZenBrowserManagerSidebar.toggle();"></toolbarbutton>
         </hbox>
       </toolbar>

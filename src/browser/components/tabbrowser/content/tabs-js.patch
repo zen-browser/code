@@ -1,5 +1,5 @@
 diff --git a/browser/components/tabbrowser/content/tabs.js b/browser/components/tabbrowser/content/tabs.js
-index f9e256b143786c18ba85859ca1b11182ab23f1aa..25eeaf2a61fcef53edcb8d1a45b6e41dc750013a 100644
+index f9e256b143786c18ba85859ca1b11182ab23f1aa..82368b940a6f2c526c471c0e4cc608b836cedbbd 100644
 --- a/browser/components/tabbrowser/content/tabs.js
 +++ b/browser/components/tabbrowser/content/tabs.js
 @@ -918,7 +918,7 @@
@@ -64,7 +64,14 @@ index f9e256b143786c18ba85859ca1b11182ab23f1aa..25eeaf2a61fcef53edcb8d1a45b6e41d
            if (!isEndTab) {
              // keep tabs the same width
              tab.style.transition = "none";
-@@ -1657,7 +1660,7 @@
+@@ -1651,13 +1654,13 @@
+       let verticalTabsContainer = document.getElementById(
+         "vertical-pinned-tabs-container"
+       );
+-      let numPinned = gBrowser.pinnedTabCount;
++      let numPinned = gBrowser._numVisiblePinTabs;
+ 
+       if (gBrowser.pinnedTabCount !== verticalTabsContainer.children.length) {
          let tabs = this.visibleTabs;
          for (let i = 0; i < numPinned; i++) {
            tabs[i].style.marginInlineStart = "";

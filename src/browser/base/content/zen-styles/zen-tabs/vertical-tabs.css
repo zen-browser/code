@@ -30,6 +30,11 @@
     width: fit-content;
   }
 
+  :root[zen-window-buttons-reversed='true'] .titlebar-buttonbox-container {
+    margin-right: auto;
+    width: fit-content;
+  }
+
   #TabsToolbar > * {
     justify-content: center;
   }

@@ -23,7 +23,7 @@
         --zen-toolbox-max-width: 54px !important;
         --zen-compact-float: calc(var(--zen-element-separation) - 1px);
         position: absolute;
-        z-index: 9;
+        z-index: 10;
         transition: transform 0.2s ease-in-out, opacity 0.2s ease-in-out;
         right: calc(100% - var(--zen-element-separation));
         top: 0;
@@ -121,8 +121,7 @@
         & #zen-appcontent-navbar-container {
           --zen-compact-toolbar-offset: 5px;
           position: absolute;
-          top: 0;
-          transform: translateY(calc(-100% + var(--zen-element-separation) + 1px));
+          top: calc((-1 * var(--zen-toolbar-height)) + var(--zen-element-separation) + 1px);
           left: 0;
           z-index: 10;
           box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.3) !important;
@@ -159,7 +158,7 @@
           opacity: 1;
           border-top-width: 1px;
 
-          transform: translateY(-1px);
+          top: -1px;
         }
       }
     }

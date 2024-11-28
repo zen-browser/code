@@ -305,9 +305,9 @@ var gZenVerticalTabsManager = {
         }
       } else {
         if (isRightSide) {
-          document.getElementById('zen-appcontent-navbar-container').prepend(windowButtons);
+          document.getElementById('zen-appcontent-navbar-container').appendChild(windowButtons);
         } else {
-          navBar.prepend(windowButtons);
+          topButtons.prepend(windowButtons);
         }
       }
     } else if (!isSingleToolbar && isCompactMode) {

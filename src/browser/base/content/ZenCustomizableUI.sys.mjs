@@ -9,7 +9,7 @@ export var ZenCustomizableUI = new (class {
       'zen-sidebar-top-buttons',
       {
         type: this.TYPE_TOOLBAR,
-        defaultPlacements: ['preferences-button', 'zen-expand-sidebar-button', 'zen-sidepanel-button'],
+        defaultPlacements: ['preferences-button', 'zen-sidepanel-button'],
         defaultCollapsed: null,
       },
       true
@@ -34,7 +34,7 @@ export var ZenCustomizableUI = new (class {
   _addSidebarButtons(window) {
     const sidebarBox = window.MozXULElement.parseXULToFragment(`
       <toolbar id="zen-sidebar-top-buttons"
-        fullscreentoolbar="true" 
+        fullscreentoolbar="true"
         class="browser-toolbar customization-target zen-dont-hide-on-fullscreen"
         brighttext="true"
         data-l10n-id="tabs-toolbar"
@@ -71,7 +71,7 @@ export var ZenCustomizableUI = new (class {
   _moveWindowButtons(window) {
     const windowControls = window.document.getElementsByClassName('titlebar-buttonbox-container');
     const toolboxIcons = window.document.getElementById('zen-sidebar-top-buttons-customization-target');
-    if (window.AppConstants.platform === 'macosx') {
+    if (window.AppConstants.platform === 'macosx'|| window.matchMedia('(-moz-gtk-csd-reversed-placement)').matches) {
       for (let i = 0; i < windowControls.length; i++) {
         if (i === 0) {
           toolboxIcons.prepend(windowControls[i]);

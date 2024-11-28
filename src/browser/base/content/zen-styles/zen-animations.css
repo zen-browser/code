@@ -56,7 +56,18 @@
 
 @keyframes zen-slide-in {
   from {
-    transform: translateX(-30px);
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes zen-slide-in-reverse {
+  from {
+    transform: translateX(100%);
     opacity: 0;
   }
   to {
@@ -194,26 +205,6 @@
   }
 }
 
-@keyframes zen-workspaces-button-active-collapsed-left {
-  from {
-    left: -20px;
-  }
-
-  to {
-    left: -2px;
-  }
-}
-
-@keyframes zen-workspaces-button-active-collapsed-right {
-  from {
-    right: -20px;
-  }
-
-  to {
-    right: -2px;
-  }
-}
-
 /* Mark: Zen Glance */
 @keyframes zen-glance-overlay-animation {
   from {
@@ -240,23 +231,22 @@
 @keyframes zen-glance-content-animation {
   /* make the box appear from initial width/height and x/y coordinates */
   0% {
-    opacity: 1;
-  }
-
-  30% {
+    opacity: 0;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%) translateZ(0);
+    width: 0%;
+    height: 0%;
   }
 
-  70% {
+  80% {
     /* make the box grow to full width/height */
     opacity: 1;
     transform: translate(-50%, -50%) translateZ(0);
     top: 50%;
     left: 50%;
     width: 87%;
-    height: calc(102% + 10px);
+    height: 102%;
   }
 
   100% {
@@ -264,7 +254,7 @@
     transform: translate(-50%, -50%) translateZ(0);
     opacity: 1;
     width: 85%;
-    height: calc(100% + 10px);
+    height: 100%;
     top: 50%;
     left: 50%;
   }
@@ -272,16 +262,24 @@
 
 @keyframes zen-glance-content-animation-out {
   0% {
-    border: none;
+    /* make the box shrink to final width/height and x/y coordinates */
+    transform: translate(-50%, -50%) translateZ(0);
+    width: 85%;
+    height: 100%;
+    top: 50%;
+    left: 50%;
+    opacity: 1;
   }
 
   100% {
-    transform: translate(-50%, -50%);
-    opacity: 1;
-    width: 85%;
-    height: calc(100% + 10px);
+    /* make the box appear from initial width/height and x/y coordinates */
+    transform: translate(-50%, -50%) translateZ(0);
+    opacity: 0;
+    width: 47%;
+    height: 53%;
     top: 50%;
     left: 50%;
+    opacity: 0;
   }
 }
 
@@ -297,10 +295,10 @@
   to {
     width: 100%;
     height: 100%;
-    top: 0;
-    left: 0;
+    top: 50%;
+    left: 50%;
     opacity: 1;
-    transform: none;
+    transform: translate(-50%, -50%); 
   }
 }
 
@@ -311,7 +309,7 @@
   }
 
   90% {
-    width: 100%; 
+    width: 100%;
   }
 
   100% {

@@ -47,8 +47,6 @@ var ZenPinnedTabsStorage = {
       await db.execute(`
         CREATE INDEX IF NOT EXISTS idx_zen_pins_changes_uuid ON zen_pins_changes(uuid)
       `);
-
-      await gZenPinnedTabManager._refreshPinnedTabs();
     });
   },
 
@@ -151,8 +149,8 @@ var ZenPinnedTabsStorage = {
   async getGroupChildren(groupUuid) {
     const db = await PlacesUtils.promiseDBConnection();
     const rows = await db.executeCached(`
-      SELECT * FROM zen_pins 
-      WHERE parent_uuid = :groupUuid 
+      SELECT * FROM zen_pins
+      WHERE parent_uuid = :groupUuid
       ORDER BY position ASC
     `, { groupUuid });
 

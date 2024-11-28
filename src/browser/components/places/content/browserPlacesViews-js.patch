@@ -1,8 +1,35 @@
 diff --git a/browser/components/places/content/browserPlacesViews.js b/browser/components/places/content/browserPlacesViews.js
-index 1bfa0af16178c9b42172bc1b1e0249d28ff8e9e6..e7e76a6d548b32887c1d39053e42c5e3dafbb839 100644
+index 1bfa0af16178c9b42172bc1b1e0249d28ff8e9e6..417a9dc4e55208bdc9c1422a3bae14361a4964c5 100644
 --- a/browser/components/places/content/browserPlacesViews.js
 +++ b/browser/components/places/content/browserPlacesViews.js
-@@ -393,6 +393,7 @@ class PlacesViewBase {
+@@ -330,12 +330,23 @@ class PlacesViewBase {
+ 
+     this._cleanPopup(aPopup);
+ 
++    let children = [];
+     let cc = resultNode.childCount;
+-    if (cc > 0) {
++    for (let i = 0; i < cc; ++i) {
++      let child = resultNode.getChild(i);
++      // Skip nodes that don't belong in current workspace
++      if (PlacesUtils.nodeIsURI(child) || PlacesUtils.containerTypes.includes(child.type)) {
++        if (ZenWorkspaces.isBookmarkInAnotherWorkspace(child)) {
++          continue;
++        }
++      }
++      children.push(child);
++    }
++
++    if (children.length > 0) {
+       this._setEmptyPopupStatus(aPopup, false);
+       let fragment = document.createDocumentFragment();
+-      for (let i = 0; i < cc; ++i) {
+-        let child = resultNode.getChild(i);
++      for (let child of children) {
+         this._insertNewItemToPopup(child, fragment);
+       }
+       aPopup.insertBefore(fragment, aPopup._endMarker);
+@@ -393,6 +404,7 @@ class PlacesViewBase {
            "scheme",
            PlacesUIUtils.guessUrlSchemeForUI(aPlacesNode.uri)
          );
@@ -10,16 +37,89 @@ index 1bfa0af16178c9b42172bc1b1e0249d28ff8e9e6..e7e76a6d548b32887c1d39053e42c5e3
        } else if (PlacesUtils.containerTypes.includes(type)) {
          element = document.createXULElement("menu");
          element.setAttribute("container", "true");
-@@ -1087,6 +1088,8 @@ class PlacesToolbar extends PlacesViewBase {
+@@ -981,25 +993,33 @@ class PlacesToolbar extends PlacesViewBase {
+       this._rootElt.firstChild.remove();
+     }
+ 
++    let visibleNodes = [];
+     let cc = this._resultNode.childCount;
+-    if (cc > 0) {
+-      // There could be a lot of nodes, but we only want to build the ones that
+-      // are more likely to be shown, not all of them.
+-      // We also don't want to wait for reflows at every node insertion, to
+-      // calculate a precise number of visible items, thus we guess a size from
+-      // the first non-separator node (because separators have flexible size).
++    for (let i = 0; i < cc; i++) {
++      let child = this._resultNode.getChild(i);
++      if (PlacesUtils.nodeIsURI(child) || PlacesUtils.containerTypes.includes(child.type)) {
++        if (!ZenWorkspaces.isBookmarkInAnotherWorkspace(child)) {
++          visibleNodes.push(child);
++        }
++      } else {
++        // Always include separators
++        visibleNodes.push(child);
++      }
++    }
++
++    if (visibleNodes.length > 0) {
++      // Look for the first non-separator node.
+       let startIndex = 0;
+       let limit = await this._runBeforeFrameRender(() => {
+         if (!this._isAlive) {
+-          return cc;
++          return visibleNodes.length;
+         }
+ 
+-        // Look for the first non-separator node.
+         let elt;
+-        while (startIndex < cc) {
++        while (startIndex < visibleNodes.length) {
+           elt = this._insertNewItem(
+-            this._resultNode.getChild(startIndex),
+-            this._rootElt
++              visibleNodes[startIndex],
++              this._rootElt
+           );
+           ++startIndex;
+           if (elt.localName != "toolbarseparator") {
+@@ -1007,15 +1027,12 @@ class PlacesToolbar extends PlacesViewBase {
+           }
+         }
+         if (!elt) {
+-          return cc;
++          return visibleNodes.length;
+         }
+ 
+         return window.promiseDocumentFlushed(() => {
+-          // We assume a button with just the icon will be more or less a square,
+-          // then compensate the measurement error by considering a larger screen
+-          // width. Moreover the window could be bigger than the screen.
+-          let size = elt.clientHeight || 1; // Sanity fallback.
+-          return Math.min(cc, parseInt((window.screen.width * 1.5) / size));
++          let size = elt.clientHeight || 1;
++          return Math.min(visibleNodes.length, parseInt((window.screen.width * 1.5) / size));
+         });
+       });
+ 
+@@ -1025,7 +1042,7 @@ class PlacesToolbar extends PlacesViewBase {
+ 
+       let fragment = document.createDocumentFragment();
+       for (let i = startIndex; i < limit; ++i) {
+-        this._insertNewItem(this._resultNode.getChild(i), fragment);
++        this._insertNewItem(visibleNodes[i], fragment);
+       }
+       await new Promise(resolve => window.requestAnimationFrame(resolve));
+       if (!this._isAlive) {
+@@ -1087,6 +1104,8 @@ class PlacesToolbar extends PlacesViewBase {
            "scheme",
            PlacesUIUtils.guessUrlSchemeForUI(aChild.uri)
          );
-+        button.hidden = ZenWorkspaces.isBookmarkInAnotherWorkspace(aChild);
++
 +        button.addEventListener("command", gZenGlanceManager.openGlanceForBookmark.bind(gZenGlanceManager));
        }
      }
  
-@@ -2235,7 +2238,7 @@ this.PlacesPanelview = class PlacesPanelview extends PlacesViewBase {
+@@ -2235,7 +2254,7 @@ this.PlacesPanelview = class PlacesPanelview extends PlacesViewBase {
          PlacesUIUtils.guessUrlSchemeForUI(placesNode.uri)
        );
        element.setAttribute("label", PlacesUIUtils.getBestTitle(placesNode));

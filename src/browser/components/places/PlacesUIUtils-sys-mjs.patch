@@ -1,0 +1,159 @@
+diff --git a/browser/components/places/PlacesUIUtils.sys.mjs b/browser/components/places/PlacesUIUtils.sys.mjs
+index 0f79ba5dd42116d626445b86f6b24731d2fa8aad..76d692db1731e84b28d9035b03e34c176c12bd23 100644
+--- a/browser/components/places/PlacesUIUtils.sys.mjs
++++ b/browser/components/places/PlacesUIUtils.sys.mjs
+@@ -58,6 +58,7 @@ class BookmarkState {
+     info,
+     tags = "",
+     keyword = "",
++    workspaces = [],
+     isFolder = false,
+     children = [],
+     autosave = false,
+@@ -82,12 +83,18 @@ class BookmarkState {
+       keyword,
+       parentGuid: info.parentGuid,
+       index,
++      workspaces,
+     };
+ 
+     // Edited bookmark
+     this._newState = {};
+   }
+ 
++  async _workspacesChanged(workspaces) {
++    this._newState.workspaces = workspaces;
++    await this._maybeSave();
++  }
++
+   /**
+    * Save edited title for the bookmark
+    *
+@@ -181,6 +188,14 @@ class BookmarkState {
+       "BookmarkState::createBookmark"
+     );
+     this._guid = results?.[0];
++
++    if ('workspaces' in this._newState) {
++      try {
++        await this.updateBookmarkWorkspaces(this._guid, this._newState.workspaces);
++      } catch (ex) {
++        console.error("Failed to update workspace assignments:", ex);
++      }
++    }
+     return this._guid;
+   }
+ 
+@@ -214,6 +229,14 @@ class BookmarkState {
+       "BookmarkState::save::createFolder"
+     );
+     this._guid = results[0];
++
++    if ('workspaces' in this._newState) {
++      try {
++        await this.updateBookmarkWorkspaces(this._guid, this._newState.workspaces);
++      } catch (ex) {
++        console.error("Failed to update workspace assignments:", ex);
++      }
++    }
+     return this._guid;
+   }
+ 
+@@ -300,11 +323,97 @@ class BookmarkState {
+       await lazy.PlacesTransactions.batch(transactions, "BookmarkState::save");
+     }
+ 
++    if ('workspaces' in this._newState) {
++      try {
++        await this.updateBookmarkWorkspaces(this._guid, this._newState.workspaces);
++      } catch (ex) {
++        console.error("Failed to update workspace assignments:", ex);
++      }
++    }
+     this._originalState = { ...this._originalState, ...this._newState };
+     this._newState = {};
+     return this._guid;
+   }
+ 
++  async updateBookmarkWorkspaces(bookmarkGuid, workspaces) {
++    await lazy.PlacesUtils.withConnectionWrapper('ZenWorkspaceBookmarksStorage.updateBookmarkWorkspaces', async (db) => {
++      const now = Date.now();
++
++      await db.executeTransaction(async () => {
++        const rows = await db.execute(`
++          SELECT workspace_uuid
++          FROM zen_bookmarks_workspaces
++          WHERE bookmark_guid = :bookmark_guid
++        `, { bookmark_guid: bookmarkGuid });
++
++        const currentWorkspaces = rows.map(row => row.getResultByName("workspace_uuid"));
++        const workspacesToRemove = currentWorkspaces.filter(w => !workspaces.includes(w));
++        const workspacesToAdd = workspaces.filter(w => !currentWorkspaces.includes(w));
++
++        // If there are workspaces to remove, delete only those specific associations
++        if (workspacesToRemove.length > 0) {
++          const placeholders = workspacesToRemove.map(() => '?').join(',');
++          await db.execute(`
++          DELETE FROM zen_bookmarks_workspaces
++          WHERE bookmark_guid = :bookmark_guid 
++          AND workspace_uuid IN (${placeholders})
++        `, [bookmarkGuid, ...workspacesToRemove]);
++
++          // Record removals
++          for (const workspace of workspacesToRemove) {
++            await this._recordChange(db, bookmarkGuid, workspace, 'removed');
++          }
++        }
++
++        // Add only new associations
++        for (const workspaceUuid of workspacesToAdd) {
++          await db.execute(`
++            INSERT INTO zen_bookmarks_workspaces (
++              bookmark_guid, workspace_uuid, created_at, updated_at
++            ) VALUES (
++                       :bookmark_guid, :workspace_uuid, :now, :now
++                     )
++          `, {
++            bookmark_guid: bookmarkGuid,
++            workspace_uuid: workspaceUuid,
++            now
++          });
++
++          await this._recordChange(db, bookmarkGuid, workspaceUuid, 'added');
++        }
++      });
++    });
++
++    const changes = { bookmarkGuid, workspaces };
++    Services.obs.notifyObservers(null, "workspace-bookmarks-updated", JSON.stringify(changes));
++  }
++
++  async _recordChange(db, bookmarkGuid, workspaceUuid, changeType) {
++    const now = Date.now();
++    await db.execute(`
++      INSERT OR REPLACE INTO zen_bookmarks_workspaces_changes (
++        bookmark_guid, workspace_uuid, change_type, timestamp
++      ) VALUES (
++        :bookmark_guid, :workspace_uuid, :change_type, :timestamp
++      )
++    `, {
++      bookmark_guid: bookmarkGuid,
++      workspace_uuid: workspaceUuid,
++      change_type: changeType,
++      timestamp: Math.floor(now / 1000)
++    });
++
++    await this._updateLastChangeTimestamp(db);
++  }
++
++  async _updateLastChangeTimestamp(db) {
++    const now = Date.now();
++    await db.execute(`
++      INSERT OR REPLACE INTO moz_meta (key, value)
++      VALUES ('zen_bookmarks_workspaces_last_change', :now)
++    `, { now });
++  }
++
+   /**
+    * Append transactions to update tags by given information.
+    *

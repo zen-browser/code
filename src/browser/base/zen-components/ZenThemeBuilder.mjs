@@ -120,7 +120,7 @@ var gZenThemeBuilder = {
     //ctx.fillRect(0, 0, size, size);
 
     // Add the thumb.
-    const accentColor = Services.prefs.getStringPref(kZenAccentColorConfigKey, '#aac7ff');
+    const accentColor = Services.prefs.getStringPref(kZenAccentColorConfigKey, '#ffb787');
     const pos = this._getPositionFromColor(ctx, this._hexToRgb(accentColor));
 
     let x = pos ? pos[0] : center;

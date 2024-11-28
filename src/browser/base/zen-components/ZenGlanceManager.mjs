@@ -192,7 +192,7 @@
 
             this.lastCurrentTab.removeAttribute("zen-glance-tab");
             this.lastCurrentTab._closingGlance = true;
-              
+
             gBrowser.tabContainer._invalidateCachedTabs();
             gBrowser.removeTab(this.lastCurrentTab, { animate: true });
 
@@ -200,10 +200,10 @@
             this.#currentBrowser = null;
 
             this.lastCurrentTab = null;
-            this._duringOpening = false;            
+            this._duringOpening = false;
           }, 400);
         });
-      });  
+      });
     }
 
     quickOpenGlance() {
@@ -231,7 +231,7 @@
 
     quickCloseGlance({ closeCurrentTab = true, closeParentTab = true, justAnimateParent = false } = {}) {
       const parentHasBrowser = !!(this.currentParentTab.linkedBrowser);
-      if (!justAnimateParent) { 
+      if (!justAnimateParent) {
         if (parentHasBrowser) {
           if (closeParentTab) {
             this.currentParentTab.linkedBrowser.closest(".browserSidebarContainer").classList.remove("deck-selected");
@@ -277,7 +277,7 @@
       }
     }
 
-    fullyOpenGlance() {            
+    fullyOpenGlance() {
       gBrowser._insertTabAtIndex(this.#currentTab, {
         index: this.#currentTab._tPos + 1,
       });
@@ -293,6 +293,7 @@
       setTimeout(() => {
         window.requestAnimationFrame(() => {
           this.browserWrapper.setAttribute("animate-full-end", true);
+          this.overlay.classList.remove("zen-glance-overlay");
           setTimeout(() => {
             this.animatingFullOpen = false;
             this.closeGlance({ noAnimation: true });

@@ -19,7 +19,7 @@
       ChromeUtils.defineLazyGetter(this, 'panel', () => document.getElementById('PanelUI-zen-gradient-generator'));
       ChromeUtils.defineLazyGetter(this, 'toolbox', () => document.getElementById('TabsToolbar'));
       ChromeUtils.defineLazyGetter(this, 'customColorInput', () => document.getElementById('PanelUI-zen-gradient-generator-custom-input'));
-      ChromeUtils.defineLazyGetter(this, 'customColorList', () => document.getElementById('PanelUI-zen-gradient-generator-custom-list'));    
+      ChromeUtils.defineLazyGetter(this, 'customColorList', () => document.getElementById('PanelUI-zen-gradient-generator-custom-list'));
 
       XPCOMUtils.defineLazyPreferenceGetter(
         this,
@@ -74,7 +74,7 @@
       this.image.onload = this.onImageLoad.bind(this);
     }
 
-    
+
     onImageLoad() {
       // resize the image to fit the panel
       const imageSize = 300 - 20; // 20 is the padding (10px)
@@ -164,11 +164,11 @@
       this.rotationInputDot.style.transform = `rotate(${degrees - 20}deg)`;
       this.rotationInputText.textContent = `${fixedRotation}°`;
     }
-    
+
     initCustomColorInput() {
       this.customColorInput.addEventListener('keydown', this.onCustomColorKeydown.bind(this));
     }
-    
+
     onCustomColorKeydown(event) {
       //checks for enter key for custom colors
       if (event.key === 'Enter') {
@@ -246,19 +246,19 @@
 
     onThemePickerClick(event) {
       event.preventDefault();
-      
+
       if (event.button !== 0 || this.dragging ) return;
-  
+
       const gradient = this.panel.querySelector('.zen-theme-picker-gradient');
       const rect = gradient.getBoundingClientRect();
       const padding = 90; // each side
-      
+
       const centerX = rect.left + rect.width / 2;
       const centerY = rect.top + rect.height / 2;
       const radius = (rect.width - padding) / 2;
       let pixelX = event.clientX;
       let pixelY = event.clientY;
-      
+
       // Check if the click is within the circle
       const distance = Math.sqrt((pixelX - centerX) ** 2 + (pixelY - centerY) ** 2);
       if (distance > radius) {
@@ -268,33 +268,33 @@
       // Check if we clicked on an existing dot
       const clickedElement = event.target;
       const isExistingDot = clickedElement.classList.contains('zen-theme-picker-dot');
-  
+
       // Only proceed if not clicking on an existing dot
       if (!isExistingDot) {
-        
+
         const relativeX = event.clientX - rect.left;
         const relativeY = event.clientY - rect.top;
-        
-        
+
+
         const color = this.getColorFromPosition(relativeX, relativeY);
-  
+
         // Create new dot
         const dot = document.createElement('div');
         dot.classList.add('zen-theme-picker-dot');
         dot.addEventListener('mousedown', this.onDotMouseDown.bind(this));
-  
+
         dot.style.left = `${relativeX}px`;
         dot.style.top = `${relativeY}px`;
         dot.style.setProperty('--zen-theme-picker-dot-color', `rgb(${color[0]}, ${color[1]}, ${color[2]})`);
-  
+
         gradient.appendChild(dot);
-  
+
         this.updateCurrentWorkspace(true);
       }
 
   }
-  
-  
+
+
 
   onDotMouseDown(event) {
     event.preventDefault();
@@ -305,7 +305,7 @@
     this.draggedDot = event.target;
     this.draggedDot.style.zIndex = 1;
     this.draggedDot.classList.add('dragging');
-    
+
     // Store the starting position of the drag
     this.dragStartPosition = {
       x: event.clientX,
@@ -320,9 +320,9 @@
         const rect = this.panel.querySelector('.zen-theme-picker-gradient').getBoundingClientRect();
         const padding = 90; // each side
         // do NOT let the ball be draged outside of an imaginary circle. You can drag it anywhere inside the circle
-        // if the distance between the center of the circle and the dragged ball is bigger than the radius, then the ball 
+        // if the distance between the center of the circle and the dragged ball is bigger than the radius, then the ball
         // should be placed on the edge of the circle. If it's inside the circle, then the ball just follows the mouse
-   
+
         const centerX = rect.left + rect.width / 2;
         const centerY = rect.top + rect.height / 2;
         const radius = (rect.width - padding) / 2;
@@ -358,18 +358,18 @@
       listItems.querySelector('.zen-theme-picker-dot-custom').style.setProperty('--zen-theme-picker-dot-color', color);
       listItems.querySelector('.zen-theme-picker-custom-list-item-label').textContent = color;
 
-      
+
       this.customColorList.appendChild(listItems);
     }
 
     async addCustomColor() {
-      
+
       const color = this.customColorInput.value;
       if (!color) {
-        
+
         return;
       }
-    
+
 
       // can be any color format, we just add it to the list as a dot, but hidden
       const dot = document.createElement('div');
@@ -385,46 +385,46 @@
 
     onThemePickerClick(event) {
       event.preventDefault();
-      
+
       if (event.button !== 0 || this.dragging) return;
-  
+
       const gradient = this.panel.querySelector('.zen-theme-picker-gradient');
       const rect = gradient.getBoundingClientRect();
       const padding = 90; // each side
-      
+
       const centerX = rect.left + rect.width / 2;
       const centerY = rect.top + rect.height / 2;
       const radius = (rect.width - padding) / 2;
       let pixelX = event.clientX;
       let pixelY = event.clientY;
-      
+
       // Check if the click is within the circle
       const distance = Math.sqrt((pixelX - centerX) ** 2 + (pixelY - centerY) ** 2);
       if (distance > radius) {
-        return; 
+        return;
       }
 
-      
+
       const clickedElement = event.target;
       const isExistingDot = clickedElement.classList.contains('zen-theme-picker-dot');
-  
-      
+
+
       if (!isExistingDot && this.numberOfDots < ZenThemePicker.MAX_DOTS) {
         const relativeX = event.clientX - rect.left;
         const relativeY = event.clientY - rect.top;
-        
+
         const color = this.getColorFromPosition(relativeX, relativeY);
-  
+
         const dot = document.createElement('div');
         dot.classList.add('zen-theme-picker-dot');
         dot.addEventListener('mousedown', this.onDotMouseDown.bind(this));
-  
+
         dot.style.left = `${relativeX}px`;
         dot.style.top = `${relativeY}px`;
         dot.style.setProperty('--zen-theme-picker-dot-color', `rgb(${color[0]}, ${color[1]}, ${color[2]})`);
-  
+
         gradient.appendChild(dot);
-  
+
         this.updateCurrentWorkspace(true);
       }
     }
@@ -438,7 +438,7 @@
       this.draggedDot = event.target;
       this.draggedDot.style.zIndex = 1;
       this.draggedDot.classList.add('dragging');
-      
+
       // Store the starting position of the drag
       this.dragStartPosition = {
         x: event.clientX,
@@ -459,7 +459,7 @@
 
       if (this.dragging) {
         event.preventDefault();
-        event.stopPropagation(); 
+        event.stopPropagation();
         this.dragging = false;
         this.draggedDot.style.zIndex = 1;
         this.draggedDot.classList.remove('dragging');
@@ -586,13 +586,13 @@
         }
       }
       const result = this.pSBC(
-        this.isDarkMode ? 0.2 : -0.5, 
+        this.isDarkMode ? 0.2 : -0.5,
         `rgb(${dominantColor[0]}, ${dominantColor[1]}, ${dominantColor[2]})`);
       return result?.match(/\d+/g).map(Number);
     }
 
     async onWorkspaceChange(workspace, skipUpdate = false, theme = null) {
-      
+
       const uuid = workspace.uuid;
       // Use theme from workspace object or passed theme
       let workspaceTheme = theme || workspace.theme;
@@ -615,7 +615,7 @@
             dot.remove();
           }
         }
-    
+
 
         const appWrapper = browser.document.getElementById('zen-main-app-wrapper');
         if (!skipUpdate) {
@@ -655,7 +655,7 @@
         const gradient = browser.gZenThemePicker.getGradient(workspaceTheme.gradientColors);
         const gradientToolbar = browser.gZenThemePicker.getGradient(workspaceTheme.gradientColors, true);
         browser.gZenThemePicker.updateNoise(workspaceTheme.texture);
-        
+
         for (const dot of workspaceTheme.gradientColors) {
           if (dot.isCustom) {
             browser.gZenThemePicker.addColorToCustomList(dot.c);

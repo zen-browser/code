@@ -12,19 +12,22 @@ mkdir windsign-temp -ErrorAction SilentlyContinue
 # Download in parallel
 
 #show output too
-Start-Job -Name "DownloadGitObjectsRepo" -ScriptBlock {
-    param($PWD)
-    echo "Downloading git objects repo to $PWD\windsign-temp\windows-binaries"
-    git clone https://github.com/zen-browser/windows-binaries.git $PWD\windsign-temp\windows-binaries
-    echo "Downloaded git objects repo to"
-} -Verbose -ArgumentList $PWD -Debug
+#Start-Job -Name "DownloadGitObjectsRepo" -ScriptBlock {
+#    param($PWD)
+#    echo "Downloading git objects repo to $PWD\windsign-temp\windows-binaries"
+#    git clone https://github.com/zen-browser/windows-binaries.git $PWD\windsign-temp\windows-binaries
+#    echo "Downloaded git objects repo to"
+#} -Verbose -ArgumentList $PWD -Debug
 
+gh run download $GithubRunId --name windows-x64-obj-arm64 -D windsign-temp\windows-x64-obj-arm64
+echo "Downloaded arm64 artifacts"
 gh run download $GithubRunId --name windows-x64-obj-specific -D windsign-temp\windows-x64-obj-specific
 echo "Downloaded specific artifacts"
 gh run download $GithubRunId --name windows-x64-obj-generic -D windsign-temp\windows-x64-obj-generic
 echo "Downloaded generic artifacts"
 
-Wait-Job -Name "DownloadGitObjectsRepo"
+
+#Wait-Job -Name "DownloadGitObjectsRepo"
 
 mkdir engine\obj-x86_64-pc-windows-msvc\ -ErrorAction SilentlyContinue
 
@@ -46,9 +49,13 @@ function SignAndPackage($name) {
     $env:SURFER_SIGNING_MODE="sign"
     $env:MAR="$PWD\\build\\winsign\\mar.exe"
     if ($name -eq "generic") {
-        $env:SURFER_COMPAT="true"
+        $env:SURFER_COMPAT="x86_64"
     } else {
-        rm env:SURFER_COMPAT -ErrorAction SilentlyContinue
+        if ($name -eq "arm64") {
+            $env:SURFER_COMPAT="aarch64"
+        } else {
+            $env:SURFER_COMPAT="x86_64-v3"
+        }
     }
 
     echo "Compat Mode? $env:SURFER_COMPAT"
@@ -67,21 +74,28 @@ function SignAndPackage($name) {
     mkdir windsign-temp\windows-x64-signed-$name
     
     # Move the MAR, add the `-generic` suffix if needed
-    if ($name -eq "generic") {
-        mv .\dist\output.mar windsign-temp\windows-x64-signed-$name\windows-generic.mar
+    echo "Moving MAR for $name"
+    if ($name -eq "generic" -or $name -eq "arm64") {
+        mv .\dist\output.mar windsign-temp\windows-x64-signed-$name\windows-$name.mar
     } else {
         mv .\dist\output.mar windsign-temp\windows-x64-signed-$name\windows.mar
     }
 
     # Move the installer
-    if ($name -eq "generic") {
-        mv .\dist\zen.installer.exe windsign-temp\windows-x64-signed-$name\zen.installer-generic.exe
+    echo "Moving installer for $name"
+    if ($name -eq "generic" -or $name -eq "arm64") {
+        mv .\dist\zen.installer.exe windsign-temp\windows-x64-signed-$name\zen.installer-$name.exe
     } else {
         mv .\dist\zen.installer.exe windsign-temp\windows-x64-signed-$name\zen.installer.exe
     }
 
     # Move the zip
-    mv (Get-Item .\dist\*.en-US.win64.zip) windsign-temp\windows-x64-signed-$name\zen.win-$name.zip
+    echo "Moving zip for $name"
+    if ($name -eq "arm64") {
+        mv (Get-Item .\dist\*.en-US.win64-aarch64.zip) windsign-temp\windows-x64-signed-$name\zen.win-arm64.zip
+    } else {
+        mv (Get-Item .\dist\*.en-US.win64.zip) windsign-temp\windows-x64-signed-$name\zen.win-$name.zip
+    }
 
     # Extract the zip, sign everything inside, and repackage it
     Expand-Archive -Path windsign-temp\windows-x64-signed-$name\zen.win-$name.zip -DestinationPath windsign-temp\windows-x64-signed-$name\zen.win-$name
@@ -103,6 +117,7 @@ function SignAndPackage($name) {
     echo "Finished $name"
 }
 
+SignAndPackage arm64
 SignAndPackage specific
 SignAndPackage generic
 
@@ -121,7 +136,9 @@ echo "All the artifacts (Generic and Specific) are signed and packaged, get a re
 Read-Host "Press Enter to continue"
 
 echo "Cleaning up" 
-rmdir windsign-temp -Recurse -ErrorAction SilentlyContinue
+rmdir windsign-temp\windows-x64-obj-specific -Recurse -ErrorAction SilentlyContinue
+rmdir windsign-temp\windows-x64-obj-generic -Recurse -ErrorAction SilentlyContinue
+rmdir windsign-temp\windows-x64-obj-arm64 -Recurse -ErrorAction SilentlyContinue
 
 echo "Opening visual studio code"
 code .

@@ -13,6 +13,13 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
   };
   _hoveringSidebar = false;
   _lastScrollTime = 0;
+  bookmarkMenus = [
+    "PlacesToolbar",
+    "bookmarks-menu-button",
+    "BMB_bookmarksToolbar",
+    "BMB_unsortedBookmarks",
+    "BMB_mobileBookmarks"
+  ];
 
   async init() {
     if (!this.shouldHaveWorkspaces) {
@@ -61,6 +68,11 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     }
 
     Services.obs.addObserver(this, 'weave:engine:sync:finish');
+    Services.obs.addObserver(async function observe(subject) {
+      this._workspaceBookmarksCache = null;
+      await this.workspaceBookmarks();
+      this._invalidateBookmarkContainers();
+    }.bind(this), "workspace-bookmarks-updated");
   }
 
   initializeWorkspaceNavigation() {
@@ -128,7 +140,7 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
       }
 
       // Change workspace based on scroll direction
-      const direction = event.deltaX > 0 ? -1 : 1;
+      const direction = event.deltaX > 0 ? 1 : -1;
       await this.changeWorkspaceShortcut(direction);
       this._lastScrollTime = currentTime;
     }, { passive: true });
@@ -320,6 +332,21 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     return this._workspaceCache;
   }
 
+  async workspaceBookmarks() {
+    if (this._workspaceBookmarksCache) {
+      return this._workspaceBookmarksCache;
+    }
+
+    const [bookmarks, lastChangeTimestamp] = await Promise.all([
+      ZenWorkspaceBookmarksStorage.getBookmarkGuidsByWorkspace(),
+      ZenWorkspaceBookmarksStorage.getLastChangeTimestamp(),
+    ]);
+
+    this._workspaceBookmarksCache = { bookmarks, lastChangeTimestamp };
+
+    return this._workspaceCache;
+  }
+
   async onWorkspacesEnabledChanged() {
     if (this.workspaceEnabled) {
       throw Error("Shoud've had reloaded the window");
@@ -339,6 +366,7 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     if (this.workspaceEnabled) {
       this._initializeWorkspaceCreationIcons();
       this._initializeWorkspaceTabContextMenus();
+      await this.workspaceBookmarks();
       window.addEventListener('TabBrowserInserted', this.onTabBrowserInserted.bind(this));
       await SessionStore.promiseInitialized;
       let workspaces = await this._workspaces();
@@ -658,7 +686,7 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
             <div class="zen-workspace-container" ${containerGroup ? '' : 'hidden="true"'}>
             </div>
           </vbox>
-            <image class="toolbarbutton-icon zen-workspace-actions-reorder-icon" ></image> 
+            <image class="toolbarbutton-icon zen-workspace-actions-reorder-icon" ></image>
           <toolbarbutton closemenu="none" class="toolbarbutton-1 zen-workspace-actions">
             <image class="toolbarbutton-icon" id="zen-workspace-actions-menu-icon"></image>
           </toolbarbutton>
@@ -754,8 +782,10 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
 
       if(clearCache) {
         browser.ZenWorkspaces._workspaceCache = null;
+        browser.ZenWorkspaces._workspaceBookmarksCache = null;
       }
       let workspaces = await browser.ZenWorkspaces._workspaces();
+      await browser.ZenWorkspaces.workspaceBookmarks();
       workspaceList.innerHTML = '';
       workspaceList.parentNode.style.display = 'flex';
       if (workspaces.workspaces.length <= 0) {
@@ -1015,7 +1045,8 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     document.documentElement.setAttribute('zen-workspace-id', window.uuid);
     let tabCount = 0;
     for (let tab of gBrowser.tabs) {
-      if (!tab.hasAttribute('zen-workspace-id') && !tab.pinned) {
+      const isEssential = tab.getAttribute("zen-essential") === "true";
+      if (!tab.hasAttribute('zen-workspace-id') && !tab.pinned && !isEssential) {
         tab.setAttribute('zen-workspace-id', window.uuid);
         tabCount++;
       }
@@ -1097,81 +1128,191 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     }
 
     this._inChangingWorkspace = true;
+    try {
+      await this._performWorkspaceChange(window, onInit);
+    } finally {
+      this._inChangingWorkspace = false;
+    }
+  }
+
+  async _performWorkspaceChange(window, onInit) {
+    const previousWorkspace = await this.getActiveWorkspace();
+
     this.activeWorkspace = window.uuid;
     const containerId = window.containerTabId?.toString();
     const workspaces = await this._workspaces();
 
+    // Refresh tab cache
     this.tabContainer._invalidateCachedTabs();
-    let firstTab = undefined;
-    for (let tab of gBrowser.tabs) {
-      if (tab.getAttribute('zen-workspace-id') === window.uuid || !tab.hasAttribute('zen-workspace-id')
-      ) {
-        if (!firstTab && (onInit || !tab.pinned)) {
-          firstTab = tab;
-        } else if (gBrowser.selectedTab === tab) {
-          // If the selected tab is already in the workspace, we don't want to change it
-          firstTab = null; // note: Do not add "undefined" here, a new tab would be created
-        }
-        gBrowser.showTab(tab);
-        if (!tab.hasAttribute('zen-workspace-id') && tab.getAttribute('zen-essential') !== 'true') {
-          // We add the id to those tabs that got inserted before we initialize the workspaces or those who lost the id for any reason
-          // example use case: opening a link from an external app
-          tab.setAttribute('zen-workspace-id', window.uuid);
-        }
-      }
+
+    // First pass: Handle tab visibility and workspace ID assignment
+    const visibleTabs = this._processTabVisibility(window.uuid, containerId, workspaces);
+
+    // Second pass: Handle tab selection
+    await this._handleTabSelection(window, onInit, visibleTabs, containerId, workspaces);
+
+    // Update UI and state
+    await this._updateWorkspaceState(window, onInit);
+
+    // Animate acordingly
+    if (previousWorkspace && !this._animatingChange) {
+      // we want to know if we are moving forward or backward in sense of animation
+      let isNextWorkspace = onInit || 
+        (workspaces.workspaces.findIndex((w) => w.uuid === previousWorkspace.uuid) 
+          < workspaces.workspaces.findIndex((w) => w.uuid === window.uuid));
+      gBrowser.tabContainer.setAttribute('zen-workspace-animation', isNextWorkspace ? 'next' : 'previous');
+      this._animatingChange = true;
+      setTimeout(() => {
+        this._animatingChange = false;
+        gBrowser.tabContainer.removeAttribute('zen-workspace-animation');
+      }, 300);
     }
-    if (firstTab) {
-      // Don't change the selected tab if it's an essential tab, it becomes annoying
-      if (!gBrowser.selectedTab.hasAttribute('zen-essential')) {
-        gBrowser.selectedTab = this._lastSelectedWorkspaceTabs[window.uuid] ?? firstTab;
-      }
-    }
-    if (typeof firstTab === 'undefined' && !onInit) {
-      this._createNewTabForWorkspace(window);
-    }
-    for (let tab of gBrowser.tabs) {
-      // Skip tabs that are in the current workspace
-      if (tab.getAttribute('zen-workspace-id') === window.uuid) {
+  }
+
+
+  _processTabVisibility(workspaceUuid, containerId, workspaces) {
+    const visibleTabs = new Set();
+    const lastSelectedTab = this._lastSelectedWorkspaceTabs[workspaceUuid];
+
+    for (const tab of gBrowser.tabs) {
+      const tabWorkspaceId = tab.getAttribute('zen-workspace-id');
+      const isEssential = tab.getAttribute("zen-essential") === "true";
+      const tabContextId = tab.getAttribute("usercontextid");
+
+      // Always hide last selected tabs from other workspaces
+      if (lastSelectedTab === tab && tabWorkspaceId !== workspaceUuid && !isEssential) {
+        gBrowser.hideTab(tab, undefined, true);
         continue;
       }
 
-      // Handle essentials
-      if (tab.getAttribute("zen-essential") === "true") {
-        if(this.containerSpecificEssentials) {
-          if (containerId) {
-            // In workspaces with default container: Hide essentials that don't match the container
-            if (tab.getAttribute("usercontextid") !== containerId) {
-              gBrowser.hideTab(tab, undefined, true);
-            }
-          } else {
-            // In workspaces without a default container: Hide essentials that are opened in a container and some workspace has that container as default
-            if (tab.hasAttribute("usercontextid") && workspaces.workspaces.some((workspace) => workspace.containerTabId === parseInt(tab.getAttribute("usercontextid") || "0" , 10))) {
-              gBrowser.hideTab(tab, undefined, true);
-            }
-          }
+      if (this._shouldShowTab(tab, workspaceUuid, containerId, workspaces)) {
+        gBrowser.showTab(tab);
+        visibleTabs.add(tab);
+
+        // Assign workspace ID if needed
+        if (!tabWorkspaceId && !isEssential) {
+          tab.setAttribute('zen-workspace-id', workspaceUuid);
         }
       } else {
-        // For non-pinned tabs: Hide if they're not in the current workspace
         gBrowser.hideTab(tab, undefined, true);
       }
     }
-    this.tabContainer._invalidateCachedTabs();
+
+    return visibleTabs;
+  }
+
+  _shouldShowTab(tab, workspaceUuid, containerId, workspaces) {
+    const isEssential = tab.getAttribute("zen-essential") === "true";
+    const tabWorkspaceId = tab.getAttribute('zen-workspace-id');
+    const tabContextId = tab.getAttribute("usercontextid");
+
+    // Handle essential tabs
+    if (isEssential) {
+      if (!this.containerSpecificEssentials) {
+        return true; // Show all essential tabs when containerSpecificEssentials is false
+      }
+
+      if (containerId) {
+        // In workspaces with default container: Show essentials that match the container
+        return tabContextId === containerId;
+      } else {
+        // In workspaces without a default container: Show essentials that aren't in container-specific workspaces
+        // or have usercontextid="0" or no usercontextid
+        return !tabContextId || tabContextId === "0" || !workspaces.workspaces.some(
+            workspace => workspace.containerTabId === parseInt(tabContextId, 10)
+        );
+      }
+    }
+
+    // For non-essential tabs (both normal and pinned)
+    if (!tabWorkspaceId) {
+      // Assign workspace ID to tabs without one
+      tab.setAttribute('zen-workspace-id', workspaceUuid);
+      return true;
+    }
+
+    // Show if tab belongs to current workspace
+    return tabWorkspaceId === workspaceUuid;
+  }
+
+  async _handleTabSelection(window, onInit, visibleTabs, containerId, workspaces) {
+    const currentSelectedTab = gBrowser.selectedTab;
+    const oldWorkspaceId = currentSelectedTab.getAttribute('zen-workspace-id');
+    const lastSelectedTab = this._lastSelectedWorkspaceTabs[window.uuid];
+
+    // Save current tab as last selected for old workspace if it shouldn't be visible in new workspace
+    if (oldWorkspaceId && oldWorkspaceId !== window.uuid) {
+      this._lastSelectedWorkspaceTabs[oldWorkspaceId] = currentSelectedTab;
+    }
+
+    let tabToSelect = null;
+
+    // If current tab is visible in new workspace, keep it
+    if (this._shouldShowTab(currentSelectedTab, window.uuid, containerId, workspaces) && visibleTabs.has(currentSelectedTab)) {
+      tabToSelect = currentSelectedTab;
+    }
+    // Try last selected tab if it is visible
+    else if (lastSelectedTab && this._shouldShowTab(lastSelectedTab, window.uuid, containerId, workspaces) && visibleTabs.has(lastSelectedTab)) {
+      tabToSelect = lastSelectedTab;
+    }
+    // Find first suitable tab
+    else {
+      tabToSelect = Array.from(visibleTabs)
+          .find(tab => !tab.pinned);
+    }
+
+    const previousSelectedTab = gBrowser.selectedTab;
+
+    // If we found a tab to select, select it
+    if (tabToSelect) {
+      gBrowser.selectedTab = tabToSelect;
+      this._lastSelectedWorkspaceTabs[window.uuid] = tabToSelect;
+    } else if (!onInit) {
+      // Create new tab if needed and no suitable tab was found
+      const newTab = this._createNewTabForWorkspace(window);
+      gBrowser.selectedTab = newTab;
+      this._lastSelectedWorkspaceTabs[window.uuid] = newTab;
+    }
+
+    // After selecting the new tab, hide the previous selected tab if it shouldn't be visible in the new workspace
+    if (!this._shouldShowTab(previousSelectedTab, window.uuid, containerId, workspaces)) {
+      gBrowser.hideTab(previousSelectedTab, undefined, true);
+    }
+  }
+
+
+  async _updateWorkspaceState(window, onInit) {
+    // Update document state
     document.documentElement.setAttribute('zen-workspace-id', window.uuid);
+
+    // Update workspace UI
     await this._updateWorkspacesChangeContextMenu();
-
     document.getElementById('tabbrowser-tabs')._positionPinnedTabs();
+    gZenUIManager.updateTabsToolbar();
+    await this._propagateWorkspaceData({ clearCache: false });
 
-    await this._propagateWorkspaceData({clearCache: onInit});
-    for (let listener of this._changeListeners ?? []) {
-      listener(window);
+    // Notify listeners
+    if (this._changeListeners?.length) {
+      for (const listener of this._changeListeners) {
+        await listener(window, onInit);
+      }
     }
-    // reset bookmark toolbars
-    const placesToolbar = document.getElementById("PlacesToolbar");
-    if(placesToolbar?._placesView) {
-      placesToolbar._placesView.invalidateContainer(placesToolbar._placesView._resultNode);
-    }
+
+    // Reset bookmarks
+    this._invalidateBookmarkContainers();
+
+    // Update workspace indicator
     await this.updateWorkspaceIndicator();
-    this._inChangingWorkspace = false;
+  }
+
+  _invalidateBookmarkContainers() {
+    for (let i = 0, len = this.bookmarkMenus.length; i < len; i++) {
+      const element = document.getElementById(this.bookmarkMenus[i]);
+      if (element && element._placesView) {
+        const placesView = element._placesView;
+        placesView.invalidateContainer(placesView._resultNode);
+      }
+    }
   }
 
   async updateWorkspaceIndicator() {
@@ -1236,7 +1377,8 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
 
   async onTabBrowserInserted(event) {
     let tab = event.originalTarget;
-    if (tab.getAttribute('zen-workspace-id') || !this.workspaceEnabled) {
+    const isEssential = tab.getAttribute("zen-essential") === "true";
+    if (tab.getAttribute('zen-workspace-id') || !this.workspaceEnabled || isEssential) {
       return;
     }
 
@@ -1251,18 +1393,22 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     if (!this.workspaceEnabled || this._inChangingWorkspace) {
       return;
     }
+
     const parent = browser.ownerGlobal;
-    let tab = gBrowser.getTabForBrowser(browser);
-    let workspaceID = tab.getAttribute('zen-workspace-id');
-    if (!workspaceID || tab.pinned) {
-      return;
+    const tab = gBrowser.getTabForBrowser(browser);
+    const workspaceID = tab.getAttribute('zen-workspace-id');
+    const isEssential = tab.getAttribute("zen-essential") === "true";
+    const activeWorkspace = await parent.ZenWorkspaces.getActiveWorkspace();
+
+    // Only update last selected tab for non-essential tabs in their workspace
+    if (!isEssential && workspaceID === activeWorkspace.uuid) {
+      this._lastSelectedWorkspaceTabs[workspaceID] = tab;
     }
-    let activeWorkspace = await parent.ZenWorkspaces.getActiveWorkspace();
-    this._lastSelectedWorkspaceTabs[workspaceID] = tab;
-    if (workspaceID === activeWorkspace.uuid) {
-      return;
+
+    // Switch workspace if needed
+    if (workspaceID && workspaceID !== activeWorkspace.uuid) {
+      await parent.ZenWorkspaces.changeWorkspace({ uuid: workspaceID });
     }
-    await parent.ZenWorkspaces.changeWorkspace({ uuid: workspaceID });
   }
 
   // Context menu management
@@ -1441,12 +1587,24 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
   }
 
   isBookmarkInAnotherWorkspace(bookmark) {
-    let tags = bookmark.tags;
-    // if any tag starts with "_workspace_id" and the workspace id doesnt match the active workspace id, return null
-    if (tags) {
-      for (let tag of tags.split(",")) {
-        return  !!(tag.startsWith("zen_workspace_") && this.getActiveWorkspaceFromCache()?.uuid !== tag.split("_")[2]);
+    if (!this._workspaceBookmarksCache?.bookmarks) return false;
+    const bookmarkGuid = bookmark.bookmarkGuid;
+    const activeWorkspaceUuid = this.activeWorkspace;
+    let isInActiveWorkspace = false;
+    let isInOtherWorkspace = false;
+
+    for (const [workspaceUuid, bookmarkGuids] of Object.entries(this._workspaceBookmarksCache.bookmarks)) {
+      if (bookmarkGuids.includes(bookmarkGuid)) {
+        if (workspaceUuid === activeWorkspaceUuid) {
+          isInActiveWorkspace = true;
+        } else {
+          isInOtherWorkspace = true;
+        }
       }
     }
+
+    // Return true only if the bookmark is in another workspace and not in the active one
+    return isInOtherWorkspace && !isInActiveWorkspace;
   }
+
 })();

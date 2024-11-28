@@ -5,7 +5,7 @@
   "binaryName": "zen",
   "version": {
     "product": "firefox",
-    "version": "132.0.2"
+    "version": "133.0"
   },
   "buildOptions": {
     "generateBranding": true
@@ -18,7 +18,7 @@
       "brandShortName": "Zen Browser",
       "brandFullName": "Zen Browser",
       "release": {
-        "displayVersion": "1.0.1-a.19",
+        "displayVersion": "1.0.1-a.22",
         "github": {
           "repo": "zen-browser/desktop"
         },
@@ -28,7 +28,9 @@
           "linux": "linux.mar",
           "macos-x64": "macos-x64.mar",
           "windows-compat": "windows-generic.mar",
-          "linux-compat": "linux-generic.mar"
+          "linux-compat": "linux-generic.mar",
+          "windows-arm64": "windows-arm64.mar",
+          "linux-aarch64": "linux-aarch64.mar"
         }
       }
     },
@@ -38,17 +40,9 @@
       "brandShortName": "Zen Twilight",
       "brandFullName": "Zen Twilight",
       "release": {
-        "displayVersion": "1.0.1-t.19",
+        "displayVersion": "1.0.1-t.22",
         "github": {
           "repo": "zen-browser/desktop"
-        },
-        "archives": {
-          "windows": "windows.mar",
-          "macos-aarch64": "macos-aarch64.mar",
-          "linux": "linux.mar",
-          "macos-x64": "macos-x64.mar",
-          "windows-compat": "windows-generic.mar",
-          "linux-compat": "linux-generic.mar"
         }
       }
     }

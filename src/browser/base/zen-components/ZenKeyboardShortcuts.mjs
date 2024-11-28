@@ -651,17 +651,6 @@ function zenGetDefaultShortcuts() {
       'zen-web-panel-shortcut-toggle'
     )
   );
-  newShortcutList.push(
-    new KeyShortcut(
-      'zen-toggle-sidebar',
-      'B',
-      '',
-      ZEN_OTHER_SHORTCUTS_GROUP,
-      KeyShortcutModifiers.fromObject({ alt: true }),
-      'code:gZenVerticalTabsManager.toggleExpand()',
-      'zen-sidebar-shortcut-toggle'
-    )
-  );
 
   // Split view
   newShortcutList.push(
@@ -713,7 +702,7 @@ function zenGetDefaultShortcuts() {
 }
 
 class ZenKeyboardShortcutsVersioner {
-  static LATEST_KBS_VERSION = 3;
+  static LATEST_KBS_VERSION = 4;
 
   constructor() {}
 
@@ -824,8 +813,12 @@ class ZenKeyboardShortcutsVersioner {
           'zen-split-view-shortcut-rearrange'
         )
       );
-    }
 
+      // Migrate from 3 to 4
+      // In this new version, we are just removing the 'zen-toggle-sidebar' shortcut
+      //  since it's not used anymore.
+      data = data.filter((shortcut) => shortcut.getID() != 'zen-toggle-sidebar');
+    }
     return data;
   }
 }
@@ -893,7 +886,7 @@ var gZenKeyboardShortcutsManager = {
 
       browser.gZenKeyboardShortcutsManager._zenKeyset = browser.document.createXULElement('keyset');
       browser.gZenKeyboardShortcutsManager._zenKeyset.id = ZEN_KEYSET_ID;
-      
+
       const mainKeyset = browser.document.getElementById(ZEN_MAIN_KEYSET_ID);
       mainKeyset.after(browser.gZenKeyboardShortcutsManager._zenKeyset);
     }

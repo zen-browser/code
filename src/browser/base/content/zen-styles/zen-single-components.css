@@ -48,3 +48,7 @@
     display: none;
   }
 }
+
+#customization-footer #customization-toolbar-visibility-button {
+  display: none !important;
+}

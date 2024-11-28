@@ -1,5 +1,5 @@
 diff --git a/browser/base/content/browser-sets.js b/browser/base/content/browser-sets.js
-index 50da6424691ca230aa1a3a419cb69e66cf47b2c4..1f63f4bb7b75c940d5482dd4f13cebf452dddb74 100644
+index 3031278749317d153624c6ccfbcc9d47aaf4089f..e67a8c3b56c01334627350c494b0139638ebf19a 100644
 --- a/browser/base/content/browser-sets.js
 +++ b/browser/base/content/browser-sets.js
 @@ -245,7 +245,7 @@ document.addEventListener(
@@ -7,7 +7,7 @@ index 50da6424691ca230aa1a3a419cb69e66cf47b2c4..1f63f4bb7b75c940d5482dd4f13cebf4
        });
  
 -    document.getElementById("mainKeyset").addEventListener("command", event => {
-+    document.getElementById(ZEN_KEYSET_ID).addEventListener("command", event => {
++    document.getElementById("zenKeyset").addEventListener("command", event => {
        switch (event.target.id) {
          case "goHome":
            BrowserCommands.home();

@@ -58,8 +58,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: [debug-inputs]
     steps:
-
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
           submodules: recursive
           token: ${{ secrets.DEPLOY_KEY }}
@@ -95,17 +95,18 @@ jobs:
       version: ${{ steps.data.outputs.version }}
       build_time: ${{ steps.data.outputs.buildtime }}
     steps:
-      - name: Install Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 20
-
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
           submodules: recursive
           token: ${{ secrets.DEPLOY_KEY }}
 
-      - name: Install pnpm
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Setup pnpm
         run: npm install -g pnpm
 
       - name: Get pnpm store directory
@@ -115,7 +116,8 @@ jobs:
           echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
 
       - name: Install dependencies
-        run: pnpm install
+        run: |
+          pnpm install
 
       - name: Setup Surfer
         run: |
@@ -145,28 +147,30 @@ jobs:
           echo "version=$(surfer get version | xargs)" >> $GITHUB_OUTPUT
           echo "buildtime=$(date +"%H:%M:%S")" >> $GITHUB_OUTPUT
 
-      - uses: stefanzweifel/git-auto-commit-action@v4
+      - name: Commit
+        uses: stefanzweifel/git-auto-commit-action@v5
         if: ${{ inputs.update_version }}
         with:
           commit_message: 🔖 Update version to ${{ steps.data.outputs.version }}
           commit_user_name: Zen Browser Robot
-          commit_user_email: zen-browser-bot@users.noreply.github.com
+          commit_user_email: zen-browser-auto@users.noreply.github.com
 
   check-release:
     runs-on: ubuntu-latest
     needs: [build-data]
     steps:
-      - name: Install Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 20
-
-      - uses: actions/checkout@v4
+      - name: Checkout repository 
+        uses: actions/checkout@v4
         with:
           submodules: recursive
           token: ${{ secrets.DEPLOY_KEY }}
 
-      - name: Install pnpm
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Setup pnpm
         run: npm install -g pnpm
 
       - name: Get pnpm store directory
@@ -176,15 +180,16 @@ jobs:
           echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
 
       - name: Install dependencies
-        run: pnpm install
+        run: |
+          pnpm install
 
-      - name: Setup surfer
+      - name: Setup Surfer
         run: |
           npm i -g @zen-browser/surfer
 
-      - name: Activate surfer CLI
+      - name: Activate Surfer CLI
         run: |
-          echo "There's a bug in the surfer CLI, we run this so that surfer sets everything up correctly"
+          echo "There's a bug in the Surfer CLI, we run this so that Surfer sets everything up correctly"
           pnpm surfer ci --brand ${{ inputs.update_branch }} --display-version ${{ needs.build-data.outputs.version }}
 
       - name: Check version
@@ -204,24 +209,25 @@ jobs:
       contents: write
     runs-on: ubuntu-latest
     needs: [build-data, check-release]
-    
-    steps:
-      - name: Install Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 20
 
-      - uses: actions/checkout@v4
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
           submodules: recursive
           token: ${{ secrets.DEPLOY_KEY }}
 
-      - name: Setup git
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Setup Git
         run: |
           git config --global user.email "mauro-balades@users.noreply.github.com"
           git config --global user.name "mauro-balades"
 
-      - name: Install pnpm
+      - name: Setup pnpm
         run: npm install -g pnpm
 
       - name: Get pnpm store directory
@@ -231,12 +237,13 @@ jobs:
           echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
 
       - name: Install dependencies
-        run: pnpm install
+        run: |
+          pnpm install
 
-      - name: Load surfer CI setup
+      - name: Load Surfer CI setup
         run: pnpm surfer ci --brand ${{ inputs.update_branch }} --display-version ${{ needs.build-data.outputs.version }}
 
-      - name: Download firefox source and dependancies
+      - name: Download Firefox source and dependencies
         run: pnpm surfer download --verbose
 
       - name: Import
@@ -245,7 +252,6 @@ jobs:
       - name: Compress
         run: |
           cd engine
-          # -h is used to dereference symlinks
           tar --use-compress-program=zstd -hcf ../zen.source.tar.gz *
           cd ..
 
@@ -265,7 +271,7 @@ jobs:
     with:
       build-version: ${{ needs.build-data.outputs.version }}
       generate-gpo: true
-      profile-data-path-archive: zen-windows-x86_64-profile-data-and-jarlog.zip
+      profile-data-path-archive: zen-windows-profile-data-and-jarlog.zip
       release-branch: ${{ inputs.update_branch }}
 
   windows-step-2:
@@ -315,35 +321,36 @@ jobs:
       release-branch: ${{ inputs.update_branch }}
 
   appimage:
-    name: AppImage build - Linux ${{ matrix.generic == true && 'generic' || 'specific' }}
+    name: AppImage build - Linux ${{ matrix.arch == 'x86_64' && 'generic' || matrix.arch == 'x86_64-v3' && 'specific' || matrix.arch == 'aarch64' && 'aarch64' }}
     permissions:
       contents: write
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        generic: [true, false]
+        arch: [x86_64, x86_64-v3, aarch64]
     needs: [linux]
     steps:
-      - name: Install Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 20
-
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
           submodules: recursive
           token: ${{ secrets.DEPLOY_KEY }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
 
       - name: Install dependencies
         run: |
           npm install -g pnpm
           sudo apt-get update
-          sudo apt-get -y install libfuse2 desktop-file-utils appstream 
+          sudo apt-get -y install libfuse2 desktop-file-utils appstream
 
-      - name: Download linux build
+      - name: Download Linux build
         uses: actions/download-artifact@v4
         with:
-          name: zen.linux-${{ matrix.generic == true && 'generic' || 'specific' }}.tar.bz2
+          name: zen.linux-${{ matrix.arch == 'x86_64' && 'generic' || matrix.arch == 'x86_64-v3' && 'specific' || matrix.arch == 'aarch64' && 'aarch64' }}.tar.bz2
 
       - name: Execute AppImage build
         run: |
@@ -367,23 +374,23 @@ jobs:
           ls -al
           find .
           ls -al "$APPDIR"
-          ARCH=x86_64 ./appimagetool-x86_64.AppImage --comp zstd --mksquashfs-opt -Xcompression-level --mksquashfs-opt 10 \
-          -u "gh-releases-zsync|$GITHUB_REPOSITORY_OWNER|desktop|latest|zen-${{ matrix.generic == true && 'generic' || 'specific' }}.AppImage.zsync" \
-          "$APPDIR" zen-${{ matrix.generic == true && 'generic' || 'specific' }}.AppImage
+          ARCH=${{ matrix.arch == 'aarch64' && 'aarch64' || 'x86_64' }} ./appimagetool-x86_64.AppImage --comp zstd --mksquashfs-opt -Xcompression-level --mksquashfs-opt 10 \
+          -u "gh-releases-zsync|$GITHUB_REPOSITORY_OWNER|desktop|latest|zen-${{ matrix.arch == 'x86_64' && 'generic' || matrix.arch == 'x86_64-v3' && 'specific' || matrix.arch == 'aarch64' && 'aarch64' }}.AppImage.zsync" \
+          "$APPDIR" zen-${{ matrix.arch == 'x86_64' && 'generic' || matrix.arch == 'x86_64-v3' && 'specific' || matrix.arch == 'aarch64' && 'aarch64' }}.AppImage
           mkdir dist
           mv zen*AppImage* dist/.
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: zen-${{ matrix.generic == true && 'generic' || 'specific' }}.AppImage
-          path: ./dist/zen-${{ matrix.generic == true && 'generic' || 'specific' }}.AppImage
+          name: zen-${{ matrix.arch == 'x86_64' && 'generic' || matrix.arch == 'x86_64-v3' && 'specific' || matrix.arch == 'aarch64' && 'aarch64' }}.AppImage
+          path: ./dist/zen-${{ matrix.arch == 'x86_64' && 'generic' || matrix.arch == 'x86_64-v3' && 'specific' || matrix.arch == 'aarch64' && 'aarch64' }}.AppImage
 
       - name: Upload artifact (ZSync)
         uses: actions/upload-artifact@v4
         with:
-          name: zen-${{ matrix.generic == true && 'generic' || 'specific' }}.AppImage.zsync
-          path: ./dist/zen-${{ matrix.generic == true && 'generic' || 'specific' }}.AppImage.zsync
+          name: zen-${{ matrix.arch == 'x86_64' && 'generic' || matrix.arch == 'x86_64-v3' && 'specific' || matrix.arch == 'aarch64' && 'aarch64' }}.AppImage.zsync
+          path: ./dist/zen-${{ matrix.arch == 'x86_64' && 'generic' || matrix.arch == 'x86_64-v3' && 'specific' || matrix.arch == 'aarch64' && 'aarch64' }}.AppImage.zsync
 
   release:
     if: ${{ inputs.create_release || inputs.update_branch == 'twilight' }}
@@ -395,21 +402,23 @@ jobs:
       name: ${{ inputs.update_branch == 'alpha' && 'Deploy-Release' || 'Deploy-Twilight' }}
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
           submodules: recursive
           token: ${{ secrets.DEPLOY_KEY }}
 
-      - name: Git Pull
+      - name: Git pull
         run: |
           git pull
 
-      - uses: actions/download-artifact@v4
+      - name: Download artifact
+        uses: actions/download-artifact@v4
 
       - name: List
         run: find .
 
-      - name: Clone updates repo
+      - name: Checkout updates repository
         uses: actions/checkout@v4
         with:
           repository: zen-browser/updates-server
@@ -428,49 +437,60 @@ jobs:
           mkdir -p updates
           cp -a ../linux_update_manifest_generic/.  updates/
           cp -a ../linux_update_manifest_specific/.  updates/
+          cp -a ../linux_update_manifest_aarch64/.  updates/
 
           if [[ $RELEASE_BRANCH == 'alpha' ]]; then
             cp -a ../.github/workflows/object/windows-x64-signed-generic/update_manifest/.  updates/
             cp -a ../.github/workflows/object/windows-x64-signed-specific/update_manifest/.  updates/
+            cp -a ../.github/workflows/object/windows-x64-signed-arm64/update_manifest/.  updates/
           else
             cp -a ../windows_update_manifest_generic/.  updates/
             cp -a ../windows_update_manifest_specific/.  updates/
+            cp -a ../windows_update_manifest_arm64/.  updates/
           fi
 
           cp -a ../macos_update_manifest_aarch64/.  updates/
-          cp -a ../macos_update_manifest_x64/.  updates/
+          cp -a ../macos_update_manifest_x86_64/.  updates/
 
-      - uses: stefanzweifel/git-auto-commit-action@v4
+      - name: Commit
+        uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: 🚀 Update update manifests
           commit_user_name: Zen Browser Robot
-          commit_user_email: zen-browser-bot@users.noreply.github.com
+          commit_user_email: zen-browser-auto@users.noreply.github.com
           repository: ./updates-server
 
-        # If we are on twilight, we want to just update the twilight tag's release
-      - name: Update twilight tag
+        # If we are on Twilight, we want to just update the Twilight tag's release
+      - name: Update Twilight tag
         if: ${{ inputs.update_branch == 'twilight' }}
-        uses: 'marvinpinto/action-automatic-releases@latest'
+        uses: marvinpinto/action-automatic-releases@master
         with:
           files: |
             zen.source.tar.gz
             zen.linux-generic.tar.bz2
             zen.linux-specific.tar.bz2
+            zen.linux-aarch64.tar.bz2
             zen-generic.AppImage
             zen-generic.AppImage.zsync
             zen-specific.AppImage
             zen-specific.AppImage.zsync
+            zen-aarch64.AppImage
+            zen-aarch64.AppImage.zsync
             zen.win-generic.zip
             zen.win-specific.zip
+            zen.win-arm64.zip
             linux.mar
             linux-generic.mar
+            linux-aarch64.mar
             windows-generic.mar
             windows.mar
-            macos-x64.mar
+            windows-arm64.mar
+            macos-x86_64.mar
             macos-aarch64.mar
             zen.installer.exe
             zen.installer-generic.exe
-            zen.macos-x64.dmg
+            zen.installer-arm64.exe
+            zen.macos-x86_64.dmg
             zen.macos-aarch64.dmg
           automatic_release_tag: 'twilight'
           title: 'Twilight build - ${{ needs.build-data.outputs.version }} (${{ needs.build-data.outputs.build_date }} at ${{ needs.build-data.outputs.build_time }})'
@@ -480,8 +500,8 @@ jobs:
         env:
           GITHUB_REPOSITORY: ${{ github.repository }}
 
-      - name: release-github
-        uses: 'marvinpinto/action-automatic-releases@latest'
+      - name: Release
+        uses: marvinpinto/action-automatic-releases@master
         if: ${{ inputs.update_branch == 'alpha' }}
         with:
           repo_token: '${{ secrets.DEPLOY_KEY }}'
@@ -492,21 +512,28 @@ jobs:
             zen.source.tar.gz
             zen.linux-generic.tar.bz2
             zen.linux-specific.tar.bz2
+            zen.linux-aarch64.tar.bz2
             zen-generic.AppImage
             zen-generic.AppImage.zsync
             zen-specific.AppImage
             zen-specific.AppImage.zsync
+            zen-aarch64.AppImage
+            zen-aarch64.AppImage.zsync
             .github/workflows/object/windows-x64-signed-generic/zen.win-generic.zip
             .github/workflows/object/windows-x64-signed-specific/zen.win-specific.zip
+            .github/workflows/object/windows-x64-signed-arm64/zen.win-arm64.zip
             linux.mar
             linux-generic.mar
+            linux-aarch64.mar
             .github/workflows/object/windows-x64-signed-generic/windows-generic.mar
             .github/workflows/object/windows-x64-signed-specific/windows.mar
-            macos-x64.mar
+            .github/workflows/object/windows-x64-signed-arm64/windows-arm64.mar
+            macos-x86_64.mar
             macos-aarch64.mar
             .github/workflows/object/windows-x64-signed-specific/zen.installer.exe
             .github/workflows/object/windows-x64-signed-generic/zen.installer-generic.exe
-            zen.macos-x64.dmg
+            .github/workflows/object/windows-x64-signed-arm64/zen.installer-arm64.exe
+            zen.macos-x86_64.dmg
             zen.macos-aarch64.dmg
 
   prepare-flatpak:
@@ -517,7 +544,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Clone flatpak repo
+      - name: Checkout Flatpak repository
         uses: actions/checkout@v4
         with:
           repository: zen-browser/release-utils
@@ -529,18 +556,19 @@ jobs:
           sudo apt-get update
           npm install
 
-      - name: Generate new flatpak release
+      - name: Generate new Flatpak release
         run: |
           npm run build-flatpak -- \
             --version ${{ needs.build-data.outputs.version }}
 
-      - uses: stefanzweifel/git-auto-commit-action@v4
+      - name: Commit
+        uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: 🚀 Update releases for flatpak
+          commit_message: 🚀 Update releases for Flatpak
           commit_user_name: Zen Browser Robot
-          commit_user_email: zen-browser-bot@users.noreply.github.com
+          commit_user_email: zen-browser-auto@users.noreply.github.com
 
-      - name: Clone flatpak repo
+      - name: Checkout Flatpak repository
         uses: actions/checkout@v4
         with:
           repository: zen-browser/flatpak
@@ -556,14 +584,15 @@ jobs:
           # output the version to the file
           echo -n ${{ needs.build-data.outputs.version }} > ./flatpak/version
 
-      - uses: stefanzweifel/git-auto-commit-action@v4
+      - name: Commit
+        uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: '[release]: Update flatpak manifest'
+          commit_message: '[release]: Update Flatpak manifest'
           commit_user_name: Zen Browser Robot
-          commit_user_email: zen-browser-bot@users.noreply.github.com
+          commit_user_email: zen-browser-auto@users.noreply.github.com
           repository: ./flatpak
 
-      - name: Wait 4 minutes for the flatpak repo to update
+      - name: Wait 4 minutes for the Flatpak repo to update
         run: sleep 240
 
   release-flatpak:
@@ -574,33 +603,33 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Clone flatpak repo
+      - name: Checkout Flatpak repository
         uses: actions/checkout@v4
         with:
           repository: flathub/io.github.zen_browser.zen
           token: ${{ secrets.DEPLOY_KEY }}
 
-      - name: Download linux generic build
+      - name: Download Linux generic build
         uses: actions/download-artifact@v4
         with:
           name: zen.linux-generic.tar.bz2
 
-      - name: Update repo
+      - name: Update repository
         uses: actions/checkout@v4
         with:
           path: zen-browser
           token: ${{ secrets.DEPLOY_KEY }}
 
-      - name: Download flatpak archive
+      - name: Download Flatpak archive
         run: |
           wget https://github.com/zen-browser/flatpak/releases/latest/download/archive.tar -O archive.tar
 
-      - name: Setup git
+      - name: Setup Git
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Prepare flatpak manifest
+      - name: Prepare Flatpak manifest
         run: |
           python3 ./zen-browser/scripts/prepare-flatpak-release.py \
             --flatpak-archive archive.tar \
@@ -620,14 +649,14 @@ jobs:
           rm -rf archive.tar
           rm -rf zen.linux-generic.tar.bz2
 
-      - name: Upload flatpak manifest
+      - name: Upload Flatpak manifest
         uses: actions/upload-artifact@v4
         with:
           name: io.github.zen_browser.zen.yml
           path: ./io.github.zen_browser.zen.yml
 
       - name: Create pull request
-        uses: peter-evans/create-pull-request@v6
+        uses: peter-evans/create-pull-request@v7
         env:
           GIT_TRACE: 1
           GIT_CURL_VERBOSE: 1
@@ -644,10 +673,35 @@ jobs:
           git-token: ${{ secrets.DEPLOY_KEY }}
           delete-branch: true
 
-  release-homebrew:
+  release-homebrew-alpha:
     if: ${{ inputs.create_release && inputs.update_branch == 'alpha' }}
     permissions: write-all
-    name: Homebrew release
+    name: Homebrew release for alpha build
+    needs: [release, mac, build-data]
+    runs-on: macos-latest
+
+    steps:
+      - name: Setup Homebrew
+        uses: Homebrew/actions/setup-homebrew@master
+        with:
+          cask: true
+          test-bot: false
+
+      - name: Setup Git
+        uses: Homebrew/actions/git-user-config@master
+        with:
+          username: zen-browser-auto
+
+      - name: Bump cask
+        uses: Homebrew/actions/bump-packages@master
+        with:
+          token: ${{ secrets.DEPLOY_KEY }}
+          casks: zen-browser
+
+  release-homebrew-twilight:
+    if: ${{ inputs.create_release && inputs.update_branch == 'twilight' }}
+    permissions: write-all
+    name: Homebrew release for twilight build
     needs: [release, mac, build-data]
     runs-on: macos-latest
 
@@ -661,10 +715,10 @@ jobs:
       - name: Setup git
         uses: Homebrew/actions/git-user-config@master
         with:
-          username: zen-browser-bot
+          username: zen-browser-auto
 
-      - name: Bump zen-browser
+      - name: Bump cask
         uses: Homebrew/actions/bump-packages@master
         with:
           token: ${{ secrets.DEPLOY_KEY }}
-          casks: zen-browser
+          casks: zen-browser@twilight

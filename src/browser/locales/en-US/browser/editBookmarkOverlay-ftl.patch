@@ -1,0 +1,15 @@
+diff --git a/browser/locales/en-US/browser/editBookmarkOverlay.ftl b/browser/locales/en-US/browser/editBookmarkOverlay.ftl
+index da74660e48620fe9097d05a51ba4be34f21246e6..d70b98c71ca3a70732c633d939079f9fb589726f 100644
+--- a/browser/locales/en-US/browser/editBookmarkOverlay.ftl
++++ b/browser/locales/en-US/browser/editBookmarkOverlay.ftl
+@@ -37,6 +37,10 @@ bookmark-overlay-tags-2 =
+   .value = Tags
+   .accesskey = T
+ 
++zen-bookmark-edit-panel-workspace-selector =
++  .value = Workspaces
++  .accesskey = W
++
+ bookmark-overlay-tags-empty-description =
+   .placeholder = Separate tags with commas
+ 

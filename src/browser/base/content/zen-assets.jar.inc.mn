@@ -26,7 +26,7 @@
         content/browser/zen-styles/zen-theme.css                (content/zen-styles/zen-theme.css)
         content/browser/zen-styles/zen-buttons.css              (content/zen-styles/zen-buttons.css)
         content/browser/zen-styles/zen-tabs.css                 (content/zen-styles/zen-tabs.css)
-        content/browser/zen-styles/zen-tabs/vertical-tabs.css   (content/zen-styles/zen-tabs/vertical-tabs.css)
+*       content/browser/zen-styles/zen-tabs/vertical-tabs.css   (content/zen-styles/zen-tabs/vertical-tabs.css)
         content/browser/zen-styles/zen-tabs/horizontal-tabs.css (content/zen-styles/zen-tabs/horizontal-tabs.css)
         content/browser/zen-styles/zen-browser-ui.css           (content/zen-styles/zen-browser-ui.css)
         content/browser/zen-styles/zen-animations.css           (content/zen-styles/zen-animations.css)

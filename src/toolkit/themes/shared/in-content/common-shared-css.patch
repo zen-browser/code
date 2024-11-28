@@ -1,5 +1,5 @@
 diff --git a/toolkit/themes/shared/in-content/common-shared.css b/toolkit/themes/shared/in-content/common-shared.css
-index 2b59a0604b4bfefd3bdcfdb9a3964937e9699114..d9f5f81158790336c7fa5ad366fd815abfe67087 100644
+index 646a11b699a0b34204cd766836678bfc17e8548e..14ebf803000ccea0de7c4f09ed2a9528bb017778 100644
 --- a/toolkit/themes/shared/in-content/common-shared.css
 +++ b/toolkit/themes/shared/in-content/common-shared.css
 @@ -5,6 +5,8 @@
@@ -11,7 +11,7 @@ index 2b59a0604b4bfefd3bdcfdb9a3964937e9699114..d9f5f81158790336c7fa5ad366fd815a
  @namespace html "http://www.w3.org/1999/xhtml";
  @namespace xul "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
  
-@@ -63,7 +65,7 @@
+@@ -54,7 +56,7 @@
    --in-content-table-border-color: var(--in-content-box-border-color);
    --in-content-table-header-background: var(--in-content-primary-button-background);
    --in-content-table-header-color: var(--in-content-primary-button-text-color);
@@ -20,12 +20,20 @@ index 2b59a0604b4bfefd3bdcfdb9a3964937e9699114..d9f5f81158790336c7fa5ad366fd815a
  
    --dialog-warning-text-color: var(--red-60);
  
-@@ -791,7 +793,8 @@ html|*#categories > html|*.category:dir(rtl) {
+@@ -740,7 +742,6 @@ html|*#categories {
+   color: inherit;
+   margin-inline-start: 34px;
+   padding-inline: 10px;
+-  transition: background-color 150ms;
+ }
+ 
+ html|*#categories > html|*.category {
+@@ -777,7 +778,8 @@ html|*#categories > html|*.category:dir(rtl) {
  @media not (forced-colors) {
    #categories > .category[selected],
    #categories > .category.selected {
--    color: var(--in-content-accent-color);
-+    /*color: var(--in-content-accent-color);*/
+-    color: var(--color-accent-primary);
++    /*color: var(--color-accent-primary);*/
 +    opacity: .7;
    }
  

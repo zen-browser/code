@@ -62,7 +62,7 @@ export class ZenGlanceChild extends JSWindowActorChild {
       url = this.contentWindow.location.origin + url;
     }
     const rect = target.getBoundingClientRect();
-    this.sendAsyncMessage('ZenGlance:OpenGlance', { 
+    this.sendAsyncMessage('ZenGlance:OpenGlance', {
       url,
       x: rect.left,
       y: rect.top,
@@ -117,7 +117,7 @@ export class ZenGlanceChild extends JSWindowActorChild {
     if (target) {
       event.preventDefault();
       event.stopPropagation();
-      
+
       this.openGlance(target);
     }
   }

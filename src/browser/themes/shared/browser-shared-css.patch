@@ -11,7 +11,7 @@ index f2171eb033a1143870f4708c63f565fabb535c4b..4280bc4b0f7cdbd94179fa2111f8001a
    }
  
 @@ -196,6 +194,31 @@ body {
-     transition: 0.8s margin-top ease-out;
+    border-bottom-color: var(--chrome-content-separator-color);
    }
  
 +

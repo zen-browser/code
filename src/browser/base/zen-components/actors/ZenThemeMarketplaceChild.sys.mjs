@@ -22,6 +22,7 @@ export class ZenThemeMarketplaceChild extends JSWindowActorChild {
   initiateThemeMarketplace() {
     this.contentWindow.setTimeout(() => {
       this.addIntallButtons();
+      this.injectMarkplaceAPI();
     }, 0);
   }
 
@@ -67,6 +68,16 @@ export class ZenThemeMarketplaceChild extends JSWindowActorChild {
     }
   }
 
+  injectMarkplaceAPI() {
+    Cu.exportFunction(
+      this.installTheme.bind(this),
+      this.contentWindow,
+      {
+        defineAs: "ZenInstallTheme",
+      }
+    );
+  }
+
   async addIntallButtons() {
     const actionButton = this.actionButton;
     const actionButtonUnnstall = this.actionButtonUnnstall;
@@ -102,7 +113,6 @@ export class ZenThemeMarketplaceChild extends JSWindowActorChild {
 
   async getThemeInfo(themeId) {
     const url = this.getThemeAPIUrl(themeId);
-    console.info('ZTM: Fetching theme info from: ', url);
     const data = await fetch(url, {
       mode: 'no-cors',
     });
@@ -122,14 +132,19 @@ export class ZenThemeMarketplaceChild extends JSWindowActorChild {
     const button = event.target;
     button.disabled = true;
     const themeId = button.getAttribute('zen-theme-id');
-    console.info('ZTM: Uninstalling theme with id: ', themeId);
     this.sendAsyncMessage('ZenThemeMarketplace:UninstallTheme', { themeId });
   }
 
-  async installTheme(event) {
-    const button = event.target;
-    button.disabled = true;
-    const themeId = button.getAttribute('zen-theme-id');
+  async installTheme(object) {
+    // Object can be an event or a theme id
+    let themeId;
+    if (object.target) {
+      const button = object.target;
+      button.disabled = true;
+      themeId = button.getAttribute('zen-theme-id');
+    } else {
+      themeId = object.themeId;
+    }
     console.info('ZTM: Installing theme with id: ', themeId);
 
     const theme = await this.getThemeInfo(themeId);

@@ -28,7 +28,7 @@
 
 ## 🖥️ Compatibility
 
-Zen is currently built using firefox version `132.0.1`! 🚀
+Zen is currently built using firefox version `133.0`! 🚀
 
 - Check out the latest [release notes](https://zen-browser.app/release-notes)!
 - Part of our mission is to keep Zen up-to-date with the latest version of Firefox, so you can enjoy the latest features and security updates!
@@ -101,7 +101,7 @@ To upgrade the browser to a newer version, use the embedded update functionality
 
 ## 👨‍💻 Development and Contributing
 
-Some components used by @zen-browser as an attempt to make firefox forks a better place, and for other to enjoy the beauty of OSS. You can find them [here](https://github.com/zen-browser/components).
+Some components used by @zen-browser as an attempt to make firefox forks a better place, and for other to enjoy the beauty of OSS. You can find them [here](https://github.com/zen-browser/desktop/tree/dev/src/browser/base/zen-components).
 
 #### `Run Locally`
 

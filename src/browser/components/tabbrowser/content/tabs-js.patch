@@ -1,8 +1,17 @@
 diff --git a/browser/components/tabbrowser/content/tabs.js b/browser/components/tabbrowser/content/tabs.js
-index f3a2f226a9056c5a75023281fdeb704cec49b4a6..39c46b141145864fb3b8043d2a9865299561a6cc 100644
+index f9e256b143786c18ba85859ca1b11182ab23f1aa..f60a8850305f1d7c2eadb6ac6996302f42a08a8a 100644
 --- a/browser/components/tabbrowser/content/tabs.js
 +++ b/browser/components/tabbrowser/content/tabs.js
-@@ -894,7 +894,7 @@
+@@ -541,7 +541,7 @@
+       if (this.#isContainerVerticalPinnedExpanded(tab)) {
+         // In expanded vertical mode, the max number of pinned tabs per row is dynamic
+         // Set this before adjusting dragged tab's position
+-        let pinnedTabs = this.visibleTabs.slice(0, gBrowser.pinnedTabCount);
++        let pinnedTabs = this.visibleTabs.slice(0, gBrowser._numVisiblePinTabs);
+         let tabsPerRow = 0;
+         let position = 0;
+         for (let pinnedTab of pinnedTabs) {
+@@ -918,7 +918,7 @@
              let postTransitionCleanup = () => {
                tab.removeAttribute("tabdrop-samewindow");
  
@@ -11,7 +20,7 @@ index f3a2f226a9056c5a75023281fdeb704cec49b4a6..39c46b141145864fb3b8043d2a986529
                if (dropIndex !== false) {
                  gBrowser.moveTabTo(tab, dropIndex);
                  if (incrementDropIndex) {
-@@ -904,7 +904,7 @@
+@@ -928,7 +928,7 @@
  
                gBrowser.syncThrobberAnimations(tab);
              };
@@ -20,25 +29,26 @@ index f3a2f226a9056c5a75023281fdeb704cec49b4a6..39c46b141145864fb3b8043d2a986529
                postTransitionCleanup();
              } else {
                let onTransitionEnd = transitionendEvent => {
-@@ -1284,7 +1284,7 @@
+@@ -1077,7 +1077,8 @@
+       if (
+         dt.mozUserCancelled ||
+         dt.dropEffect != "none" ||
+-        this._isCustomizing
++        this._isCustomizing ||
++        draggedTab.pinned
+       ) {
+         delete draggedTab._dragData;
+         return;
+@@ -1328,7 +1329,7 @@
          }
        }
  
--      let allChildren = [...verticalPinnedTabsContainer.children, ...children];
-+      let allChildren = [...document.getElementById("zen-essentials-container").children, ...verticalPinnedTabsContainer.children, ...children];
-       this._allTabs = allChildren;
-       return allChildren;
+-      this.#allTabs = [...verticalPinnedTabsContainer.children, ...children];
++      this.#allTabs = [...document.getElementById("zen-essentials-container").children, ...verticalPinnedTabsContainer.children, ...children];
+       return this.#allTabs;
      }
-@@ -1480,7 +1480,7 @@
-           let rect = ele => {
-             return window.windowUtils.getBoundsWithoutFlushing(ele);
-           };
--          let tab = this._getVisibleTabs()[gBrowser._numPinnedTabs];
-+          let tab = this._getVisibleTabs()[gBrowser._numVisiblePinTabs];
-           if (tab && rect(tab).width <= this._tabClipWidth) {
-             this.setAttribute("closebuttons", "activetab");
-           } else {
-@@ -1499,10 +1499,12 @@
+ 
+@@ -1520,10 +1521,12 @@
  
      _handleTabSelect(aInstant) {
        let selectedTab = this.selectedItem;
@@ -54,16 +64,16 @@ index f3a2f226a9056c5a75023281fdeb704cec49b4a6..39c46b141145864fb3b8043d2a986529
        selectedTab._notselectedsinceload = false;
      }
  
-@@ -1550,7 +1552,7 @@
+@@ -1571,7 +1574,7 @@
          if (isEndTab && !this._hasTabTempMaxWidth) {
            return;
          }
--        let numPinned = gBrowser._numPinnedTabs;
+-        let numPinned = gBrowser.pinnedTabCount;
 +        let numPinned = gBrowser._numVisiblePinTabs;
          // Force tabs to stay the same width, unless we're closing the last tab,
          // which case we need to let them expand just enough so that the overall
          // tabbar width is the same.
-@@ -1565,7 +1567,7 @@
+@@ -1586,7 +1589,7 @@
          let tabsToReset = [];
          for (let i = numPinned; i < tabs.length; i++) {
            let tab = tabs[i];
@@ -72,16 +82,15 @@ index f3a2f226a9056c5a75023281fdeb704cec49b4a6..39c46b141145864fb3b8043d2a986529
            if (!isEndTab) {
              // keep tabs the same width
              tab.style.transition = "none";
-@@ -1630,13 +1632,13 @@
+@@ -1651,13 +1654,13 @@
        let verticalTabsContainer = document.getElementById(
          "vertical-pinned-tabs-container"
        );
--      let numPinned = gBrowser._numPinnedTabs;
+-      let numPinned = gBrowser.pinnedTabCount;
 +      let numPinned = gBrowser._numVisiblePinTabs;
  
--      if (gBrowser._numPinnedTabs !== verticalTabsContainer.children.length) {
-+      if (gBrowser._numVisiblePinTabs !== verticalTabsContainer.children.length) {
-         let tabs = this._getVisibleTabs();
+       if (gBrowser.pinnedTabCount !== verticalTabsContainer.children.length) {
+         let tabs = this.visibleTabs;
          for (let i = 0; i < numPinned; i++) {
            tabs[i].style.marginInlineStart = "";
 -          verticalTabsContainer.appendChild(tabs[i]);
@@ -89,26 +98,35 @@ index f3a2f226a9056c5a75023281fdeb704cec49b4a6..39c46b141145864fb3b8043d2a986529
          }
        }
  
-@@ -1660,7 +1662,7 @@
+@@ -1681,7 +1684,7 @@
  
      _positionPinnedTabs() {
-       let tabs = this._getVisibleTabs();
--      let numPinned = gBrowser._numPinnedTabs;
+       let tabs = this.visibleTabs;
+-      let numPinned = gBrowser.pinnedTabCount;
 +      let numPinned = gBrowser._numVisiblePinTabs;
        let absPositionHorizontalTabs =
          this.overflowing && tabs.length > numPinned && numPinned > 0;
  
-@@ -1934,7 +1936,7 @@
+@@ -1762,7 +1765,7 @@
+         return;
+       }
+ 
+-      let tabs = this.visibleTabs.slice(0, gBrowser.pinnedTabCount);
++      let tabs = this.visibleTabs.slice(0, gBrowser._numVisiblePinTabs);
+ 
+       let directionX = screenX > dragData.animLastScreenX;
+       let directionY = screenY > dragData.animLastScreenY;
+@@ -1948,7 +1951,7 @@
        }
  
        let pinned = draggedTab.pinned;
--      let numPinned = gBrowser._numPinnedTabs;
+-      let numPinned = gBrowser.pinnedTabCount;
 +      let numPinned = gBrowser._numVisiblePinTabs;
-       let tabs = this._getVisibleTabs().slice(
+       let tabs = this.visibleTabs.slice(
          pinned ? 0 : numPinned,
          pinned ? numPinned : undefined
-@@ -2059,8 +2061,8 @@
-       }
+@@ -2140,8 +2143,8 @@
+       );
      }
  
 -    _finishAnimateTabMove() {
@@ -117,16 +135,4 @@ index f3a2f226a9056c5a75023281fdeb704cec49b4a6..39c46b141145864fb3b8043d2a986529
 +      if (!this.hasAttribute("movingtab") && !always) {
          return;
        }
- 
-@@ -2218,9 +2220,9 @@
-       function newIndex(aTab, index) {
-         // Don't allow mixing pinned and unpinned tabs.
-         if (aTab.pinned) {
--          return Math.min(index, gBrowser._numPinnedTabs - 1);
-+          return Math.min(index, gBrowser._numVisiblePinTabs - 1);
-         }
--        return Math.max(index, gBrowser._numPinnedTabs);
-+        return Math.max(index, gBrowser._numVisiblePinTabs);
-       }
-     }
  

@@ -1,4 +1,5 @@
 name: macOS Release Build
+
 on:
   workflow_call:
     inputs:
@@ -14,33 +15,31 @@ on:
 jobs:
   mac-build:
     name: Build macOS - ${{ matrix.arch }}
+    runs-on: macos-14
     
-    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - arch: aarch64
-            os: macos-14
-          - arch: x64
-            os: macos-13
+        arch: [x86_64, aarch64]
 
     steps:
-      - name: Install Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 20
-
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
           submodules: recursive
           token: ${{ secrets.DEPLOY_KEY }}
 
-      - name: Setup git
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Setup Git
         run: |
           git config --global user.email "mauro-balades@users.noreply.github.com"
           git config --global user.name "mauro-balades"
@@ -48,43 +47,38 @@ jobs:
       - name: Install system dependencies
         run: |
           brew update
-
           brew install cairo sccache gnu-tar mercurial
           sudo pip install setuptools
 
-          # completly uninstall python3 and python3.12
           brew uninstall --ignore-dependencies python3.12 -f
 
           export PATH="$(python3 -m site --user-base)/bin":$PATH
           python3 -m pip install --user mercurial
 
-          rm '/usr/local/bin/2to3-3.11' # fix Could not symlink bin/2to3-3.11
-          rm '/usr/local/bin/2to3-3.12' # fix Could not symlink bin/2to3-3.12
-          rm /usr/local/bin/2to3 # fix Could not symlink bin/2to3
-          rm '/usr/local/bin/idle3.11' #fix Could not symlink bin/idle3.11
-          rm '/usr/local/bin/idle3.12' # fix Could not symlink bin/idle3.12
-          rm '/usr/local/bin/idle3' # fix Could not symlink bin/idle3
-          rm '/usr/local/bin/pydoc3.11' # fix Could not symlink bin/pydoc3.11
-          rm '/usr/local/bin/pydoc3.12' # fix Could not symlink bin/pydoc3.12
-          rm '/usr/local/bin/pydoc3' # fix Could not symlink bin/pydoc3
-          rm '/usr/local/bin/python3.11' # fix Could not symlink bin/python3.11
-          rm '/usr/local/bin/python3.12' # fix Could not symlink bin/python3.12
-          rm '/usr/local/bin/python3' # fix Could not symlink bin/python3
-          rm '/usr/local/bin/python3.11-config' # fix Could not symlink bin/python3.11-config
-          rm '/usr/local/bin/python3.12-config' # fix Could not symlink bin/python3.12-config
-          rm '/usr/local/bin/python3-config' # fix Could not symlink bin/python3-config
+          rm '/usr/local/bin/2to3-3.11' '/usr/local/bin/2to3-3.12' '/usr/local/bin/2to3' 
+          rm '/usr/local/bin/idle3.11' '/usr/local/bin/idle3.12' '/usr/local/bin/idle3' 
+          rm '/usr/local/bin/pydoc3.11' '/usr/local/bin/pydoc3.12' '/usr/local/bin/pydoc3' 
+          rm '/usr/local/bin/python3.11' '/usr/local/bin/python3.12' '/usr/local/bin/python3' 
+          rm '/usr/local/bin/python3.11-config' '/usr/local/bin/python3.12-config' '/usr/local/bin/python3-config'
 
           brew install watchman
 
           curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain 1.79
+          source $HOME/.cargo/env
+          
+          if test "${{ matrix.arch }}" = "aarch64"; then
+            rustup target add aarch64-apple-darwin
+          else
+            rustup target add x86_64-apple-darwin
+          fi
 
-      - name: Force usage fo gnu-tar
+      - name: Force usage of gnu-tar
         run: |
           echo 'export PATH="/usr/local/opt/gnu-tar/libexec/gnubin:$PATH"' >> ~/.bash_profile
           echo 'export PATH="/usr/local/opt/gnu-tar/libexec/gnubin:$PATH"' >> ~/.zsh
           source ~/.bash_profile
 
-      - name: Install pnpm
+      - name: Setup pnpm
         run: npm install -g pnpm
 
       - name: Get pnpm store directory
@@ -94,52 +88,58 @@ jobs:
           echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
 
       - name: Install dependencies
-        run: pnpm install
+        run: |
+          pnpm install
+
       - name: Load surfer CI setup
         run: pnpm surfer ci --brand ${{ inputs.release-branch }} --display-version ${{ inputs.build-version }}
 
-      - name: Download firefox source and dependancies
+      - name: Download Firefox source and dependencies
         run: pnpm surfer download
 
       - name: Bootstrap
         run: |
           cd engine
+          export SURFER_PLATFORM="darwin"
           export PATH="$(python3 -m site --user-base)/bin":$PATH
           ./mach --no-interactive bootstrap --application-choice browser --no-system-changes
           cd ..
 
       - name: Import
         env:
-          SURFER_COMPAT: ${{ matrix.arch == 'x64' }}
-        run: |
-          pnpm surfer import --verbose
+          SURFER_COMPAT: ${{ matrix.arch }}
+        run: pnpm surfer import --verbose
 
       - name: Build language packs
         run: sh scripts/download-language-packs.sh
 
-      - name: build Zen
+      - name: Build Zen
         env:
-          SURFER_COMPAT: ${{ matrix.arch == 'x64' }}
+          SURFER_COMPAT: ${{ matrix.arch }}
         run: |
-          if test "${{ matrix.arch }}" = "x64"; then
+          export SURFER_PLATFORM="darwin"
+          if test "${{ matrix.arch }}" = "x86_64"; then
             export ZEN_DISABLE_LTO=1
           fi
           sh .github/workflows/src/release-build.sh
 
       - name: Rebuild Zen if failed
         if: failure()
-        run: sh .github/workflows/src/release-build.sh
+        run: |
+          export SURFER_PLATFORM="darwin"
+          sh .github/workflows/src/release-build.sh
 
-      - name: import APPLE DEVELOPER ID CERTIFICATE for .app
-        uses: apple-actions/import-codesign-certs@v3
+      - name: Import APPLE DEVELOPER ID CERTIFICATE for .app
+        uses: Apple-Actions/import-codesign-certs@v3
         with:
           p12-file-base64: ${{ secrets.macOS_CERTIFICATES_P12_For_App_BASE64 }}
           p12-password: ${{ secrets.macOS_CERTIFICATES_P12_PASSWORD }}
 
       - name: Package
         env:
-          SURFER_COMPAT: ${{ matrix.arch == 'x64' }}
+          SURFER_COMPAT: ${{ matrix.arch }}
         run: |
+          export SURFER_PLATFORM="darwin"
           export MACOS_APPLE_DEVELOPER_ID="${{ secrets.macOS_AppleDeveloperId }}"
           pnpm package
 
@@ -147,7 +147,7 @@ jobs:
         run: |
           mv ./dist/output.mar macos-${{ matrix.arch }}.mar
 
-      - name: Sign to .dmg
+      - name: Sign .dmg
         run: |
           set -ex
           hdiutil convert ./dist/*.dmg -format UDZO -imagekey zlib-level=9 -o zen.macos-${{ matrix.arch }}.dmg
@@ -160,19 +160,19 @@ jobs:
             --wait
           xcrun stapler staple "zen.macos-${{ matrix.arch }}.dmg"
 
-      - name: Upload artifact
+      - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
           name: zen.macos-${{ matrix.arch }}.dmg
           path: ./zen.macos-${{ matrix.arch }}.dmg
 
-      - name: Upload mar
+      - name: Upload build artifact (.mar)
         uses: actions/upload-artifact@v4
         with:
           name: macos-${{ matrix.arch }}.mar
           path: ./macos-${{ matrix.arch }}.mar
 
-      - name: Upload update manifests
+      - name: Upload build artifact (update manifests)
         uses: actions/upload-artifact@v4
         with:
           name: macos_update_manifest_${{ matrix.arch }}

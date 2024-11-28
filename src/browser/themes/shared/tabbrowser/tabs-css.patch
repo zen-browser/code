@@ -1,11 +1,11 @@
 diff --git a/browser/themes/shared/tabbrowser/tabs.css b/browser/themes/shared/tabbrowser/tabs.css
-index d48aad3a397909056ee43be4e65797875e80b772..89d2b381153d137ccfd080844bdb9abbbd90e1d5 100644
+index d48aad3a397909056ee43be4e65797875e80b772..d9728867a69a935caf2176d492a7aa78dcee7424 100644
 --- a/browser/themes/shared/tabbrowser/tabs.css
 +++ b/browser/themes/shared/tabbrowser/tabs.css
 @@ -26,7 +26,7 @@
-   --tab-icon-end-margin: 5.5px;
-   --tab-icon-overlay-fill: light-dark(black, white);
-   --tab-icon-overlay-stroke: light-dark(white, black);
+   --tab-icon-overlay-fill: light-dark(white, black);
+   --tab-icon-overlay-stroke: light-dark(black, white);
+   --tab-label-line-height: 1.7;
 -  --tab-loading-fill: #0A84FF;
 +  --tab-loading-fill: var(--zen-primary-color);
    --tab-hover-background-color: color-mix(in srgb, currentColor 11%, transparent);
@@ -20,7 +20,7 @@ index d48aad3a397909056ee43be4e65797875e80b772..89d2b381153d137ccfd080844bdb9abb
 +
    }
  
-   #tabbrowser-tabs[movingtab] > #tabbrowser-arrowscrollbox > &:is([selected], [multiselected]) {
+   #tabbrowser-tabs[movingtab] &:is([selected], [multiselected]) {
 @@ -498,14 +497,14 @@
    }
  
@@ -40,6 +40,15 @@ index d48aad3a397909056ee43be4e65797875e80b772..89d2b381153d137ccfd080844bdb9abb
        direction: rtl;
        mask-image: linear-gradient(to right, transparent, black var(--tab-label-mask-size));
      }
+@@ -863,7 +862,7 @@ tab-group {
+   margin-inline: var(--tab-inner-inline-margin);
+ 
+   #tabbrowser-tabs[orient="vertical"]:not([expanded]) & > .toolbarbutton-text {
+-    display: none;
++    display: flex;
+   }
+ 
+   &:hover {
 @@ -1052,7 +1051,7 @@ tab-group {
    toolbarbutton:not(#firefox-view-button),
    toolbarpaletteitem:not(#wrapper-firefox-view-button)

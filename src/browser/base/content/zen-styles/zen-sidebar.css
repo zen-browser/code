@@ -60,11 +60,11 @@
     overflow: hidden;
     border: 1px solid var(--zen-colors-border);
 
-    :root:has(#navigator-toolbox:not([zen-right-side='true'])) &[positionend='true'] {
+    :root:not([zen-right-side='true']) &[positionend='true'] {
       margin-right: var(--zen-element-separation);
     }
 
-    :root:has(#navigator-toolbox[zen-right-side='true']) & {
+    :root[zen-right-side='true'] & {
       margin-left: var(--zen-element-separation);
     }
   }

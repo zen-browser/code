@@ -36,7 +36,9 @@ var ZenThemeModifier = {
   },
 
   listenForEvents() {
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', this._onPrefersColorSchemeChange.bind(this));
+    if (this._inMainBrowserWindow) {
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', this._onPrefersColorSchemeChange.bind(this));
+    }
 
     var handleEvent = this.handleEvent.bind(this);
     // Listen for changes in the accent color and border radius
@@ -73,6 +75,11 @@ var ZenThemeModifier = {
   updateElementSeparation() {
     const separation = Services.prefs.getIntPref('zen.theme.content-element-separation');
     document.documentElement.style.setProperty('--zen-element-separation', separation + 'px');
+    if (separation == 0) {
+      document.documentElement.setAttribute("zen-no-padding", true);
+    } else {
+      document.documentElement.removeAttribute("zen-no-padding");
+    }
   },
 
   /**

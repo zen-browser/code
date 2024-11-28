@@ -49,7 +49,11 @@ var ZenProfileDialogUI = {
   },
 
   _openProfile(profile) {
-    Services.startup.createInstanceWithProfile(profile);
+    SelectableProfileService.getProfile(
+      aEvent.target.getAttribute("profileid")
+    ).then(profile => {
+      SelectableProfileService.launchInstance(profile);
+    });
   },
 
   _getProfilesSize(profiles) {

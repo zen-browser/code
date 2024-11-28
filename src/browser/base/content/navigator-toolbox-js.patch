@@ -1,0 +1,13 @@
+diff --git a/browser/base/content/navigator-toolbox.js b/browser/base/content/navigator-toolbox.js
+index 64ded8fb2c08f1dbfec8fe08ab427a24b53f1169..69009d53d7242c26f777ac2e0bb1897ff27ad916 100644
+--- a/browser/base/content/navigator-toolbox.js
++++ b/browser/base/content/navigator-toolbox.js
+@@ -8,7 +8,7 @@
+ document.addEventListener(
+   "DOMContentLoaded",
+   () => {
+-    const navigatorToolbox = document.getElementById("navigator-toolbox");
++    const navigatorToolbox = document.getElementById("browser");
+     const widgetOverflow = document.getElementById("widget-overflow");
+ 
+     function onPopupShowing(event) {

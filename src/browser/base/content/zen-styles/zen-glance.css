@@ -4,18 +4,10 @@
   visibility: inherit;
 }
 
-#tabbrowser-tabpanels {
-  transition: transform 0.1s ease-in-out;
-}
-
-#tabbrowser-tabpanels:has(.zen-glance-background) {
+.zen-glance-background {
   transform: scale(0.98);
   backdrop-filter: blur(5px);
-
-  & .zen-glance-background {
-    opacity: 0.6;
-    transition: opacity 0.1s ease-in-out;
-  }
+  opacity: 0.6;
 }
 
 #zen-glance-sidebar-container {
@@ -27,18 +19,18 @@
 }
 
 .browserSidebarContainer.zen-glance-overlay {
+  box-shadow: none !important;
+
   &[fade-out='true'] {
     background: transparent;
     opacity: 1;
 
     & .browserContainer {
-      opacity: 1 !important;
-      animation: zen-glance-content-animation-out .3s ease-out forwards !important;
-      animation-direction: reverse !important;
+      opacity: 1;
+      animation: zen-glance-content-animation-out .3s ease-in-out forwards !important;
 
       & browser {
-        opacity: 0;
-        transition: opacity .1s ease-in-out;
+        opacity: 1 !important;
       }
 
       & #zen-glance-sidebar-container {
@@ -50,12 +42,9 @@
 
   & .browserContainer {
     background: var(--zen-dialog-background);
-    box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.2);
-    transform: translate(var(--initial-x), var(--initial-y));
-    width: var(--initial-width);
-    height: var(--initial-height);
-    position: absolute;
+    position: fixed;
     border-radius: var(--zen-border-radius);
+    overflow: hidden;
     opacity: 0;
     top: 0;
     left: 0;
@@ -67,7 +56,7 @@
       transition: 0s !important;
       transform: none !important;
       margin: auto !important;
-      top: -5px !important;
+      top: 0 !important;
       left: 0 !important;
     }
 
@@ -120,8 +109,7 @@
     }
 
     &[animate='true'] {
-      animation: zen-glance-content-animation .3s ease-in-out forwards;
-      animation-delay: 0.1s;
+      animation: zen-glance-content-animation .4s ease-in-out forwards;
 
       &:not([animate-end='true']) {
         pointer-events: none;

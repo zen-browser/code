@@ -1,5 +1,5 @@
 diff --git a/browser/components/places/content/bookmarkProperties.xhtml b/browser/components/places/content/bookmarkProperties.xhtml
-index 047652a52e705d49f870399992873fce536c07b9..2932eb94e8c16eb05f172322a6ce3ea201ecd0b1 100644
+index 047652a52e705d49f870399992873fce536c07b9..8bc7d1c5e44c33d90f82fdc6f66d9e2e80c60bae 100644
 --- a/browser/components/places/content/bookmarkProperties.xhtml
 +++ b/browser/components/places/content/bookmarkProperties.xhtml
 @@ -37,6 +37,7 @@
@@ -10,3 +10,11 @@ index 047652a52e705d49f870399992873fce536c07b9..2932eb94e8c16eb05f172322a6ce3ea2
    </linkset>
  
    <stringbundleset id="stringbundleset">
+@@ -44,6 +45,7 @@
+                   src="chrome://browser/locale/places/bookmarkProperties.properties"/>
+   </stringbundleset>
+ 
++  <script src="chrome://browser/content/zen-components/ZenWorkspacesStorage.mjs" />
+   <script src="chrome://browser/content/places/editBookmark.js"/>
+   <script src="chrome://browser/content/places/bookmarkProperties.js"/>
+   <script src="chrome://global/content/globalOverlay.js"/>

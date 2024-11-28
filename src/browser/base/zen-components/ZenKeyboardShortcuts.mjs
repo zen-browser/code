@@ -802,6 +802,12 @@ class ZenKeyboardShortcutsVersioner {
       }
     }
     if (version < 4) {
+      // Migrate from 3 to 4
+      // In this new version, we are just removing the 'zen-toggle-sidebar' shortcut
+      //  since it's not used anymore.
+      data = data.filter((shortcut) => shortcut.getID() != 'zen-toggle-sidebar');
+    }
+    if (version < 5) {
       data.push(
         new KeyShortcut(
           'zen-split-view-rearrange',
@@ -813,11 +819,6 @@ class ZenKeyboardShortcutsVersioner {
           'zen-split-view-shortcut-rearrange'
         )
       );
-
-      // Migrate from 3 to 4
-      // In this new version, we are just removing the 'zen-toggle-sidebar' shortcut
-      //  since it's not used anymore.
-      data = data.filter((shortcut) => shortcut.getID() != 'zen-toggle-sidebar');
     }
     return data;
   }

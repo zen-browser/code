@@ -5,7 +5,6 @@
     position: relative;
 
     box-shadow: 0 0 1px 1px light-dark(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.5));
-    border-radius: var(--zen-border-radius);
     overflow: hidden;
     margin: 1px;
     

@@ -80,7 +80,7 @@
 
 #zen-sidebar-web-panel {
   border-radius: var(--zen-panel-radius);
-  overflow: hidden;
+  z-index: 2;
   box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.1);
   border: 1px solid var(--zen-colors-border);
   background: var(--zen-colors-tertiary);
@@ -105,21 +105,47 @@
   top: 0;
   left: 0;
   height: 100%;
-  width: 4px;
+  width: calc(var(--zen-element-separation) * 2 - 3px);
   background: transparent;
   border: none;
   cursor: ew-resize;
+
+  &::before {
+    height: 30px;
+    width: 3px;
+    background: var(--zen-colors-border);
+    border-radius: 2px;
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.1s ease-in-out;
+    pointer-events: none;
+  }
+
+  &:hover::before {
+    opacity: 1;
+  }
 }
 
 .zen-sidebar-web-panel-splitter[side='right'] {
-  left: initial;
-  right: 0;
+  left: 100%;
+}
+
+.zen-sidebar-web-panel-splitter[side='left'] {
+  right: 100%;
 }
 
 .zen-sidebar-web-panel-splitter[orient='horizontal'] {
   width: 100%;
   height: 7px;
   cursor: ns-resize;
+
+  &::before {
+    display: none;
+  }
 }
 
 .zen-sidebar-web-panel-splitter[side='bottom'] {
@@ -253,6 +279,7 @@
 :root:not([zen-right-side='true']) {
   #zen-sidebar-web-panel-wrapper:not(:has(#zen-sidebar-web-panel[pinned='true'])) {
     margin-left: 0 !important;
+    margin-right: calc(var(--zen-element-separation) * 2 - 3px) !important;
   }
 }
 

@@ -75,6 +75,7 @@
 #zen-appcontent-wrapper {
   max-width: 100%;
   overflow-x: hidden;
+  z-index: 1;
 }
 
 :root:not([inDOMFullscreen='true']):not([chromehidden~='location']):not([chromehidden~='toolbar']) {

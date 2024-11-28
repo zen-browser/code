@@ -1,5 +1,5 @@
 diff --git a/browser/base/content/navigator-toolbox.inc.xhtml b/browser/base/content/navigator-toolbox.inc.xhtml
-index eb2d8670874bd5bcaf9253caafb98444cb8cfcd9..eba11edbbcebe8201a6e1153d66a5b63ab62acc7 100644
+index eb2d8670874bd5bcaf9253caafb98444cb8cfcd9..51e6c01c279e0105ec8ac08df0763027179c0616 100644
 --- a/browser/base/content/navigator-toolbox.inc.xhtml
 +++ b/browser/base/content/navigator-toolbox.inc.xhtml
 @@ -2,7 +2,7 @@
@@ -29,7 +29,15 @@ index eb2d8670874bd5bcaf9253caafb98444cb8cfcd9..eba11edbbcebe8201a6e1153d66a5b63
        <toolbartabstop/>
        <hbox id="TabsToolbar-customization-target" flex="1">
          <toolbarbutton id="firefox-view-button"
-@@ -55,9 +55,14 @@
+@@ -40,6 +40,7 @@
+                        data-l10n-id="toolbar-button-firefox-view-2"
+                        role="button"
+                        aria-pressed="false"
++                       hidden="true"
+                        cui-areatype="toolbar"
+                        removable="true"/>
+ 
+@@ -55,9 +56,14 @@
  # significantly, there is an optimization in
  # DisplayPortUtils::MaybeCreateDisplayPortInFirstScrollFrameEncountered based
  # the current structure that we may want to revisit.
@@ -45,7 +53,7 @@ index eb2d8670874bd5bcaf9253caafb98444cb8cfcd9..eba11edbbcebe8201a6e1153d66a5b63
              <tab is="tabbrowser-tab" class="tabbrowser-tab" selected="true" visuallyselected="" fadein=""/>
              <hbox id="tabbrowser-arrowscrollbox-periphery">
                <toolbartabstop/>
-@@ -100,11 +105,12 @@
+@@ -100,11 +106,12 @@
  #include private-browsing-indicator.inc.xhtml
      <toolbarbutton id="content-analysis-indicator"
                     class="toolbarbutton-1 content-analysis-indicator-icon"/>
@@ -61,7 +69,7 @@ index eb2d8670874bd5bcaf9253caafb98444cb8cfcd9..eba11edbbcebe8201a6e1153d66a5b63
    <toolbar id="nav-bar"
             class="browser-toolbar chromeclass-location"
             data-l10n-id="navbar-accessible"
-@@ -487,10 +493,12 @@
+@@ -487,10 +494,12 @@
                       consumeanchor="PanelUI-button"
                       data-l10n-id="appmenu-menu-button-closed2"/>
      </toolbaritem>

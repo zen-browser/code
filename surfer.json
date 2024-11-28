@@ -26,7 +26,7 @@
           "windows": "windows.mar",
           "macos-aarch64": "macos-aarch64.mar",
           "linux": "linux.mar",
-          "macos-x64": "macos-x64.mar",
+          "macos-x64": "macos-x86_64.mar",
           "windows-compat": "windows-generic.mar",
           "linux-compat": "linux-generic.mar"
         }

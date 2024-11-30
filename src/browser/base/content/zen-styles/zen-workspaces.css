@@ -19,15 +19,18 @@
     appearance: unset !important;
     height: fit-content;
     gap: 3px;
+    width: 100%;
 
     & toolbarbutton {
       margin: auto;
-      width: 25px;
+      width: auto;
       display: flex;
       justify-content: center;
       padding: 0 !important;
       align-items: center;
       position: relative;
+      flex: 1 1 4px !important;       
+      min-width: 0;
 
       @media (-moz-bool-pref: 'zen.workspaces.hide-deactivated-workspaces') {
         &:not([active='true']):not(:hover) {

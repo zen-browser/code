@@ -1071,4 +1071,9 @@ Preferences.addAll([
     type: "bool",
     default: true,
   },
+  {
+    id: "zen.tabs.openNewTabByDblclick",
+    type: "bool",
+    default: true,
+  },
 ]);

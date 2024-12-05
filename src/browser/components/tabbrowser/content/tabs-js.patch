@@ -1,5 +1,5 @@
 diff --git a/browser/components/tabbrowser/content/tabs.js b/browser/components/tabbrowser/content/tabs.js
-index f9e256b143786c18ba85859ca1b11182ab23f1aa..4e0ddb8c8848015bcf9e6f5547c86dbff5e176cc 100644
+index f9e256b143786c18ba85859ca1b11182ab23f1aa..69fd7107a9c5bf3f855ab8dbe7ee5e1d32205bb7 100644
 --- a/browser/components/tabbrowser/content/tabs.js
 +++ b/browser/components/tabbrowser/content/tabs.js
 @@ -155,6 +155,13 @@
@@ -16,13 +16,12 @@ index f9e256b143786c18ba85859ca1b11182ab23f1aa..4e0ddb8c8848015bcf9e6f5547c86dbf
      }
  
      attributeChangedCallback(name, oldValue, newValue) {
-@@ -309,11 +316,14 @@
+@@ -309,11 +316,13 @@
          return;
        }
  
 -      if (!this._blockDblClick) {
 +      if (!this._blockDblClick && this._openNewTabByDblclick) {
-+        Services.console.logStringMessage("Double clicked on Tab Bar");
          BrowserCommands.openTab();
        }
  
@@ -33,7 +32,7 @@ index f9e256b143786c18ba85859ca1b11182ab23f1aa..4e0ddb8c8848015bcf9e6f5547c86dbf
      }
  
      on_click(event) {
-@@ -541,7 +551,7 @@
+@@ -541,7 +550,7 @@
        if (this.#isContainerVerticalPinnedExpanded(tab)) {
          // In expanded vertical mode, the max number of pinned tabs per row is dynamic
          // Set this before adjusting dragged tab's position
@@ -42,7 +41,7 @@ index f9e256b143786c18ba85859ca1b11182ab23f1aa..4e0ddb8c8848015bcf9e6f5547c86dbf
          let tabsPerRow = 0;
          let position = 0;
          for (let pinnedTab of pinnedTabs) {
-@@ -918,7 +928,7 @@
+@@ -918,7 +927,7 @@
              let postTransitionCleanup = () => {
                tab.removeAttribute("tabdrop-samewindow");
  
@@ -51,7 +50,7 @@ index f9e256b143786c18ba85859ca1b11182ab23f1aa..4e0ddb8c8848015bcf9e6f5547c86dbf
                if (dropIndex !== false) {
                  gBrowser.moveTabTo(tab, dropIndex);
                  if (incrementDropIndex) {
-@@ -928,7 +938,7 @@
+@@ -928,7 +937,7 @@
  
                gBrowser.syncThrobberAnimations(tab);
              };
@@ -60,7 +59,7 @@ index f9e256b143786c18ba85859ca1b11182ab23f1aa..4e0ddb8c8848015bcf9e6f5547c86dbf
                postTransitionCleanup();
              } else {
                let onTransitionEnd = transitionendEvent => {
-@@ -1077,7 +1087,8 @@
+@@ -1077,7 +1086,8 @@
        if (
          dt.mozUserCancelled ||
          dt.dropEffect != "none" ||
@@ -70,7 +69,7 @@ index f9e256b143786c18ba85859ca1b11182ab23f1aa..4e0ddb8c8848015bcf9e6f5547c86dbf
        ) {
          delete draggedTab._dragData;
          return;
-@@ -1328,7 +1339,7 @@
+@@ -1328,7 +1338,7 @@
          }
        }
  
@@ -79,7 +78,7 @@ index f9e256b143786c18ba85859ca1b11182ab23f1aa..4e0ddb8c8848015bcf9e6f5547c86dbf
        return this.#allTabs;
      }
  
-@@ -1520,10 +1531,12 @@
+@@ -1520,10 +1530,12 @@
  
      _handleTabSelect(aInstant) {
        let selectedTab = this.selectedItem;
@@ -95,7 +94,7 @@ index f9e256b143786c18ba85859ca1b11182ab23f1aa..4e0ddb8c8848015bcf9e6f5547c86dbf
        selectedTab._notselectedsinceload = false;
      }
  
-@@ -1571,7 +1584,7 @@
+@@ -1571,7 +1583,7 @@
          if (isEndTab && !this._hasTabTempMaxWidth) {
            return;
          }
@@ -104,7 +103,7 @@ index f9e256b143786c18ba85859ca1b11182ab23f1aa..4e0ddb8c8848015bcf9e6f5547c86dbf
          // Force tabs to stay the same width, unless we're closing the last tab,
          // which case we need to let them expand just enough so that the overall
          // tabbar width is the same.
-@@ -1586,7 +1599,7 @@
+@@ -1586,7 +1598,7 @@
          let tabsToReset = [];
          for (let i = numPinned; i < tabs.length; i++) {
            let tab = tabs[i];
@@ -113,7 +112,7 @@ index f9e256b143786c18ba85859ca1b11182ab23f1aa..4e0ddb8c8848015bcf9e6f5547c86dbf
            if (!isEndTab) {
              // keep tabs the same width
              tab.style.transition = "none";
-@@ -1651,13 +1664,13 @@
+@@ -1651,13 +1663,13 @@
        let verticalTabsContainer = document.getElementById(
          "vertical-pinned-tabs-container"
        );
@@ -129,7 +128,7 @@ index f9e256b143786c18ba85859ca1b11182ab23f1aa..4e0ddb8c8848015bcf9e6f5547c86dbf
          }
        }
  
-@@ -1681,7 +1694,7 @@
+@@ -1681,7 +1693,7 @@
  
      _positionPinnedTabs() {
        let tabs = this.visibleTabs;
@@ -138,7 +137,7 @@ index f9e256b143786c18ba85859ca1b11182ab23f1aa..4e0ddb8c8848015bcf9e6f5547c86dbf
        let absPositionHorizontalTabs =
          this.overflowing && tabs.length > numPinned && numPinned > 0;
  
-@@ -1762,7 +1775,7 @@
+@@ -1762,7 +1774,7 @@
          return;
        }
  
@@ -147,7 +146,7 @@ index f9e256b143786c18ba85859ca1b11182ab23f1aa..4e0ddb8c8848015bcf9e6f5547c86dbf
  
        let directionX = screenX > dragData.animLastScreenX;
        let directionY = screenY > dragData.animLastScreenY;
-@@ -1948,7 +1961,7 @@
+@@ -1948,7 +1960,7 @@
        }
  
        let pinned = draggedTab.pinned;
@@ -156,7 +155,7 @@ index f9e256b143786c18ba85859ca1b11182ab23f1aa..4e0ddb8c8848015bcf9e6f5547c86dbf
        let tabs = this.visibleTabs.slice(
          pinned ? 0 : numPinned,
          pinned ? numPinned : undefined
-@@ -2140,8 +2153,8 @@
+@@ -2140,8 +2152,8 @@
        );
      }
  

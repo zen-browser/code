@@ -107,6 +107,7 @@ pref('zen.view.compact.toolbar-flash-popup.duration', 800);
 pref('zen.view.compact.toolbar-hide-after-hover.duration', 1000);
 pref('zen.view.compact.color-toolbar', true);
 pref('zen.view.compact.color-sidebar', true);
+pref('zen.view.use-deprecated-urlbar', false);
 
 #ifdef XP_MACOSX
 // Disable for macos in the meantime until @HarryHeres finds a solution for hight DPI screens

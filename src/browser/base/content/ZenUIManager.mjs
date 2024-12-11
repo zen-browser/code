@@ -392,7 +392,7 @@ var gZenVerticalTabsManager = {
             navBar.append(windowButtons);
           }
         } else { // not windows styled buttons
-          if (isRightSide) {
+          if (isRightSide || !isSidebarExpanded) {
             navBar.prepend(windowButtons);
           } else {
             topButtons.prepend(windowButtons);

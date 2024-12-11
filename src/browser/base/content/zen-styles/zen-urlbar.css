@@ -337,39 +337,47 @@ button.popup-notification-dropmarker {
   }
 }
 
-#urlbar[open] {
-  z-index: 1000;
-  min-width: 45vw;
-  max-width: 45vw;
-  top: 0 !important;
-  --urlbar-container-height: 55px !important;
-  --urlbar-margin-inline: 10px !important;
-  font-size: 1.1em;
+@media not (-moz-bool-pref: 'zen.view.use-deprecated-urlbar') {
+  #urlbar[open] {
+    z-index: 1000;
+    min-width: 45vw;
+    max-width: 45vw;
+    top: 0 !important;
+    --urlbar-container-height: 55px !important;
+    --urlbar-margin-inline: 10px !important;
+    font-size: 1.1em;
 
-  & #urlbar-background {
-    /* We cant have a transparent background with a backdrop-filter because on normal websites,
-      the backdrop woudn't work, we would need to apply a clip-path to the site and that's not recommended
-      due to performance issues */
-    background-color: var(--zen-branding-bg) !important;
-    box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.1) !important;
-    outline: 1px solid light-dark(rgba(20, 20, 20, 0.2), rgba(235, 235, 235, 0.2)) !important;
-    outline-offset: -1px !important;
+    & #urlbar-background {
+      /* We cant have a transparent background with a backdrop-filter because on normal websites,
+        the backdrop woudn't work, we would need to apply a clip-path to the site and that's not recommended
+        due to performance issues */
+      background-color: var(--zen-branding-bg) !important;
+      box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.1) !important;
+      outline: 1px solid light-dark(rgba(20, 20, 20, 0.2), rgba(235, 235, 235, 0.2)) !important;
+      outline-offset: -1px !important;
+    }
+
+    & #identity-box {
+      margin-right: var(--urlbar-margin-inline);
+    }
+
+    :root[zen-right-side='true'] & {
+      right: 0;
+    }
+    position: absolute;
+
+    top: calc(var(--zen-toolbar-height) * 2) !important;
+    left: 28vw;
+
+    #urlbar-container:has(&) {
+      border-radius: 10px;
+      background: var(--toolbarbutton-hover-background);
+    }
   }
+}
 
-  & #identity-box {
-    margin-right: var(--urlbar-margin-inline);
-  }
-
-  :root[zen-right-side='true'] & {
-    right: 0;
-  }
-  position: absolute;
-
-  top: calc(var(--zen-toolbar-height) * 2) !important;
-  left: 28vw;
-
-  #urlbar-container:has(&) {
-    border-radius: 10px;
-    background: var(--toolbarbutton-hover-background);
+@media (-moz-bool-pref: 'zen.view.use-deprecated-urlbar') {
+  #urlbar[open] {
+    top: 0 !important;
   }
 }

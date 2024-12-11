@@ -19,12 +19,21 @@
         display: none !important;
       }
 
+
+      #zen-sidebar-top-buttons:has(#zen-sidebar-top-buttons-customization-target:empty) {
+        max-height: 0 !important;
+        min-height: 0 !important;
+        opacity: 0;
+        overflow: hidden;
+        pointer-events: none;
+      }
+
       #navigator-toolbox {
         --zen-toolbox-max-width: 54px !important;
         --zen-compact-float: calc(var(--zen-element-separation) - 1px);
         position: absolute;
         z-index: 10;
-        transition: transform 0.25s ease-in-out, opacity 0.1s ease-in-out;
+        transition: transform 0.25s ease, opacity 0.1s ease-in-out;
         right: calc(100% - var(--zen-element-separation));
         top: 0;
         bottom: var(--zen-element-separation);

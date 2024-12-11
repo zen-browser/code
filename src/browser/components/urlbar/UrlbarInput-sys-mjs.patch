@@ -1,5 +1,5 @@
 diff --git a/browser/components/urlbar/UrlbarInput.sys.mjs b/browser/components/urlbar/UrlbarInput.sys.mjs
-index c504c9afc43785b5f003bb1f9f1dfbddef38d78b..845043f5a887d4f46b0064792fb0834724e94a07 100644
+index c504c9afc43785b5f003bb1f9f1dfbddef38d78b..e5a1ce5d61962d485d092cf3d1a90ff4833037f1 100644
 --- a/browser/components/urlbar/UrlbarInput.sys.mjs
 +++ b/browser/components/urlbar/UrlbarInput.sys.mjs
 @@ -3901,6 +3901,9 @@ export class UrlbarInput {
@@ -25,3 +25,12 @@ index c504c9afc43785b5f003bb1f9f1dfbddef38d78b..845043f5a887d4f46b0064792fb08347
          this._mousedownOnUrlbarDescendant = true;
  
          if (
+@@ -4025,7 +4031,7 @@ export class UrlbarInput {
+         }
+ 
+         this.focusedViaMousedown = !this.focused;
+-        this._preventClickSelectsAll = this.focused;
++        this._preventClickSelectsAll = this.hasAttribute("breakout-extend");
+ 
+         // Keep the focus status, since the attribute may be changed
+         // upon calling this.focus().

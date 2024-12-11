@@ -807,6 +807,30 @@ class ZenKeyboardShortcutsVersioner {
       //  since it's not used anymore.
       data = data.filter((shortcut) => shortcut.getID() != 'zen-toggle-sidebar');
     }
+    if (version < 5) {
+      data.push(
+        ...[
+          new KeyShortcut(
+            'zen-advance-selected-tab-shortcut',
+            '',
+            '',
+            ZEN_OTHER_SHORTCUTS_GROUP,
+            KeyShortcutModifiers.fromObject({}),
+            'code:gBrowser.tabContainer.advanceSelectedTab(1, true)',
+            'zen-advance-selected-tab-shortcut'
+          ),
+          new KeyShortcut(
+            'zen-reverse-selected-tab-shortcut',
+            '',
+            '',
+            ZEN_OTHER_SHORTCUTS_GROUP,
+            KeyShortcutModifiers.fromObject({}),
+            'code:gBrowser.tabContainer.advanceSelectedTab(-1, true)',
+            'zen-reverse-selected-tab-shortcut'
+          ),
+        ]
+      );
+    }
     return data;
   }
 }

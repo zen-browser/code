@@ -84,6 +84,10 @@
     height: calc(2 * var(--toolbarbutton-inner-padding) + 16px) !important;
     border-radius: var(--tab-border-radius) !important;
 
+    :root:not([zen-sidebar-expanded='true']) #navigator-toolbox & label {
+      display: none;
+    }
+
     &:hover {
       background: var(--toolbarbutton-hover-background) !important;
     }

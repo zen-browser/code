@@ -702,7 +702,7 @@ function zenGetDefaultShortcuts() {
 }
 
 class ZenKeyboardShortcutsVersioner {
-  static LATEST_KBS_VERSION = 4;
+  static LATEST_KBS_VERSION = 5;
 
   constructor() {}
 

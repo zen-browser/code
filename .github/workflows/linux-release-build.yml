@@ -25,7 +25,7 @@ jobs:
 
     steps:
       - name: Free disk space
-        run: src/ci/scripts/free-disk-space.sh
+        run: src/ci/free-disk-space.sh
 
       - name: Checkout repository
         uses: actions/checkout@v4

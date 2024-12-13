@@ -6,7 +6,7 @@ fast_rmdir() {
     cd "$@" || exit
     pwd
     ls
-    perl -e 'unlink for glob "*"'
+    perl -e 'Unlink for glob "*"'
 }
 
 list_installed_dpkg() {

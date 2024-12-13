@@ -30,7 +30,7 @@ jobs:
         arch: [x86_64, x86_64-v3, aarch64]
 
     steps:
-      - name: Free Disk Space (Ubuntu)
+      - name: Free disk space
         uses: jlumbroso/free-disk-space@main
         with:
           tool-cache: false
@@ -115,7 +115,7 @@ jobs:
       - name: Setup Rust
         run: |
           cd engine/
-          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain 1.79
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
           source $HOME/.cargo/env
           if test "${{ matrix.arch }}" = "aarch64"; then
             rustup target add aarch64-pc-windows-msvc
@@ -123,7 +123,7 @@ jobs:
             rustup target add x86_64-pc-windows-msvc
           fi
           cargo install cargo-download
-          cargo download -x windows=0.58.0
+          cargo download -x windows=0.84.0
           export CARGO_INCREMENTAL=0
           echo "" >> ../configs/common/mozconfig
           echo "export MOZ_WINDOWS_RS_DIR=$(pwd)/windows-0.58.0" >> ../configs/common/mozconfig

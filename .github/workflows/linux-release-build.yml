@@ -24,7 +24,7 @@ jobs:
     name: Build Linux - ${{ matrix.arch == 'x86_64' && 'Generic' || matrix.arch == 'x86_64-v3' && 'Specific' || matrix.arch == 'aarch64' && 'aarch64' }}
 
     steps:
-      - name: Free Disk Space (Ubuntu)
+      - name: Free disk space
         uses: jlumbroso/free-disk-space@main
         with:
           tool-cache: false
@@ -62,7 +62,7 @@ jobs:
       - name: Setup sccache
         env:
           LINK: https://github.com/mozilla/sccache/releases/download
-          SCCACHE_VERSION: 0.2.13
+          SCCACHE_VERSION: 0.9.0
         run: |
           SCCACHE_FILE=sccache-$SCCACHE_VERSION-x86_64-unknown-linux-musl
           mkdir -p $HOME/.local/bin
@@ -98,7 +98,7 @@ jobs:
       - name: Fix Rust version
         run: |
           # Install a rust version compatible with LLVM 18
-          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain 1.79
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
           source $HOME/.cargo/env
 
           if test "${{ matrix.arch }}" = "aarch64"; then

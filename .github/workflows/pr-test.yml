@@ -2,8 +2,6 @@ name: Pull request test
 
 on:
   pull_request:
-    branches:
-      - dev
 
 jobs:
   pr-test:

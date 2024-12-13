@@ -1,4 +1,3 @@
-
 set -ex
 
 CURRENT_DIR=$(pwd)
@@ -18,7 +17,7 @@ update_language() {
   cd $langId
 
   echo "Updating $langId"
-  # move the contents from ../firefox-l10n/$langId to ./l10n/$langId
+  # Move the contents from ../firefox-l10n/$langId to ./l10n/$langId
   rsync -av --progress ../firefox-l10n/$langId/ . --exclude .git
 
   cd $CURRENT_DIR
@@ -44,7 +43,7 @@ rm -rf ~/tools
 rm -rf ~/.git-cinnabar
 
 for lang in $(cat ./l10n/supported-languages); do
-  # remove every file except if it starts with "zen"
+  # Remove every file except if it starts with "zen"
   find ./l10n/$lang -type f -not -name "zen*" -delete
 done
 

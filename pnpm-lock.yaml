@@ -448,8 +448,8 @@ packages:
     resolution: {integrity: sha512-dOWoqflvcydARa360Gvv18DZ/gRuHKi2NU/wU5X1ZFzdYfH29nkiNZsF3mp4OJ3H4yo9Mx8A/uAGNzpzPN3yBA==}
     engines: {node: '>=0.10.0'}
 
-  is-apple-silicon@https://codeload.github.com/trickypr/is-apple-silicon/tar.gz/5f75501a1d7566ba9f94174b6825d7bd9d302b6a:
-    resolution: {tarball: https://codeload.github.com/trickypr/is-apple-silicon/tar.gz/5f75501a1d7566ba9f94174b6825d7bd9d302b6a}
+  is-apple-silicon@git+https://git@github.com:trickypr/is-apple-silicon.git#5f75501a1d7566ba9f94174b6825d7bd9d302b6a:
+    resolution: {commit: 5f75501a1d7566ba9f94174b6825d7bd9d302b6a, repo: git@github.com:trickypr/is-apple-silicon.git, type: git}
     version: 1.0.1
 
   is-arrayish@0.3.2:
@@ -1015,7 +1015,7 @@ snapshots:
       fast-extract: 1.1.0
       fs-extra: 10.1.0
       ini: 3.0.1
-      is-apple-silicon: https://codeload.github.com/trickypr/is-apple-silicon/tar.gz/5f75501a1d7566ba9f94174b6825d7bd9d302b6a
+      is-apple-silicon: git+https://git@github.com:trickypr/is-apple-silicon.git#5f75501a1d7566ba9f94174b6825d7bd9d302b6a
       kleur: 4.1.5
       modern-async: 1.1.4
       mount-dmg: 1.0.1
@@ -1354,7 +1354,7 @@ snapshots:
       is-relative: 1.0.0
       is-windows: 1.0.2
 
-  is-apple-silicon@https://codeload.github.com/trickypr/is-apple-silicon/tar.gz/5f75501a1d7566ba9f94174b6825d7bd9d302b6a: {}
+  is-apple-silicon@git+https://git@github.com:trickypr/is-apple-silicon.git#5f75501a1d7566ba9f94174b6825d7bd9d302b6a: {}
 
   is-arrayish@0.3.2: {}
 

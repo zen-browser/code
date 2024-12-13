@@ -25,9 +25,7 @@ jobs:
 
     steps:
       - name: Free disk space
-        uses: jlumbroso/free-disk-space@main
-        with:
-          tool-cache: false
+        run: src/ci/scripts/free-disk-space.sh
 
       - name: Checkout repository
         uses: actions/checkout@v4

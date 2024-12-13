@@ -37,7 +37,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: '3.13'
 
       - name: Setup Git
         run: |
@@ -91,7 +91,7 @@ jobs:
         run: |
           pnpm install
 
-      - name: Load surfer CI setup
+      - name: Load Surfer CI setup
         run: pnpm surfer ci --brand ${{ inputs.release-branch }} --display-version ${{ inputs.build-version }}
 
       - name: Download Firefox source and dependencies

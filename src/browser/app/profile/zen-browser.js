@@ -84,7 +84,7 @@ pref('zen.theme.gradient', true);
 pref('zen.tabs.show-newtab-vertical', true);
 pref('zen.view.show-newtab-button-border-top', true);
 pref('zen.view.show-newtab-button-top', false);
-pref("zen.tabs.openNewTabByDblclick", true);
+pref("zen.tabs.open-newtab-by-dblclick", true);
 
 #ifdef XP_MACOSX
 pref('zen.theme.border-radius', 10); // In pixels

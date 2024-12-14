@@ -2,6 +2,14 @@
 
 @media (-moz-bool-pref: 'zen.view.compact') {
   :root:not([customizing]):not([inDOMFullscreen='true']) {
+    #zen-sidebar-top-buttons:has(#zen-sidebar-top-buttons-customization-target:empty) {
+      max-height: 0 !important;
+      min-height: 0 !important;
+      opacity: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
     @media (-moz-bool-pref: 'zen.view.compact.hide-tabbar') {
       #zen-sidebar-web-panel-wrapper:has(#zen-sidebar-web-panel[pinned='true']) {
         margin-left: calc(var(--zen-sidebar-web-panel-spacing) * 2) !important;
@@ -19,22 +27,12 @@
         display: none !important;
       }
 
-
-      #zen-sidebar-top-buttons:has(#zen-sidebar-top-buttons-customization-target:empty) {
-        max-height: 0 !important;
-        min-height: 0 !important;
-        opacity: 0;
-        overflow: hidden;
-        pointer-events: none;
-      }
-
       #navigator-toolbox {
         --zen-toolbox-max-width: 54px !important;
         --zen-compact-float: calc(var(--zen-element-separation) - 1px);
         position: absolute;
         z-index: 10;
         transition: transform 0.25s ease, opacity 0.1s ease-in-out;
-        right: calc(100% - var(--zen-element-separation));
         top: 0;
         bottom: var(--zen-element-separation);
         opacity: 0;
@@ -49,6 +47,10 @@
             margin-left: calc(var(--zen-toolbox-padding) / 2) !important;
           }
         }
+      }
+
+      &:not([zen-right-side='true']) #navigator-toolbox {
+        right: calc(100% - var(--zen-element-separation));
       }
 
       /* When we have multiple toolbars and the top-toolbar is NOT being hidden,
@@ -66,7 +68,6 @@
           padding-left: unset !important;
           padding-right: var(--zen-compact-float) !important;
           left: calc(100% - var(--zen-element-separation));
-          right: unset;
         }
 
         & .browserSidebarContainer {
@@ -147,7 +148,7 @@
           border-bottom-right-radius: var(--zen-border-radius);
           border-top-left-radius: env(-moz-gtk-csd-titlebar-radius);
           border-top-right-radius: env(-moz-gtk-csd-titlebar-radius);
-          transition: all 0.1s ease-in-out;
+          transition: all 0.15s ease;
           width: 100%;
           opacity: 0;
           background: var(--zen-dialog-background);
@@ -155,6 +156,11 @@
 
           & > * {
             position: relative !important;
+          }
+
+          & #urlbar {
+            transform: translateY(-50%);
+            transition: transform 0.1s ease-in-out;
           }
 
           :root[zen-window-buttons-reversed='true'] & {
@@ -181,6 +187,10 @@
           border-top-width: 1px;
 
           top: -1px;
+
+          & #urlbar {
+            transform: translateY(0);
+          }
         }
       }
     }

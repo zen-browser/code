@@ -808,6 +808,19 @@ class ZenKeyboardShortcutsVersioner {
       data = data.filter((shortcut) => shortcut.getID() != 'zen-toggle-sidebar');
     }
     if (version < 5) {
+      // Migrate from 4 to 5
+      // Here, we are adding the 'zen-toggle-sidebar' shortcut back, but with a new action
+      data.push(
+        new KeyShortcut(
+          'zen-toggle-sidebar',
+          'B',
+          '',
+          ZEN_OTHER_SHORTCUTS_GROUP,
+          KeyShortcutModifiers.fromObject({ alt: true }),
+          'code:gZenVerticalTabsManager.toggleExpand()',
+          'zen-sidebar-shortcut-toggle'
+        )
+      // Here, we are adding shortcuts to switch to prev/next tabs in a workspace
       data.push(
         ...[
           new KeyShortcut(

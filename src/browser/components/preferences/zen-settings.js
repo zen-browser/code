@@ -1088,6 +1088,11 @@ Preferences.addAll([
     default: true,
   },
   {
+    id: "zen.urlbar.behavior",
+    type: "string",
+    default: "float",
+  },
+  {
     id: "zen.view.compact.color-sidebar",
     type: "bool",
     default: true,

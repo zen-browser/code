@@ -340,6 +340,29 @@
         </hbox>
 </groupbox>
 
+<hbox id="zenUrlBarCategory"
+      class="subcategory"
+      hidden="true"
+      data-category="paneZenLooks">
+<html:h1 data-l10n-id="zen-urlbar-title"/>
+</hbox>
+
+<groupbox id="zenUrlbarGroup" data-category="paneZenLooks" hidden="true" class="highlighting-group">
+      <label><html:h2 data-l10n-id="zen-urlbar-header"/></label>
+      <description class="description-deemphasized" data-l10n-id="zen-urlbar-description" />
+
+      <hbox align="center">
+            <label data-l10n-id="zen-urlbar-behavior-label"/>
+            <menulist preference="zen.urlbar.behavior">
+                  <menupopup>
+                        <menuitem data-l10n-id="zen-urlbar-behavior-normal" value="normal"/>
+                        <menuitem data-l10n-id="zen-urlbar-behavior-floating-on-type" value="floating-on-type"/>
+                        <menuitem data-l10n-id="zen-urlbar-behavior-float" value="float"/>
+                  </menupopup>
+            </menulist>
+        </hbox>
+</groupbox>
+
 <hbox id="zenSplitViewCategory"
       class="subcategory"
       hidden="true"

@@ -337,47 +337,115 @@ button.popup-notification-dropmarker {
   }
 }
 
-@media not (-moz-bool-pref: 'zen.view.use-deprecated-urlbar') {
-  #urlbar[open] {
-    z-index: 1000;
-    min-width: 45vw;
-    max-width: 45vw;
-    top: 0 !important;
-    --urlbar-container-height: 55px !important;
-    --urlbar-margin-inline: 10px !important;
-    font-size: 1.1em;
+#urlbar[open] {
 
-    & #urlbar-background {
-      /* We cant have a transparent background with a backdrop-filter because on normal websites,
-        the backdrop woudn't work, we would need to apply a clip-path to the site and that's not recommended
-        due to performance issues */
-      background-color: var(--zen-branding-bg) !important;
-      box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.1) !important;
-      outline: 1px solid light-dark(rgba(20, 20, 20, 0.2), rgba(235, 235, 235, 0.2)) !important;
-      outline-offset: -1px !important;
-    }
-
-    & #identity-box {
-      margin-right: var(--urlbar-margin-inline);
-    }
-
-    :root[zen-right-side='true'] & {
-      right: 0;
-    }
-    position: absolute;
-
-    top: calc(var(--zen-toolbar-height) * 2) !important;
-    left: 28vw;
-
-    #urlbar-container:has(&) {
-      border-radius: 10px;
-      background: var(--toolbarbutton-hover-background);
-    }
+  & #urlbar-background {
+    /* We cant have a transparent background with a backdrop-filter because on normal websites,
+      the backdrop woudn't work, we would need to apply a clip-path to the site and that's not recommended
+      due to performance issues */
+    background-color: var(--zen-branding-bg) !important;
+    box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.1) !important;
+    outline: 1px solid light-dark(rgba(20, 20, 20, 0.2), rgba(235, 235, 235, 0.2)) !important;
+    outline-offset: -1px !important;
   }
 }
 
-@media (-moz-bool-pref: 'zen.view.use-deprecated-urlbar') {
-  #urlbar[open] {
-    top: 0 !important;
+:root[zen-single-toolbar='true'] #urlbar[open] {
+  min-width: 30vw;
+}
+
+#urlbar[open][zen-floating-urlbar='true'] {
+  z-index: 1000;
+  max-width: 45vw;
+  min-width: 45vw !important;
+  font-size: 1.1em;
+  --urlbar-container-height: 55px !important;
+  --urlbar-margin-inline: 10px !important;
+
+  & #identity-box {
+    margin-right: var(--urlbar-margin-inline);
+  }
+
+  :root[zen-right-side='true'] & {
+    right: 0;
+  }
+  position: absolute;
+
+  top: calc(var(--zen-toolbar-height) * 2) !important;
+  left: 28vw;
+
+  #urlbar-container:has(&) {
+    border-radius: 10px;
+    background: var(--toolbarbutton-hover-background);
+  }
+}
+
+/* Code ~~stolen~~ taken inspiration from https://github.com/greeeen-dev/zen-arc-cmd-bar
+ *
+ * MIT License
+ *
+ * Copyright (c) 2024 green.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ **/
+.urlbarView-title, .urlbarView-title-separator, .urlbarView-action, .urlbarView-url {
+  margin-top: auto !important;
+  margin-bottom: auto !important;
+}
+
+.urlbarView-title {
+  font-size: 14px !important;
+  font-weight: 500 !important;
+}
+
+.urlbarView-url, .urlbarView-title-separator::before {
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  color: #aaa !important;
+}
+
+.urlbarView-favicon {
+  margin-left: 0 !important;
+  margin-right: 12px !important;
+  padding: 6px !important;
+  border-radius: 6px !important;
+}
+
+.urlbarView-row[has-action]:is([type="switchtab"], [type="remotetab"], [type="clipboard"]) .urlbarView-action {
+  margin-left: auto !important;
+  margin-right: 0 !important;
+}
+
+.urlbarView-row {
+  .urlbarView-favicon {
+    transition: background-color 0.05s;
+  }
+
+  &:hover {
+    background-color: light-dark(var(--zen-colors-secondary), var(--zen-colors-primary)) !important;
+
+    .urlbarView-favicon {
+      background-color: color-mix(in srgb, var(--zen-branding-bg-reverse) 20%, transparent 80%) !important;
+    }
+
+    .urlbarView-url, .urlbarView-title-separator::before {
+      color: color-mix(in srgb, var(--zen-colors-primary) 30%, lightgray) !important;
+    }
   }
 }

@@ -56,3 +56,7 @@
 #alltabs-button {
   display: none !important;
 }
+
+.private-browsing-indicator-with-label {
+  display: none !important;
+}

@@ -12,7 +12,6 @@
     margin: 1px;
 
     :root[zen-right-side='true'] & {
-      margin-right: 0;
       margin-left: var(--zen-element-separation);
     }
 

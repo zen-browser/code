@@ -107,7 +107,8 @@ pref('zen.view.compact.toolbar-flash-popup.duration', 800);
 pref('zen.view.compact.toolbar-hide-after-hover.duration', 1000);
 pref('zen.view.compact.color-toolbar', true);
 pref('zen.view.compact.color-sidebar', true);
-pref('zen.view.use-deprecated-urlbar', false);
+
+pref('zen.urlbar.behavior', 'floating-on-type'); // default, floating-on-type, float
 
 #ifdef XP_MACOSX
 // Disable for macos in the meantime until @HarryHeres finds a solution for hight DPI screens
@@ -130,9 +131,7 @@ pref('zen.view.sidebar-expanded', true);
 pref('zen.view.sidebar-collapsed.hide-mute-button', true);
 pref('zen.view.experimental-force-window-controls-left', false);
 
-#ifndef XP_MACOSX
 pref('zen.view.hide-window-controls', true);
-#endif
 
 pref('zen.tabs.dim-pending', true);
 pref('zen.tabs.newtab-on-middle-click', true);
@@ -294,3 +293,5 @@ pref('browser.download.autohideButton', false);
 #ifdef XP_MACOSX
 pref('widget.macos.titlebar-blend-mode.behind-window', true);
 #endif
+
+pref("browser.urlbar.maxRichResults", 5);

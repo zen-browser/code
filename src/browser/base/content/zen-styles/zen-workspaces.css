@@ -84,8 +84,14 @@
     height: calc(2 * var(--toolbarbutton-inner-padding) + 16px) !important;
     border-radius: var(--tab-border-radius) !important;
 
-    :root:not([zen-sidebar-expanded='true']) #navigator-toolbox & label {
-      display: none;
+    :root:not([zen-sidebar-expanded='true']) #navigator-toolbox & {
+      & .zen-workspace-sidebar-name {
+        display: none;
+      }
+
+      & .zen-workspace-sidebar-icon {
+        margin-inline-end: 0 !important;
+      }
     }
 
     &:hover {

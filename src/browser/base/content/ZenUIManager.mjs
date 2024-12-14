@@ -379,7 +379,7 @@ var gZenVerticalTabsManager = {
       }
 
       // Case: single toolbar, not compact mode, not right side and macos styled buttons
-      if (doNotChangeWindowButtons && isSingleToolbar && !isCompactMode && !isRightSide && !this.isWindowsStyledButtons) {
+      if (!doNotChangeWindowButtons && isSingleToolbar && !isCompactMode && !isRightSide && !this.isWindowsStyledButtons) {
         topButtons.prepend(windowButtons);
       }
 

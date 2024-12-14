@@ -338,9 +338,6 @@ button.popup-notification-dropmarker {
 }
 
 #urlbar[open] {
-  --urlbar-container-height: 55px !important;
-  --urlbar-margin-inline: 10px !important;
-  font-size: 1.1em;
 
   & #urlbar-background {
     /* We cant have a transparent background with a backdrop-filter because on normal websites,
@@ -354,13 +351,16 @@ button.popup-notification-dropmarker {
 }
 
 :root[zen-single-toolbar='true'] #urlbar[open] {
-  min-width: 45vw;
+  min-width: 30vw;
 }
 
 #urlbar[open][zen-floating-urlbar='true'] {
   z-index: 1000;
   max-width: 45vw;
-  top: 0 !important;
+  min-width: 45vw !important;
+  font-size: 1.1em;
+  --urlbar-container-height: 55px !important;
+  --urlbar-margin-inline: 10px !important;
 
   & #identity-box {
     margin-right: var(--urlbar-margin-inline);

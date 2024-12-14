@@ -1,5 +1,5 @@
 diff --git a/browser/components/urlbar/UrlbarInput.sys.mjs b/browser/components/urlbar/UrlbarInput.sys.mjs
-index c504c9afc43785b5f003bb1f9f1dfbddef38d78b..289a9dfdc2fd38f7d7c3571732e3897aa978d8d9 100644
+index c504c9afc43785b5f003bb1f9f1dfbddef38d78b..f4167cf9f3dcbbb8666118436e9f79137caf565a 100644
 --- a/browser/components/urlbar/UrlbarInput.sys.mjs
 +++ b/browser/components/urlbar/UrlbarInput.sys.mjs
 @@ -65,6 +65,13 @@ XPCOMUtils.defineLazyPreferenceGetter(
@@ -31,7 +31,7 @@ index c504c9afc43785b5f003bb1f9f1dfbddef38d78b..289a9dfdc2fd38f7d7c3571732e3897a
    }
  
    _on_click(event) {
-+    if (lazy.ZEN_URLBAR_BEHAVIOR === 'float') {
++    if (lazy.ZEN_URLBAR_BEHAVIOR === 'float' && event.target == this.inputField) {
 +      event.zenOriginalTarget = this.textbox;
 +      this._on_mousedown(event);
 +    }
@@ -58,7 +58,7 @@ index c504c9afc43785b5f003bb1f9f1dfbddef38d78b..289a9dfdc2fd38f7d7c3571732e3897a
  
 -        this.focusedViaMousedown = !this.focused;
 -        this._preventClickSelectsAll = this.focused;
-+        this.focusedViaMousedown = !(lazy.ZEN_URLBAR_BEHAVIOR === 'float' ? this.hasAttribute("breakout-extend") : this.focused);
++        this.focusedViaMousedown = !(lazy.ZEN_URLBAR_BEHAVIOR === 'default' ? this.focused : this.hasAttribute("breakout-extend"));
 +        this._preventClickSelectsAll = lazy.ZEN_URLBAR_BEHAVIOR === 'default' ? this.focused : this.hasAttribute("breakout-extend");
  
          // Keep the focus status, since the attribute may be changed

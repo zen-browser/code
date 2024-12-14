@@ -4,6 +4,7 @@
 
 #zen-tabbox-wrapper {
   position: relative;
+  z-index: 0;
 }
 
 @media (-moz-bool-pref: 'zen.workspaces.hide-default-container-indicator') {

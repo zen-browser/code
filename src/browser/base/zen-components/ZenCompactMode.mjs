@@ -63,6 +63,13 @@ var gZenCompactModeManager = {
     this.updateContextMenu();
   },
 
+  updateCompactModeContext(isSingleToolbar) {
+    const IDs = ['zen-context-menu-compact-mode-hide-sidebar', 'zen-context-menu-compact-mode-hide-toolbar', 'zen-context-menu-compact-mode-hide-both'];
+    for (let id of IDs) {
+      document.getElementById(id).disabled = isSingleToolbar;
+    }
+  },
+
   hideSidebar() {
     Services.prefs.setBoolPref('zen.view.compact.hide-tabbar', true);
     Services.prefs.setBoolPref('zen.view.compact.hide-toolbar', false);

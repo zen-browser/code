@@ -641,12 +641,10 @@ var gZenWorkspacesSettings = {
   },
 
   async onWorkspaceChange(checked) {
-    if (checked) {
-      let buttonIndex = await confirmRestartPrompt(true, 1, true, false);
-      if (buttonIndex == CONFIRM_RESTART_PROMPT_RESTART_NOW) {
-        Services.startup.quit(Ci.nsIAppStartup.eAttemptQuit | Ci.nsIAppStartup.eRestart);
-        return;
-      }
+    let buttonIndex = await confirmRestartPrompt(true, 1, true, false);
+    if (buttonIndex == CONFIRM_RESTART_PROMPT_RESTART_NOW) {
+      Services.startup.quit(Ci.nsIAppStartup.eAttemptQuit | Ci.nsIAppStartup.eRestart);
+      return;
     }
   },
 };

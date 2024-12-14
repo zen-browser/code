@@ -10,12 +10,8 @@
   --urlbarView-hover-background: var(--toolbarbutton-hover-background);
   --urlbarView-highlight-background: var(--toolbarbutton-hover-background);
   border-radius: var(--toolbarbutton-border-radius);
-  overflow: hidden;
   padding: 1px;
-}
-
-#urlbar[focused='true'][breakout-extend='true'] {
-  overflow: visible;
+  font-size: 1.1em;
 }
 
 #searchbar:focus-within {
@@ -27,23 +23,18 @@
 }
 
 #urlbar-background {
-  background: var(--zen-dialog-background);
+  background: var(--zen-toolbar-element-bg) !important;
   outline: none !important;
-}
-
-#urlbar[focused='true'] > #urlbar-background {
-  background: var(--zen-dialog-background) !important;
-}
-
-#urlbar:not([focused='true']):not([breakout-extend="true"]) > #urlbar-background {
-  background: light-dark(rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.1)) !important;
-  backdrop-filter: blur(10px);
 }
 
 #urlbar-background {
   border: transparent !important;
   margin: 1px;
+
   box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.1) !important;
+  :root[zen-single-toolbar='true'] & {
+    box-shadow: none !important;
+  }
 }
 
 #urlbar[focused='true']:not([suppress-focus-border]) > #urlbar-background,
@@ -84,7 +75,7 @@
   position: relative;
 }
 
-#urlbar:not([extend='true']) #identity-box:is(:not(.chromeUI), [pageproxystate='invalid']) {
+#urlbar:not([breakout-extend='true']) #identity-box:is(:not(.chromeUI), [pageproxystate='invalid']) {
   margin-inline-end: 0 !important;
 }
 
@@ -126,9 +117,37 @@
 }
 
 :root[zen-single-toolbar='true'] {
-  #urlbar[breakout-extend='true'] {
-    top: 0px !important;
-    width: calc(var(--urlbar-width) + 2 * var(--urlbar-margin-inline) * 4);
+
+  .urlbar-page-action:not(#star-button-box),
+  #tracking-protection-icon-container {
+    margin-inline-end: calc(-16px - 2 * var(--urlbar-icon-padding)) !important;
+    opacity: 0;
+    transition: all 0.2s;
+  }
+
+  #urlbar[open] :is(#tracking-protection-icon-container, .urlbar-page-action),
+  #urlbar:hover :is(#tracking-protection-icon-container, .urlbar-page-action),
+  .urlbar-page-action[open],
+  #tracking-protection-icon-container[open] {
+    opacity: 1;
+    margin-inline-end: 0 !important;
+  }
+
+  #identity-permission-box,
+  #notification-popup-box {
+    margin-inline-start: calc(-16px - 2 * var(--urlbar-icon-padding));
+    opacity: 0;
+    transition: all 0.2s;
+  }
+
+  #urlbar[open] #identity-permission-box,
+  #urlbar[open] #notification-popup-box,
+  #urlbar:hover #identity-permission-box,
+  #urlbar:hover #notification-popup-box,
+  #identity-permission-box[open],
+  #notification-popup-box[open] {
+    opacity: 1;
+    margin-inline-start: 0 !important;
   }
 
   #notification-popup-box {
@@ -309,6 +328,47 @@ button.popup-notification-dropmarker {
   padding-right: var(--zen-element-separation) !important;
 }*/
 
-#PersonalToolbar:not([collapsed='true']) {
-  padding-left: 0 !important;
+#urlbar[breakout-extend='true'] {
+  z-index: 1000;
+  min-width: 600px;
+  top: 0 !important;
+  --urlbar-container-height: 55px !important;
+  --urlbar-margin-inline: 10px !important;
+
+  & #urlbar-background {
+    /* We cant have a transparent background with a backdrop-filter because on normal websites,
+      the backdrop woudn't work, we would need to apply a clip-path to the site and that's not recommended
+      due to performance issues */
+      background-color: light-dark(
+        rgba(255, 255, 255, 0.55),
+        rgba(25, 25, 25, 0.65)
+      ) !important;
+      backdrop-filter: blur(30px) !important;
+    box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.1) !important;
+    outline: 1px solid light-dark(rgba(20, 20, 20, 0.2), rgba(235, 235, 235, 0.2)) !important;
+    outline-offset: -1px !important;
+  }
+
+  & #identity-box {
+    margin-right: var(--urlbar-margin-inline);
+  }
+
+  :root[zen-right-side='true'] & {
+    right: 0;
+  }
+
+  @media not (-moz-bool-pref: 'zen.view.compact') {
+    max-width: 45%;
+    min-width: 45%;
+    position: absolute;
+
+    top: calc(var(--zen-toolbar-height) * 4) !important;
+    left: 50%;
+    transform: translateX(-50%);
+
+    #urlbar-container:has(&) {
+      border-radius: 10px;
+      background: var(--toolbarbutton-hover-background);
+    }
+  }
 }

@@ -1,0 +1,27 @@
+diff --git a/browser/components/urlbar/UrlbarInput.sys.mjs b/browser/components/urlbar/UrlbarInput.sys.mjs
+index c504c9afc43785b5f003bb1f9f1dfbddef38d78b..845043f5a887d4f46b0064792fb0834724e94a07 100644
+--- a/browser/components/urlbar/UrlbarInput.sys.mjs
++++ b/browser/components/urlbar/UrlbarInput.sys.mjs
+@@ -3901,6 +3901,9 @@ export class UrlbarInput {
+   }
+ 
+   _on_click(event) {
++    event.zenOriginalTarget = this.textbox;
++    this._on_mousedown(event);
++
+     if (
+       event.target == this.inputField ||
+       event.target == this._inputContainer ||
+@@ -4012,8 +4015,11 @@ export class UrlbarInput {
+   }
+ 
+   _on_mousedown(event) {
+-    switch (event.currentTarget) {
++    switch (event.zenOriginalTarget || event.currentTarget) {
+       case this.textbox: {
++        if (event.type != "click") {
++          return true;
++        }
+         this._mousedownOnUrlbarDescendant = true;
+ 
+         if (

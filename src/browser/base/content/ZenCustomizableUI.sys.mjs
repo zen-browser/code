@@ -9,7 +9,7 @@ export var ZenCustomizableUI = new (class {
       'zen-sidebar-top-buttons',
       {
         type: this.TYPE_TOOLBAR,
-        defaultPlacements: ['preferences-button', 'zen-sidepanel-button'],
+        defaultPlacements: ['zen-sidepanel-button'],
         defaultCollapsed: null,
       },
       true

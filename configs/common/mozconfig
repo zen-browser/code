@@ -28,18 +28,18 @@ ac_add_options --enable-application=browser
 
 if test "$ZEN_RELEASE"; then
   ac_add_options --enable-bootstrap
-  
+
   ac_add_options --enable-release
   ac_add_options --disable-debug
   ac_add_options --disable-debug-symbols
   ac_add_options --disable-debug-js-modules
   ac_add_options --disable-tests
-  
+
   ac_add_options --disable-vtune
 
   ac_add_options --enable-rust-simd
   ac_add_options --enable-wasm-simd
-  
+
   mk_add_options MOZ_PARALLEL_COMPILE=1
 
   ac_add_options --enable-proxy-bypass-protection

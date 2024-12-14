@@ -290,3 +290,52 @@ menuitem {
     color: var(--button-hover-color);
   }
 }
+
+/*Bookmark workspace selector styles*/
+.workspace-dropdown {
+  position: relative;
+  width: 100%;
+  display: flex;
+}
+
+.workspace-trigger {
+  width: 100%;
+  text-align: left;
+  padding: 8px 12px;
+  border: 1px solid var(--input-border-color);
+  border-radius: 4px;
+  background-color: var(--zen-colors-tertiary);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+#editBMPanel_workspaceList {
+  flex-direction: column;
+  width: 100%;
+  max-height: 200px;
+  overflow-y: auto;
+  margin-top: 4px;
+  border: 1px solid var(--zen-colors-border);
+  border-radius: 4px;
+  background-color: var(--zen-colors-tertiary);
+  box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.1);
+  padding: 4px 0;
+}
+
+#editBMPanel_workspaceList li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+#editBMPanel_workspaceList li > label {
+  display: flex;
+  align-items: center;
+  padding: 4px 12px;
+  cursor: pointer;
+}
+
+#editBMPanel_workspaceList input[type="checkbox"] {
+  margin-right: 8px;
+}

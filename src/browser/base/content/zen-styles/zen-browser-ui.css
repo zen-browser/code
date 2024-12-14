@@ -9,6 +9,11 @@
   --inactive-titlebar-opacity: 1;
 }
 
+#nav-bar,
+#navigator-toolbox {
+  position: inherit;
+}
+
 :root:is([inDOMFullscreen='true'], [chromehidden~='location'], [chromehidden~='toolbar']) {
   #navigator-toolbox,
   #zen-sidebar-splitter {

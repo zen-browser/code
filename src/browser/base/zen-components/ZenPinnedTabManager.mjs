@@ -492,7 +492,7 @@
         // Return as a proper data URL
         return `data:${faviconData.mimeType};base64,${base64String}`;
       } catch (ex) {
-        console.error("Failed to get favicon:", ex);
+     // console.error("Failed to get favicon:", ex);
         return null;
       }
     }

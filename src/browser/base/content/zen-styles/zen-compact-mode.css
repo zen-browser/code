@@ -24,7 +24,7 @@
         --zen-compact-float: calc(var(--zen-element-separation) - 1px);
         position: absolute;
         z-index: 10;
-        transition: transform 0.2s ease-in-out, opacity 0.2s ease-in-out;
+        transition: transform 0.25s ease-in-out, opacity 0.1s ease-in-out;
         right: calc(100% - var(--zen-element-separation));
         top: 0;
         bottom: var(--zen-element-separation);
@@ -90,7 +90,7 @@
       #navigator-toolbox:has(*[open='true']:not(tab):not(.zen-compact-mode-ignore)) {
         opacity: 1;
 
-        transform: translateX(calc(100% - var(--zen-element-separation)));
+        transform: translateX(calc(100% - var(--zen-element-separation) - 1px));
         :root[zen-right-side='true'] & {
           transform: translateX(calc(-100% + var(--zen-element-separation) + 1px));
         }
@@ -134,6 +134,10 @@
           opacity: 0;
           background: var(--zen-dialog-background);
           padding-left: var(--zen-toolbox-padding) !important;
+
+          & > * {
+            position: relative !important;
+          }
 
           :root[zen-window-buttons-reversed='true'] & {
             padding-left: 0 !important;

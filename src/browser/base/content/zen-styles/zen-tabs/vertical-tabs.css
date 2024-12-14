@@ -89,12 +89,12 @@
 
   & #urlbar-container,
   & #urlbar {
-    --urlbar-container-height: 40px !important;
+    --urlbar-container-height: 40px;
     --urlbar-height: 38px !important;
   }
 
   & #nav-bar {
-    margin-bottom: 8px;
+    margin-bottom: 6px;
   }
 
   & #zen-sidebar-top-buttons {
@@ -119,8 +119,8 @@
 }
 
 #navigator-toolbox {
-  --border-radius-medium: 8px;
-  --tab-border-radius: var(--border-radius-medium);
+  --border-radius-medium: 10px;
+  --tab-border-radius: 10px;
   --zen-toolbox-min-width: 1px;
 
   --tab-hover-background-color: color-mix(in srgb, var(--toolbarbutton-hover-background) 50%, transparent 50%);
@@ -169,7 +169,10 @@
 
     :root[zen-window-buttons-reversed='true'] & {
       &:has(#PersonalToolbar[collapsed="true"]) {
-        display: none;
+        opacity: 0;
+        & > * {
+          display: none;
+        }
       }
     }
   }
@@ -231,7 +234,7 @@
 
   & .tabbrowser-tab {
     animation: none;
-    transition: none;
+    transition: scale 0.1s ease-in-out;
     &[fadein='true']:not([zen-essential='true']) {
       #tabbrowser-tabs[zen-workspace-animation='previous'] & {
         animation: zen-slide-in-reverse 0.2s ease-in-out;
@@ -240,10 +243,10 @@
       #tabbrowser-tabs[zen-workspace-animation='next'] & {
         animation: zen-slide-in 0.2s ease-in-out;
       }
+    }
 
-      &[pinned] {
-        animation-delay: .03s !important;
-      }
+    &:not([zen-essential='true']):active {
+      scale: 0.98;
     }
 
     max-width: unset;
@@ -361,7 +364,10 @@
   padding: var(--zen-toolbox-padding);
   padding-left: 0;
   padding-top: 0;
-  z-index: 1;
+
+  #PersonalToolbar:not([collapsed='true']) {
+    padding-left: 0 !important;
+  }
 
   & #titlebar {
     min-width: 150px;
@@ -377,7 +383,7 @@
     :root[zen-single-toolbar='true'] & {
       margin-left: var(--zen-toolbox-padding);
       width: calc(100% - var(--zen-toolbox-padding));
-      & .urlbar-input-container {
+      & #urlbar:not([breakout-extend='true']) .urlbar-input-container {
         padding-left: 4px;
         padding-right: 4px;
       }
@@ -429,7 +435,7 @@
   }
 
   & #zen-essentials-container {
-    --tab-min-height: 42px;
+    --tab-min-height: 44px;
   }
 
   /* Mark: Fix separator paddings */
@@ -500,7 +506,7 @@
       & .tab-background {
         @media not (prefers-color-scheme: dark) {
           &:is([selected], [multiselected]) {
-            box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 .5px 1px rgba(0, 0, 0, 0.1);
           }
         }
         margin-inline: var(--tab-block-margin);
@@ -525,12 +531,13 @@
   }
 }
 
-/* Mark: toolbox as collapsed */
-#navigator-toolbox:not([zen-sidebar-expanded='true']) {
+:root:not([zen-sidebar-expanded='true']) {
   --tab-min-width: 36px !important;
-  /* Important: When changin this value, make sure expand on hover doesn't break! */
   --zen-toolbox-padding: calc(var(--zen-element-separation) / 2 + 1px);
   --zen-toolbox-max-width: calc(var(--tab-min-width) + var(--zen-toolbox-padding) * 2);
+}
+
+#navigator-toolbox:not([zen-sidebar-expanded='true']) {
   max-width: var(--zen-toolbox-max-width) !important;
   min-width: var(--zen-toolbox-max-width) !important;
   & #zen-current-workspace-indicator-name,
@@ -882,12 +889,14 @@
   width: 100% !important;
   border-radius: var(--border-radius-medium);
 
-  &:not([selected]) .tab-background {
-    background: light-dark(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.1));
+  &[selected] .tab-background {
     box-shadow: 0 0 1px 1px light-dark(rgba(0, 0, 0, 0.07), rgba(0, 0, 0, 0.1));
   }
 
-  backdrop-filter: blur(10px);
+  &:not([selected]) .tab-background {
+    background: var(--zen-toolbar-element-bg);
+    backdrop-filter: none !important;
+  }
 
   & .tab-content {
     display: flex;
@@ -908,3 +917,22 @@
   }
 }
 
+
+/* Very special occasions */
+
+/* Mark: Right side windows controls with collapsed sidebar */
+@media not (-moz-bool-pref: 'zen.view.compact') {
+  :root[zen-right-side='true']:not([zen-sidebar-expanded='true']):not([zen-window-buttons-reversed='true']) {
+    & #navigator-toolbox {
+      padding-top: var(--zen-toolbar-height);
+    }
+
+    & .titlebar-buttonbox-container {
+      margin-right: calc(-1 * var(--zen-toolbox-max-width)) !important;
+    }
+
+    & #zen-appcontent-wrapper {
+      overflow-x: visible;
+    }
+  }
+}

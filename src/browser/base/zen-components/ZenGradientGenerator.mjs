@@ -363,13 +363,16 @@
     }
 
     async addCustomColor() {
+      let color = this.customColorInput.value;
 
-      const color = this.customColorInput.value;
       if (!color) {
-
         return;
       }
 
+      // Add '#' prefix if it's missing and the input appears to be a hex color
+      if (!color.startsWith('#') && /^[0-9A-Fa-f]{3,6}$/.test(color)) {
+        color = '#' + color;
+      }
 
       // can be any color format, we just add it to the list as a dot, but hidden
       const dot = document.createElement('div');

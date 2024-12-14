@@ -5,6 +5,13 @@
   min-width: var(--panel-width);
 }
 
+#PanelUI-zen-gradient-generator .panel-viewcontainer,
+#PanelUI-zen-gradient-generator .panel-viewstack {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
 #PanelUI-zen-gradient-degrees {
   position: relative;
   border-radius: 999px;

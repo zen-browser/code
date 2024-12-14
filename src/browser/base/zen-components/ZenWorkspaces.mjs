@@ -30,6 +30,19 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     this.ownerWindow = window;
     XPCOMUtils.defineLazyPreferenceGetter(
       this,
+      'activationMethod',
+      'zen.workspaces.scroll-modifier-key',
+      'ctrl',
+      this._expandWorkspacesStrip.bind(this)
+    );
+    XPCOMUtils.defineLazyPreferenceGetter(
+      this,
+      'shouldWrapAroundNavigation',
+      'zen.workspaces.wrap-around-navigation',
+      true
+    );
+    XPCOMUtils.defineLazyPreferenceGetter(
+      this,
       'shouldShowIconStrip',
       'zen.workspaces.show-icon-strip',
       true,
@@ -121,27 +134,62 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
       this._hoveringSidebar = false;
     });
 
-    const scrollCooldown = 500; // Milliseconds to wait before allowing another scroll
-    const scrollThreshold = 5; // Minimum scroll delta to trigger workspace change
+    const scrollCooldown = 200; // Milliseconds to wait before allowing another scroll
+    const scrollThreshold = 2;  // Minimum scroll delta to trigger workspace change
 
     toolbox.addEventListener('wheel', async (event) => {
       if (!this.workspaceEnabled) return;
-      // Only process horizontal scroll (deltaX)
-      if (!event.deltaX) return;
+
+      // Only process non-gesture scrolls
+      if (event.deltaMode !== 1) return;
+
+      const isVerticalScroll = event.deltaY && !event.deltaX;
+      const isHorizontalScroll = event.deltaX && !event.deltaY;
+
+      //if the scroll is vertical this checks that a modifier key is used before proceeding
+      if (isVerticalScroll) {
+
+        const activationKeyMap = {
+          ctrl: event.ctrlKey,
+          alt: event.altKey,
+          shift: event.shiftKey,
+          meta: event.metaKey,
+        };
+
+        if (this.activationMethod in activationKeyMap && !activationKeyMap[this.activationMethod]) {
+          return;
+        }
+      }
 
       const currentTime = Date.now();
-      if (currentTime - this._lastScrollTime < scrollCooldown) {
-        return;
+      if (currentTime - this._lastScrollTime < scrollCooldown) return;
+
+      //this decides which delta to use
+      const delta = isVerticalScroll ? event.deltaY : event.deltaX;
+      if (Math.abs(delta) < scrollThreshold) return;
+
+      // Determine scroll direction
+      const direction = delta > 0 ? -1 : 1;
+
+      // Workspace logic
+      const workspaces = (await this._workspaces()).workspaces;
+      const currentIndex = workspaces.findIndex(w => w.uuid === this.activeWorkspace);
+      if (currentIndex === -1) return; // No valid current workspace
+
+      let targetIndex = currentIndex + direction;
+
+      if (this.shouldWrapAroundNavigation) {
+        // Add length to handle negative indices and loop
+        targetIndex = (targetIndex + workspaces.length) % workspaces.length;
+      } else {
+        // Clamp within bounds to disable looping
+        targetIndex = Math.max(0, Math.min(workspaces.length - 1, targetIndex));
       }
 
-      // Only process if the horizontal scroll is significant enough
-      if (Math.abs(event.deltaX) < scrollThreshold) {
-        return;
+      if (targetIndex !== currentIndex) {
+        await this.changeWorkspace(workspaces[targetIndex]);
       }
 
-      // Change workspace based on scroll direction
-      const direction = event.deltaX > 0 ? 1 : -1;
-      await this.changeWorkspaceShortcut(direction);
       this._lastScrollTime = currentTime;
     }, { passive: true });
   }
@@ -212,7 +260,6 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
 
   async _handleSwipeEnd(event) {
     if (!this.workspaceEnabled || !this._swipeState?.isGestureActive) return;
-
     event.preventDefault();
     event.stopPropagation();
 
@@ -224,14 +271,21 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
         const isRTL = document.documentElement.matches(':-moz-locale-dir(rtl)');
         const moveForward = (this._swipeState.direction === 'right') !== isRTL;
 
-        let targetIndex;
-        if (moveForward) {
-          targetIndex = (currentIndex + 1) % workspaces.length;
+        let targetIndex = moveForward
+          ? currentIndex + 1
+          : currentIndex - 1;
+
+        if (this.shouldWrapAroundNavigation) {
+          // Add length to handle negative indices and clamp within bounds
+          targetIndex = (targetIndex + workspaces.length) % workspaces.length;
         } else {
-          targetIndex = (currentIndex - 1 + workspaces.length) % workspaces.length;
+          // Clamp within bounds for to remove looping
+          targetIndex = Math.max(0, Math.min(workspaces.length - 1, targetIndex));
         }
 
-        await this.changeWorkspace(workspaces[targetIndex]);
+        if (targetIndex !== currentIndex) {
+          await this.changeWorkspace(workspaces[targetIndex]);
+        }
       }
     }
 
@@ -376,11 +430,11 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
         let activeWorkspace = await this.getActiveWorkspace();
         if (!activeWorkspace) {
           activeWorkspace = workspaces.workspaces.find((workspace) => workspace.default);
-          this.activeWorkspace = activeWorkspace.uuid;
+          this.activeWorkspace = activeWorkspace?.uuid;
         }
         if (!activeWorkspace) {
           activeWorkspace = workspaces.workspaces[0];
-          this.activeWorkspace = activeWorkspace.uuid;
+          this.activeWorkspace = activeWorkspace?.uuid;
         }
         await this.changeWorkspace(activeWorkspace, true);
       }
@@ -1157,8 +1211,8 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     // Animate acordingly
     if (previousWorkspace && !this._animatingChange) {
       // we want to know if we are moving forward or backward in sense of animation
-      let isNextWorkspace = onInit || 
-        (workspaces.workspaces.findIndex((w) => w.uuid === previousWorkspace.uuid) 
+      let isNextWorkspace = onInit ||
+        (workspaces.workspaces.findIndex((w) => w.uuid === previousWorkspace.uuid)
           < workspaces.workspaces.findIndex((w) => w.uuid === window.uuid));
       gBrowser.tabContainer.setAttribute('zen-workspace-animation', isNextWorkspace ? 'next' : 'previous');
       this._animatingChange = true;
@@ -1398,16 +1452,18 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     const tab = gBrowser.getTabForBrowser(browser);
     const workspaceID = tab.getAttribute('zen-workspace-id');
     const isEssential = tab.getAttribute("zen-essential") === "true";
-    const activeWorkspace = await parent.ZenWorkspaces.getActiveWorkspace();
+    if (!isEssential) {
+      const activeWorkspace = await parent.ZenWorkspaces.getActiveWorkspace();
 
-    // Only update last selected tab for non-essential tabs in their workspace
-    if (!isEssential && workspaceID === activeWorkspace.uuid) {
-      this._lastSelectedWorkspaceTabs[workspaceID] = tab;
-    }
+      // Only update last selected tab for non-essential tabs in their workspace
+      if (!isEssential && workspaceID === activeWorkspace.uuid) {
+        this._lastSelectedWorkspaceTabs[workspaceID] = tab;
+      }
 
-    // Switch workspace if needed
-    if (workspaceID && workspaceID !== activeWorkspace.uuid) {
-      await parent.ZenWorkspaces.changeWorkspace({ uuid: workspaceID });
+      // Switch workspace if needed
+      if (workspaceID && workspaceID !== activeWorkspace.uuid) {
+        await parent.ZenWorkspaces.changeWorkspace({ uuid: workspaceID });
+      }
     }
   }
 
@@ -1546,7 +1602,7 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
 
   getContextIdIfNeeded(userContextId, fromExternal, allowInheritPrincipal) {
     if (!this.workspaceEnabled) {
-      return [userContextId, false];
+      return [userContextId, false, undefined];
     }
 
     if (this.shouldForceContainerTabsToWorkspace && typeof userContextId !== 'undefined' && this._workspaceCache?.workspaces) {
@@ -1558,7 +1614,7 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
         const workspace = matchingWorkspaces[0];
         if (workspace.uuid !== this.getActiveWorkspaceFromCache().uuid) {
           this.changeWorkspace(workspace);
-          return [userContextId, true];
+          return [userContextId, true, workspace.uuid];
         }
       }
     }
@@ -1567,13 +1623,13 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     const activeWorkspaceUserContextId = activeWorkspace?.containerTabId;
 
     if ((fromExternal || allowInheritPrincipal === false) && !!activeWorkspaceUserContextId) {
-      return [activeWorkspaceUserContextId, true];
+      return [activeWorkspaceUserContextId, true, undefined];
     }
 
     if (typeof userContextId !== 'undefined' && userContextId !== activeWorkspaceUserContextId) {
-      return [userContextId, false];
+      return [userContextId, false, undefined];
     }
-    return [activeWorkspaceUserContextId, true];
+    return [activeWorkspaceUserContextId, true, undefined];
   }
 
   async shortcutSwitchTo(index) {

@@ -18,7 +18,6 @@ xul|button {
   font-weight: 500 !important;
 
   border: 1px solid var(--zen-colors-border);
-  box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.05) !important;
 }
 
 button:not(#zen-workspaces-button):active {

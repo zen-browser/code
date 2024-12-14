@@ -302,7 +302,7 @@
 }
 
 #identity-box[pageproxystate='valid'].chromeUI #identity-icon {
-  list-style-image: url('firefox.svg') !important;
+  filter: grayscale(1);
 }
 
 #identity-box[pageproxystate='valid'].localResource #identity-icon {
@@ -342,7 +342,7 @@
 }
 
 #identity-popup[connection='chrome'] .identity-popup-security-connection {
-  list-style-image: url('firefox.svg') !important;
+  filter: grayscale(1);
 }
 
 #identity-popup[connection='file'] .identity-popup-security-connection {

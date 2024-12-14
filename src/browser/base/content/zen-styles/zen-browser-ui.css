@@ -53,6 +53,10 @@
   }
 }
 
+:root:not([zen-single-toolbar='true']) #zen-appcontent-wrapper {
+  z-index: 2;
+}
+
 #zen-main-app-wrapper {
   background: transparent;
   overflow: hidden;

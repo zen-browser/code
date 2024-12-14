@@ -31,7 +31,7 @@ echo "Downloaded generic artifacts"
 
 mkdir engine\obj-x86_64-pc-windows-msvc\ -ErrorAction SilentlyContinue
 
-pnpm surfer ci --brand alpha
+pnpm surfer ci --brand beta
 
 function SignAndPackage($name) {
     echo "Executing on $name"
@@ -72,7 +72,7 @@ function SignAndPackage($name) {
     echo "Creating tar for $name"
     rm .\windsign-temp\windows-x64-signed-$name -Recurse -ErrorAction SilentlyContinue
     mkdir windsign-temp\windows-x64-signed-$name
-    
+
     # Move the MAR, add the `-generic` suffix if needed
     echo "Moving MAR for $name"
     if ($name -eq "generic" -or $name -eq "arm64") {
@@ -135,7 +135,7 @@ echo "All done!"
 echo "All the artifacts (Generic and Specific) are signed and packaged, get a rest now!"
 Read-Host "Press Enter to continue"
 
-echo "Cleaning up" 
+echo "Cleaning up"
 rmdir windsign-temp\windows-x64-obj-specific -Recurse -ErrorAction SilentlyContinue
 rmdir windsign-temp\windows-x64-obj-generic -Recurse -ErrorAction SilentlyContinue
 rmdir windsign-temp\windows-x64-obj-arm64 -Recurse -ErrorAction SilentlyContinue

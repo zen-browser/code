@@ -1,4 +1,4 @@
-<img src="./docs/assets/zen-black.svg" width="100px" align="left">
+<img src="./docs/assets/zen-dark.svg" width="100px" align="left">
 
 ### `Zen Browser`
 
@@ -28,7 +28,7 @@
 
 ## 🖥️ Compatibility
 
-Zen is currently built using firefox version `133.0`! 🚀
+Zen is currently built using firefox version `133.0.3`! 🚀
 
 - Check out the latest [release notes](https://zen-browser.app/release-notes)!
 - Part of our mission is to keep Zen up-to-date with the latest version of Firefox, so you can enjoy the latest features and security updates!

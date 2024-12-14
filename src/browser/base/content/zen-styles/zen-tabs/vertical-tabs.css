@@ -42,6 +42,12 @@
       }
     }
   }
+
+  #vertical-pinned-tabs-container, #tabbrowser-arrowscrollbox {
+    .tabbrowser-tab[fadein='true'][zen-initial-fadein='true'] {
+      animation: zen-new-tab-appear-vertical 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
+    }
+  }
 }
 
 :root[zen-window-buttons-reversed='true'] .titlebar-buttonbox-container {
@@ -51,10 +57,6 @@
 
 #TabsToolbar > * {
   justify-content: center;
-}
-
-#private-browsing-indicator-with-label {
-  display: none !important;
 }
 
 #browser {
@@ -134,8 +136,6 @@
   order: 0 !important;
 
   display: flex;
-
-  & toolbarspring { display: none; }
 }
 
 .titlebar-spacer[type='pre-tabs'],
@@ -155,8 +155,8 @@
     }
 
     /* We enable this trick IF we follow any of theses conditions:
-      * - We are on a Mac
-      * - We are on a Linux with reversed CSD
+      * - We are supposed to hide the window controls (e.g. left sidebar, windows like layouts)
+      *    - This also involves linux's reverse GTK window controls, we'll need to handle that a bit differently
       * - If we are not in any of the above, we can still enable it if the user has bookmarks toolbar enabled
       */
     &:has(#PersonalToolbar[collapsed='false']) {
@@ -165,15 +165,6 @@
 
     &[should-hide='true'] {
 %include vertical-tabs-topbar.inc.css
-    }
-
-    :root[zen-window-buttons-reversed='true'] & {
-      &:has(#PersonalToolbar[collapsed="true"]) {
-        opacity: 0;
-        & > * {
-          display: none;
-        }
-      }
     }
   }
 }
@@ -233,15 +224,14 @@
   }
 
   & .tabbrowser-tab {
-    animation: none;
     transition: scale 0.1s ease-in-out;
     &[fadein='true']:not([zen-essential='true']) {
       #tabbrowser-tabs[zen-workspace-animation='previous'] & {
-        animation: zen-slide-in-reverse 0.2s ease-in-out;
+        animation: zen-slide-in 0.2s ease-in-out;
       }
 
       #tabbrowser-tabs[zen-workspace-animation='next'] & {
-        animation: zen-slide-in 0.2s ease-in-out;
+        animation: zen-slide-in-reverse 0.2s ease-in-out;
       }
     }
 
@@ -537,6 +527,7 @@
   --zen-toolbox-max-width: calc(var(--tab-min-width) + var(--zen-toolbox-padding) * 2);
 }
 
+/* Mark: collapsed sidebar */
 #navigator-toolbox:not([zen-sidebar-expanded='true']) {
   max-width: var(--zen-toolbox-max-width) !important;
   min-width: var(--zen-toolbox-max-width) !important;
@@ -561,6 +552,20 @@
   }
   :root[customizing] & #zen-sidebar-icons-wrapper {
     min-width: unset !important;
+  }
+  & #zen-sidebar-top-buttons {
+    justify-content: center;
+    max-height: unset !important;
+    height: fit-content !important;
+    margin-bottom: var(--zen-element-separation);
+  }
+  & #titlebar {
+    display: grid;
+    grid-template-rows: auto 1fr;
+  }
+  & #zen-sidebar-top-buttons-customization-target {
+    flex-direction: column;
+    padding-top: var(--zen-element-separation);
   }
   & #zen-sidebar-icons-wrapper {
     display: flex;
@@ -790,25 +795,34 @@
   order: -1;
 
   min-width: unset !important;
-  --toolbarbutton-inner-padding: calc(var(--zen-toolbar-button-inner-padding) - 2px) !important;
+
+  :root[zen-sidebar-expanded='true'] & {
+    --toolbarbutton-inner-padding: calc(var(--zen-toolbar-button-inner-padding) - 2px) !important;
+  }
 
   & #zen-sidebar-top-buttons-customization-target {
     height: 100%;
     align-items: center;
-    padding-inline-start: var(--zen-toolbox-padding);
+
+    :root:not([zen-sidebar-expanded='true']):not([zen-right-side='true']) {
+      padding-inline-start: var(--zen-toolbox-padding);
+    }
 
     #nav-bar:has(&) & {
       padding-inline-start: var(--toolbarbutton-outer-padding);
     }
 
     :root[zen-right-side='true'] & {
-      padding-inline-start: 0;
       padding-inline-end: var(--zen-toolbox-padding);
     }
 
     & toolbarbutton:not(.titlebar-button) {
       height: calc(2 * var(--toolbarbutton-inner-padding) + 16px);
       padding: 0 var(--toolbarbutton-outer-padding) !important;
+    }
+
+    & toolbarspring {
+      display: none;
     }
   }
 
@@ -933,6 +947,36 @@
 
     & #zen-appcontent-wrapper {
       overflow-x: visible;
+    }
+
+    & #zen-sidebar-top-buttons-customization-target {
+      padding-top: 0;
+    }
+
+    & #zen-appcontent-navbar-container {
+      padding-left: var(--zen-element-separation);
+    }
+  }
+
+  :root:not([zen-right-side='true']):not([zen-sidebar-expanded='true'])[zen-window-buttons-reversed='true'] {
+    & #navigator-toolbox {
+      padding-top: var(--zen-toolbar-height);
+    }
+
+    & .titlebar-buttonbox-container {
+      margin-left: calc(-1 * var(--zen-toolbox-max-width)) !important;
+    }
+
+    & #zen-appcontent-wrapper {
+      overflow-x: visible;
+    }
+
+    & #zen-sidebar-top-buttons-customization-target {
+      padding-top: 0;
+    }
+
+    & #zen-appcontent-navbar-container {
+      padding-right: var(--zen-element-separation);
     }
   }
 }

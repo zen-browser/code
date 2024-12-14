@@ -12,7 +12,7 @@ ChromeUtils.defineModuleGetter(this, 'ExtensionSettingsStore', 'resource://gre/m
 
 Services.scriptloader.loadSubScript('chrome://browser/content/ZenUIManager.mjs');
 
-const kWelcomeSeenPref = 'zen.welcomeScreen.seen';
+const kWelcomeSeenPref = 'zen.welcome-screen.seen';
 
 // =============================================================================
 // Util stuff copied from browser/components/preferences/search.js
@@ -158,6 +158,36 @@ class Themes extends Page {
   }
 }
 
+class Layout extends Page {
+  constructor(id) {
+    super(id);
+
+    this.loadLayouts();
+  }
+
+  loadLayouts() {
+    const kExtendedSidebar = 'zen.view.sidebar-expanded';
+    const kSingleToolbar = 'zen.view.use-single-toolbar';
+
+    for (const layout of document.getElementById('layoutList').children) {
+      layout.addEventListener('click', () => {
+        if (layout.hasAttribute('disabled')) {
+          return;
+        }
+
+        for (const el of document.getElementById('layoutList').children) {
+          el.classList.remove('selected');
+        }
+
+        layout.classList.add('selected');
+
+        Services.prefs.setBoolPref(kExtendedSidebar, layout.getAttribute('layout') != 'collapsed');
+        Services.prefs.setBoolPref(kSingleToolbar, layout.getAttribute('layout') == 'single');
+      });
+    }
+  }
+}
+
 class Thanks extends Page {
   constructor(id) {
     super(id);
@@ -242,16 +272,12 @@ class Pages {
    * @param {Page[]} pages The pages
    */
   constructor(pages) {
-    console.info('Initializing welcome pages...');
     this.pages = pages;
     this.currentPage = 0;
-
-    window.maximize();
 
     this.pages.forEach((page) => page.setPages(this));
 
     this._displayCurrentPage();
-    console.info('Welcome pages initialized.');
 
     this.nextEl = document.getElementById(`next`);
     this.prevEl = document.getElementById(`back`);
@@ -304,6 +330,7 @@ class Pages {
 const pages = new Pages([
   new Page('welcome'),
   new Themes('theme'),
+  new Layout('layout'),
   new Import('import'),
   new Search('search'),
   new Thanks('thanks'),

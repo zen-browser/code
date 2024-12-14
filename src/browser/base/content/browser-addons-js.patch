@@ -1,0 +1,17 @@
+diff --git a/browser/base/content/browser-addons.js b/browser/base/content/browser-addons.js
+index 992d07daaef1abc4554a43aa654888f66963c575..6db4dd3864375da4b83a3a6f1a656403f324093e 100644
+--- a/browser/base/content/browser-addons.js
++++ b/browser/base/content/browser-addons.js
+@@ -2113,10 +2113,12 @@ var gUnifiedExtensions = {
+       ? CustomizableUI.AREA_NAVBAR
+       : CustomizableUI.AREA_ADDONS;
+     let newPosition = shouldPinToToolbar ? undefined : 0;
++    for (const window of CustomizableUI.windows) window.gZenVerticalTabsManager._preCustomize();
+ 
+     CustomizableUI.addWidgetToArea(widgetId, newArea, newPosition);
+ 
+     this.updateAttention();
++    for (const window of CustomizableUI.windows) window.gZenVerticalTabsManager._updateEvent();
+   },
+ 
+   async moveWidget(menu, direction) {

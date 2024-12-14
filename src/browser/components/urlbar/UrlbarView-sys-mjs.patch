@@ -1,0 +1,13 @@
+diff --git a/browser/components/urlbar/UrlbarView.sys.mjs b/browser/components/urlbar/UrlbarView.sys.mjs
+index 197e0a1c3030b6346c49a010338130797c1e5f4b..333d38aea2116c5407ffc242b805db633df12968 100644
+--- a/browser/components/urlbar/UrlbarView.sys.mjs
++++ b/browser/components/urlbar/UrlbarView.sys.mjs
+@@ -628,7 +628,7 @@ export class UrlbarView {
+       !this.input.value ||
+       this.input.getAttribute("pageproxystate") == "valid"
+     ) {
+-      if (!this.isOpen && ["mousedown", "command"].includes(event.type)) {
++      if (!this.isOpen && ["mousedown", "click", "command"].includes(event.type)) {
+         // Try to reuse the cached top-sites context. If it's not cached, then
+         // there will be a gap of time between when the input is focused and
+         // when the view opens that can be perceived as flicker.

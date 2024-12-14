@@ -14,9 +14,13 @@
   --zen-border-radius: 7px;
   --zen-primary-color: #ffb787;
 
-  --zen-branding-bg-dark: #202020;
-  --zen-branding-bg: light-dark(#F2F0E3, var(--zen-branding-bg-dark));
-  --zen-branding-bg-reverse: light-dark(var(--zen-branding-bg-dark), #F2F0E3);
+  /* Branding */
+  --zen-branding-dark: #202020;
+  --zen-branding-coral: #F76F53;
+  --zen-branding-paper: #F2F0E3;
+
+  --zen-branding-bg: light-dark(var(--zen-branding-paper), var(--zen-branding-dark));
+  --zen-branding-bg-reverse: light-dark(var(--zen-branding-dark), var(--zen-branding-paper));
 
   /** Zen colors are generated automatically from the primary color */
   --zen-colors-primary: color-mix(in srgb, var(--zen-primary-color) 50%, black 50%);
@@ -45,6 +49,7 @@
   --in-content-box-border-color: var(--zen-colors-border) !important;
 
   --in-content-accent-color: var(--zen-colors-primary) !important;
+  --in-content-accent-color-active: currentColor !important;
 
   /* This is like the secondary button */
   --in-content-button-background: transparent !important;
@@ -132,7 +137,7 @@
 
   @media (-moz-windows-mica) or (-moz-platform: macos) {
     background: transparent;
-    --zen-themed-toolbar-bg-transparency: 0.05;
+    --zen-themed-toolbar-bg-transparency: 0;
     --zen-themed-toolbar-bg-transparent: light-dark(rgba(255, 255, 255, var(--zen-themed-toolbar-bg-transparency)), rgba(0, 0, 0, var(--zen-themed-toolbar-bg-transparency)));
   }
 

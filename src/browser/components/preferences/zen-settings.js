@@ -485,6 +485,9 @@ var gZenMarketplaceManager = {
   },
 };
 
+const kZenExtendedSidebar = 'zen.view.sidebar-expanded';
+const kZenSingleToolbar = 'zen.view.use-single-toolbar';
+
 var gZenLooksAndFeel = {
   init() {
     if (this.__hasInitialized) return;
@@ -495,12 +498,57 @@ var gZenLooksAndFeel = {
     gZenMarketplaceManager.init();
     var onPreferColorSchemeChange = this.onPreferColorSchemeChange.bind(this);
     window.matchMedia('(prefers-color-scheme: dark)').addListener(onPreferColorSchemeChange);
+    for (const pref of [kZenExtendedSidebar, kZenSingleToolbar]) {
+      Services.prefs.addObserver(pref, this);
+    }
     this.onPreferColorSchemeChange();
     window.addEventListener('unload', () => {
       window.matchMedia('(prefers-color-scheme: dark)').removeListener(onPreferColorSchemeChange);
+      for (const pref of [kZenExtendedSidebar, kZenSingleToolbar]) {
+        Services.prefs.removeObserver(pref, this);
+      }
     });
     this.setDarkThemeListener();
     this.setCompactModeStyle();
+
+    this.applySidebarLayout();
+  },
+
+  observe(subject, topic, data) {
+    this.applySidebarLayout();
+  },
+
+  applySidebarLayout() {
+    const isSingleToolbar = Services.prefs.getBoolPref(kZenSingleToolbar);
+    const isExtendedSidebar = Services.prefs.getBoolPref(kZenExtendedSidebar);
+    for (const layout of document.getElementById('zenLayoutList').children) {
+      layout.classList.remove('selected');
+      if (layout.getAttribute('layout') == 'single' && isSingleToolbar) {
+        layout.classList.add('selected');
+      } else if (layout.getAttribute('layout') == 'multiple' && !isSingleToolbar && isExtendedSidebar) {
+        layout.classList.add('selected');
+      } else if (layout.getAttribute('layout') == 'collapsed' && !isExtendedSidebar) {
+        layout.classList.add('selected');
+      }
+    }
+    if (this.__hasInitializedLayout) return;
+    this.__hasInitializedLayout = true;
+    for (const layout of document.getElementById('zenLayoutList').children) {
+      layout.addEventListener('click', () => {
+        if (layout.hasAttribute('disabled')) {
+          return;
+        }
+
+        for (const el of document.getElementById('zenLayoutList').children) {
+          el.classList.remove('selected');
+        }
+
+        layout.classList.add('selected');
+
+        Services.prefs.setBoolPref(kZenExtendedSidebar, layout.getAttribute('layout') != 'collapsed');
+        Services.prefs.setBoolPref(kZenSingleToolbar, layout.getAttribute('layout') == 'single');
+      });
+    }
   },
 
   onPreferColorSchemeChange(event) {
@@ -1038,6 +1086,11 @@ Preferences.addAll([
     id: "zen.view.compact.color-toolbar",
     type: "bool",
     default: true,
+  },
+  {
+    id: "zen.urlbar.behavior",
+    type: "string",
+    default: "float",
   },
   {
     id: "zen.view.compact.color-sidebar",

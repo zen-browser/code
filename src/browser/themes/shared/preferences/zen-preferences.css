@@ -200,6 +200,12 @@ groupbox h2 {
   }
 }
 
+@media (-moz-bool-pref: 'zen.view.use-single-toolbar') {
+  #zen-compact-mode-styles-form {
+    display: none;
+  }
+}
+
 #zen-expand-tabbar-strat {
   display: flex;
   flex-direction: column;
@@ -595,6 +601,35 @@ groupbox h2 {
 
   & moz-toggle {
     margin-left: 10px;
+  }
+}
+
+#zenLayoutList {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 10px;
+
+  & > [layout] {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    font-weight: 600;
+    cursor: pointer;
+
+    &[disabled='true'] {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    & img {
+      width: 250px;
+      border-radius: 10px;
+      border: 4px solid transparent;
+    }
+
+    &.selected img {
+      border: 4px solid var(--zen-colors-primary);
+    }
   }
 }
 

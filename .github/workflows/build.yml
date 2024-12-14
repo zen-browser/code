@@ -16,10 +16,10 @@ on:
       update_branch:
         description: 'Update branch with new version'
         required: true
-        default: 'alpha'
+        default: 'beta'
         type: 'choice'
         options:
-          - 'alpha'
+          - 'beta'
           - 'twilight'
   workflow_call:
     inputs:
@@ -36,7 +36,7 @@ on:
       update_branch:
         description: 'Update branch with new version'
         required: true
-        default: 'alpha'
+        default: 'beta'
         type: 'string'
 
 jobs:
@@ -72,7 +72,7 @@ jobs:
           git status
           git branch --show-current
           branch="${{ inputs.update_branch }}"
-          if [[ $branch == "alpha" ]]; then
+          if [[ $branch == "beta" ]]; then
             branch="stable"
           elif [[ $branch == "twilight" ]]; then
             branch="dev"
@@ -124,7 +124,7 @@ jobs:
           npm i -g @zen-browser/surfer
 
       - name: Bump version
-        if: ${{ inputs.update_version && inputs.update_branch == 'alpha' }}
+        if: ${{ inputs.update_version && inputs.update_branch == 'beta' }}
         run: |
           pnpm surfer ci --brand ${{ inputs.update_branch }} --bump prerelease
 
@@ -361,7 +361,7 @@ jobs:
 
           if [ "${{ inputs.update_branch }}" = "twilight" ]; then
             sed -i -e 's/Name=Zen Browser/Name=Zen Twilight/g' AppDir/zen.desktop
-            sed -i -e 's/StartupWMClass=zen-alpha/StartupWMClass=zen-twilight/g' AppDir/zen.desktop
+            sed -i -e 's/StartupWMClass=zen-beta/StartupWMClass=zen-twilight/g' AppDir/zen.desktop
           fi
 
           APPDIR=AppDir
@@ -399,7 +399,7 @@ jobs:
     needs: [build-data, linux, windows-step-3, check-release, mac, appimage, source]
     runs-on: ubuntu-latest
     environment:
-      name: ${{ inputs.update_branch == 'alpha' && 'Deploy-Release' || 'Deploy-Twilight' }}
+      name: ${{ inputs.update_branch == 'beta' && 'Deploy-Release' || 'Deploy-Twilight' }}
 
     steps:
       - name: Checkout repository
@@ -439,7 +439,7 @@ jobs:
           cp -a ../linux_update_manifest_specific/.  updates/
           cp -a ../linux_update_manifest_aarch64/.  updates/
 
-          if [[ $RELEASE_BRANCH == 'alpha' ]]; then
+          if [[ $RELEASE_BRANCH == 'beta' ]]; then
             cp -a ../.github/workflows/object/windows-x64-signed-generic/update_manifest/.  updates/
             cp -a ../.github/workflows/object/windows-x64-signed-specific/update_manifest/.  updates/
             cp -a ../.github/workflows/object/windows-x64-signed-arm64/update_manifest/.  updates/
@@ -502,12 +502,12 @@ jobs:
 
       - name: Release
         uses: marvinpinto/action-automatic-releases@master
-        if: ${{ inputs.update_branch == 'alpha' }}
+        if: ${{ inputs.update_branch == 'beta' }}
         with:
           repo_token: '${{ secrets.DEPLOY_KEY }}'
           automatic_release_tag: ${{ needs.build-data.outputs.version }}
           prerelease: false
-          title: 'Alpha build - ${{ needs.build-data.outputs.version }} (${{ needs.build-data.outputs.build_date }})'
+          title: 'Beta build - ${{ needs.build-data.outputs.version }} (${{ needs.build-data.outputs.build_date }})'
           files: |
             zen.source.tar.gz
             zen.linux-generic.tar.bz2
@@ -537,7 +537,7 @@ jobs:
             zen.macos-aarch64.dmg
 
   prepare-flatpak:
-    if: ${{ inputs.create_release && inputs.update_branch == 'alpha' }}
+    if: ${{ inputs.create_release && inputs.update_branch == 'beta' }}
     permissions: write-all
     name: Prepare Flatpak
     needs: [release, linux, build-data]
@@ -596,7 +596,7 @@ jobs:
         run: sleep 240
 
   release-flatpak:
-    if: ${{ inputs.create_release && inputs.update_branch == 'alpha' }}
+    if: ${{ inputs.create_release && inputs.update_branch == 'beta' }}
     permissions: write-all
     name: Release Flatpak
     needs: [prepare-flatpak, build-data]
@@ -673,10 +673,10 @@ jobs:
           git-token: ${{ secrets.DEPLOY_KEY }}
           delete-branch: true
 
-  release-homebrew-alpha:
-    if: ${{ inputs.create_release && inputs.update_branch == 'alpha' }}
+  release-homebrew-beta:
+    if: ${{ inputs.create_release && inputs.update_branch == 'beta' }}
     permissions: write-all
-    name: Homebrew release for alpha build
+    name: Homebrew release for beta build
     needs: [release, mac, build-data]
     runs-on: macos-latest
 

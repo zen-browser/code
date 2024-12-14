@@ -16,7 +16,7 @@ getAvailableSpace() {
     echo $(df -a $1 | awk 'NR > 1 {avail+=$4} END {print avail}') 
 }
 
-formatByteCount() { 
+formatByteCount() {
     echo $(numfmt --to=iec-i --suffix=B --padding=7 $1'000') 
 }
 

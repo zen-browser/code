@@ -1,5 +1,5 @@
 diff --git a/browser/components/tabbrowser/content/tabs.js b/browser/components/tabbrowser/content/tabs.js
-index f9e256b143786c18ba85859ca1b11182ab23f1aa..69fd7107a9c5bf3f855ab8dbe7ee5e1d32205bb7 100644
+index f9e256b143786c18ba85859ca1b11182ab23f1aa..faeddb59825c8db4f9e9c6ebefe63302a8b02e5d 100644
 --- a/browser/components/tabbrowser/content/tabs.js
 +++ b/browser/components/tabbrowser/content/tabs.js
 @@ -155,6 +155,13 @@
@@ -10,7 +10,7 @@ index f9e256b143786c18ba85859ca1b11182ab23f1aa..69fd7107a9c5bf3f855ab8dbe7ee5e1d
 +      XPCOMUtils.defineLazyPreferenceGetter(
 +        this,
 +        "_openNewTabByDblclick",
-+        "zen.tabs.openNewTabByDblclick",
++        "zen.tabs.open-newtab-by-dblclick",
 +        true
 +      );
      }

@@ -174,7 +174,7 @@ class KeyShortcutModifiers {
       str += 'Ctrl+';
     }
     if (this.#alt) {
-      str += AppConstants.platform == 'macosx' ? 'Option+' : 'Alt+';
+      str += AppConstants.platform == 'macosx' ? 'Shift+' : 'Cmd+';
     }
     if (this.#shift) {
       str += 'Shift+';

@@ -133,11 +133,9 @@ pref("browser.privatebrowsing.vpnpromourl", "", locked);
 pref("extensions.getAddons.showPane", false);
 pref("extensions.htmlaboutaddons.recommendations.enabled", false);
 pref("browser.discovery.enabled", false);
-pref("browser.shell.checkDefaultBrowser", false);
 pref("browser.newtabpage.activity-stream.asrouter.userprefs.cfr.addons", false);
 pref("browser.newtabpage.activity-stream.asrouter.userprefs.cfr.features", false);
 pref("browser.preferences.moreFromMozilla", false);
-pref("browser.aboutConfig.showWarning", false);
 pref("browser.aboutwelcome.enabled", false);
 
 /** THEME ADJUSTMENTS ***/
@@ -179,20 +177,3 @@ pref("browser.bookmarks.openInTabClosesMenu", false);
 pref("browser.menu.showViewImageInfo", true);
 pref("findbar.highlightAll", true);
 pref("layout.word_select.eat_space_to_next_word", false);
-
-/****************************************************************************
- * START: MY OVERRIDES                                                      *
-****************************************************************************/
-// visit https://github.com/yokoffing/Betterfox/wiki/Common-Overrides
-// visit https://github.com/yokoffing/Betterfox/wiki/Optional-Hardening
-// Enter your personal overrides below this line:
-
-/****************************************************************************
- * SECTION: SMOOTHFOX                                                       *
-****************************************************************************/
-// visit https://github.com/yokoffing/Betterfox/blob/main/Smoothfox.js
-// Enter your scrolling overrides below this line:
-
-/****************************************************************************
- * END: BETTERFOX                                                           *
-****************************************************************************/

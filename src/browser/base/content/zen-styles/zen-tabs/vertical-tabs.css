@@ -573,9 +573,6 @@
     padding-top: var(--zen-element-separation);
     align-items: center;
   }
-  :root:has(&) #zen-sidebar-splitter {
-    display: none !important;
-  }
   & #tabbrowser-arrowscrollbox-periphery {
     & > toolbarbutton {
       margin: 0 auto !important;
@@ -675,6 +672,10 @@
       }
     }
   }
+}
+
+:root:not([zen-sidebar-expanded='true']) #zen-sidebar-splitter {
+  display: none !important;
 }
 
 /* Mark: Separator styling */
@@ -808,7 +809,7 @@
       padding-inline-start: var(--zen-toolbox-padding);
     }
 
-    #nav-bar:has(&) & {
+    #nav-bar & {
       padding-inline-start: var(--toolbarbutton-outer-padding);
     }
 

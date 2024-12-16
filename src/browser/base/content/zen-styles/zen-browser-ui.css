@@ -90,12 +90,19 @@
 :root:not([inDOMFullscreen='true']):not([chromehidden~='location']):not([chromehidden~='toolbar']) {
   & #zen-tabbox-wrapper {
     margin: var(--zen-element-separation);
-    margin-left: 0;
     margin-top: 0;
+  }
+
+  &:not([zen-right-side='true']) #zen-tabbox-wrapper {
+    margin-left: 0;
   }
 
   &[zen-right-side='true'] #zen-tabbox-wrapper {
     margin-right: 0;
+  }
+
+  &:not([zen-no-padding='true']) #zen-tabbox-wrapper {
+    margin-left: 1px;
   }
 }
 

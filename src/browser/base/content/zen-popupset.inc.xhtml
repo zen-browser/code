@@ -187,8 +187,30 @@
         </button>
       </html:moz-button-group>
     </panelview>
-    <panelview id="PanelUI-zen-workspaces-icon-picker" class="PanelUI-subView" role="document" mainview-with-header="true" has-custom-header="true">
-      <vbox id="PanelUI-zen-workspaces-icon-picker-wrapper">
+    <panelview id="PanelUI-zen-workspaces-icon-picker" class="PanelUI-subView" role="document" mainview-with-header="true" has-custom-header="true" oncommand="ZenWorkspaces.testfuncti();">
+      <vbox id="PanelUI-zen-workspaces-icon-picker-wrapper"
+      style=" display: flex;
+              flex-wrap: wrap;
+              justify-content: flex-start;
+              gap: 2px;">
+        <html:div id="workspace-icon-search-bar" 
+                  style="position: sticky; 
+                         top: 0; 
+                         background-color: inherit; 
+                         z-index: 1000; 
+                         padding: 10px; 
+                         width: 100%;">
+          <html:input autofocus="true"
+                      type="text" 
+                      id="workspace-icon-search-input" 
+                      placeholder="Search icons..." 
+                      style="width: 100%; 
+                             padding: 8px; 
+                             font-size: 16px; 
+                             border: 1px solid #ccc; 
+                             border-radius: 4px; 
+                             box-sizing: border-box;"/>
+        </html:div>
       </vbox>
     </panelview>
   </panelmultiview>

@@ -166,6 +166,13 @@
     &[should-hide='true'] {
 %include vertical-tabs-topbar.inc.css
     }
+
+    :root[inDOMFullscreen='true'] & {
+      max-height: 0 !important;
+      min-height: unset !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+    }
   }
 }
 
@@ -224,14 +231,14 @@
   }
 
   & .tabbrowser-tab {
-    transition: scale 0.1s ease-in-out;
+    transition: scale 0.07s ease;
     &[fadein='true']:not([zen-essential='true']) {
       #tabbrowser-tabs[zen-workspace-animation='previous'] & {
-        animation: zen-slide-in 0.2s ease-in-out;
+        animation: zen-slide-in 0.2s ease;
       }
 
       #tabbrowser-tabs[zen-workspace-animation='next'] & {
-        animation: zen-slide-in-reverse 0.2s ease-in-out;
+        animation: zen-slide-in-reverse 0.2s ease;
       }
     }
 
@@ -372,7 +379,6 @@
 
     :root[zen-single-toolbar='true'] & {
       margin-left: var(--zen-toolbox-padding);
-      width: calc(100% - var(--zen-toolbox-padding));
       & #urlbar:not([breakout-extend='true']) .urlbar-input-container {
         padding-left: 4px;
         padding-right: 4px;
@@ -380,7 +386,6 @@
 
       :root[zen-right-side='true'] & {
         margin-left: 0;
-        margin-right: var(--zen-toolbox-padding);
       }
     }
   }
@@ -681,7 +686,8 @@
 /* Mark: Separator styling */
 #zen-sidebar-splitter {
   opacity: 0;
-  width: var(--zen-toolbox-padding);
+  max-width: var(--zen-toolbox-padding) !important;
+  min-width: var(--zen-toolbox-padding) !important;
   height: 100%;
   transition: opacity 0.2s ease-in-out;
   background: var(--zen-colors-border);
@@ -939,7 +945,7 @@
 @media not (-moz-bool-pref: 'zen.view.compact') {
   :root[zen-right-side='true']:not([zen-sidebar-expanded='true']):not([zen-window-buttons-reversed='true']) {
     & #navigator-toolbox {
-      padding-top: var(--zen-toolbar-height);
+      margin-top: var(--zen-toolbar-height) !important;
     }
 
     & .titlebar-buttonbox-container {
@@ -957,11 +963,13 @@
     & #zen-appcontent-navbar-container {
       padding-left: var(--zen-element-separation);
     }
+
+%include vertical-tabs-topbuttons-fix.css
   }
 
   :root:not([zen-right-side='true']):not([zen-sidebar-expanded='true'])[zen-window-buttons-reversed='true'] {
     & #navigator-toolbox {
-      padding-top: var(--zen-toolbar-height);
+      margin-top: var(--zen-toolbar-height) !important;
     }
 
     & .titlebar-buttonbox-container {
@@ -979,5 +987,7 @@
     & #zen-appcontent-navbar-container {
       padding-right: var(--zen-element-separation);
     }
+
+%include vertical-tabs-topbuttons-fix.css
   }
 }

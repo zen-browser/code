@@ -17,7 +17,7 @@
   /* Branding */
   --zen-branding-dark: #202020;
   --zen-branding-coral: #F76F53;
-  --zen-branding-paper: #F2F0E3;
+  --zen-branding-paper: #ebebeb;
 
   --zen-branding-bg: light-dark(var(--zen-branding-paper), var(--zen-branding-dark));
   --zen-branding-bg-reverse: light-dark(var(--zen-branding-dark), var(--zen-branding-paper));
@@ -75,6 +75,9 @@
   --color-accent-primary: var(--button-primary-bgcolor) !important;
   --color-accent-primary-hover: var(--button-primary-hover-bgcolor) !important;
   --color-accent-primary-active: var(--button-primary-active-bgcolor) !important;
+
+  --link-color: var(--zen-branding-bg-reverse) !important;
+  --link-color-hover: var(--zen-branding-bg-reverse) !important;
 
   --in-content-page-background: var(--zen-colors-tertiary) !important;
   --zen-in-content-dialog-background: var(--zen-colors-tertiary);

@@ -83,6 +83,7 @@
 
 #zen-appcontent-wrapper {
   max-width: 100%;
+  min-width: 1px;
   overflow-x: hidden;
   z-index: 1;
 }

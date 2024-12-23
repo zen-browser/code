@@ -26,19 +26,11 @@
 #forward-button,
 #zen-sidebar-web-panel-forward {
   list-style-image: url('forward.svg') !important;
-
-  @media (max-width: 650px) {
-    display: none;
-  }
 }
 
 #reload-button,
 #zen-sidebar-web-panel-reload {
   list-style-image: url('reload.svg') !important;
-
-  @media (max-width: 650px) {
-    display: none;
-  }
 }
 
 #stop-button,
@@ -82,10 +74,6 @@
 #appMenu-downloads-button,
 #appMenu-library-downloads-button {
   list-style-image: url('downloads.svg') !important;
-
-  @media (max-width: 650px) {
-    display: none;
-  }
 }
 
 #appMenu-translate-button {

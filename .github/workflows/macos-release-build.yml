@@ -36,8 +36,7 @@ jobs:
 
       - name: Setup Python
         uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
+        # note: This will use the version defined in '.python-version' by default
 
       - name: Setup Git
         run: |
@@ -177,17 +176,20 @@ jobs:
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
+          retention-days: 5
           name: zen.macos-${{ matrix.arch }}.dmg
           path: ./zen.macos-${{ matrix.arch }}.dmg
 
       - name: Upload build artifact (.mar)
         uses: actions/upload-artifact@v4
         with:
+          retention-days: 5
           name: macos-${{ matrix.arch }}.mar
           path: ./macos-${{ matrix.arch }}.mar
 
       - name: Upload build artifact (update manifests)
         uses: actions/upload-artifact@v4
         with:
+          retention-days: 5
           name: macos_update_manifest_${{ matrix.arch }}
           path: ./dist/update

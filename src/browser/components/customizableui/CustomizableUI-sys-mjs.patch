@@ -1,5 +1,5 @@
 diff --git a/browser/components/customizableui/CustomizableUI.sys.mjs b/browser/components/customizableui/CustomizableUI.sys.mjs
-index 45d0e0e4872eeabf87862dbadfee1dc211ed7bed..5a0825ff92c115bf30046a01cff17f189005d5ef 100644
+index 45d0e0e4872eeabf87862dbadfee1dc211ed7bed..04a65485a3493fd42b2a58523123f1392ed9c3b2 100644
 --- a/browser/components/customizableui/CustomizableUI.sys.mjs
 +++ b/browser/components/customizableui/CustomizableUI.sys.mjs
 @@ -13,6 +13,7 @@ ChromeUtils.defineESModuleGetters(lazy, {
@@ -78,6 +78,24 @@ index 45d0e0e4872eeabf87862dbadfee1dc211ed7bed..5a0825ff92c115bf30046a01cff17f18
        // For toolbars that need it, mark as dirty.
        let defaultPlacements = areaProperties.get("defaultPlacements");
        if (
+@@ -3603,7 +3609,7 @@ var CustomizableUIInternal = {
+     }
+   },
+ 
+-  _rebuildRegisteredAreas() {
++  _rebuildRegisteredAreas(zenDontRebuildCollapsed = false) {
+     for (let [areaId, areaNodes] of gBuildAreas) {
+       let placements = gPlacements.get(areaId);
+       let isFirstChangedToolbar = true;
+@@ -3614,7 +3620,7 @@ var CustomizableUIInternal = {
+         if (area.get("type") == CustomizableUI.TYPE_TOOLBAR) {
+           let defaultCollapsed = area.get("defaultCollapsed");
+           let win = areaNode.ownerGlobal;
+-          if (defaultCollapsed !== null) {
++          if (defaultCollapsed !== null && !zenDontRebuildCollapsed) {
+             win.setToolbarVisibility(
+               areaNode,
+               typeof defaultCollapsed == "string"
 @@ -4572,6 +4578,7 @@ export var CustomizableUI = {
    unregisterArea(aName, aDestroyPlacements) {
      CustomizableUIInternal.unregisterArea(aName, aDestroyPlacements);

@@ -24,9 +24,9 @@ export MOZ_SOURCE_CHANGESET=${changeset}
 export MOZ_INCLUDE_SOURCE_INFO=1
 
 ac_add_options --enable-application=browser
-#ac_add_options --enable-clang-plugin
 
 if test "$ZEN_RELEASE"; then
+  ac_add_options --enable-clang-plugin
   ac_add_options --enable-bootstrap
 
   ac_add_options --enable-release

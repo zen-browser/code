@@ -439,7 +439,7 @@ var gZenMarketplaceManager = {
               }
 
               input.addEventListener(
-                'input',
+                'change',
                 ZenThemesCommon.throttle((event) => {
                   const value = event.target.value;
 

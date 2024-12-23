@@ -18,13 +18,13 @@
     :root[zen-no-padding='true'] &:not([zen-split="true"]) {
       border-radius: 0 !important;
     }
-
-    @media (-moz-bool-pref: 'zen.view.experimental-rounded-view') {
-      #tabbrowser-tabpanels {
-        mix-blend-mode: multiply;
-        -moz-osx-font-smoothing: grayscale;
-        isolation: isolate;
-      }
+  }
+  
+  @media (-moz-bool-pref: 'zen.view.experimental-rounded-view') {
+    #tabbrowser-tabpanels {
+      mix-blend-mode: multiply;
+      -moz-osx-font-smoothing: grayscale;
+      isolation: isolate;
     }
   }
 }

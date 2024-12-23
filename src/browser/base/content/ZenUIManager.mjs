@@ -117,6 +117,8 @@ var gZenUIManager = {
 
 var gZenVerticalTabsManager = {
   init() {
+    this._multiWindowFeature = new ZenMultiWindowFeature();
+
     ChromeUtils.defineLazyGetter(this, 'isWindowsStyledButtons', () => {
       return !(window.AppConstants.platform === 'macosx' || window.matchMedia('(-moz-gtk-csd-reversed-placement)').matches
         || Services.prefs.getBoolPref('zen.view.experimental-force-window-controls-left'));
@@ -138,7 +140,7 @@ var gZenVerticalTabsManager = {
     this.initRightSideOrderContextMenu();
 
     window.addEventListener('customizationstarting', this._preCustomize.bind(this));
-    window.addEventListener('aftercustomization', updateEvent);
+    window.addEventListener('aftercustomization', this._postCustomize.bind(this));
 
     window.addEventListener('DOMContentLoaded', updateEvent, { once: true });
 
@@ -209,10 +211,20 @@ var gZenVerticalTabsManager = {
     return this.__actualWindowButtons;
   },
 
-  _preCustomize() {
-    this._updateEvent({ forceMultipleToolbar: true });
+  async _preCustomize() {
+    await this._multiWindowFeature.foreachWindowAsActive(async (browser) => {
+      browser.gZenVerticalTabsManager._updateEvent({ forceMultipleToolbar: true, dontRebuildAreas: true });
+    });
+    this.rebuildAreas();
     this.navigatorToolbox.setAttribute('zen-sidebar-expanded', 'true');
     document.documentElement.setAttribute('zen-sidebar-expanded', 'true'); // force expanded sidebar
+  },
+
+  _postCustomize() {
+    // No need to use `await` here, because the customization is already done
+    this._multiWindowFeature.foreachWindowAsActive(async (browser) => {
+      browser.gZenVerticalTabsManager._updateEvent({ dontRebuildAreas: true });
+    });
   },
 
   initializePreferences(updateEvent) {
@@ -261,7 +273,7 @@ var gZenVerticalTabsManager = {
     );
   },
 
-  _updateEvent({ forceMultipleToolbar = false } = {}) {
+  _updateEvent({ forceMultipleToolbar = false, dontRebuildAreas = false } = {}) {
     if (this._isUpdating) {
       return;
     }
@@ -300,7 +312,7 @@ var gZenVerticalTabsManager = {
       let shouldHide = false;
       if (((!isRightSide && this.isWindowsStyledButtons) || (isRightSide && !this.isWindowsStyledButtons)
         || (
-          isCompactMode && isSingleToolbar && this.isWindowsStyledButtons && !isRightSide
+          isCompactMode && isSingleToolbar && this.isWindowsStyledButtons
         )) && isSingleToolbar) {
         appContentNavbarContaienr.setAttribute('should-hide', 'true');
         shouldHide = true;
@@ -314,15 +326,7 @@ var gZenVerticalTabsManager = {
         !isCompactMode
       ) {
         this.navigatorToolbox.prepend(topButtons);
-      //  browser.prepend(this.navigatorToolbox);
-      } else {
-      //  customizationTarget.prepend(topButtons);
-      //  tabboxWrapper.prepend(this.navigatorToolbox);
       }
-
-      //if (!isVerticalTabs) {
-      //  document.getElementById("urlbar-container").after(document.getElementById('navigator-toolbox'));
-      //}
 
       let windowButtons = this.actualWindowButtons;
       let doNotChangeWindowButtons = !isCompactMode && isRightSide && this.isWindowsStyledButtons;
@@ -365,7 +369,9 @@ var gZenVerticalTabsManager = {
         document.documentElement.removeAttribute("zen-single-toolbar");
         navBar.appendChild(document.getElementById('PanelUI-button'));
         this._toolbarOriginalParent.prepend(navBar);
-        CustomizableUI.zenInternalCU._rebuildRegisteredAreas();
+        if (!dontRebuildAreas) {
+          this.rebuildAreas();
+        }
       }
 
       if (isCompactMode) {
@@ -415,7 +421,7 @@ var gZenVerticalTabsManager = {
         }
       }
 
-      if (shouldHide && !isCompactMode) {
+      if (shouldHide) {
         appContentNavbarContaienr.append(windowButtons);
       }
 
@@ -427,6 +433,10 @@ var gZenVerticalTabsManager = {
       console.error(e);
     }
     this._isUpdating = false;
+  },
+
+  rebuildAreas() {
+    CustomizableUI.zenInternalCU._rebuildRegisteredAreas(/* zenDontRebuildCollapsed */ true);
   },
 
   _updateMaxWidth() {

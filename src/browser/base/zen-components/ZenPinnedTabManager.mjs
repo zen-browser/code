@@ -2,7 +2,7 @@
   const lazy = {};
 
   class ZenPinnedTabsObserver {
-    static ALL_EVENTS = ['TabPinned', 'TabUnpinned'];
+    static ALL_EVENTS = ['TabPinned', 'TabUnpinned', 'TabMove'];
 
     #listeners = [];
 
@@ -49,7 +49,6 @@
 
       this._zenClickEventListener = this._onTabClick.bind(this);
       ZenWorkspaces.addChangeListeners(this.onWorkspaceChange.bind(this));
-
     }
 
     async onWorkspaceChange(newWorkspace, onInit) {
@@ -72,9 +71,6 @@
     }
 
     async _refreshPinnedTabs(currentWorkspace,{ init = false } = {}) {
-      if(init) {
-        await ZenPinnedTabsStorage.init();
-      }
       await this._initializePinsCache();
       await this._initializePinnedTabs(init,currentWorkspace);
     }
@@ -87,7 +83,7 @@
         // Enhance pins with favicons
         const enhancedPins = await Promise.all(pins.map(async pin => {
           try {
-            const image = await this.getFaviconAsBase64(pin.url);
+            const image = await this.getFaviconAsBase64(Services.io.newURI(pin.url).spec);
             return {
               ...pin,
               iconUrl: image || null
@@ -271,10 +267,33 @@
             delete tab._zenClickEventListener;
           }
           break;
+        case "TabMove":
+          this._onTabMove(tab);
+          break;
         default:
           console.warn('ZenPinnedTabManager: Unhandled tab event', action);
           break;
       }
+    }
+
+    async _onTabMove(tab) {
+      if (!tab.pinned) {
+        return;
+      }
+
+      // Recollect pinned tabs and essentials after a tab move
+      const currentWorkspace = await ZenWorkspaces.getActiveWorkspace();
+
+      tab.position = tab._tPos;
+
+      for (let otherTab of gBrowser.tabs) {
+        if (otherTab.pinned && otherTab._tPos > tab.position) {
+          otherTab.position = otherTab._tPos;
+          await ZenPinnedTabsStorage.savePin(otherTab, false);
+        }
+      }
+
+      await ZenPinnedTabsStorage.savePin(tab);
     }
 
     _onTabClick(e) {
@@ -361,7 +380,8 @@
     }
 
     async _removePinnedAttributes(tab, isClosing = false) {
-      if(!tab.getAttribute("zen-pin-id")) {
+      if(!tab.getAttribute("zen-pin-id") || this._temporarilyUnpiningEssential) {
+        this._temporarilyUnpiningEssential = false;
         return;
       }
 
@@ -493,7 +513,7 @@
         return `data:${faviconData.mimeType};base64,${base64String}`;
       } catch (ex) {
      // console.error("Failed to get favicon:", ex);
-        return null;
+        return `page-icon:${pageUrl}`; // Use this as a fallback
       }
     }
 
@@ -506,6 +526,7 @@
           tab.removeAttribute("zen-workspace-id");
         }
         if (tab.pinned) {
+          this._temporarilyUnpiningEssential = true;
           gBrowser.unpinTab(tab);
         }
         gBrowser.pinTab(tab);

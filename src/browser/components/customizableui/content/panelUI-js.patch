@@ -1,0 +1,13 @@
+diff --git a/browser/components/customizableui/content/panelUI.js b/browser/components/customizableui/content/panelUI.js
+index 1805bad6c58e060533f634ed9e511c05cad3ded1..4eb04f3eb1b9dd1c5d663cca0a7ad903b38c4efd 100644
+--- a/browser/components/customizableui/content/panelUI.js
++++ b/browser/components/customizableui/content/panelUI.js
+@@ -545,7 +545,7 @@ const PanelUI = {
+ 
+       if (viewShown) {
+         CustomizableUI.addPanelCloseListeners(tempPanel);
+-        tempPanel.addEventListener("popuphidden", panelRemover);
++        tempPanel.addEventListener("popuphidden", panelRemover, { capture: true });
+       } else {
+         panelRemover();
+       }

@@ -1,0 +1,8 @@
+
+& #zen-sidebar-top-buttons:has(#zen-sidebar-top-buttons-customization-target:empty) {
+  max-height: 0 !important;
+  min-height: 0 !important;
+  opacity: 0;
+  overflow: hidden;
+  pointer-events: none;
+}

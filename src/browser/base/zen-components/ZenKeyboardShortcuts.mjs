@@ -11,6 +11,18 @@ const KEYCODE_MAP = {
   F10: 'VK_F10',
   F11: 'VK_F11',
   F12: 'VK_F12',
+  F13: 'VK_F13',
+  F14: 'VK_F14',
+  F15: 'VK_F15',
+  F16: 'VK_F16',
+  F17: 'VK_F17',
+  F18: 'VK_F18',
+  F19: 'VK_F19',
+  F20: 'VK_F20',
+  F21: 'VK_F21',
+  F22: 'VK_F22',
+  F23: 'VK_F23',
+  F24: 'VK_F24',
   TAB: 'VK_TAB',
   ENTER: 'VK_RETURN',
   ESCAPE: 'VK_ESCAPE',
@@ -22,6 +34,8 @@ const KEYCODE_MAP = {
   DELETE: 'VK_DELETE',
   BACKSPACE: 'VK_BACK',
   HOME: 'VK_HOME',
+  NUM_LOCK: 'VK_NUMLOCK',
+  SCROLL_LOCK: 'VK_SCROLL',
 };
 
 const defaultKeyboardGroups = {
@@ -66,6 +80,7 @@ const defaultKeyboardGroups = {
     'zen-search-find-again-shortcut-prev',
   ],
   pageOperations: [
+    'zen-text-action-copy-url-shortcut',
     'zen-location-open-shortcut',
     'zen-location-open-shortcut-alt',
     'zen-save-page-shortcut',
@@ -537,7 +552,7 @@ class ZenKeyboardShortcutsLoader {
     } catch (e) {
       // Recreate shortcuts file
       Services.prefs.clearUserPref('zen.keyboard.shortcuts.version');
-      console.error('Error loading shortcuts file', e);
+      console.warn('Error loading shortcuts file', e);
       return null;
     }
   }
@@ -556,7 +571,6 @@ function zenGetDefaultShortcuts() {
   // For adding new default shortcuts, add them to inside the migration function
   //  and increment the version number.
 
-  console.info('Zen CKS: Loading default shortcuts...');
   let keySet = document.getElementById(ZEN_MAIN_KEYSET_ID);
   let newShortcutList = [];
 
@@ -702,7 +716,7 @@ function zenGetDefaultShortcuts() {
 }
 
 class ZenKeyboardShortcutsVersioner {
-  static LATEST_KBS_VERSION = 5;
+  static LATEST_KBS_VERSION = 6;
 
   constructor() {}
 
@@ -819,6 +833,21 @@ class ZenKeyboardShortcutsVersioner {
           KeyShortcutModifiers.fromObject({ alt: true }),
           'code:gZenVerticalTabsManager.toggleExpand()',
           'zen-sidebar-shortcut-toggle'
+        )
+      );
+    }
+    if (version < 6) {
+      // Migrate from 5 to 6
+      // In this new version, we add the "Copy URL" shortcut to the default shortcuts
+      data.push(
+        new KeyShortcut(
+          'zen-copy-url',
+          'C',
+          '',
+          ZEN_OTHER_SHORTCUTS_GROUP,
+          KeyShortcutModifiers.fromObject({ accel: true, shift: true }),
+          'code:gZenCommonActions.copyCurrentURLToClipboard()',
+          'zen-text-action-copy-url-shortcut'
         )
       );
     }
@@ -941,7 +970,6 @@ var gZenKeyboardShortcutsManager = {
       }
 
       mainKeyset.after(keyset);
-      console.debug('Shortcuts applied...');
     }
   },
 

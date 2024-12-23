@@ -437,7 +437,7 @@
   }
 }
 
-@media not (-moz-bool-pref: 'zen.workspaces.show-workspace-indicator') {
+@media (not (-moz-bool-pref: 'zen.workspaces.show-workspace-indicator')) or (not (-moz-bool-pref: 'zen.workspaces.enabled')) {
   #zen-current-workspace-indicator {
     display: none !important;
   }

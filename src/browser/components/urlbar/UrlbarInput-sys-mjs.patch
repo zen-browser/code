@@ -1,5 +1,5 @@
 diff --git a/browser/components/urlbar/UrlbarInput.sys.mjs b/browser/components/urlbar/UrlbarInput.sys.mjs
-index c504c9afc43785b5f003bb1f9f1dfbddef38d78b..f4167cf9f3dcbbb8666118436e9f79137caf565a 100644
+index c504c9afc43785b5f003bb1f9f1dfbddef38d78b..b08cb1d9fee5f76070c70ea928209b15b6146cb3 100644
 --- a/browser/components/urlbar/UrlbarInput.sys.mjs
 +++ b/browser/components/urlbar/UrlbarInput.sys.mjs
 @@ -65,6 +65,13 @@ XPCOMUtils.defineLazyPreferenceGetter(
@@ -16,18 +16,17 @@ index c504c9afc43785b5f003bb1f9f1dfbddef38d78b..f4167cf9f3dcbbb8666118436e9f7913
  const DEFAULT_FORM_HISTORY_NAME = "searchbar-history";
  const SEARCH_BUTTON_CLASS = "urlbar-search-button";
  
-@@ -2154,6 +2161,10 @@ export class UrlbarInput {
+@@ -2154,6 +2161,9 @@ export class UrlbarInput {
  
      this.setAttribute("breakout-extend", "true");
  
 +    if (lazy.ZEN_URLBAR_BEHAVIOR == 'float' || (lazy.ZEN_URLBAR_BEHAVIOR == 'floating-on-type' && !this.focusedViaMousedown)) {
 +      this.setAttribute("zen-floating-urlbar", "true");
 +    } else this.removeAttribute("zen-floating-urlbar");
-+
      // Enable the animation only after the first extend call to ensure it
      // doesn't run when opening a new window.
      if (!this.hasAttribute("breakout-extend-animate")) {
-@@ -3901,6 +3912,11 @@ export class UrlbarInput {
+@@ -3901,6 +3911,11 @@ export class UrlbarInput {
    }
  
    _on_click(event) {
@@ -39,20 +38,21 @@ index c504c9afc43785b5f003bb1f9f1dfbddef38d78b..f4167cf9f3dcbbb8666118436e9f7913
      if (
        event.target == this.inputField ||
        event.target == this._inputContainer ||
-@@ -4012,8 +4028,11 @@ export class UrlbarInput {
+@@ -4012,9 +4027,12 @@ export class UrlbarInput {
    }
  
    _on_mousedown(event) {
 -    switch (event.currentTarget) {
 +    switch (event.zenOriginalTarget || event.currentTarget) {
        case this.textbox: {
+         this._mousedownOnUrlbarDescendant = true;
 +        if (event.type != "click" && lazy.ZEN_URLBAR_BEHAVIOR === 'float') {
 +          return true;
 +        }
-         this._mousedownOnUrlbarDescendant = true;
  
          if (
-@@ -4024,8 +4043,8 @@ export class UrlbarInput {
+           event.target != this.inputField &&
+@@ -4024,8 +4042,8 @@ export class UrlbarInput {
            break;
          }
  

@@ -281,10 +281,16 @@
   animation: better-sidebar-pinned-hide 0.15s ease-in-out forwards !important;
 }
 
-:root:not([zen-right-side='true']) {
-  #zen-sidebar-web-panel-wrapper:not(:has(#zen-sidebar-web-panel:is([hidden='true'], [pinned='true']))) {
-    margin-left: 0 !important;
+#zen-sidebar-web-panel-wrapper:has(#zen-sidebar-web-panel:not([hidden='true'])) {
+  :root:not([zen-right-side='true']) & {
     margin-right: calc(var(--zen-element-separation) * 2 - 3px) !important;
+  }
+
+  @media (-moz-bool-pref: 'zen.view.compact') and (-moz-bool-pref: 'zen.view.compact.hide-tabbar') {
+    :root[zen-right-side='true'] & {
+      margin-left: 0 !important;
+      margin-right: calc(var(--zen-element-separation) * 2 - 3px) !important;
+    }
   }
 }
 

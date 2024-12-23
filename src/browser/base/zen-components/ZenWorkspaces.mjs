@@ -27,7 +27,6 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
       console.warn('ZenWorkspaces: !!! ZenWorkspaces is disabled in hidden windows !!!');
       return; // We are in a hidden window, don't initialize ZenWorkspaces
     }
-
     this.ownerWindow = window;
     XPCOMUtils.defineLazyPreferenceGetter(
       this,
@@ -113,7 +112,6 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     window.addEventListener("AppCommand", HandleAppCommandEvent, true);
   }
 
-  
   _handleAppCommand(event) {
     if (!this.workspaceEnabled || !this._hoveringSidebar) {
       return;
@@ -447,11 +445,11 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
         activeWorkspace = await this.getActiveWorkspace();
         if (!activeWorkspace) {
           activeWorkspace = workspaces.workspaces.find((workspace) => workspace.default);
-          this.activeWorkspace = activeWorkspace.uuid;
+          this.activeWorkspace = activeWorkspace?.uuid;
         }
         if (!activeWorkspace) {
           activeWorkspace = workspaces.workspaces[0];
-          this.activeWorkspace = activeWorkspace.uuid;
+          this.activeWorkspace = activeWorkspace?.uuid;
         }
         await this.changeWorkspace(activeWorkspace, true);
       }

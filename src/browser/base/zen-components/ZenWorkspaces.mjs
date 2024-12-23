@@ -627,9 +627,7 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
       };
       container.appendChild(button);
     }
-
     
-
     searchInput.addEventListener('input', (event) => {
       const query = event.target.value.toLowerCase();
       if (query !== '') {

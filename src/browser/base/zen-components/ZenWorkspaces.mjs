@@ -564,8 +564,6 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
           }
         }
       }
-
-      
   
       // Update emojiScores with the highest rank found
       if (searchScore !== -1) {
@@ -668,23 +666,6 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     const parentPanel = document.getElementById('PanelUI-zen-workspaces-edit');
     PanelUI.showSubView('PanelUI-zen-workspaces-icon-picker', parentPanel);
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   async saveWorkspace(workspaceData) {
     await ZenWorkspacesStorage.saveWorkspace(workspaceData);

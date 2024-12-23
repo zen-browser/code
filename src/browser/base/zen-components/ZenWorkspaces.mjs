@@ -27,7 +27,6 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
       console.warn('ZenWorkspaces: !!! ZenWorkspaces is disabled in hidden windows !!!');
       return; // We are in a hidden window, don't initialize ZenWorkspaces
     }
-
     this.ownerWindow = window;
     XPCOMUtils.defineLazyPreferenceGetter(
       this,
@@ -113,7 +112,6 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     window.addEventListener("AppCommand", HandleAppCommandEvent, true);
   }
 
-  
   _handleAppCommand(event) {
     if (!this.workspaceEnabled || !this._hoveringSidebar) {
       return;
@@ -447,11 +445,11 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
         activeWorkspace = await this.getActiveWorkspace();
         if (!activeWorkspace) {
           activeWorkspace = workspaces.workspaces.find((workspace) => workspace.default);
-          this.activeWorkspace = activeWorkspace.uuid;
+          this.activeWorkspace = activeWorkspace?.uuid;
         }
         if (!activeWorkspace) {
           activeWorkspace = workspaces.workspaces[0];
-          this.activeWorkspace = activeWorkspace.uuid;
+          this.activeWorkspace = activeWorkspace?.uuid;
         }
         await this.changeWorkspace(activeWorkspace, true);
       }
@@ -592,7 +590,7 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     // Clear the search input field
     searchInput.value = '';
     for (let button of container.querySelectorAll('.toolbarbutton-1')) {
-      button.style.display = ''; // Reset the display when cleared
+      button.style.display = ''; 
     }
   }
 
@@ -631,26 +629,23 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     }
 
     
-    // Add event listener for filtering logic
+
     searchInput.addEventListener('input', (event) => {
       const query = event.target.value.toLowerCase();
       if (query !== '') {
         for (let button of container.querySelectorAll('.toolbarbutton-1')) {
-          button.style.display = 'none'; // Reset the display when cleared
+          button.style.display = 'none';
         }
       let filteredIcons = this.searchIcons(query, emojies);
 
-      // Remove all buttons from the container
       const buttons = Array.from(container.querySelectorAll('.toolbarbutton-1'));
       
-
       // Append the filtered icons in order
       for (let emoji of filteredIcons) {
         for (let button of buttons) {
           if (button.label === emoji) {
             container.appendChild(button);
             button.style.display = ''; 
-            
           }
         }
       }

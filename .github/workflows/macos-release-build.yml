@@ -16,7 +16,7 @@ jobs:
   mac-build:
     name: Build macOS - ${{ matrix.arch }}
     runs-on: macos-14
-    
+
     strategy:
       fail-fast: false
       matrix:
@@ -32,12 +32,11 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version-file: '.nvmrc'
 
       - name: Setup Python
         uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
+        # note: This will use the version defined in '.python-version' by default
 
       - name: Setup Git
         run: |
@@ -55,17 +54,17 @@ jobs:
           export PATH="$(python3 -m site --user-base)/bin":$PATH
           python3 -m pip install --user mercurial
 
-          rm '/usr/local/bin/2to3-3.11' '/usr/local/bin/2to3-3.12' '/usr/local/bin/2to3' 
-          rm '/usr/local/bin/idle3.11' '/usr/local/bin/idle3.12' '/usr/local/bin/idle3' 
-          rm '/usr/local/bin/pydoc3.11' '/usr/local/bin/pydoc3.12' '/usr/local/bin/pydoc3' 
-          rm '/usr/local/bin/python3.11' '/usr/local/bin/python3.12' '/usr/local/bin/python3' 
+          rm '/usr/local/bin/2to3-3.11' '/usr/local/bin/2to3-3.12' '/usr/local/bin/2to3'
+          rm '/usr/local/bin/idle3.11' '/usr/local/bin/idle3.12' '/usr/local/bin/idle3'
+          rm '/usr/local/bin/pydoc3.11' '/usr/local/bin/pydoc3.12' '/usr/local/bin/pydoc3'
+          rm '/usr/local/bin/python3.11' '/usr/local/bin/python3.12' '/usr/local/bin/python3'
           rm '/usr/local/bin/python3.11-config' '/usr/local/bin/python3.12-config' '/usr/local/bin/python3-config'
 
           brew install watchman
 
           curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain 1.79
           source $HOME/.cargo/env
-          
+
           if test "${{ matrix.arch }}" = "aarch64"; then
             rustup target add aarch64-apple-darwin
           else
@@ -160,20 +159,37 @@ jobs:
             --wait
           xcrun stapler staple "zen.macos-${{ matrix.arch }}.dmg"
 
+      - name: Sign .dmg again if failed
+        if: failure()
+        run: |
+          set -ex
+          hdiutil convert ./dist/*.dmg -format UDZO -imagekey zlib-level=9 -o zen.macos-${{ matrix.arch }}.dmg
+          xattr -cr zen.macos-${{ matrix.arch }}.dmg
+          codesign -s "${{ secrets.macOS_AppleDeveloperId }}" zen.macos-${{ matrix.arch }}.dmg
+          xcrun notarytool submit "zen.macos-${{ matrix.arch }}.dmg" \
+            --apple-id "${{ secrets.macOS_AppleAccountId }}" \
+            --team-id "${{ secrets.macOS_AppleDeveloperIdTeamId }}" \
+            --password "${{ secrets.macOS_AppleDeveloperIdPassword }}" \
+            --wait
+          xcrun stapler staple "zen.macos-${{ matrix.arch }}.dmg"
+
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
+          retention-days: 5
           name: zen.macos-${{ matrix.arch }}.dmg
           path: ./zen.macos-${{ matrix.arch }}.dmg
 
       - name: Upload build artifact (.mar)
         uses: actions/upload-artifact@v4
         with:
+          retention-days: 5
           name: macos-${{ matrix.arch }}.mar
           path: ./macos-${{ matrix.arch }}.mar
 
       - name: Upload build artifact (update manifests)
         uses: actions/upload-artifact@v4
         with:
+          retention-days: 5
           name: macos_update_manifest_${{ matrix.arch }}
           path: ./dist/update

@@ -84,6 +84,16 @@
     height: calc(2 * var(--toolbarbutton-inner-padding) + 16px) !important;
     border-radius: var(--tab-border-radius) !important;
 
+    :root:not([zen-sidebar-expanded='true']) #navigator-toolbox & {
+      & .zen-workspace-sidebar-name {
+        display: none;
+      }
+
+      & .zen-workspace-sidebar-icon {
+        margin-inline-end: 0 !important;
+      }
+    }
+
     &:hover {
       background: var(--toolbarbutton-hover-background) !important;
     }
@@ -373,7 +383,6 @@
 #PanelUI-zen-workspaces-new,
 #PanelUI-zen-workspaces-reorder-mode,
 #PanelUI-zen-gradient-generator-color-custom-add {
-  margin-left: auto;
   min-height: 1px !important;
   padding: 3px;
   border-radius: 4px;
@@ -393,6 +402,10 @@
 #PanelUI-zen-workspaces-create-footer button[default='true'],
 #PanelUI-zen-workspaces-edit-footer button[default='true'] {
   width: 100%;
+}
+
+#PanelUI-zen-workspaces-header {
+  margin-right: auto;
 }
 
 /* Mark workspaces indicator */
@@ -416,16 +429,20 @@
     display: block;
 
     position: absolute;
-    max-width: 100%;
+    max-width: calc(100% - var(--zen-toolbox-padding) * 4);
   }
 
   & #zen-current-workspace-indicator-icon:not([hidden]) + #zen-current-workspace-indicator-name  {
-    margin-left: 22px;
+    padding-left: 24px;
   }
 }
 
-@media not (-moz-bool-pref: 'zen.workspaces.show-workspace-indicator') or (not (-moz-bool-pref: 'zen.workspaces.enabled')) {
+@media (not (-moz-bool-pref: 'zen.workspaces.show-workspace-indicator')) or (not (-moz-bool-pref: 'zen.workspaces.enabled')) {
   #zen-current-workspace-indicator {
     display: none !important;
   }
+}
+
+#zen-current-workspace-indicator[hidden='true'] {
+  display: none !important;
 }

@@ -9,6 +9,11 @@
   --inactive-titlebar-opacity: 1;
 }
 
+#nav-bar,
+#navigator-toolbox {
+  position: inherit;
+}
+
 :root:is([inDOMFullscreen='true'], [chromehidden~='location'], [chromehidden~='toolbar']) {
   #navigator-toolbox,
   #zen-sidebar-splitter {
@@ -48,6 +53,10 @@
   }
 }
 
+:root:not([zen-single-toolbar='true']) #zen-appcontent-wrapper {
+  z-index: 2;
+}
+
 #zen-main-app-wrapper {
   background: transparent;
   overflow: hidden;
@@ -74,6 +83,7 @@
 
 #zen-appcontent-wrapper {
   max-width: 100%;
+  min-width: 1px;
   overflow-x: hidden;
   z-index: 1;
 }
@@ -81,12 +91,19 @@
 :root:not([inDOMFullscreen='true']):not([chromehidden~='location']):not([chromehidden~='toolbar']) {
   & #zen-tabbox-wrapper {
     margin: var(--zen-element-separation);
-    margin-left: 0;
     margin-top: 0;
+  }
+
+  &:not([zen-right-side='true']) #zen-tabbox-wrapper {
+    margin-left: 0;
   }
 
   &[zen-right-side='true'] #zen-tabbox-wrapper {
     margin-right: 0;
+  }
+
+  &:not([zen-no-padding='true']) #zen-tabbox-wrapper {
+    margin-left: 1px;
   }
 }
 

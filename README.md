@@ -1,9 +1,10 @@
-<img src="./docs/assets/zen-black.svg" width="100px" align="left">
+<img src="./docs/assets/zen-dark.svg" width="100px" align="left">
 
 ### `Zen Browser`
 
 [![Downloads](https://img.shields.io/github/downloads/zen-browser/desktop/total.svg)](https://github.com/zen-browser/desktop/releases)
 [![Crowdin](https://badges.crowdin.net/zen-browser/localized.svg)](https://crowdin.com/project/zen-browser)
+[![Zen Release builds](https://github.com/zen-browser/desktop/actions/workflows/build.yml/badge.svg?branch=stable)](https://github.com/zen-browser/desktop/actions/workflows/build.yml)
 
 
 ✨ Experience tranquillity while browsing the web without people tracking you! Zen is a privacy-focused browser that blocks trackers, ads, and other unwanted content while offering the best browsing experience!
@@ -28,7 +29,7 @@
 
 ## 🖥️ Compatibility
 
-Zen is currently built using firefox version `133.0`! 🚀
+Zen is currently built using firefox version `133.0.3`! 🚀
 
 - Check out the latest [release notes](https://zen-browser.app/release-notes)!
 - Part of our mission is to keep Zen up-to-date with the latest version of Firefox, so you can enjoy the latest features and security updates!
@@ -36,6 +37,26 @@ Zen is currently built using firefox version `133.0`! 🚀
 ## 🤝 Contribution
 
 Zen is an open-source project, and we welcome contributions from the community! Please take a look at the [contribution guidelines](./docs/contribute.md) before getting started!
+
+### Issue metrics
+
+We keep track of how many issues are closed at the end of the month in [docs/issue-metrics](./docs/issue-metrics). This is to keep track of how many issues are being closed, because who doesn't like to see progress? 📈
+
+### Versioning
+
+Zen uses [Semantic Versioning](https://semver.org/) for versioning. Meaning, versions are displayed as `a.b.c-d.e` where:
+
+- `a` is the major version
+- `b` is the minor version
+- `c` is the patch version
+- `d` is the branch prefix
+- `e` is the build number
+
+### Branches
+
+Zen is divided into 2 main branches. We use `dev` for development and `stable` for stable releases. The `dev` branch is where all the new features are added and where `twilight` builds are generated. The `stable` branch is where the stable releases are generated. 
+
+We divide into 2 branches in case there's any really important security update (for example) that needs to be released before the next stable release. This allows us to do patches without releasing unstable versions to the public.
 
 ## ⚡ Performance
 
@@ -54,11 +75,7 @@ If you dont see your OS listed below, that's because we already have it in our [
 ##### Winget
 
 ```ps
-# Generic version
 winget install --id Zen-Team.Zen-Browser
-
-# Optimized version
-winget install --id Zen-Team.Zen-Browser.Optimized
 ```
 
 #### macOS
@@ -77,17 +94,13 @@ brew install --cask zen-browser
 ##### Arch-based distributions
 
 ```sh
-# For generic version
 yay -S zen-browser-bin
-
-# For optimized version
-yay -S zen-browser-avx2-bin
 ```
 
 ##### Other Linux distributions (AppImage with automated system integration)
 
 - `native` tarball install:
-```sudo bash <(curl -s https://updates.zen-browser.app/install.sh)```
+```bash <(curl -s https://updates.zen-browser.app/install.sh)```
 
 - `zsync` is required for the Update feature of the script below
 

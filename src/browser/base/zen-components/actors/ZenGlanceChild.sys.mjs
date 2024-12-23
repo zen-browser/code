@@ -44,7 +44,7 @@ export class ZenGlanceChild extends JSWindowActorChild {
 
       this.contentWindow.document.removeEventListener('click', this.clickListener);
     } else if (activationMethod === 'ctrl' || activationMethod === 'alt' || activationMethod === 'shift') {
-      this.contentWindow.document.addEventListener('click', this.clickListener);
+      this.contentWindow.document.addEventListener('click', this.clickListener, { capture: true });
 
       this.contentWindow.removeEventListener('mousedown', this.mouseDownListener);
       this.contentWindow.removeEventListener('mouseup', this.mouseUpListener);

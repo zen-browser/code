@@ -1,13 +1,16 @@
 diff --git a/testing/profiles/profileserver/user.js b/testing/profiles/profileserver/user.js
-index 19ff7d474f6d22d2d386764e2e6942ce6a324470..3cec3a25acc6f8780d56d273995974a905b6c031 100644
+index 19ff7d474f6d22d2d386764e2e6942ce6a324470..40d1906bdebd08510014fd6124be17052248e748 100644
 --- a/testing/profiles/profileserver/user.js
 +++ b/testing/profiles/profileserver/user.js
-@@ -8,3 +8,7 @@
+@@ -8,3 +8,11 @@
  user_pref("dom.timeout.enable_budget_timer_throttling", false);
  // Turn off update
  user_pref("app.update.disabledForTesting", true);
 +
 +// zen:
-+// Disable workspaces in order to prevent SQL calls
++// Disable some of zen's features to better match the default Firefox experience
 +user_pref("zen.workspaces.enabled", false);
-\ No newline at end of file
++user_pref("zen.welcome-screen.enabled", false);
++user_pref("zen.tab-unloader.enabled", false);
++user_pref("zen.watermark.enabled", false);
++user_pref("zen.glance.enabled", false);

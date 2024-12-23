@@ -1,13 +1,17 @@
 var ZenWorkspacesStorage = {
+  lazy: {},
+
   async init() {
-    console.log('ZenWorkspacesStorage: Initializing...');
+    ChromeUtils.defineESModuleGetters(this.lazy, {
+      PlacesUtils: "resource://gre/modules/PlacesUtils.sys.mjs",
+    });
+
     await this._ensureTable();
     await ZenWorkspaceBookmarksStorage.init();
-    ZenWorkspaces._delayedStartup();
   },
 
   async _ensureTable() {
-    await PlacesUtils.withConnectionWrapper('ZenWorkspacesStorage._ensureTable', async (db) => {
+    await this.lazy.PlacesUtils.withConnectionWrapper('ZenWorkspacesStorage._ensureTable', async (db) => {
       // Create the main workspaces table if it doesn't exist
       await db.execute(`
         CREATE TABLE IF NOT EXISTS zen_workspaces (
@@ -100,7 +104,7 @@ var ZenWorkspacesStorage = {
   async saveWorkspace(workspace, notifyObservers = true) {
     const changedUUIDs = new Set();
 
-    await PlacesUtils.withConnectionWrapper('ZenWorkspacesStorage.saveWorkspace', async (db) => {
+    await this.lazy.PlacesUtils.withConnectionWrapper('ZenWorkspacesStorage.saveWorkspace', async (db) => {
       await db.executeTransaction(async () => {
         const now = Date.now();
 
@@ -171,7 +175,7 @@ var ZenWorkspacesStorage = {
   },
 
   async getWorkspaces() {
-    const db = await PlacesUtils.promiseDBConnection();
+    const db = await this.lazy.PlacesUtils.promiseDBConnection();
     const rows = await db.executeCached(`
       SELECT * FROM zen_workspaces ORDER BY created_at ASC
     `);
@@ -195,7 +199,7 @@ var ZenWorkspacesStorage = {
   async removeWorkspace(uuid, notifyObservers = true) {
     const changedUUIDs = [uuid];
 
-    await PlacesUtils.withConnectionWrapper('ZenWorkspacesStorage.removeWorkspace', async (db) => {
+    await this.lazy.PlacesUtils.withConnectionWrapper('ZenWorkspacesStorage.removeWorkspace', async (db) => {
       await db.execute(
           `
             DELETE FROM zen_workspaces WHERE uuid = :uuid
@@ -222,7 +226,7 @@ var ZenWorkspacesStorage = {
   },
 
   async wipeAllWorkspaces() {
-    await PlacesUtils.withConnectionWrapper('ZenWorkspacesStorage.wipeAllWorkspaces', async (db) => {
+    await this.lazy.PlacesUtils.withConnectionWrapper('ZenWorkspacesStorage.wipeAllWorkspaces', async (db) => {
       await db.execute(`DELETE FROM zen_workspaces`);
       await db.execute(`DELETE FROM zen_workspaces_changes`);
       await this.updateLastChangeTimestamp(db);
@@ -232,7 +236,7 @@ var ZenWorkspacesStorage = {
   async setDefaultWorkspace(uuid, notifyObservers = true) {
     const changedUUIDs = [];
 
-    await PlacesUtils.withConnectionWrapper('ZenWorkspacesStorage.setDefaultWorkspace', async (db) => {
+    await this.lazy.PlacesUtils.withConnectionWrapper('ZenWorkspacesStorage.setDefaultWorkspace', async (db) => {
       await db.executeTransaction(async () => {
         const now = Date.now();
         // Unset the default flag for all other workspaces
@@ -269,7 +273,7 @@ var ZenWorkspacesStorage = {
   },
 
   async markChanged(uuid) {
-    await PlacesUtils.withConnectionWrapper('ZenWorkspacesStorage.markChanged', async (db) => {
+    await this.lazy.PlacesUtils.withConnectionWrapper('ZenWorkspacesStorage.markChanged', async (db) => {
       const now = Date.now();
       await db.execute(`
         INSERT OR REPLACE INTO zen_workspaces_changes (uuid, timestamp)
@@ -283,7 +287,7 @@ var ZenWorkspacesStorage = {
 
   async saveWorkspaceTheme(uuid, theme, notifyObservers = true) {
     const changedUUIDs = [uuid];
-    await PlacesUtils.withConnectionWrapper('saveWorkspaceTheme', async (db) => {
+    await this.lazy.PlacesUtils.withConnectionWrapper('saveWorkspaceTheme', async (db) => {
       await db.execute(`
         UPDATE zen_workspaces
         SET
@@ -314,7 +318,7 @@ var ZenWorkspacesStorage = {
   },
 
   async getChangedIDs() {
-    const db = await PlacesUtils.promiseDBConnection();
+    const db = await this.lazy.PlacesUtils.promiseDBConnection();
     const rows = await db.execute(`
       SELECT uuid, timestamp FROM zen_workspaces_changes
     `);
@@ -326,7 +330,7 @@ var ZenWorkspacesStorage = {
   },
 
   async clearChangedIDs() {
-    await PlacesUtils.withConnectionWrapper('ZenWorkspacesStorage.clearChangedIDs', async (db) => {
+    await this.lazy.PlacesUtils.withConnectionWrapper('ZenWorkspacesStorage.clearChangedIDs', async (db) => {
       await db.execute(`DELETE FROM zen_workspaces_changes`);
     });
   },
@@ -363,7 +367,7 @@ var ZenWorkspacesStorage = {
   },
 
   async getLastChangeTimestamp() {
-    const db = await PlacesUtils.promiseDBConnection();
+    const db = await this.lazy.PlacesUtils.promiseDBConnection();
     const result = await db.executeCached(`
       SELECT value FROM moz_meta WHERE key = 'zen_workspaces_last_change'
     `);
@@ -373,7 +377,7 @@ var ZenWorkspacesStorage = {
   async updateWorkspacePositions(workspaces) {
     const changedUUIDs = new Set();
 
-    await PlacesUtils.withConnectionWrapper('ZenWorkspacesStorage.updateWorkspacePositions', async (db) => {
+    await this.lazy.PlacesUtils.withConnectionWrapper('ZenWorkspacesStorage.updateWorkspacePositions', async (db) => {
       await db.executeTransaction(async () => {
         const now = Date.now();
 
@@ -414,7 +418,7 @@ var ZenWorkspaceBookmarksStorage = {
   },
 
   async _ensureTable() {
-    await PlacesUtils.withConnectionWrapper('ZenWorkspaceBookmarksStorage.init', async (db) => {
+    await ZenWorkspacesStorage.lazy.PlacesUtils.withConnectionWrapper('ZenWorkspaceBookmarksStorage.init', async (db) => {
       // Create table using GUIDs instead of IDs
       await db.execute(`
         CREATE TABLE IF NOT EXISTS zen_bookmarks_workspaces (
@@ -475,7 +479,7 @@ var ZenWorkspaceBookmarksStorage = {
    * @returns {Promise<number>} The timestamp of the last change.
    */
   async getLastChangeTimestamp() {
-    const db = await PlacesUtils.promiseDBConnection();
+    const db = await ZenWorkspacesStorage.lazy.PlacesUtils.promiseDBConnection();
     const result = await db.executeCached(`
       SELECT value FROM moz_meta WHERE key = 'zen_bookmarks_workspaces_last_change'
     `);
@@ -483,7 +487,7 @@ var ZenWorkspaceBookmarksStorage = {
   },
 
   async getBookmarkWorkspaces(bookmarkGuid) {
-    const db = await PlacesUtils.promiseDBConnection();
+    const db = await ZenWorkspacesStorage.lazy.PlacesUtils.promiseDBConnection();
 
     const rows = await db.execute(`
       SELECT workspace_uuid
@@ -505,7 +509,7 @@ var ZenWorkspaceBookmarksStorage = {
    * }
    */
   async getBookmarkGuidsByWorkspace() {
-    const db = await PlacesUtils.promiseDBConnection();
+    const db = await ZenWorkspacesStorage.lazy.PlacesUtils.promiseDBConnection();
 
     const rows = await db.execute(`
       SELECT workspace_uuid, GROUP_CONCAT(bookmark_guid) as bookmark_guids
@@ -528,9 +532,9 @@ var ZenWorkspaceBookmarksStorage = {
    * @returns {Promise<Object>} An object mapping bookmark+workspace pairs to their change data.
    */
   async getChangedIDs() {
-    const db = await PlacesUtils.promiseDBConnection();
+    const db = await ZenWorkspacesStorage.lazy.PlacesUtils.promiseDBConnection();
     const rows = await db.execute(`
-      SELECT bookmark_guid, workspace_uuid, change_type, timestamp 
+      SELECT bookmark_guid, workspace_uuid, change_type, timestamp
       FROM zen_bookmarks_workspaces_changes
     `);
 
@@ -549,9 +553,11 @@ var ZenWorkspaceBookmarksStorage = {
    * Clear all recorded changes.
    */
   async clearChangedIDs() {
-    await PlacesUtils.withConnectionWrapper('ZenWorkspaceBookmarksStorage.clearChangedIDs', async (db) => {
+    await ZenWorkspacesStorage.lazy.PlacesUtils.withConnectionWrapper('ZenWorkspaceBookmarksStorage.clearChangedIDs', async (db) => {
       await db.execute(`DELETE FROM zen_bookmarks_workspaces_changes`);
     });
   },
 
 };
+
+ZenWorkspacesStorage.init();

@@ -52,3 +52,11 @@
 #customization-footer #customization-toolbar-visibility-button {
   display: none !important;
 }
+
+#alltabs-button {
+  display: none !important;
+}
+
+.private-browsing-indicator-with-label {
+  display: none !important;
+}

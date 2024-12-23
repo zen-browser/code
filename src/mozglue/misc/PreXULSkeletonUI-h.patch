@@ -1,0 +1,15 @@
+diff --git a/mozglue/misc/PreXULSkeletonUI.h b/mozglue/misc/PreXULSkeletonUI.h
+index 3e91eac21adce6d1a38d92ad36459c04cc1cbe1d..8f0c9b1a65bca1c35a4f6c042712715d872b0852 100644
+--- a/mozglue/misc/PreXULSkeletonUI.h
++++ b/mozglue/misc/PreXULSkeletonUI.h
+@@ -21,8 +21,8 @@ namespace mozilla {
+ // to not vary based off of any user settings for the initial toplevel window,
+ // so we're safe here for now.
+ static const DWORD kPreXULSkeletonUIWindowStyle =
+-    WS_CLIPCHILDREN | WS_DLGFRAME | WS_BORDER | WS_MAXIMIZEBOX |
+-    WS_MINIMIZEBOX | WS_SIZEBOX | WS_SYSMENU;
++    WS_OVERLAPPED | WS_CLIPCHILDREN | WS_DLGFRAME | WS_BORDER | WS_THICKFRAME |
++    WS_MAXIMIZEBOX | WS_MINIMIZEBOX | WS_SYSMENU;
+ static const DWORD kPreXULSkeletonUIWindowStyleEx = WS_EX_WINDOWEDGE;
+ 
+ struct CSSPixelSpan {

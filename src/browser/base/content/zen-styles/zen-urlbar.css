@@ -10,12 +10,7 @@
   --urlbarView-hover-background: var(--toolbarbutton-hover-background);
   --urlbarView-highlight-background: var(--toolbarbutton-hover-background);
   border-radius: var(--toolbarbutton-border-radius);
-  overflow: hidden;
   padding: 1px;
-}
-
-#urlbar[focused='true'][breakout-extend='true'] {
-  overflow: visible;
 }
 
 #searchbar:focus-within {
@@ -27,23 +22,18 @@
 }
 
 #urlbar-background {
-  background: var(--zen-dialog-background);
+  background: var(--zen-toolbar-element-bg) !important;
   outline: none !important;
-}
-
-#urlbar[focused='true'] > #urlbar-background {
-  background: var(--zen-dialog-background) !important;
-}
-
-#urlbar:not([focused='true']):not([breakout-extend="true"]) > #urlbar-background {
-  background: light-dark(rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.1)) !important;
-  backdrop-filter: blur(10px);
 }
 
 #urlbar-background {
   border: transparent !important;
   margin: 1px;
+
   box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.1) !important;
+  :root[zen-single-toolbar='true'] & {
+    box-shadow: none !important;
+  }
 }
 
 #urlbar[focused='true']:not([suppress-focus-border]) > #urlbar-background,
@@ -84,7 +74,7 @@
   position: relative;
 }
 
-#urlbar:not([extend='true']) #identity-box:is(:not(.chromeUI), [pageproxystate='invalid']) {
+#urlbar:not([breakout-extend='true']) #identity-box:is(:not(.chromeUI), [pageproxystate='invalid']) {
   margin-inline-end: 0 !important;
 }
 
@@ -126,9 +116,41 @@
 }
 
 :root[zen-single-toolbar='true'] {
-  #urlbar[breakout-extend='true'] {
-    top: 0px !important;
-    width: calc(var(--urlbar-width) + 2 * var(--urlbar-margin-inline) * 4);
+
+  .urlbar-page-action:not(#star-button-box):not([open]),
+  #tracking-protection-icon-container {
+    margin-inline-end: calc(-16px - 2 * var(--urlbar-icon-padding)) !important;
+    opacity: 0;
+    transition: all 0.2s;
+  }
+
+  #identity-permission-box > *:not(#permissions-granted-icon) {
+    visibility: collapse;
+  }
+
+  #urlbar[open] :is(#tracking-protection-icon-container, .urlbar-page-action),
+  #urlbar:hover :is(#tracking-protection-icon-container, .urlbar-page-action),
+  .urlbar-page-action[open],
+  #tracking-protection-icon-container[open] {
+    opacity: 1;
+    margin-inline-end: 0 !important;
+  }
+
+  #identity-permission-box:not([open]),
+  #notification-popup-box:not([open]) {
+    margin-inline-start: calc(-10px - 2 * var(--urlbar-icon-padding));
+    opacity: 0;
+    transition: all 0.2s;
+  }
+
+  #urlbar[open] #identity-permission-box,
+  #urlbar[open] #notification-popup-box,
+  #urlbar:hover #identity-permission-box,
+  #urlbar:hover #notification-popup-box,
+  #identity-permission-box[open],
+  #notification-popup-box[open] {
+    opacity: 1;
+    margin-inline-start: 0 !important;
   }
 
   #notification-popup-box {
@@ -284,8 +306,18 @@ button.popup-notification-dropmarker {
   align-items: center;
 }
 
-:root:not([zen-single-toolbar='true']) #nav-bar {
-  margin-bottom: -1px;
+:root:not([zen-single-toolbar='true']) {
+  & #nav-bar {
+    margin-bottom: -1px;
+  }
+
+  &[zen-right-side='true']:not([zen-window-buttons-reversed='true']) #nav-bar {
+    margin-inline-start: var(--zen-element-separation);
+  }
+
+  &:not([zen-right-side='true'])[zen-window-buttons-reversed='true'] #nav-bar {
+    margin-inline-end: var(--zen-element-separation);
+  }
 }
 
 /* Other small tweaks */
@@ -309,6 +341,135 @@ button.popup-notification-dropmarker {
   padding-right: var(--zen-element-separation) !important;
 }*/
 
-#PersonalToolbar:not([collapsed='true']) {
-  padding-left: 0 !important;
+#urlbar {
+  & .search-panel-one-offs-header {
+    display: none;
+  }
+
+  & .search-panel-one-offs-container .searchbar-engine-one-off-item {
+    box-shadow: none;
+  }
+}
+
+#urlbar[open] {
+  --urlbar-margin-inline: 5px !important;
+
+  & #identity-box {
+    margin-right: var(--urlbar-margin-inline);
+  }
+
+  & #urlbar-background {
+    /* We cant have a transparent background with a backdrop-filter because on normal websites,
+      the backdrop woudn't work, we would need to apply a clip-path to the site and that's not recommended
+      due to performance issues */
+    background-color: light-dark(rgb(247, 247, 247), var(--zen-branding-bg)) !important;
+    box-shadow: 0 0 1px 1px light-dark(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.1)) !important;
+    outline: 1px solid light-dark(rgba(20, 20, 20, 0.2), rgba(235, 235, 235, 0.2)) !important;
+    outline-offset: -1px !important;
+  }
+}
+
+:root[zen-single-toolbar='true'] {
+  #urlbar[open] {
+    min-width: 30vw;
+  }
+
+  &[zen-right-side='true'] #urlbar[open]:not([zen-floating-urlbar='true']) {
+    right: 0;
+  }
+}
+
+#urlbar[open][zen-floating-urlbar='true'] {
+  z-index: 1000;
+  max-width: 45vw;
+  min-width: 45vw !important;
+  font-size: 1.1em;
+  --urlbar-container-height: 55px !important;
+  --urlbar-margin-inline: 10px !important;
+  position: absolute;
+
+  top: calc(var(--zen-toolbar-height) * 2) !important;
+
+  :root[zen-right-side='true'] & {
+    right: 28vw !important;
+  }
+
+  :root:not([zen-right-side='true']) & {
+    left: 28vw !important;
+  }
+
+  #urlbar-container:has(&) {
+    border-radius: 10px;
+    background: var(--toolbarbutton-hover-background);
+  }
+}
+
+/* Code ~~stolen~~ taken inspiration from https://github.com/greeeen-dev/zen-arc-cmd-bar
+ *
+ * MIT License
+ *
+ * Copyright (c) 2024 green.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ **/
+.urlbarView-title, .urlbarView-title-separator, .urlbarView-action, .urlbarView-url {
+  margin-top: auto !important;
+  margin-bottom: auto !important;
+}
+
+.urlbarView-title {
+  font-size: 14px !important;
+  font-weight: 500 !important;
+}
+
+.urlbarView-url, .urlbarView-title-separator::before {
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  color: #aaa !important;
+}
+
+.urlbarView-favicon {
+  margin-left: 0 !important;
+  margin-right: 12px !important;
+  padding: 6px !important;
+  border-radius: 6px !important;
+}
+
+.urlbarView-row[has-action]:is([type="switchtab"], [type="remotetab"], [type="clipboard"]) .urlbarView-action {
+  margin-left: auto !important;
+  margin-right: 0 !important;
+}
+
+.urlbarView-row {
+  .urlbarView-favicon {
+    transition: background-color 0.05s;
+  }
+
+  &:hover {
+    background-color: light-dark(var(--zen-colors-secondary), var(--zen-colors-primary)) !important;
+
+    .urlbarView-favicon {
+      background-color: color-mix(in srgb, var(--zen-branding-bg-reverse) 20%, transparent 80%) !important;
+    }
+
+    .urlbarView-url, .urlbarView-title-separator::before {
+      color: color-mix(in srgb, var(--zen-colors-primary) 30%, lightgray) !important;
+    }
+  }
 }

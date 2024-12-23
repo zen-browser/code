@@ -56,7 +56,7 @@
 
   :root[zen-right-side='true'] & {
     margin-right: 0;
-    margin-left: calc(-1 * var(--zen-split-column-gap));
+    margin-left: var(--zen-element-separation);
   }
 }
 

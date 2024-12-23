@@ -1,5 +1,5 @@
 diff --git a/browser/components/places/content/editBookmarkPanel.inc.xhtml b/browser/components/places/content/editBookmarkPanel.inc.xhtml
-index 3ec3f094831c2143a818b43d1761a571f0ffa63d..c4dd904604ee10a909bbcc7c03dd0dd3536020b1 100644
+index 3ec3f094831c2143a818b43d1761a571f0ffa63d..98704f399089f2a33776c6ae9565b8ff9b8ddd34 100644
 --- a/browser/components/places/content/editBookmarkPanel.inc.xhtml
 +++ b/browser/components/places/content/editBookmarkPanel.inc.xhtml
 @@ -5,7 +5,7 @@
@@ -34,7 +34,7 @@ index 3ec3f094831c2143a818b43d1761a571f0ffa63d..c4dd904604ee10a909bbcc7c03dd0dd3
              oncommand="gEditItemOverlay.toggleFolderTreeVisibility();"/>
    </hbox>
 +</hbox>
-+  <vbox>
++  <hbox flex="1" class="zenEditBMPanel_fieldContainer">
 +    <label data-l10n-id="zen-bookmark-edit-panel-workspace-selector"
 +           class="hideable"
 +           control="editBMPanel_workspacesSelectorExpander"/>
@@ -49,7 +49,7 @@ index 3ec3f094831c2143a818b43d1761a571f0ffa63d..c4dd904604ee10a909bbcc7c03dd0dd3
 +              oncommand="gEditItemOverlay.onWorkspaceDropdownToggle();"/>
 +
 +    </div>
-+  </vbox>
++  </hbox>
 +
 +  <ul id="editBMPanel_workspaceList" class="workspace-list hideable" hidden="true">
 +  </ul>

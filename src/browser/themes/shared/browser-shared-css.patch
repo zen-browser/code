@@ -1,8 +1,8 @@
 diff --git a/browser/themes/shared/browser-shared.css b/browser/themes/shared/browser-shared.css
-index f2171eb033a1143870f4708c63f565fabb535c4b..4280bc4b0f7cdbd94179fa2111f8001a331ea42b 100644
+index 08bc078c2572fb218b435e580ef71be2586989c3..e440b6dc3f331785c841e1702887f67a67e00e96 100644
 --- a/browser/themes/shared/browser-shared.css
 +++ b/browser/themes/shared/browser-shared.css
-@@ -188,7 +187,6 @@ body {
+@@ -144,7 +144,6 @@ body {
    transition: background-color var(--inactive-window-transition);
  
    &:-moz-window-inactive {
@@ -10,8 +10,8 @@ index f2171eb033a1143870f4708c63f565fabb535c4b..4280bc4b0f7cdbd94179fa2111f8001a
      color: var(--toolbox-non-lwt-textcolor-inactive);
    }
  
-@@ -196,6 +194,31 @@ body {
-    border-bottom-color: var(--chrome-content-separator-color);
+@@ -163,6 +162,31 @@ body {
+     border-bottom-color: var(--chrome-content-separator-color);
    }
  
 +
@@ -38,7 +38,7 @@ index f2171eb033a1143870f4708c63f565fabb535c4b..4280bc4b0f7cdbd94179fa2111f8001a
 +    background-repeat: no-repeat, var(--lwt-background-tiling);
 +    background-position: right top, var(--lwt-background-alignment);
 +  }
-+  
++
    :root[customizing] & {
      border-bottom-style: none;
    }

@@ -14,9 +14,13 @@
   --zen-border-radius: 7px;
   --zen-primary-color: #ffb787;
 
-  --zen-branding-bg-dark: #202020;
-  --zen-branding-bg: light-dark(#F2F0E3, var(--zen-branding-bg-dark));
-  --zen-branding-bg-reverse: light-dark(var(--zen-branding-bg-dark), #F2F0E3);
+  /* Branding */
+  --zen-branding-dark: #202020;
+  --zen-branding-coral: #F76F53;
+  --zen-branding-paper: #ebebeb;
+
+  --zen-branding-bg: light-dark(var(--zen-branding-paper), var(--zen-branding-dark));
+  --zen-branding-bg-reverse: light-dark(var(--zen-branding-dark), var(--zen-branding-paper));
 
   /** Zen colors are generated automatically from the primary color */
   --zen-colors-primary: color-mix(in srgb, var(--zen-primary-color) 50%, black 50%);
@@ -34,9 +38,10 @@
 
   --zen-secondary-btn-color: var(--zen-colors-primary-foreground);
 
-  --in-content-primary-button-background: color-mix(in srgb, var(--zen-primary-color) 10%, var(--zen-branding-bg-reverse) 90%) !important;
-  --in-content-primary-button-background-hover: color-mix(in srgb, var(--zen-primary-color) 5%, var(--zen-branding-bg-reverse) 60%) !important;
-  --in-content-primary-button-background-active: color-mix(in srgb, var(--zen-primary-color) 7%, var(--zen-branding-bg-reverse) 50%) !important;
+  --in-content-primary-button-background: color-mix(in srgb, var(--zen-primary-color) 10%, var(--zen-branding-bg) 90%) !important;
+  --in-content-primary-button-background-hover: color-mix(in srgb, var(--zen-primary-color) 15%, var(--zen-branding-bg) 85%) !important;
+  --in-content-primary-button-background-active: color-mix(in srgb, var(--zen-primary-color) 20%, var(--zen-branding-bg) 80%) !important;
+  --button-text-color-primary: var(--zen-branding-bg-reverse) !important;
   --in-content-primary-button-text-color: var(--zen-colors-primary-foreground) !important;
   --in-content-primary-button-border-color: transparent !important;
   --in-content-primary-button-border-hover: transparent !important;
@@ -44,12 +49,12 @@
   --in-content-box-border-color: var(--zen-colors-border) !important;
 
   --in-content-accent-color: var(--zen-colors-primary) !important;
+  --in-content-accent-color-active: currentColor !important;
 
   /* This is like the secondary button */
   --in-content-button-background: transparent !important;
   --in-content-button-text-color: var(--zen-secondary-btn-color) !important;
-  --in-content-button-background-hover: color-mix(in srgb, var(--zen-primary-color) 5%, var(--zen-branding-bg-reverse) 60%) !important;
-  --in-content-button-text-color-hover: var(--zen-branding-bg) !important;
+  --in-content-button-background-hover: color-mix(in srgb, var(--zen-primary-color) 5%, var(--zen-branding-bg) 60%) !important;
   --button-bgcolor: var(--in-content-button-background) !important;
   --button-hover-bgcolor: var(--in-content-button-background-hover) !important;
   --button-hover-color: var(--in-content-button-text-color-hover) !important;
@@ -65,18 +70,25 @@
 
   --button-background-color: var(--in-content-button-background) !important;
   --button-background-color-hover: var(--in-content-button-background-hover) !important;
-  --button-text-color-hover: var(--in-content-button-text-color-hover) !important;
   --button-background-color-active: var(--in-content-primary-button-background-active) !important;
 
   --color-accent-primary: var(--button-primary-bgcolor) !important;
   --color-accent-primary-hover: var(--button-primary-hover-bgcolor) !important;
   --color-accent-primary-active: var(--button-primary-active-bgcolor) !important;
 
+  --link-color: var(--zen-branding-bg-reverse) !important;
+  --link-color-hover: var(--zen-branding-bg-reverse) !important;
+
   --in-content-page-background: var(--zen-colors-tertiary) !important;
   --zen-in-content-dialog-background: var(--zen-colors-tertiary);
 
   --zen-button-border-radius: 5px;
   --zen-button-padding: 0.6rem 1.2rem;
+
+  --zen-toolbar-element-bg: light-dark(
+    rgba(255, 255, 255, 0.4),
+    rgba(170, 170, 170, 0.2)
+  );
 
   /* Toolbar */
   --zen-toolbar-height: 38px;
@@ -95,6 +107,8 @@
   /* XUL */
   --zen-main-browser-background: light-dark(rgb(235, 235, 235), #1b1b1b);
   --zen-main-browser-background-toolbar: var(--zen-main-browser-background);
+
+  --browser-area-z-index-toolbox: 2 !important;
 
   --zen-appcontent-border: 1px solid var(--zen-colors-border);
   --zen-panel-radius: var(--zen-border-radius);
@@ -124,13 +138,16 @@
   --zen-themed-toolbar-bg: light-dark(var(--zen-branding-bg), var(--zen-colors-tertiary));
   --zen-themed-toolbar-bg-transparent: light-dark(var(--zen-branding-bg), var(--zen-colors-tertiary));
 
-  @supports (-moz-osx-font-smoothing: auto) {
-    --zen-themed-toolbar-bg-transparency: 0.05;
+  @media (-moz-windows-mica) or (-moz-platform: macos) {
+    background: transparent;
+    --zen-themed-toolbar-bg-transparency: 0;
     --zen-themed-toolbar-bg-transparent: light-dark(rgba(255, 255, 255, var(--zen-themed-toolbar-bg-transparency)), rgba(0, 0, 0, var(--zen-themed-toolbar-bg-transparency)));
   }
 
   --toolbar-field-background-color: var(--zen-colors-input-bg) !important;
   --arrowpanel-background: var(--zen-dialog-background) !important;
+
+  --tab-selected-shadow: 0 0 1px 1px rgba(0,0,0,.1) !important;
 }
 
 @media (prefers-color-scheme: dark) {

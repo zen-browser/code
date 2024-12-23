@@ -1,0 +1,176 @@
+diff --git a/widget/windows/nsWindow.cpp b/widget/windows/nsWindow.cpp
+index 00681c216c838efedbbcded9d6b843dbd8b5b0b6..f07e6e723596d84fb53a8a72b06e02cd4ace6bc1 100644
+--- a/widget/windows/nsWindow.cpp
++++ b/widget/windows/nsWindow.cpp
+@@ -2729,12 +2729,37 @@ nsresult nsWindow::SetNonClientMargins(const LayoutDeviceIntMargin& margins) {
+   mCustomNonClient = margins != LayoutDeviceIntMargin(-1, -1, -1, -1);
+   mNonClientMargins = margins;
+ 
++  const LONG_PTR style = GetWindowLongPtrW(mWnd, GWL_STYLE);
+   // Force a reflow of content based on the new client dimensions.
+   if (mCustomNonClient) {
+-    UpdateNonClientMargins();
+-  } else {
+-    ResetLayout();
+-  }
++    if (style & WS_SYSMENU) {
++      // Remove the WS_SYSMENU style, so that DWM doesn't draw the caption
++      // buttons. Note that we still need WS_MAXIMIZEBOX at least to
++      // support Snap Layouts / Aero Snap.
++      //
++      // This behavior is not documented: per MSDN, WS_MAXIMIZEBOX simply
++      // requires WS_SYSMENU, and is not valid without it. However, omitting it
++      // doesn't seem to have negative side-effects on any version of Windows
++      // tested (other than losing the default system menu handling, which we
++      // implement ourselves in DisplaySystemMenu()).
++      //
++      // Since the system menu is lazily initialized (see [1]), we have to call
++      // GetSystemMenu() here in order to get it created before it is too late.
++      // An alternative would be to play with window styles later to force it
++      // to be created, but that seems a bit more finicky.
++      //
++      // [1]: https://devblogs.microsoft.com/oldnewthing/20100528-00/?p=13893
++      ::GetSystemMenu(mWnd, FALSE);
++      ::SetWindowLongPtrW(mWnd, GWL_STYLE, style & ~WS_SYSMENU);
++    }
++     UpdateNonClientMargins();
++   } else {
++    if (WindowStyle() & WS_SYSMENU) {
++      // Restore the WS_SYSMENU style if appropriate.
++      ::SetWindowLongPtrW(mWnd, GWL_STYLE, style | WS_SYSMENU);
++    }
++     ResetLayout();
++   }
+ 
+   return NS_OK;
+ }
+@@ -4560,53 +4585,55 @@ void nsWindow::IPCWindowProcHandler(UINT& msg, WPARAM& wParam, LPARAM& lParam) {
+ static bool DisplaySystemMenu(HWND hWnd, nsSizeMode sizeMode, bool isRtl,
+                               int32_t x, int32_t y) {
+   HMENU hMenu = GetSystemMenu(hWnd, FALSE);
+-  if (hMenu) {
+-    MENUITEMINFO mii;
+-    mii.cbSize = sizeof(MENUITEMINFO);
+-    mii.fMask = MIIM_STATE;
+-    mii.fType = 0;
+-
+-    // update the options
+-    mii.fState = MF_ENABLED;
+-    SetMenuItemInfo(hMenu, SC_RESTORE, FALSE, &mii);
+-    SetMenuItemInfo(hMenu, SC_SIZE, FALSE, &mii);
+-    SetMenuItemInfo(hMenu, SC_MOVE, FALSE, &mii);
+-    SetMenuItemInfo(hMenu, SC_MAXIMIZE, FALSE, &mii);
+-    SetMenuItemInfo(hMenu, SC_MINIMIZE, FALSE, &mii);
+-
+-    mii.fState = MF_GRAYED;
+-    switch (sizeMode) {
+-      case nsSizeMode_Fullscreen:
+-        // intentional fall through
+-      case nsSizeMode_Maximized:
+-        SetMenuItemInfo(hMenu, SC_SIZE, FALSE, &mii);
+-        SetMenuItemInfo(hMenu, SC_MOVE, FALSE, &mii);
+-        SetMenuItemInfo(hMenu, SC_MAXIMIZE, FALSE, &mii);
+-        break;
+-      case nsSizeMode_Minimized:
+-        SetMenuItemInfo(hMenu, SC_MINIMIZE, FALSE, &mii);
+-        break;
+-      case nsSizeMode_Normal:
+-        SetMenuItemInfo(hMenu, SC_RESTORE, FALSE, &mii);
+-        break;
+-      case nsSizeMode_Invalid:
+-        NS_ASSERTION(false, "Did the argument come from invalid IPC?");
+-        break;
+-      default:
+-        MOZ_ASSERT_UNREACHABLE("Unhnalded nsSizeMode value detected");
+-        break;
+-    }
+-    LPARAM cmd = TrackPopupMenu(
+-        hMenu,
+-        (TPM_LEFTBUTTON | TPM_RIGHTBUTTON | TPM_RETURNCMD | TPM_TOPALIGN |
+-         (isRtl ? TPM_RIGHTALIGN : TPM_LEFTALIGN)),
+-        x, y, 0, hWnd, nullptr);
+-    if (cmd) {
+-      PostMessage(hWnd, WM_SYSCOMMAND, cmd, 0);
+-      return true;
+-    }
++  if (NS_WARN_IF(!hMenu)) {
++    return false;
+   }
+-  return false;
++
++  MENUITEMINFO mii;
++  mii.cbSize = sizeof(MENUITEMINFO);
++  mii.fMask = MIIM_STATE;
++  mii.fType = 0;
++
++  // update the options
++  mii.fState = MF_ENABLED;
++  SetMenuItemInfo(hMenu, SC_RESTORE, FALSE, &mii);
++  SetMenuItemInfo(hMenu, SC_SIZE, FALSE, &mii);
++  SetMenuItemInfo(hMenu, SC_MOVE, FALSE, &mii);
++  SetMenuItemInfo(hMenu, SC_MAXIMIZE, FALSE, &mii);
++  SetMenuItemInfo(hMenu, SC_MINIMIZE, FALSE, &mii);
++
++  mii.fState = MF_GRAYED;
++  switch (sizeMode) {
++    case nsSizeMode_Fullscreen:
++      // intentional fall through
++    case nsSizeMode_Maximized:
++      SetMenuItemInfo(hMenu, SC_SIZE, FALSE, &mii);
++      SetMenuItemInfo(hMenu, SC_MOVE, FALSE, &mii);
++      SetMenuItemInfo(hMenu, SC_MAXIMIZE, FALSE, &mii);
++      break;
++    case nsSizeMode_Minimized:
++      SetMenuItemInfo(hMenu, SC_MINIMIZE, FALSE, &mii);
++      break;
++    case nsSizeMode_Normal:
++      SetMenuItemInfo(hMenu, SC_RESTORE, FALSE, &mii);
++      break;
++    case nsSizeMode_Invalid:
++      NS_ASSERTION(false, "Did the argument come from invalid IPC?");
++      break;
++    default:
++      MOZ_ASSERT_UNREACHABLE("Unhnalded nsSizeMode value detected");
++      break;
++  }
++  LPARAM cmd = TrackPopupMenu(hMenu,
++                              TPM_LEFTBUTTON | TPM_RIGHTBUTTON | TPM_RETURNCMD |
++                                  TPM_TOPALIGN |
++                                  (isRtl ? TPM_RIGHTALIGN : TPM_LEFTALIGN),
++                              x, y, 0, hWnd, nullptr);
++  if (!cmd) {
++    return false;
++  }
++  PostMessage(hWnd, WM_SYSCOMMAND, cmd, 0);
++  return true;
+ }
+ 
+ // The WndProc procedure for all nsWindows in this toolkit. This merely catches
+@@ -5768,13 +5795,20 @@ bool nsWindow::ProcessMessageInternal(UINT msg, WPARAM& wParam, LPARAM& lParam,
+         result = true;
+       }
+ 
+-      // Handle the system menu manually when we're in full screen mode
+-      // so we can set the appropriate options.
+-      if (filteredWParam == SC_KEYMENU && lParam == VK_SPACE &&
+-          mFrameState->GetSizeMode() == nsSizeMode_Fullscreen) {
+-        DisplaySystemMenu(mWnd, mFrameState->GetSizeMode(), mIsRTL,
+-                          MOZ_SYSCONTEXT_X_POS, MOZ_SYSCONTEXT_Y_POS);
+-        result = true;
++      if (filteredWParam == SC_KEYMENU && lParam == VK_SPACE) {
++        const auto sizeMode = mFrameState->GetSizeMode();
++        // Handle the system menu manually when we're in full screen mode or
++        // with custom titlebar so we can set the appropriate options.
++        if (sizeMode == nsSizeMode_Fullscreen || mCustomNonClient) {
++          // Historically on fullscreen windows we've used this offset from the
++          // top left as our context menu position. Note that if the point we
++          // supply is offscreen, Windows will still try to put our menu in the
++          // right place.
++          constexpr LayoutDeviceIntPoint offset(20, 20);
++          auto pos = GetScreenBounds().TopLeft() + offset;
++          DisplaySystemMenu(mWnd, sizeMode, mIsRTL, pos.x, pos.y);
++          result = true;
++        }
+       }
+     } break;
+ 

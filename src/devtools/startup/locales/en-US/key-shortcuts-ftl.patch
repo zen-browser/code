@@ -1,0 +1,13 @@
+diff --git a/devtools/startup/locales/en-US/key-shortcuts.ftl b/devtools/startup/locales/en-US/key-shortcuts.ftl
+index bbc2c7ca1e8c3544289407371457790cf8b0fa65..f307e5cb75df9175106184f97b2f500c1adf9fca 100644
+--- a/devtools/startup/locales/en-US/key-shortcuts.ftl
++++ b/devtools/startup/locales/en-US/key-shortcuts.ftl
+@@ -13,7 +13,7 @@ devtools-commandkey-browser-console = J
+ # Key pressed to toggle on the Responsive Design Mode
+ devtools-commandkey-responsive-design-mode = M
+ # Key pressed to open a toolbox with the inspector panel selected
+-devtools-commandkey-inspector = C
++devtools-commandkey-inspector = L
+ # Key pressed to open a toolbox with the web console panel selected
+ devtools-commandkey-webconsole = K
+ # Key pressed to open a toolbox with the debugger panel selected

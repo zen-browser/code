@@ -12,12 +12,19 @@
     margin: 1px;
 
     :root[zen-right-side='true'] & {
-      margin-right: 0;
       margin-left: var(--zen-element-separation);
     }
 
     :root[zen-no-padding='true'] &:not([zen-split="true"]) {
       border-radius: 0 !important;
+    }
+  }
+  
+  @media (-moz-bool-pref: 'zen.view.experimental-rounded-view') {
+    #tabbrowser-tabpanels {
+      mix-blend-mode: multiply;
+      -moz-osx-font-smoothing: grayscale;
+      isolation: isolate;
     }
   }
 }

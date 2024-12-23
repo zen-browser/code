@@ -21,17 +21,15 @@ mkdir windsign-temp -ErrorAction SilentlyContinue
 
 gh run download $GithubRunId --name windows-x64-obj-arm64 -D windsign-temp\windows-x64-obj-arm64
 echo "Downloaded arm64 artifacts"
-gh run download $GithubRunId --name windows-x64-obj-specific -D windsign-temp\windows-x64-obj-specific
-echo "Downloaded specific artifacts"
-gh run download $GithubRunId --name windows-x64-obj-generic -D windsign-temp\windows-x64-obj-generic
-echo "Downloaded generic artifacts"
+gh run download $GithubRunId --name windows-x64-obj-x86_64 -D windsign-temp\windows-x64-obj-x86_64
+echo "Downloaded x86_64 artifacts"
 
 
 #Wait-Job -Name "DownloadGitObjectsRepo"
 
 mkdir engine\obj-x86_64-pc-windows-msvc\ -ErrorAction SilentlyContinue
 
-pnpm surfer ci --brand alpha
+pnpm surfer ci --brand beta
 
 function SignAndPackage($name) {
     echo "Executing on $name"
@@ -48,34 +46,30 @@ function SignAndPackage($name) {
     echo "Packaging $name"
     $env:SURFER_SIGNING_MODE="sign"
     $env:MAR="$PWD\\build\\winsign\\mar.exe"
-    if ($name -eq "generic") {
-        $env:SURFER_COMPAT="x86_64"
+    if ($name -eq "arm64") {
+        $env:SURFER_COMPAT="aarch64"
     } else {
-        if ($name -eq "arm64") {
-            $env:SURFER_COMPAT="aarch64"
-        } else {
-            $env:SURFER_COMPAT="x86_64-v3"
-        }
+        $env:SURFER_COMPAT="x86_64"
     }
 
     echo "Compat Mode? $env:SURFER_COMPAT"
     pnpm surfer package --verbose
 
     # In the release script, we do the following:
-    #  tar -xvf .github/workflows/object/windows-x64-signed-generic.tar.gz -C windows-x64-signed-generic
+    #  tar -xvf .github/workflows/object/windows-x64-signed-x86_64.tar.gz -C windows-x64-signed-x86_64
     # We need to create a tar with the same structure and no top-level directory
     # Inside, we need:
     #  - update_manifest/*
-    #  - windows.mar or windows-generic.mar
-    #  - zen.installer.exe or zen.installer-generic.exe
-    #  - zen.win-generic.zip or zen.win-specific.zip
+    #  - windows.mar
+    #  - zen.installer.exe
+    #  - zen.win-x86_64.zip
     echo "Creating tar for $name"
     rm .\windsign-temp\windows-x64-signed-$name -Recurse -ErrorAction SilentlyContinue
     mkdir windsign-temp\windows-x64-signed-$name
-    
-    # Move the MAR, add the `-generic` suffix if needed
+
+    # Move the MAR, add the `-arm64` suffix if needed
     echo "Moving MAR for $name"
-    if ($name -eq "generic" -or $name -eq "arm64") {
+    if ($name -eq "arm64") {
         mv .\dist\output.mar windsign-temp\windows-x64-signed-$name\windows-$name.mar
     } else {
         mv .\dist\output.mar windsign-temp\windows-x64-signed-$name\windows.mar
@@ -83,7 +77,7 @@ function SignAndPackage($name) {
 
     # Move the installer
     echo "Moving installer for $name"
-    if ($name -eq "generic" -or $name -eq "arm64") {
+    if ($name -eq "arm64") {
         mv .\dist\zen.installer.exe windsign-temp\windows-x64-signed-$name\zen.installer-$name.exe
     } else {
         mv .\dist\zen.installer.exe windsign-temp\windows-x64-signed-$name\zen.installer.exe
@@ -118,8 +112,7 @@ function SignAndPackage($name) {
 }
 
 SignAndPackage arm64
-SignAndPackage specific
-SignAndPackage generic
+SignAndPackage x86_64
 
 echo "All artifacts signed and packaged, ready for release!"
 echo "Commiting the changes to the repository"
@@ -132,12 +125,11 @@ cd ..\..
 # Cleaning up
 
 echo "All done!"
-echo "All the artifacts (Generic and Specific) are signed and packaged, get a rest now!"
+echo "All the artifacts (x86_64 and arm46) are signed and packaged, get a rest now!"
 Read-Host "Press Enter to continue"
 
-echo "Cleaning up" 
-rmdir windsign-temp\windows-x64-obj-specific -Recurse -ErrorAction SilentlyContinue
-rmdir windsign-temp\windows-x64-obj-generic -Recurse -ErrorAction SilentlyContinue
+echo "Cleaning up"
+rmdir windsign-temp\windows-x64-obj-x86_64 -Recurse -ErrorAction SilentlyContinue
 rmdir windsign-temp\windows-x64-obj-arm64 -Recurse -ErrorAction SilentlyContinue
 
 echo "Opening visual studio code"

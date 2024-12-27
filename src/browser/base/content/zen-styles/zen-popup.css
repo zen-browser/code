@@ -196,36 +196,6 @@ panel {
   min-height: calc((var(--arrowpanel-menuitem-padding-block) + 4px) * 2 + 16px);
 }
 
-/* Workspace icon picker styles */
-#PanelUI-zen-workspaces-icon-picker-wrapper {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  gap: 2px;
-}
-
-#PanelUI-zen-workspaces-icon-search-bar {
-  display: flex;
-  position: sticky;
-  top: 0;
-  background-color: inherit;
-  z-index: 1000;
-  padding: 8px;
-  width: 100%;
-  margin: 0;
-  box-sizing: border-box;
-}
-
-#PanelUI-zen-workspaces-icon-search-input {
-  width: 100%;
-  padding: 8px 12px;
-  font-size: 14px;
-  border: 1px solid var(--panel-separator-color, #ccc);
-  border-radius: 4px;
-  box-sizing: border-box;
-  margin: 0;
-}
-
 /* URL bar popup */
 
 .identity-popup-security-connection > hbox > description {

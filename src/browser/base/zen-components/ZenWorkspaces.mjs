@@ -525,47 +525,45 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
       return parseInt((inputLength / targetLength) * weight);
     }
     
-
-    for (let icon of icons) {
-
-      let searchScore = -1;
-      let emojiName = icon.name.toLowerCase();
-      let emojiDescription = icon.description.split(',').map(keyword => keyword.trim().toLowerCase());
-  
+    for (let currentEmoji of icons) {
+      let alignmentScore = -1;
+      let normalizedEmojiName = currentEmoji.name.toLowerCase();
+      let keywordList = currentEmoji.description.split(',').map(keyword => keyword.trim().toLowerCase());
+    
       if (input[0] === ":") {
-        let sliced_input = input.slice(1);
-        let nameIndex = emojiName.indexOf(sliced_input);
-  
-        if (nameIndex !== -1 && nameIndex === 0) {
-          searchScore = calculateSearchScore(sliced_input.length, emojiName.length, 100);
+        let searchTerm = input.slice(1);
+        let nameMatchIndex = normalizedEmojiName.indexOf(searchTerm);
+    
+        if (nameMatchIndex !== -1 && nameMatchIndex === 0) {
+          alignmentScore = calculateSearchScore(searchTerm.length, normalizedEmojiName.length, 100);
         }
       } else {
-        if (input === icon.emoji) {
-          searchScore = 999;
+        if (input === currentEmoji.emoji) {
+          alignmentScore = 999;
         }
-        let nameIndex = emojiName.replace(/_/g, ' ').indexOf(input);
-        if (nameIndex !== -1) {
-          if (nameIndex === 0) {
-            searchScore = calculateSearchScore(input.length, emojiName.length, 150); 
+        let nameMatchIndex = normalizedEmojiName.replace(/_/g, ' ').indexOf(input);
+        if (nameMatchIndex !== -1) {
+          if (nameMatchIndex === 0) {
+            alignmentScore = calculateSearchScore(input.length, normalizedEmojiName.length, 150); 
           } else if (input[input.length - 1] !== " ") {
-            searchScore += calculateSearchScore(input.length, emojiName.length, 40);
+            alignmentScore += calculateSearchScore(input.length, normalizedEmojiName.length, 40);
           }
         }
-        for (let keyword of emojiDescription) {
-          let keywordIndex = keyword.indexOf(input);
-          if (keywordIndex !== -1) {
-            if (keywordIndex === 0) {
-              searchScore += calculateSearchScore(input.length, keyword.length, 50);
+        for (let keyword of keywordList) {
+          let keywordMatchIndex = keyword.indexOf(input);
+          if (keywordMatchIndex !== -1) {
+            if (keywordMatchIndex === 0) {
+              alignmentScore += calculateSearchScore(input.length, keyword.length, 50);
             } else if (input[input.length - 1] !== " ") {
-              searchScore += calculateSearchScore(input.length, keyword.length, 5);
+              alignmentScore += calculateSearchScore(input.length, keyword.length, 5);
             }
           }
         }
       }
       
-      // Update emojiScores with the highest rank found
-      if (searchScore !== -1) {
-        emojiScores.push({ "emoji": icon.emoji, "Score": searchScore });
+      //if match score is not -1, add it 
+      if (alignmentScore !== -1) {
+        emojiScores.push({ "emoji": currentEmoji.emoji, "score": alignmentScore });
       }
     }
   
@@ -581,7 +579,6 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     // Return the emojis in the order of their rank
     return filteredEmojiScores.map(score => score.emoji);
   }
-
 
   resetWorkspaceIconSearch(){
     let container = document.getElementById('PanelUI-zen-workspaces-icon-picker-wrapper');
@@ -600,14 +597,7 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     searchInput.value = '';
     for (let icon of this._kIcons) {
       let button = document.createXULElement('toolbarbutton');
-      button.className = 'toolbarbutton-1';
-      button.style.cssText = `
-        min-width: 24px;
-        min-height: 24px;
-        font-size: 16px;
-        margin: 2px;
-        padding: 4px;
-      `;
+      button.className = 'toolbarbutton-1 workspace-icon-button';
       button.setAttribute('label', icon);
       button.onclick = (event) => {
         const button = event.target;

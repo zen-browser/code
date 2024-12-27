@@ -566,17 +566,11 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
         emojiScores.push({ "emoji": currentEmoji.emoji, "score": alignmentScore });
       }
     }
-  
     // Sort the emojis by their score in descending order
     emojiScores.sort((a, b) => b.Score - a.Score);
-  
-    // Filter out emojis with a score lower than 10
-    let filteredEmojiScores = emojiScores;
-    if (emojiScores.length > 30) {
-      filteredEmojiScores = emojiScores.filter(score => score.Score >= 10);
-    }
-  
+    
     // Return the emojis in the order of their rank
+    let filteredEmojiScores = emojiScores;
     return filteredEmojiScores.map(score => score.emoji);
   }
 

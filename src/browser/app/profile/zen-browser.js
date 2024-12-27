@@ -30,6 +30,10 @@ pref('browser.compactmode.show', true);
 pref("browser.privateWindowSeparation.enabled", false);
 #endif
 
+#ifdef UNIX_BUT_NOT_MAC
+pref("widget.gtk.rounded-bottom-corners.enabled", true);
+#endif
+
 pref('browser.newtabpage.activity-stream.newtabWallpapers.enabled', true);
 pref('browser.newtabpage.activity-stream.newtabWallpapers.v2.enabled', true);
 pref('browser.translations.newSettingsUI.enable', true);

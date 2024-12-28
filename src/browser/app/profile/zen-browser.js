@@ -427,3 +427,6 @@ pref("browser.newtabpage.activity-stream.asrouter.userprefs.cfr.addons", false);
 pref("browser.newtabpage.activity-stream.asrouter.userprefs.cfr.features", false);
 pref("browser.preferences.moreFromMozilla", false, locked);
 pref("browser.aboutwelcome.enabled", false);
+
+// Fingerprinting
+pref("privacy.resistFingerprinting", true, locked)

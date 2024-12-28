@@ -117,14 +117,16 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
       return;
     }
 
+    const direction = this.naturalScroll ? -1 : 1;
+    // event is forward or back
     switch (event.command) {
       case "Forward":
-        this.changeWorkspaceShortcut(1);
+        this.changeWorkspaceShortcut(1 * direction);
         event.stopImmediatePropagation();
         event.preventDefault();
         break;
       case "Back":
-        this.changeWorkspaceShortcut(-1);
+        this.changeWorkspaceShortcut(-1 * direction);
         event.stopImmediatePropagation();
         event.preventDefault();
         break;
@@ -177,29 +179,10 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
       if (Math.abs(delta) < scrollThreshold) return;
 
       // Determine scroll direction
-      let direction = delta > 0 ? 1 : -1;
-      if (this.naturalScroll) {
-        direction = delta > 0 ? -1 : 1;
-      }
+      let rawDirection = delta > 0 ? 1 : -1;
 
-      // Workspace logic
-      const workspaces = (await this._workspaces()).workspaces;
-      const currentIndex = workspaces.findIndex(w => w.uuid === this.activeWorkspace);
-      if (currentIndex === -1) return; // No valid current workspace
-
-      let targetIndex = currentIndex + direction;
-
-      if (this.shouldWrapAroundNavigation) {
-        // Add length to handle negative indices and loop
-        targetIndex = (targetIndex + workspaces.length) % workspaces.length;
-      } else {
-        // Clamp within bounds to disable looping
-        targetIndex = Math.max(0, Math.min(workspaces.length - 1, targetIndex));
-      }
-
-      if (targetIndex !== currentIndex) {
-        await this.changeWorkspace(workspaces[targetIndex]);
-      }
+      let direction = this.naturalScroll ? -1 : 1; 
+      this.changeWorkspaceShortcut(rawDirection * direction);
 
       this._lastScrollTime = currentTime;
     }, { passive: true });
@@ -265,42 +248,21 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     // Determine swipe direction based on cumulative delta
     if (Math.abs(this._swipeState.cumulativeDelta) > 0.25) {
       this._swipeState.direction = this._swipeState.cumulativeDelta > 0 ? 'left' : 'right';
-      if (this.naturalScroll){
-        this._swipeState.direction = this._swipeState.cumulativeDelta > 0 ? 'right' : 'left';
-      }
     }
-
   }
 
   async _handleSwipeEnd(event) {
     if (!this.workspaceEnabled || !this._swipeState?.isGestureActive) return;
     event.preventDefault();
     event.stopPropagation();
-
+    const isRTL = document.documentElement.matches(':-moz-locale-dir(rtl)');
+    const moveForward = (this._swipeState.direction === 'right') !== isRTL;
+    
+    let rawDirection = moveForward ? 1 : -1;
     if (this._swipeState.direction) {
-      const workspaces = (await this._workspaces()).workspaces;
-      const currentIndex = workspaces.findIndex(w => w.uuid === this.activeWorkspace);
-
-      if (currentIndex !== -1) {
-        const isRTL = document.documentElement.matches(':-moz-locale-dir(rtl)');
-        const moveForward = (this._swipeState.direction === 'right') !== isRTL;
-
-        let targetIndex = moveForward
-          ? currentIndex + 1
-          : currentIndex - 1;
-
-        if (this.shouldWrapAroundNavigation) {
-          // Add length to handle negative indices and clamp within bounds
-          targetIndex = (targetIndex + workspaces.length) % workspaces.length;
-        } else {
-          // Clamp within bounds for to remove looping
-          targetIndex = Math.max(0, Math.min(workspaces.length - 1, targetIndex));
-        }
-
-        if (targetIndex !== currentIndex) {
-          await this.changeWorkspace(workspaces[targetIndex]);
-        }
-      }
+        
+      let direction = this.naturalScroll ? -1 : 1; 
+      this.changeWorkspaceShortcut(rawDirection * direction);
     }
 
     // Reset swipe state
@@ -1575,14 +1537,23 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     await this.openEditDialog(this._contextMenuId);
   }
 
-  async changeWorkspaceShortcut(offset = 1) {
+  async changeWorkspaceShortcut(offset = 1){
     // Cycle through workspaces
     let workspaces = await this._workspaces();
     let activeWorkspace = await this.getActiveWorkspace();
     let workspaceIndex = workspaces.workspaces.indexOf(activeWorkspace);
+    
     // note: offset can be negative
-    let nextWorkspace =
-      workspaces.workspaces[(workspaceIndex + offset + workspaces.workspaces.length) % workspaces.workspaces.length];
+    let targetIndex = workspaceIndex + offset;
+    if (this.shouldWrapAroundNavigation) {
+      // Add length to handle negative indices and loop
+      targetIndex = (targetIndex + workspaces.workspaces.length) % workspaces.workspaces.length;
+    } else {
+      // Clamp within bounds to disable looping
+      targetIndex = Math.max(0, Math.min(workspaces.workspaces.length - 1, targetIndex));
+    }
+
+    let nextWorkspace = workspaces.workspaces[(targetIndex)];
     await this.changeWorkspace(nextWorkspace);
   }
 

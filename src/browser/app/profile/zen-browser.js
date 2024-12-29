@@ -91,9 +91,11 @@ pref('zen.view.show-newtab-button-border-top', true);
 pref('zen.view.show-newtab-button-top', false);
 
 #ifdef MOZILLA_OFFICIAL
-pref('zen.rice.api.url', "https://share.zen-browser.app");
+pref('zen.rice.api.url', 'https://share.zen-browser.app', locked);
+pref('zen.injections.match-urls', 'https://zen-browser.app/*,https://share.zen-browser.app/*', locked);
 #else
-pref('zen.rice.api.url', "http://localhost:3000");
+pref('zen.rice.api.url', "http://localhost:3000", locked);
+pref('zen.injections.match-urls', 'http://localhost:3000/*', locked);
 #endif
 pref('zen.rice.share.notice.accepted', false);
 

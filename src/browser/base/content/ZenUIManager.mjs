@@ -13,19 +13,14 @@ var gZenUIManager = {
       0
     );
 
-    function throttle(f, delay) {
-      let timer = 0;
-      return function (...args) {
-        clearTimeout(timer);
-        timer = setTimeout(() => f.apply(this, args), delay);
-      };
-    }
-
-    new ResizeObserver(throttle(this.updateTabsToolbar.bind(this), this.sidebarHeightThrottle)).observe(
+    new ResizeObserver(gZenCommonActions.throttle(this.updateTabsToolbar.bind(this), this.sidebarHeightThrottle)).observe(
       document.getElementById('tabbrowser-tabs')
     );
-  },
 
+    new ResizeObserver(gZenCommonActions.throttle(gZenCompactModeManager.getAndApplySidebarWidth.bind(gZenCompactModeManager), this.sidebarHeightThrottle)).observe(
+      document.getElementById('navigator-toolbox')
+    );
+  },
 
   updateTabsToolbar() {
     // Set tabs max-height to the "toolbar-items" height
@@ -280,6 +275,12 @@ var gZenVerticalTabsManager = {
     this._isUpdating = true;
     try {
       this._updateMaxWidth();
+
+      window.docShell.treeOwner
+        .QueryInterface(Ci.nsIInterfaceRequestor)
+        .getInterface(Ci.nsIAppWindow)
+        .rollupAllPopups();
+
       const topButtons = document.getElementById('zen-sidebar-top-buttons');
       const isCompactMode = this._prefsCompactMode;
       const isVerticalTabs = this._prefsVerticalTabs || forceMultipleToolbar;

@@ -79,5 +79,13 @@ var gZenCommonActions = {
       );
       ConfirmationHint.show(document.getElementById("PanelUI-menu-button"), "zen-copy-current-url-confirmation");
     }
+  },
+
+  throttle(f, delay) {
+    let timer = 0;
+    return function (...args) {
+      clearTimeout(timer);
+      timer = setTimeout(() => f.apply(this, args), delay);
+    };
   }
 };

@@ -1,17 +1,20 @@
 diff --git a/browser/themes/linux/browser.css b/browser/themes/linux/browser.css
-index 963a33af85521914ba0dad973ef94e6a8c2afdd0..f31bd5261631cb9e00ee6b723d6f9a85f0ae3119 100644
+index a9276a678f16a67e2a003474203c37cb5c9300ad..892c69950d2a695b890fec9f8ea3f6e64032fe25 100644
 --- a/browser/themes/linux/browser.css
 +++ b/browser/themes/linux/browser.css
-@@ -72,7 +72,7 @@
+@@ -42,15 +42,17 @@
      -moz-default-appearance: -moz-window-decorations;
      appearance: auto;
  
 -    #navigator-toolbox,
+-    dialog::backdrop {
 +    #zen-main-app-wrapper,
-     dialog::backdrop {
++    dialog::backdrop,
++    #browser::after,
++    #browser::before {
        border-top-left-radius: env(-moz-gtk-csd-titlebar-radius);
        border-top-right-radius: env(-moz-gtk-csd-titlebar-radius);
-@@ -80,7 +80,7 @@
+     }
  
      /* stylelint-disable-next-line media-query-no-invalid */
      @media (-moz-bool-pref: "widget.gtk.rounded-bottom-corners.enabled") {

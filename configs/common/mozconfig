@@ -98,7 +98,3 @@ mk_add_options MOZ_TELEMETRY_REPORTING=
 # Allow loading unsigned extensions
 export MOZ_REQUIRE_SIGNING=
 mk_add_options MOZ_REQUIRE_SIGNING=
-
-# Sorry ptr, I didnt mean to!
-# Edit: ok, ill remove it, goodbye top #1 on fastest browsers benchmark :[
-# ac_add_options --without-wasm-sandboxed-libraries

@@ -22,6 +22,7 @@
         content/browser/zen-components/ZenGradientGenerator.mjs (zen-components/ZenGradientGenerator.mjs)
         content/browser/zen-components/ZenGlanceManager.mjs     (zen-components/ZenGlanceManager.mjs)
         content/browser/zen-components/ZenActorsManager.mjs     (zen-components/ZenActorsManager.mjs)
+        content/browser/zen-components/ZenRices.mjs             (zen-components/ZenRices.mjs)
 
         content/browser/zen-styles/zen-theme.css                (content/zen-styles/zen-theme.css)
         content/browser/zen-styles/zen-buttons.css              (content/zen-styles/zen-buttons.css)
@@ -43,6 +44,7 @@
         content/browser/zen-styles/zen-popup.css                (content/zen-styles/zen-popup.css)
         content/browser/zen-styles/zen-sidebar-panels.css       (content/zen-styles/zen-sidebar-panels.css)
         content/browser/zen-styles/zen-gradient-generator.css   (content/zen-styles/zen-gradient-generator.css)
+        content/browser/zen-styles/zen-rices.css                (content/zen-styles/zen-rices.css)
         content/browser/zen-styles/zen-branding.css             (content/zen-styles/zen-branding.css)
 
         content/browser/zen-styles/zen-panels/bookmarks.css     (content/zen-styles/zen-panels/bookmarks.css)
@@ -55,6 +57,7 @@
         # Images
         content/browser/zen-images/gradient.png                 (content/zen-images/gradient.png)
         content/browser/zen-images/gradient-display.png         (content/zen-images/gradient-display.png)
+        content/browser/zen-images/brand-header.svg             (content/zen-images/brand-header.svg)
         content/browser/zen-images/layouts/collapsed.png        (content/zen-images/layouts/collapsed.png)
         content/browser/zen-images/layouts/multiple-toolbar.png (content/zen-images/layouts/multiple-toolbar.png)
         content/browser/zen-images/layouts/single-toolbar.png   (content/zen-images/layouts/single-toolbar.png)
@@ -68,3 +71,6 @@
         # Fonts
         content/browser/zen-fonts/JunicodeVF-Italic.woff2       (content/zen-fonts/JunicodeVF-Italic.woff2)
         content/browser/zen-fonts/JunicodeVF-Roman.woff2        (content/zen-fonts/JunicodeVF-Roman.woff2)
+
+        # JS Vendor
+        content/browser/zen-vendor/tsparticles.confetti.bundle.min.js (content/zen-vendor/tsparticles.confetti.bundle.min.js)

@@ -117,7 +117,9 @@ var gZenCompactModeManager = {
     }
     this._isAnimating = true;
     // Do this so we can get the correct width ONCE compact mode styled have been applied
-    this.sidebar.setAttribute("animate", "true");
+    if (this._canAnimateSidebar) {
+      this.sidebar.setAttribute("animate", "true");
+    }
     window.requestAnimationFrame(() => {
       let sidebarWidth = this.getAndApplySidebarWidth();
       if (!this._canAnimateSidebar) {
@@ -308,6 +310,11 @@ var gZenCompactModeManager = {
           if (event.clientX < MAC_WINDOW_BUTTONS_X_BORDER && event.clientY < MAC_WINDOW_BUTTONS_Y_BORDER) {
             return;
           }
+        }
+
+        // If it's a child element but not the target, ignore the event
+        if (target.contains(event.explicitOriginalTarget) && event.explicitOriginalTarget !== target) {
+          return;
         }
 
         if (this.hoverableElements[i].keepHoverDuration) {

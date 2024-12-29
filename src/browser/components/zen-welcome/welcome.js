@@ -293,11 +293,20 @@ class Pages {
       if (this.pages.currentPage === 1) {
         this.prevEl.setAttribute('disabled', 'true');
       }
+
+      for (const button of document.getElementById('buttons-footer').children) {
+        button.style.display = 'none';
+        // Re-animate the buttons
+        setTimeout(() => {
+          button.style.removeProperty('display');
+        });
+      }
     });
   }
 
   next() {
     this.currentPage++;
+    document.getElementById('main-view').setAttribute('data-page', this.currentPage);
 
     if (this.currentPage >= this.pages.length) {
       // We can use internal js apis to close the window. We also want to set
@@ -307,6 +316,14 @@ class Pages {
 
       close();
       return;
+    }
+
+    for (const button of document.getElementById('buttons-footer').children) {
+      button.style.display = 'none';
+      // Re-animate the buttons
+      setTimeout(() => {
+        button.style.removeProperty('display');
+      });
     }
 
     this._displayCurrentPage();

@@ -1,3 +1,8 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 
 #tabbrowser-tabs,
 #TabsToolbar,
@@ -234,11 +239,11 @@
     transition: scale 0.07s ease;
     &[fadein='true']:not([zen-essential='true']) {
       #tabbrowser-tabs[zen-workspace-animation='previous'] & {
-        animation: zen-slide-in 0.2s ease;
+        animation: zen-slide-in 0.3s ease-out;
       }
 
       #tabbrowser-tabs[zen-workspace-animation='next'] & {
-        animation: zen-slide-in-reverse 0.2s ease;
+        animation: zen-slide-in-reverse 0.3s ease-out;
       }
     }
 

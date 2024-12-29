@@ -1,4 +1,24 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 @keyframes zen-jello-animation {
+  0% {
+    transform: scale3d(0.8, 0.8, 0.8);
+  }
+
+  60% {
+    transform: scale3d(1.01, 1.01, 1.01);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale3d(1, 1, 1);
+  }
+}
+
+@keyframes zen-jello-animation-large {
   0% {
     transform: scale3d(0.8, 0.8, 0.8);
   }
@@ -71,7 +91,7 @@
 
 @keyframes zen-slide-in {
   from {
-    transform: translateX(-100%);
+    transform: translateX(-150%);
     opacity: 0;
   }
   to {
@@ -82,7 +102,7 @@
 
 @keyframes zen-slide-in-reverse {
   from {
-    transform: translateX(100%);
+    transform: translateX(150%);
     opacity: 0;
   }
   to {
@@ -342,5 +362,81 @@
   to {
     opacity: 1;
     transform: translateX(-100%) translateY(-50%);
+  }
+}
+
+@keyframes zen-rice-form-out {
+  0% {
+    transform: translateX(0);
+    max-height: 350px;
+    opacity: 1;
+    position: relative;
+  }
+
+  50% {
+    transform: translateX(-100%);
+    opacity: 0;
+    position: relative;
+  }
+
+  99% {
+    transform: translateX(-100%);
+    opacity: 0;
+    max-height: 15px;
+    position: relative;
+  }
+
+  100% {
+    transform: translateX(-100%);
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+  }
+}
+
+@keyframes zen-rice-form-in {
+  0% {
+    position: absolute;
+    transform: translateX(100%);
+    opacity: 0;
+  }
+
+  99% {
+    position: absolute;
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  100% {
+    position: relative;
+  }
+}
+
+@keyframes zen-rice-form-in-2 {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+    max-height: 50px;
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+    max-height: 450px;
+  }
+}
+
+@keyframes zen-rice-submit-animation {
+  /* Scale and shake the dialog */
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.1);
+  }
+
+  100% {
+    transform: scale(1);
   }
 }

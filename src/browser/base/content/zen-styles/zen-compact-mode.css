@@ -1,3 +1,8 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 /* All overrides for compact mode go here */
 
 @media (-moz-bool-pref: 'zen.view.compact') {
@@ -119,7 +124,7 @@
       #navigator-toolbox[has-popup-menu],
       #navigator-toolbox[movingtab],
       #navigator-toolbox:has(.tabbrowser-tab:active),
-      #navigator-toolbox:has(*:is([open='true'], #nav-bar:focus-within):not(tab):not(.zen-compact-mode-ignore)) {
+      #navigator-toolbox:has(*:is([panelopen='true'], #nav-bar:focus-within):not(.zen-compact-mode-ignore)) {
         &:not([animate='true']) {
           transition: left 0.25s ease, right 0.25s ease;
           opacity: 1;
@@ -200,7 +205,7 @@
         & #zen-appcontent-navbar-container:focus-within,
         & #zen-appcontent-navbar-container[zen-user-show],
         & #zen-appcontent-navbar-container[has-popup-menu],
-        & #zen-appcontent-navbar-container:has(*[open='true']) {
+        & #zen-appcontent-navbar-container:has(*[panelopen='true']) {
           opacity: 1;
           border-top-width: 1px;
 

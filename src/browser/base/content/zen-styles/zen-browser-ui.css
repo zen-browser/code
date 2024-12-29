@@ -1,3 +1,8 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 
 #tabbrowser-tabpanels {
   background: transparent !important;
@@ -24,6 +29,51 @@
 #browser {
   width: 100%;
   background: var(--zen-main-browser-background);
+
+  will-change: background-color;
+
+  &::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 0;
+    pointer-events: none;
+    transition: backdrop-filter var(--inactive-window-transition);
+  }
+
+  @media (-moz-bool-pref: 'zen.theme.gradient') {
+    &[animating='true']::after {
+      background: var(--zen-main-browser-background-old);
+      backdrop-filter: blur(5px);
+      animation: zen-main-app-wrapper-animation .6s ease forwards;
+      transition: 0s;
+    }
+  }
+
+  @media (-moz-windows-accent-color-in-titlebar) {
+    background-color: var(--toolbox-non-lwt-bgcolor);
+    transition: background-color var(--inactive-window-transition);
+    &:-moz-window-inactive {
+      background-color: var(--toolbox-non-lwt-bgcolor-inactive);
+      color: var(--toolbox-non-lwt-textcolor-inactive);
+    }
+    &::after {
+      display: none;
+    }
+  }
+
+  @media (not (-moz-windows-accent-color-in-titlebar)) and (not (-moz-windows-mica)) {
+    transition: color var(--inactive-window-transition);
+    color: var(--toolbox-non-lwt-textcolor-inactive);
+    &:-moz-window-inactive {
+      &::after {
+        backdrop-filter: grayscale(0.8);
+      }
+    }
+  }
 
   &::before {
     content: '';
@@ -63,21 +113,6 @@
 
   & > * {
     z-index: 1;
-  }
-
-  @media (-moz-bool-pref: 'zen.theme.gradient') {
-    &[animating='true']::before {
-      content: '';
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: var(--zen-main-browser-background-old);
-      backdrop-filter: blur(5px);
-      animation: zen-main-app-wrapper-animation .5s ease-in-out forwards;
-      border-radius: env(-moz-gtk-csd-titlebar-radius);
-    }
   }
 }
 

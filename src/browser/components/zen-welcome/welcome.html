@@ -46,7 +46,6 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
           <p data-l10n-id="welcome-dialog-import-subtext"></p>
         </div>
         <button
-          class="primary"
           id="importBrowser"
           data-l10n-id="welcome-dialog-import-action"
         ></button>
@@ -58,12 +57,12 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
           <p data-l10n-id="welcome-dialog-theme-subtext"></p>
         </div>
         <div>
-          <h2 data-l10n-id="welcome-dialog-theme-header-1"></h2>
-          <div id="colorListWrapper">
+          <h2 data-l10n-id="welcome-dialog-theme-header-1" class="delay-animation"></h2>
+          <div id="colorListWrapper" class="delay-animation">
           </div>
-          <h2 data-l10n-id="welcome-dialog-theme-header-2"></h2>
+          <h2 data-l10n-id="welcome-dialog-theme-header-2" class="delay-animation"></h2>
           <div id="themeList" class="cardGroup">
-            <svg viewBox="0 0 700 700" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg viewBox="0 0 700 700" fill="none" xmlns="http://www.w3.org/2000/svg" class="delay-animation-2">
               <g clip-path="url(#clip0_404_2706)">
               <rect width="700" height="700" fill="#F4F4F4"/>
               <g filter="url(#filter0_d_404_2706)">
@@ -92,7 +91,7 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
               </clipPath>
               </defs>
             </svg>
-            <svg viewBox="0 0 700 700" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg viewBox="0 0 700 700" fill="none" xmlns="http://www.w3.org/2000/svg" class="delay-animation-2">
               <g clip-path="url(#clip0_404_2709)">
               <rect width="700" height="700" fill="#515151"/>
               <g filter="url(#filter0_d_404_2709)">
@@ -131,15 +130,15 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
           <p data-l10n-id="welcome-dialog-layout-subtext"></p>
         </div>
         <div id="layoutList" class="cardGroup">
-          <hbox layout="single" class="selected">
+          <hbox layout="single" class="selected delay-animation">
             <img src="chrome://browser/content/zen-images/layouts/single-toolbar.png" />
             <p data-l10n-id="welcome-dialog-layout-single-toolbar"></p>
           </hbox>
-          <hbox layout="multiple">
+          <hbox layout="multiple" class="delay-animation">
             <img src="chrome://browser/content/zen-images/layouts/multiple-toolbar.png" />
             <p data-l10n-id="welcome-dialog-layout-multiple-toolbar"></p>
           </hbox>
-          <hbox layout="collapsed">
+          <hbox layout="collapsed" class="delay-animation">
             <img src="chrome://browser/content/zen-images/layouts/collapsed.png" />
             <p data-l10n-id="welcome-dialog-layout-collapsed-toolbar"></p>
           </hbox>

@@ -44,13 +44,12 @@ We keep track of how many issues are closed at the end of the month in [docs/iss
 
 ### Versioning
 
-Zen uses [Semantic Versioning](https://semver.org/) for versioning. Meaning, versions are displayed as `a.b.c-d.e` where:
+Zen uses [Semantic Versioning](https://semver.org/) for versioning. Meaning, versions are displayed as `a.b-c.d` where:
 
 - `a` is the major version
 - `b` is the minor version
-- `c` is the patch version
-- `d` is the branch prefix
-- `e` is the build number
+- `c` is the branch prefix
+- `d` is the patch version
 
 ### Branches
 
@@ -133,15 +132,9 @@ Zen couldn't be in its current state without the help of these amazing projects!
 
 ### 🖥️ Comparison with other browsers
 
-As you can see, chromium based browsers are the most popular browsers, help us change that by starring the project and spreading the word! 🌟
+Thanks everyone for making zen stand out amongs these giants!
 
-<a href="https://star-history.com/#zen-browser/desktop&Date">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=zen-browser/desktop,chromium/chromium,brave/brave-browser&type=Date&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=zen-browser/desktop,chromium/chromium,brave/brave-browser&type=Date" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=chromium/chromium,zen-browser/desktop,brave/brave-browser&type=Date" />
- </picture>
-</a>
+[![Star History Chart](https://api.star-history.com/svg?repos=zen-browser/desktop,chromium/chromium,brave/brave-browser&type=Date)](https://star-history.com/#zen-browser/desktop&chromium/chromium&brave/brave-browser&Date)
 
 ## 📄 License
 

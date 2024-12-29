@@ -1,16 +1,8 @@
 diff --git a/browser/themes/shared/browser-shared.css b/browser/themes/shared/browser-shared.css
-index 08bc078c2572fb218b435e580ef71be2586989c3..e440b6dc3f331785c841e1702887f67a67e00e96 100644
+index 08bc078c2572fb218b435e580ef71be2586989c3..3d173cfcfe80e978683df760c132307f97d73ae6 100644
 --- a/browser/themes/shared/browser-shared.css
 +++ b/browser/themes/shared/browser-shared.css
-@@ -144,7 +144,6 @@ body {
-   transition: background-color var(--inactive-window-transition);
- 
-   &:-moz-window-inactive {
--    background-color: var(--toolbox-non-lwt-bgcolor-inactive);
-     color: var(--toolbox-non-lwt-textcolor-inactive);
-   }
- 
-@@ -163,6 +162,31 @@ body {
+@@ -163,6 +163,31 @@ body {
      border-bottom-color: var(--chrome-content-separator-color);
    }
  

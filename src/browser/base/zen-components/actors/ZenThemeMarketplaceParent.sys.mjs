@@ -34,6 +34,10 @@ export class ZenThemeMarketplaceParent extends JSWindowActorParent {
         this.checkForThemeUpdates();
         break;
       }
+      case 'ZenThemeMarketplace:RizePage': {
+        // TODO: Implement
+        break;
+      }
     }
   }
 

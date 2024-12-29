@@ -381,7 +381,7 @@
         document.getElementById("zen-rice-share-second-form").setAttribute("fade-out", "true");
         successBox.removeAttribute("hidden");
         const link = document.getElementById("zen-rice-share-success-link");
-        link.value = `${ZEN_RICE_API}/${slug}`;
+        link.value = `${ZEN_RICE_API}/rices/${slug}`;
         this.showConffetti();
       }, 2000);
     }

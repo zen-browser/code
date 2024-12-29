@@ -6,11 +6,36 @@ export class ZenThemeMarketplaceChild extends JSWindowActorChild {
   handleEvent(event) {
     switch (event.type) {
       case 'DOMContentLoaded':
-        this.initiateThemeMarketplace();
-        this.contentWindow.document.addEventListener('ZenCheckForThemeUpdates', this.checkForThemeUpdates.bind(this));
+        this.initalizeZenAPI(event);
         break;
       default:
     }
+  }
+
+  initalizeZenAPI(event) {
+    const verifier = this.contentWindow.document.querySelector('meta[name="zen-content-verified"]');
+    if (verifier) {
+      verifier.setAttribute('content', 'verified');
+    }
+    const possibleRicePage = this.collectRiceMetadata();
+    if (possibleRicePage) {
+      this.sendAsyncMessage('ZenThemeMarketplace:RizePage', { data: possibleRicePage });
+      return;
+    }
+    this.initiateThemeMarketplace();
+    this.contentWindow.document.addEventListener('ZenCheckForThemeUpdates', this.checkForThemeUpdates.bind(this));
+  }
+
+  collectRiceMetadata() {
+    const meta = this.contentWindow.document.querySelector('meta[name="rize-metadata"]');
+    if (meta) {
+      return {
+        id: meta.getAttribute('data-id'),
+        name: meta.getAttribute('data-title'),
+        author: meta.getAttribute('data-author'),
+      }
+    }
+    return null;
   }
 
   // This function will be caleld from about:preferences

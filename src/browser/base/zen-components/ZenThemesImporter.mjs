@@ -313,5 +313,5 @@ gZenActorsManager.addJSWindowActor("ZenThemeMarketplace", {
       DOMContentLoaded: {},
     },
   },
-  matches: [Services.prefs.getStringPref("zen.injections.match-urls").split(","), "about:preferences"],
+  matches: [...Services.prefs.getStringPref("zen.injections.match-urls").split(","), "about:preferences"],
 });

@@ -94,8 +94,8 @@ pref('zen.view.show-newtab-button-top', false);
 pref('zen.rice.api.url', 'https://share.zen-browser.app', locked);
 pref('zen.injections.match-urls', 'https://zen-browser.app/*,https://share.zen-browser.app/*', locked);
 #else
-pref('zen.rice.api.url', "http://localhost:3000", locked);
-pref('zen.injections.match-urls', 'http://localhost:3000/*', locked);
+pref('zen.rice.api.url', "http://localhost", locked);
+pref('zen.injections.match-urls', 'http://localhost/*', locked);
 #endif
 pref('zen.rice.share.notice.accepted', false);
 

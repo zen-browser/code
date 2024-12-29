@@ -992,6 +992,7 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
 
     workspacesList?.removeAttribute('reorder-mode');
     reorderModeButton?.removeAttribute('active');
+    this.resetWorkspaceIconSearch();
   }
 
   async moveWorkspaceToEnd(draggedWorkspaceId) {

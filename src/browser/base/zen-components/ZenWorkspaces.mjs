@@ -30,7 +30,7 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     
     Services.scriptloader.loadSubScript("chrome://browser/content/zen-components/ZenEmojies.mjs", this);
     this.gemojies = this.zenGlobalEmojis();
-    
+
     this.ownerWindow = window;
     XPCOMUtils.defineLazyPreferenceGetter(
       this,
@@ -618,7 +618,6 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
   conductSearch() {
     const container = document.getElementById('PanelUI-zen-workspaces-icon-picker-wrapper');
     const searchInput = document.getElementById('PanelUI-zen-workspaces-icon-search-input');
-    console.log(this.gemojies);
     const query = searchInput.value.toLowerCase();
     
     if (query === '') {

@@ -41,4 +41,5 @@ export VERBOSE=1
 
 # Enable polly for macos, since they have a more stable set of GPU drivers,
 # unlike Linux, which has a lot of different drivers.
-export POLLY="-mllvm -polly -mllvm -polly-2nd-level-tiling -mllvm -polly-loopfusion-greedy -mllvm -polly-pattern-matching-based-opts -mllvm -polly-position=before-vectorizer -mllvm -polly-vectorizer=stripmine"
+# Edit: let's run some experiments, see if RAM usage lowers significantly
+# export POLLY="-mllvm -polly -mllvm -polly-2nd-level-tiling -mllvm -polly-loopfusion-greedy -mllvm -polly-pattern-matching-based-opts -mllvm -polly-position=before-vectorizer -mllvm -polly-vectorizer=stripmine"

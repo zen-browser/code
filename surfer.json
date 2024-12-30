@@ -5,14 +5,15 @@
   "binaryName": "zen",
   "version": {
     "product": "firefox",
-    "version": "133.0.3"
+    "version": "134.0",
+    "candidate": "134.0"
   },
   "buildOptions": {
     "generateBranding": true
   },
   "addons": {},
   "brands": {
-    "beta": {
+    "stable": {
       "backgroundColor": "#282A33",
       "brandShorterName": "Zen",
       "brandShortName": "Zen Browser",

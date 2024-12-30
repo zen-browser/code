@@ -14,14 +14,14 @@ index f9e256b143786c18ba85859ca1b11182ab23f1aa..f60a8850305f1d7c2eadb6ac6996302f
 @@ -918,7 +918,7 @@
              let postTransitionCleanup = () => {
                tab.removeAttribute("tabdrop-samewindow");
- 
+
 -              this._finishAnimateTabMove();
 +              this._finishAnimateTabMove(true);
                if (dropIndex !== false) {
                  gBrowser.moveTabTo(tab, dropIndex);
                  if (incrementDropIndex) {
 @@ -928,7 +928,7 @@
- 
+
                gBrowser.syncThrobberAnimations(tab);
              };
 -            if (gReduceMotion) {
@@ -40,30 +40,30 @@ index f9e256b143786c18ba85859ca1b11182ab23f1aa..f60a8850305f1d7c2eadb6ac6996302f
          delete draggedTab._dragData;
          return;
 @@ -1328,7 +1329,7 @@
-         }
        }
- 
--      this.#allTabs = [...verticalPinnedTabsContainer.children, ...children];
-+      this.#allTabs = [...document.getElementById("zen-essentials-container").children, ...verticalPinnedTabsContainer.children, ...children];
+
+       this.#allTabs = [
+-      ...this.verticalPinnedTabsContainer.children,
++      ...document.getElementById("zen-essentials-container").children, ...verticalPinnedTabsContainer.children,
+         ...children,
+       ];
        return this.#allTabs;
-     }
- 
 @@ -1520,10 +1521,12 @@
- 
+
      _handleTabSelect(aInstant) {
        let selectedTab = this.selectedItem;
 -      if (this.overflowing) {
 -        this.arrowScrollbox.ensureElementIsVisible(selectedTab, aInstant);
 -      }
 +      this.arrowScrollbox.ensureElementIsVisible(selectedTab, aInstant);
- 
+
 +      if (!aInstant && Services.prefs.getBoolPref('zen.view.compact')
 +          && Services.prefs.getBoolPref('zen.view.compact.toolbar-flash-popup')) {
 +        gZenCompactModeManager.flashSidebar();
 +      }
        selectedTab._notselectedsinceload = false;
      }
- 
+
 @@ -1571,7 +1574,7 @@
          if (isEndTab && !this._hasTabTempMaxWidth) {
            return;
@@ -88,7 +88,7 @@ index f9e256b143786c18ba85859ca1b11182ab23f1aa..f60a8850305f1d7c2eadb6ac6996302f
        );
 -      let numPinned = gBrowser.pinnedTabCount;
 +      let numPinned = gBrowser._numVisiblePinTabs;
- 
+
        if (gBrowser.pinnedTabCount !== verticalTabsContainer.children.length) {
          let tabs = this.visibleTabs;
          for (let i = 0; i < numPinned; i++) {
@@ -97,28 +97,28 @@ index f9e256b143786c18ba85859ca1b11182ab23f1aa..f60a8850305f1d7c2eadb6ac6996302f
 +          tabs[i].hasAttribute("zen-essential") ? document.getElementById("zen-essentials-container").appendChild(tabs[i]) : verticalTabsContainer.appendChild(tabs[i]);
          }
        }
- 
+
 @@ -1681,7 +1684,7 @@
- 
+
      _positionPinnedTabs() {
        let tabs = this.visibleTabs;
 -      let numPinned = gBrowser.pinnedTabCount;
 +      let numPinned = gBrowser._numVisiblePinTabs;
        let absPositionHorizontalTabs =
          this.overflowing && tabs.length > numPinned && numPinned > 0;
- 
+
 @@ -1762,7 +1765,7 @@
          return;
        }
- 
+
 -      let tabs = this.visibleTabs.slice(0, gBrowser.pinnedTabCount);
 +      let tabs = this.visibleTabs.slice(0, gBrowser._numVisiblePinTabs);
- 
+
        let directionX = screenX > dragData.animLastScreenX;
        let directionY = screenY > dragData.animLastScreenY;
 @@ -1948,7 +1951,7 @@
        }
- 
+
        let pinned = draggedTab.pinned;
 -      let numPinned = gBrowser.pinnedTabCount;
 +      let numPinned = gBrowser._numVisiblePinTabs;
@@ -128,11 +128,11 @@ index f9e256b143786c18ba85859ca1b11182ab23f1aa..f60a8850305f1d7c2eadb6ac6996302f
 @@ -2140,8 +2143,8 @@
        );
      }
- 
+
 -    _finishAnimateTabMove() {
 -      if (!this.hasAttribute("movingtab")) {
 +    _finishAnimateTabMove(always = false) {
 +      if (!this.hasAttribute("movingtab") && !always) {
          return;
        }
- 
+

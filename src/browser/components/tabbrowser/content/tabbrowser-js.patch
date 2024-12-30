@@ -4,8 +4,8 @@ index fec3dc8129a4d235fdd05e0390145a02064ebaa5..65f0675f558bda9a1d02335418ffb92b
 +++ b/browser/components/tabbrowser/content/tabbrowser.js
 @@ -402,11 +402,26 @@
        return count;
-     },
- 
+     }
+
 +    get _numVisiblePinTabs() {
 +      let i = 0;
 +      for (let tab of this.tabs) {
@@ -17,7 +17,7 @@ index fec3dc8129a4d235fdd05e0390145a02064ebaa5..65f0675f558bda9a1d02335418ffb92b
 +        }
 +      }
 +      return i;
-+    },
++    }
 +
      get pinnedTabCount() {
 -      for (var i = 0; i < this.tabs.length; i++) {
@@ -30,20 +30,20 @@ index fec3dc8129a4d235fdd05e0390145a02064ebaa5..65f0675f558bda9a1d02335418ffb92b
 +        i++;
        }
        return i;
-     },
+     }
 @@ -800,7 +815,7 @@
+       this.showTab(aTab);
        if (this.tabContainer.verticalMode) {
-         let wasFocused = document.activeElement == this.selectedTab;
-         let oldPosition = aTab._tPos;
--        this.verticalPinnedTabsContainer.appendChild(aTab);
-+        aTab.hasAttribute("zen-essential") ? document.getElementById("zen-essentials-container").appendChild(aTab) : this.verticalPinnedTabsContainer.appendChild(aTab);
-         this._updateAfterMoveTabTo(aTab, oldPosition, wasFocused);
+         this._handleTabMove(aTab, () =>
+-          this.verticalPinnedTabsContainer.appendChild(aTab)
++          aTab.hasAttribute("zen-essential") ? document.getElementById("zen-essentials-container").appendChild(aTab) : this.verticalPinnedTabsContainer.appendChild(aTab);
+        );
        } else {
          this.moveTabTo(aTab, this.pinnedTabCount);
 @@ -1047,6 +1062,7 @@
- 
+
        let LOCAL_PROTOCOLS = ["chrome:", "about:", "resource:", "data:"];
- 
+
 +      try {
        if (
          aIconURL &&
@@ -55,7 +55,7 @@ index fec3dc8129a4d235fdd05e0390145a02064ebaa5..65f0675f558bda9a1d02335418ffb92b
 +      } catch (e) {
 +        console.warn(e);
 +      }
- 
+
        let browser = this.getBrowserForTab(aTab);
        browser.mIconURL = aIconURL;
 @@ -1286,6 +1305,7 @@
@@ -67,13 +67,13 @@ index fec3dc8129a4d235fdd05e0390145a02064ebaa5..65f0675f558bda9a1d02335418ffb92b
          // if this is the foreground window, update the last-seen timestamps.
          if (this.ownerGlobal == BrowserWindowTracker.getTopWindow()) {
 @@ -2371,7 +2391,7 @@
- 
+
        let panel = this.getPanel(browser);
        let uniqueId = this._generateUniquePanelID();
 -      panel.id = uniqueId;
 +      if (!panel.id?.startsWith("zen-")) panel.id = uniqueId;
        aTab.linkedPanel = uniqueId;
- 
+
        // Inject the <browser> into the DOM if necessary.
 @@ -2431,7 +2451,7 @@
        // hasSiblings=false on both the existing browser and the new browser.
@@ -87,7 +87,7 @@ index fec3dc8129a4d235fdd05e0390145a02064ebaa5..65f0675f558bda9a1d02335418ffb92b
 @@ -2651,6 +2671,12 @@
          );
        }
- 
+
 +      let hasZenDefaultUserContextId = false;
 +      let zenForcedWorkspaceId = undefined;
 +      if (typeof ZenWorkspaces !== "undefined") {
@@ -113,7 +113,7 @@ index fec3dc8129a4d235fdd05e0390145a02064ebaa5..65f0675f558bda9a1d02335418ffb92b
 @@ -2862,6 +2894,13 @@
          }
        }
- 
+
 +      requestAnimationFrame(() => {
 +        t.setAttribute("zen-initial-fadein", "true");
 +        setTimeout(() => {
@@ -150,7 +150,7 @@ index fec3dc8129a4d235fdd05e0390145a02064ebaa5..65f0675f558bda9a1d02335418ffb92b
            } else {
 @@ -3355,6 +3411,9 @@
              restoreTabsLazily && !select && !tabData.pinned;
- 
+
            let url = "about:blank";
 +
 +          gZenPinnedTabManager.resetPinnedTabData(tabData);
@@ -161,7 +161,7 @@ index fec3dc8129a4d235fdd05e0390145a02064ebaa5..65f0675f558bda9a1d02335418ffb92b
 @@ -3391,6 +3450,21 @@
              preferredRemoteType,
            });
- 
+
 +          if (tabData.zenWorkspace) {
 +            tab.setAttribute("zen-workspace-id", tabData.zenWorkspace);
 +          }
@@ -187,22 +187,22 @@ index fec3dc8129a4d235fdd05e0390145a02064ebaa5..65f0675f558bda9a1d02335418ffb92b
 -
          tab.initialize();
        }
- 
+
 @@ -3992,6 +4065,10 @@
          return;
        }
- 
+
 +      for (tab of selectedTabs) {
 +        gZenPinnedTabManager._removePinnedAttributes(tab, true);
 +      }
 +
        this.removeTabs(selectedTabs);
-     },
- 
+     }
+
 @@ -4309,6 +4386,13 @@
          TelemetryStopwatch.start("FX_TAB_CLOSE_TIME_NO_ANIM_MS", aTab);
        }
- 
+
 +      if (ZenWorkspaces.workspaceEnabled) {
 +        let newTab = ZenWorkspaces.handleTabBeforeClose(aTab);
 +        if (newTab) {
@@ -216,7 +216,7 @@ index fec3dc8129a4d235fdd05e0390145a02064ebaa5..65f0675f558bda9a1d02335418ffb92b
 @@ -4324,6 +4408,10 @@
        // state).
        let tabWidth = window.windowUtils.getBoundsWithoutFlushing(aTab).width;
- 
+
 +      if (aTab.hasAttribute("zen-glance-tab")) {
 +        gZenGlanceManager.closeGlance();
 +        return;
@@ -225,18 +225,18 @@ index fec3dc8129a4d235fdd05e0390145a02064ebaa5..65f0675f558bda9a1d02335418ffb92b
          !this._beginRemoveTab(aTab, {
            closeWindowFastpath: true,
 @@ -4472,7 +4560,7 @@
- 
-       var closeWindow = false;
-       var newTab = false;
--      if (aTab.visible && this.visibleTabs.length == 1) {
-+      if (aTab.visible && this.visibleTabs.length == 1 && !aTab._closingGlance) {
+         !!this.tabsInCollapsedTabGroups.length;
+       if (
+         aTab.visible &&
+-        this.visibleTabs.length == 1 &&
++        this.visibleTabs.length == 1 && !aTab._closingGlance
+         !anyRemainingTabsInCollapsedTabGroups
+       ) {
          closeWindow =
-           closeWindowWithLastTab != null
-             ? closeWindowWithLastTab
 @@ -5265,10 +5353,10 @@
        SessionStore.deleteCustomTabValue(aTab, "hiddenBy");
-     },
- 
+     }
+
 -    hideTab(aTab, aSource) {
 +    hideTab(aTab, aSource, forZenWorkspaces = false) {
        if (
@@ -270,7 +270,7 @@ index fec3dc8129a4d235fdd05e0390145a02064ebaa5..65f0675f558bda9a1d02335418ffb92b
 -      tabsToMove[0] == visibleTabs[gBrowser.pinnedTabCount];
 +      tabsToMove[0] == visibleTabs[gBrowser._numVisiblePinTabs];
      contextMoveTabToStart.disabled = isFirstTab && allSelectedTabsAdjacent;
- 
+
      document.getElementById("context_openTabInWindow").disabled =
 @@ -8376,6 +8465,7 @@ var TabContextMenu = {
      if (this.contextTab.multiselected) {

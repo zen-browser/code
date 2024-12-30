@@ -16,10 +16,10 @@ on:
       update_branch:
         description: 'Update branch with new version'
         required: true
-        default: 'beta'
+        default: 'stable'
         type: 'choice'
         options:
-          - 'beta'
+          - 'stable'
           - 'twilight'
   workflow_call:
     inputs:
@@ -36,7 +36,7 @@ on:
       update_branch:
         description: 'Update branch with new version'
         required: true
-        default: 'beta'
+        default: 'stable'
         type: 'string'
 
 jobs:
@@ -72,9 +72,7 @@ jobs:
           git status
           git branch --show-current
           branch="${{ inputs.update_branch }}"
-          if [[ $branch == "beta" ]]; then
-            branch="stable"
-          elif [[ $branch == "twilight" ]]; then
+          if [[ $branch == "twilight" ]]; then
             branch="dev"
           fi
           if [[ $(git branch --show-current) != $branch ]]; then
@@ -124,7 +122,7 @@ jobs:
           npm i -g @zen-browser/surfer
 
       - name: Bump version
-        if: ${{ inputs.update_version && inputs.update_branch == 'beta' }}
+        if: ${{ inputs.update_version && inputs.update_branch == 'stable' }}
         run: |
           pnpm surfer ci --brand ${{ inputs.update_branch }} --bump prerelease
 
@@ -362,7 +360,7 @@ jobs:
 
           if [ "${{ inputs.update_branch }}" = "twilight" ]; then
             sed -i -e 's/Name=Zen Browser/Name=Zen Twilight/g' AppDir/zen.desktop
-            sed -i -e 's/StartupWMClass=zen-beta/StartupWMClass=zen-twilight/g' AppDir/zen.desktop
+            sed -i -e 's/StartupWMClass=zen-stable/StartupWMClass=zen-twilight/g' AppDir/zen.desktop
           fi
 
           APPDIR=AppDir
@@ -402,7 +400,7 @@ jobs:
     needs: [build-data, linux, windows-step-3, check-release, mac, appimage, source]
     runs-on: ubuntu-latest
     environment:
-      name: ${{ inputs.update_branch == 'beta' && 'Deploy-Release' || 'Deploy-Twilight' }}
+      name: ${{ inputs.update_branch == 'stable' && 'Deploy-Release' || 'Deploy-Twilight' }}
 
     steps:
       - name: Checkout repository
@@ -441,7 +439,7 @@ jobs:
           cp -a ../linux_update_manifest_x86_64/.  updates/
           cp -a ../linux_update_manifest_aarch64/.  updates/
 
-          if [[ $RELEASE_BRANCH == 'beta' ]]; then
+          if [[ $RELEASE_BRANCH == 'stable' ]]; then
             cp -a ../.github/workflows/object/windows-x64-signed-x86_64/update_manifest/.  updates/
             cp -a ../.github/workflows/object/windows-x64-signed-arm64/update_manifest/.  updates/
           else
@@ -495,12 +493,12 @@ jobs:
 
       - name: Release
         uses: marvinpinto/action-automatic-releases@master
-        if: ${{ inputs.update_branch == 'beta' }}
+        if: ${{ inputs.update_branch == 'stable' }}
         with:
           repo_token: '${{ secrets.DEPLOY_KEY }}'
           automatic_release_tag: ${{ needs.build-data.outputs.version }}
           prerelease: false
-          title: 'Beta build - ${{ needs.build-data.outputs.version }} (${{ needs.build-data.outputs.build_date }})'
+          title: 'Stable build - ${{ needs.build-data.outputs.version }} (${{ needs.build-data.outputs.build_date }})'
           files: |
             zen.source.tar.gz
             zen.linux-x86_64.tar.bz2
@@ -523,7 +521,7 @@ jobs:
             zen.macos-aarch64.dmg
 
   prepare-flatpak:
-    if: ${{ inputs.create_release && inputs.update_branch == 'beta' }}
+    if: ${{ inputs.create_release && inputs.update_branch == 'stable' }}
     permissions: write-all
     name: Prepare Flatpak
     needs: [release, linux, build-data]
@@ -582,7 +580,7 @@ jobs:
         run: sleep 120
 
   release-flatpak:
-    if: ${{ inputs.create_release && inputs.update_branch == 'beta' }}
+    if: ${{ inputs.create_release && inputs.update_branch == 'stable' }}
     permissions: write-all
     name: Release Flatpak
     needs: [prepare-flatpak, build-data]

@@ -8,10 +8,6 @@
   border: 1px solid var(--zen-dialog-border-color);
 }
 
-#window-modal-dialog:not([zen-dialog-welcome-element='true']) .dialogBox:not(.spotlightBox) {
-  transform: translateY(-9px);
-}
-
 #window-modal-dialog[zen-dialog-welcome-element='true'] .dialogBox:not(.spotlightBox) {
   margin: 0 !important;
 }

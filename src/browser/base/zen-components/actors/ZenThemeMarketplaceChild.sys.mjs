@@ -18,8 +18,8 @@ export class ZenThemeMarketplaceChild extends JSWindowActorChild {
       verifier.setAttribute('content', 'verified');
     }
     const possibleRicePage = this.collectRiceMetadata();
-    if (possibleRicePage) {
-      this.sendAsyncMessage('ZenThemeMarketplace:RicePage', { data: possibleRicePage });
+    if (possibleRicePage?.id) {
+      this.sendAsyncMessage('ZenThemeMarketplace:RicePage', possibleRicePage);
       return;
     }
     this.initiateThemeMarketplace();
@@ -27,11 +27,11 @@ export class ZenThemeMarketplaceChild extends JSWindowActorChild {
   }
 
   collectRiceMetadata() {
-    const meta = this.contentWindow.document.querySelector('meta[name="rize-metadata"]');
+    const meta = this.contentWindow.document.querySelector('meta[name="zen-rice-data"]');
     if (meta) {
       return {
         id: meta.getAttribute('data-id'),
-        name: meta.getAttribute('data-title'),
+        name: meta.getAttribute('data-name'),
         author: meta.getAttribute('data-author'),
       }
     }

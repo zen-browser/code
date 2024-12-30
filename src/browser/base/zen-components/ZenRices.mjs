@@ -417,7 +417,9 @@
       frame.call(this);
     }
 
-    openRicePage({ id, name, author }) {
+    openRicePage({ name, id, author }) {
+      console.log("Opening rice page: ", name, id, author);
+      gBrowser.removeTab(gBrowser.selectedTab);
     }
   }
 

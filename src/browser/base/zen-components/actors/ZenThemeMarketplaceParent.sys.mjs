@@ -42,8 +42,7 @@ export class ZenThemeMarketplaceParent extends JSWindowActorParent {
   }
 
   openRicePage(window, data) {
-    console.info(this.browsingContext);
-    window.gZenThemeMarketplaceManager.openRicePage(data);
+    window.gZenThemePicker.riceManager.openRicePage(data);
   }
 
   compareversion(version1, version2) {

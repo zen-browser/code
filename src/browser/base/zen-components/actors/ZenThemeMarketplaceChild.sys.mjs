@@ -19,7 +19,7 @@ export class ZenThemeMarketplaceChild extends JSWindowActorChild {
     }
     const possibleRicePage = this.collectRiceMetadata();
     if (possibleRicePage) {
-      this.sendAsyncMessage('ZenThemeMarketplace:RizePage', { data: possibleRicePage });
+      this.sendAsyncMessage('ZenThemeMarketplace:RicePage', { data: possibleRicePage });
       return;
     }
     this.initiateThemeMarketplace();

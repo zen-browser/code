@@ -416,6 +416,9 @@
       }
       frame.call(this);
     }
+
+    openRicePage({ id, name, author }) {
+    }
   }
 
   window.ZenRiceManager = ZenRiceManager;

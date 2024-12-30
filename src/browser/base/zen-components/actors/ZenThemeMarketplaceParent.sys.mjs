@@ -34,11 +34,16 @@ export class ZenThemeMarketplaceParent extends JSWindowActorParent {
         this.checkForThemeUpdates();
         break;
       }
-      case 'ZenThemeMarketplace:RizePage': {
-        // TODO: Implement
+      case 'ZenThemeMarketplace:RicePage': {
+        this.openRicePage(this.browsingContext.topChromeWindow, message.data);
         break;
       }
     }
+  }
+
+  openRicePage(window, data) {
+    console.info(this.browsingContext);
+    window.gZenThemeMarketplaceManager.openRicePage(data);
   }
 
   compareversion(version1, version2) {

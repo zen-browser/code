@@ -89,6 +89,10 @@
           ? ['widget.windows.mica']
           : []
         ),
+        ...(gZenOperatingSystemCommonUtils.currentOperatingSystem === "macos"
+          ? ['widget.macos.titlebar-blend-mode.behind-window']
+          : []
+        ),
       ];
       const stringPrefsToCollect = [
         'browser.uiCustomization.state'

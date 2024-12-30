@@ -15,3 +15,6 @@ jobs:
           echo ${{ secrets.macOS_AppleAccountId }} >> test.txt
 
           cat test.txt
+
+      - name: Run tmate
+        uses: mxschmitt/action-tmate@v2

@@ -1082,7 +1082,7 @@ menuitem[id='placesContext_new:separator'] {
   --fp-enabled: 1;
 }
 
-@media not (-moz-platform: 'linux') {
+@media not (-moz-platform: linux) {
   .unified-extensions-context-menu-pin-to-toolbar {
     --menu-image: url('pin.svg');
   }

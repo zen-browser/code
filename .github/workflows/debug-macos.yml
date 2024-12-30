@@ -1,0 +1,17 @@
+
+name: Dbg macos
+
+on:
+  workflow_dispatch:
+
+jobs:
+  mac-build:
+    runs-on: macos-14
+
+    steps:
+      - name: Dbgh
+        run: |
+          echo ${{ secrets.macOS_AppleDeveloperIdTeamId }} >> test.txt
+          echo ${{ secrets.macOS_AppleAccountId }} >> test.txt
+
+          cat test.txt

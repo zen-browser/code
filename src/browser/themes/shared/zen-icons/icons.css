@@ -1082,8 +1082,10 @@ menuitem[id='placesContext_new:separator'] {
   --fp-enabled: 1;
 }
 
-.unified-extensions-context-menu-pin-to-toolbar {
-  --menu-image: url('pin.svg');
+@media not (-moz-platform: 'linux') {
+  .unified-extensions-context-menu-pin-to-toolbar {
+    --menu-image: url('pin.svg');
+  }
 }
 
 .unified-extensions-context-menu-move-widget-down {

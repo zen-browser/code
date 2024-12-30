@@ -1,7 +1,7 @@
 {
   "name": "Zen Browser",
   "vendor": "Zen OSS Team",
-  "appId": "app.zen-browser.zenbrowser",
+  "appId": "app.zen-browser.zen",
   "binaryName": "zen",
   "version": {
     "product": "firefox",

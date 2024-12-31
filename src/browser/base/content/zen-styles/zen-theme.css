@@ -78,7 +78,7 @@
   --button-background-color-active: var(--in-content-primary-button-background-active) !important;
 
   --color-accent-primary: var(--button-primary-bgcolor) !important;
-  --color-accent-primary-hover: var(--button-primary-hover-bgcolor) !important;
+  --color-accent-primary-hover: var(--zen-colors-primary-foreground) !important;
   --color-accent-primary-active: var(--button-primary-active-bgcolor) !important;
 
   --link-color: var(--zen-branding-bg-reverse) !important;

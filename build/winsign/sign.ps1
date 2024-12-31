@@ -29,7 +29,7 @@ echo "Downloaded x86_64 artifacts"
 
 mkdir engine\obj-x86_64-pc-windows-msvc\ -ErrorAction SilentlyContinue
 
-pnpm surfer ci --brand beta
+pnpm surfer ci --brand stable
 
 function SignAndPackage($name) {
     echo "Executing on $name"

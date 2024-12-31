@@ -45,7 +45,7 @@ jobs:
         run: npm install -g pnpm
 
       - name: Install Surfer
-        run: npm i -g @zen-browser/surfer@1.7.0
+        run: npm i -g @zen-browser/surfer
 
       - name: Download artifact
         if: ${{ matrix.arch == 'x86_64' }}

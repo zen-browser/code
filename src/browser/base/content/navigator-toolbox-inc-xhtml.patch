@@ -1,15 +1,15 @@
 diff --git a/browser/base/content/navigator-toolbox.inc.xhtml b/browser/base/content/navigator-toolbox.inc.xhtml
-index eb2d8670874bd5bcaf9253caafb98444cb8cfcd9..51e6c01c279e0105ec8ac08df0763027179c0616 100644
+index 00391af141d9015fe5839534e5e6b22a91ba65d9..17d8ac96986e698b09033b870c24fc2f61c47a05 100644
 --- a/browser/base/content/navigator-toolbox.inc.xhtml
 +++ b/browser/base/content/navigator-toolbox.inc.xhtml
 @@ -2,7 +2,7 @@
  # License, v. 2.0. If a copy of the MPL was not distributed with this
  # file, You can obtain one at http://mozilla.org/MPL/2.0/.
-
+ 
 -<toolbox id="navigator-toolbox" class="browser-toolbox-background">
 +<toolbox id="navigator-toolbox" class="browser-toolbox-background" persist="width style">
    <script src="chrome://browser/content/navigator-toolbox.js" />
-
+ 
    <!-- Menu -->
 @@ -19,7 +19,7 @@
      <spacer flex="1" skipintoolbarset="true" style="order: 1000;"/>
@@ -21,9 +21,9 @@ index eb2d8670874bd5bcaf9253caafb98444cb8cfcd9..51e6c01c279e0105ec8ac08df0763027
             class="browser-toolbar browser-titlebar"
             fullscreentoolbar="true"
 @@ -32,7 +32,7 @@
-
+ 
      <hbox class="titlebar-spacer" type="pre-tabs"/>
-
+ 
 -    <hbox flex="1" align="end" class="toolbar-items">
 +    <hbox flex="1" align="start" class="toolbar-items">
        <toolbartabstop/>
@@ -36,7 +36,7 @@ index eb2d8670874bd5bcaf9253caafb98444cb8cfcd9..51e6c01c279e0105ec8ac08df0763027
 +                       hidden="true"
                         cui-areatype="toolbar"
                         removable="true"/>
-
+ 
 @@ -55,9 +56,14 @@
  # significantly, there is an optimization in
  # DisplayPortUtils::MaybeCreateDisplayPortInFirstScrollFrameEncountered based
@@ -81,5 +81,5 @@ index eb2d8670874bd5bcaf9253caafb98444cb8cfcd9..51e6c01c279e0105ec8ac08df0763027
  #include titlebar-items.inc.xhtml
 +#endif
    </toolbar>
-
+ 
    <toolbar id="PersonalToolbar"

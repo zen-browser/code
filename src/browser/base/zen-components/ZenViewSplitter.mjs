@@ -86,12 +86,6 @@ class ZenViewSplitter extends ZenDOMOperatedFeature {
       () => document.getElementById('zen-splitview-dropzone')
     );
 
-    ChromeUtils.defineLazyGetter(
-      this,
-      'sidebarBox',
-      () => document.getElementById('sidebar-box')
-    );
-
     window.addEventListener('TabClose', this.handleTabClose.bind(this));
     this.initializeContextMenu();
     this.insertPageActionButton();
@@ -221,31 +215,6 @@ class ZenViewSplitter extends ZenDOMOperatedFeature {
     if (!wrapper) return;
 
     wrapper.setAttribute('hidden', !value);
-  }
-
-  /**
-   * Updates the padding on the wrapper to account for sidebar width
-   * and properly align vertical splitters
-   */
-  updateWrapperDisplay() {
-    const wrapper = this.overlay?.parentNode;
-    if (!wrapper) return;
-    
-    const isRight = this.sidebarBox.getAttribute('positionend') !== null;
-    const sidebarShown = this.sidebarBox.getAttribute('hidden') === null;
-    const sidebarWidth = this.sidebarBox.style.width;
-
-    if (!sidebarShown) {
-      wrapper.style.paddingLeft = 0;
-      wrapper.style.paddingRight = 0;
-    }
-    else if (isRight) {
-      wrapper.style.paddingLeft = 0;
-      wrapper.style.paddingRight = sidebarWidth;
-    } else {
-      wrapper.style.paddingLeft = sidebarWidth;
-      wrapper.style.paddingRight = 0;
-    }
   }
 
   enableTabRearrangeView() {
@@ -781,7 +750,6 @@ class ZenViewSplitter extends ZenDOMOperatedFeature {
     this.updateSplitViewButton(false);
     this.applyGridToTabs(splitData.tabs);
     this.applyGridLayout(splitData.layoutTree);
-    this.updateWrapperDisplay();
     this.toggleWrapperDisplay(true);
   }
 

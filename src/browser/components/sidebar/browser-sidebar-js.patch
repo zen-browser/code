@@ -1,35 +1,8 @@
 diff --git a/browser/components/sidebar/browser-sidebar.js b/browser/components/sidebar/browser-sidebar.js
-index e95aa93e912d97aca2f60bf094562ea43a8d179b..166497ed26b075995b2151c5f841dc5dd6d20699 100644
+index 4a124003976684e014435854aef69ce29da541d2..61ce44751c36eea3e5ae2ddcc62e42c01459629b 100644
 --- a/browser/components/sidebar/browser-sidebar.js
 +++ b/browser/components/sidebar/browser-sidebar.js
-@@ -246,6 +246,8 @@ var SidebarController = {
-   _localesObserverAdded: false,
-   _mainResizeObserverAdded: false,
-   _mainResizeObserver: null,
-+  _sidebarResizeObserverAdded: false,
-+  _sidebarResizeObserver: null,
-   _ongoingAnimations: [],
- 
-   /**
-@@ -334,6 +336,17 @@ var SidebarController = {
-       sidebarBox.style.maxWidth = `calc(75vw - ${entry.contentBoxSize[0].inlineSize}px)`;
-     });
- 
-+    if (this._sidebarResizeObserver) {
-+      this._sidebarResizeObserver.disconnect();
-+    }
-+    this._sidebarResizeObserver = new ResizeObserver(async () => {
-+      gZenViewSplitter.updateWrapperDisplay();
-+    })
-+    if (!this._sidebarResizeObserverAdded) {
-+      this._sidebarResizeObserver.observe(this._box);
-+      this._sidebarResizeObserverAdded = true;
-+    }
-+
-     if (this.sidebarRevampEnabled) {
-       if (!customElements.get("sidebar-main")) {
-         ChromeUtils.importESModule(
-@@ -654,7 +667,7 @@ var SidebarController = {
+@@ -578,7 +578,7 @@ var SidebarController = {
     */
    setPosition() {
      // First reset all ordinals to match DOM ordering.
@@ -38,7 +11,7 @@ index e95aa93e912d97aca2f60bf094562ea43a8d179b..166497ed26b075995b2151c5f841dc5d
      [...browser.children].forEach((node, i) => {
        node.style.order = i + 1;
      });
-@@ -668,9 +681,10 @@ var SidebarController = {
+@@ -592,9 +592,10 @@ var SidebarController = {
        let boxOrdinal = this._box.style.order;
        this._box.style.order = tabbox.style.order;
  
@@ -51,7 +24,7 @@ index e95aa93e912d97aca2f60bf094562ea43a8d179b..166497ed26b075995b2151c5f841dc5d
        // Indicate we've switched ordering to the box
        this._box.toggleAttribute("positionend", true);
        sidebarMain.toggleAttribute("positionend", true);
-@@ -681,9 +695,15 @@ var SidebarController = {
+@@ -603,6 +604,9 @@ var SidebarController = {
        this._box.toggleAttribute("positionend", false);
        sidebarMain.toggleAttribute("positionend", false);
        sidebarContainer.toggleAttribute("positionend", false);
@@ -61,9 +34,3 @@ index e95aa93e912d97aca2f60bf094562ea43a8d179b..166497ed26b075995b2151c5f841dc5d
        this.toolbarButton &&
          this.toolbarButton.toggleAttribute("positionend", false);
      }
-+    
-+    // Update split view wrapper padding
-+    gZenViewSplitter.updateWrapperDisplay();
- 
-     this.hideSwitcherPanel();
- 

@@ -1122,4 +1122,9 @@ Preferences.addAll([
     type: "bool",
     default: true,
   },
+  {
+    id: "zen.tabs.open-newtab-by-dblclick",
+    type: "bool",
+    default: true,
+  },
 ]);

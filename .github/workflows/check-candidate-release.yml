@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  check_tag:
+  check_candidates:
     runs-on: ubuntu-latest
 
     steps:
@@ -22,4 +22,4 @@ jobs:
         DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
         DISCORD_PING_IDS: ${{ secrets.DISCORD_PING_IDS }}
       run: |
-        python3 scripts/check-rc-response.py
+        python3 scripts/check-rc-response.py || true

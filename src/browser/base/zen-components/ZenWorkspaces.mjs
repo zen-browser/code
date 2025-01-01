@@ -27,9 +27,6 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
       console.warn('ZenWorkspaces: !!! ZenWorkspaces is disabled in hidden windows !!!');
       return; // We are in a hidden window, don't initialize ZenWorkspaces
     }
-    
-    Services.scriptloader.loadSubScript("chrome://browser/content/zen-components/ZenEmojies.mjs", this);
-    this.gemojies = this.zenGlobalEmojis();
 
     this.ownerWindow = window;
     XPCOMUtils.defineLazyPreferenceGetter(
@@ -185,7 +182,7 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
       // Determine scroll direction
       let rawDirection = delta > 0 ? 1 : -1;
 
-      let direction = this.naturalScroll ? -1 : 1; 
+      let direction = this.naturalScroll ? -1 : 1;
       this.changeWorkspaceShortcut(rawDirection * direction);
 
       this._lastScrollTime = currentTime;
@@ -261,11 +258,11 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     event.stopPropagation();
     const isRTL = document.documentElement.matches(':-moz-locale-dir(rtl)');
     const moveForward = (this._swipeState.direction === 'right') !== isRTL;
-    
+
     let rawDirection = moveForward ? 1 : -1;
     if (this._swipeState.direction) {
-        
-      let direction = this.naturalScroll ? -1 : 1; 
+
+      let direction = this.naturalScroll ? -1 : 1;
       this.changeWorkspaceShortcut(rawDirection * direction);
     }
 
@@ -486,20 +483,20 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
       return icons;
     }
     const emojiScores = [];
-  
+
     function calculateSearchScore(inputLength, targetLength, weight = 100) {
       return parseInt((inputLength / targetLength) * weight);
     }
-    
+
     for (let currentEmoji of icons) {
       let alignmentScore = -1;
-    
+
       let normalizedEmojiName = currentEmoji[1].toLowerCase();
       let keywordList = currentEmoji[2].split(',').map(keyword => keyword.trim().toLowerCase());
       if (input[0] === ":") {
         let searchTerm = input.slice(1);
         let nameMatchIndex = normalizedEmojiName.indexOf(searchTerm);
-    
+
         if (nameMatchIndex !== -1 && nameMatchIndex === 0) {
           alignmentScore = calculateSearchScore(searchTerm.length, normalizedEmojiName.length, 100);
         }
@@ -510,7 +507,7 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
         let nameMatchIndex = normalizedEmojiName.replace(/_/g, ' ').indexOf(input);
         if (nameMatchIndex !== -1) {
           if (nameMatchIndex === 0) {
-            alignmentScore = calculateSearchScore(input.length, normalizedEmojiName.length, 150); 
+            alignmentScore = calculateSearchScore(input.length, normalizedEmojiName.length, 150);
           } else if (input[input.length - 1] !== " ") {
             alignmentScore += calculateSearchScore(input.length, normalizedEmojiName.length, 40);
           }
@@ -527,13 +524,13 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
         }
       }
 
-      //if match score is not -1, add it 
+      //if match score is not -1, add it
       if (alignmentScore !== -1) {
         emojiScores.push({ "emoji": currentEmoji[0], "score": alignmentScore });
       }
     }
     // Sort the emojis by their score in descending order
-    emojiScores.sort((a, b) => b.Score - a.Score);
+    emojiScores.sort((a, b) => b.score - a.score);
 
     // Return the emojis in the order of their rank
     let filteredEmojiScores = emojiScores;
@@ -547,9 +544,10 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     // Clear the search input field
     searchInput.value = '';
     for (let button of container.querySelectorAll('.toolbarbutton-1')) {
-      button.style.display = ''; 
+      button.style.display = '';
     }
   }
+
   _initializeWorkspaceCreationIcons() {
     let container = document.getElementById('PanelUI-zen-workspaces-icon-picker-wrapper');
     let searchInput = document.getElementById('PanelUI-zen-workspaces-icon-search-input');
@@ -581,19 +579,19 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     const container = document.getElementById('PanelUI-zen-workspaces-icon-picker-wrapper');
     const searchInput = document.getElementById('PanelUI-zen-workspaces-icon-search-input');
     const query = searchInput.value.toLowerCase();
-    
+
     if (query === '') {
       this.resetWorkspaceIconSearch();
       return;
     }
-  
+
     const buttons = Array.from(container.querySelectorAll('.toolbarbutton-1'));
     buttons.forEach(button => button.style.display = 'none');
-  
-    const filteredIcons = this.searchIcons(query, this.gemojies);
-  
+
+    const filteredIcons = this.searchIcons(query, this.emojis);
+
     filteredIcons.forEach(emoji => {
-      const matchingButton = buttons.find(button => 
+      const matchingButton = buttons.find(button =>
         button.getAttribute('label') === emoji
       );
       if (matchingButton) {
@@ -960,6 +958,7 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     workspacesList?.removeAttribute('reorder-mode');
     reorderModeButton?.removeAttribute('active');
     this.resetWorkspaceIconSearch();
+    this.clearEmojis();
   }
 
   async moveWorkspaceToEnd(draggedWorkspaceId) {
@@ -1646,12 +1645,27 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     await this.openEditDialog(this._contextMenuId);
   }
 
+  get emojis() {
+    if (this._emojis) {
+      return this._emojis;
+    }
+    const lazy = {};
+    Services.scriptloader.loadSubScript("chrome://browser/content/zen-components/ZenEmojies.mjs", lazy);
+    this._emojis = lazy.zenGlobalEmojis();
+    return this._emojis;
+  }
+
+  clearEmojis() {
+    // Unload from memory
+    this._emojis = null;
+  }
+
   async changeWorkspaceShortcut(offset = 1){
     // Cycle through workspaces
     let workspaces = await this._workspaces();
     let activeWorkspace = await this.getActiveWorkspace();
     let workspaceIndex = workspaces.workspaces.indexOf(activeWorkspace);
-    
+
     // note: offset can be negative
     let targetIndex = workspaceIndex + offset;
     if (this.shouldWrapAroundNavigation) {

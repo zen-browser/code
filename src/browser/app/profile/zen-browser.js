@@ -388,7 +388,6 @@ pref("browser.formfill.enable", false);
 pref("security.insecure_connection_text.enabled", true);
 pref("security.insecure_connection_text.pbmode.enabled", true);
 pref("network.IDN_show_punycode", true);
-pref("signon.rememberSignons", false);
 
 // Telemetry
 pref("datareporting.policy.dataSubmissionEnabled", false, locked);

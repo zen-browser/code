@@ -27,6 +27,10 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
       console.warn('ZenWorkspaces: !!! ZenWorkspaces is disabled in hidden windows !!!');
       return; // We are in a hidden window, don't initialize ZenWorkspaces
     }
+    
+    Services.scriptloader.loadSubScript("chrome://browser/content/zen-components/ZenEmojies.mjs", this);
+    this.gemojies = this.zenGlobalEmojis();
+
     this.ownerWindow = window;
     XPCOMUtils.defineLazyPreferenceGetter(
       this,
@@ -475,11 +479,84 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     typeof Intl.Segmenter !== 'undefined' ? new Intl.Segmenter().segment(icon).containing().segment : Array.from(icon)[0]
   );
 
+  searchIcons(input, icons) {
+    input = input.toLowerCase();
+
+    if ((input === ':') || (input === '')) {
+      return icons;
+    }
+    const emojiScores = [];
+  
+    function calculateSearchScore(inputLength, targetLength, weight = 100) {
+      return parseInt((inputLength / targetLength) * weight);
+    }
+    
+    for (let currentEmoji of icons) {
+      let alignmentScore = -1;
+    
+      let normalizedEmojiName = currentEmoji[1].toLowerCase();
+      let keywordList = currentEmoji[2].split(',').map(keyword => keyword.trim().toLowerCase());
+      if (input[0] === ":") {
+        let searchTerm = input.slice(1);
+        let nameMatchIndex = normalizedEmojiName.indexOf(searchTerm);
+    
+        if (nameMatchIndex !== -1 && nameMatchIndex === 0) {
+          alignmentScore = calculateSearchScore(searchTerm.length, normalizedEmojiName.length, 100);
+        }
+      } else {
+        if (input === currentEmoji[0]) {
+          alignmentScore = 999;
+        }
+        let nameMatchIndex = normalizedEmojiName.replace(/_/g, ' ').indexOf(input);
+        if (nameMatchIndex !== -1) {
+          if (nameMatchIndex === 0) {
+            alignmentScore = calculateSearchScore(input.length, normalizedEmojiName.length, 150); 
+          } else if (input[input.length - 1] !== " ") {
+            alignmentScore += calculateSearchScore(input.length, normalizedEmojiName.length, 40);
+          }
+        }
+        for (let keyword of keywordList) {
+          let keywordMatchIndex = keyword.indexOf(input);
+          if (keywordMatchIndex !== -1) {
+            if (keywordMatchIndex === 0) {
+              alignmentScore += calculateSearchScore(input.length, keyword.length, 50);
+            } else if (input[input.length - 1] !== " ") {
+              alignmentScore += calculateSearchScore(input.length, keyword.length, 5);
+            }
+          }
+        }
+      }
+
+      //if match score is not -1, add it 
+      if (alignmentScore !== -1) {
+        emojiScores.push({ "emoji": currentEmoji[0], "score": alignmentScore });
+      }
+    }
+    // Sort the emojis by their score in descending order
+    emojiScores.sort((a, b) => b.Score - a.Score);
+
+    // Return the emojis in the order of their rank
+    let filteredEmojiScores = emojiScores;
+    return filteredEmojiScores.map(score => score.emoji);
+  }
+
+  resetWorkspaceIconSearch(){
+    let container = document.getElementById('PanelUI-zen-workspaces-icon-picker-wrapper');
+    let searchInput = document.getElementById('PanelUI-zen-workspaces-icon-search-input');
+
+    // Clear the search input field
+    searchInput.value = '';
+    for (let button of container.querySelectorAll('.toolbarbutton-1')) {
+      button.style.display = ''; 
+    }
+  }
   _initializeWorkspaceCreationIcons() {
     let container = document.getElementById('PanelUI-zen-workspaces-icon-picker-wrapper');
+    let searchInput = document.getElementById('PanelUI-zen-workspaces-icon-search-input');
+    searchInput.value = '';
     for (let icon of this._kIcons) {
       let button = document.createXULElement('toolbarbutton');
-      button.className = 'toolbarbutton-1';
+      button.className = 'toolbarbutton-1 workspace-icon-button';
       button.setAttribute('label', icon);
       button.onclick = (event) => {
         const button = event.target;
@@ -498,6 +575,32 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
       };
       container.appendChild(button);
     }
+  }
+
+  conductSearch() {
+    const container = document.getElementById('PanelUI-zen-workspaces-icon-picker-wrapper');
+    const searchInput = document.getElementById('PanelUI-zen-workspaces-icon-search-input');
+    const query = searchInput.value.toLowerCase();
+    
+    if (query === '') {
+      this.resetWorkspaceIconSearch();
+      return;
+    }
+  
+    const buttons = Array.from(container.querySelectorAll('.toolbarbutton-1'));
+    buttons.forEach(button => button.style.display = 'none');
+  
+    const filteredIcons = this.searchIcons(query, this.gemojies);
+  
+    filteredIcons.forEach(emoji => {
+      const matchingButton = buttons.find(button => 
+        button.getAttribute('label') === emoji
+      );
+      if (matchingButton) {
+        matchingButton.style.display = '';
+        container.appendChild(matchingButton);
+      }
+    });
   }
 
   async saveWorkspace(workspaceData) {
@@ -856,6 +959,7 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
 
     workspacesList?.removeAttribute('reorder-mode');
     reorderModeButton?.removeAttribute('active');
+    this.resetWorkspaceIconSearch();
   }
 
   async moveWorkspaceToEnd(draggedWorkspaceId) {

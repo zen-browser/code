@@ -809,7 +809,7 @@
   min-width: unset !important;
 
   :root[zen-sidebar-expanded='true'] & {
-    --toolbarbutton-inner-padding: calc(var(--zen-toolbar-button-inner-padding) - 2px) !important;
+    --toolbarbutton-inner-padding: var(--zen-toolbar-button-inner-padding) !important;
   }
 
   & #zen-sidebar-top-buttons-customization-target {

@@ -29,12 +29,12 @@ def get_pings():
   return pings
 
 def send_webhook(rc: str):
-  text = "Sending a PR to update the current version to %s goo %s" % (rc, get_pings())
+  text = "||%s|| New Firefox RC version is available: **%s**" % (get_pings(), rc)
   webhook_url = os.getenv('DISCORD_WEBHOOK_URL') #os.getenv('DISCORD_WEBHOOK_URL')
   message = {
     "content": text,
-    "username": "GO-WORK",
-    "avatar_url": "https://zen-browser.app/favicon.svg",
+    "username": "Firefox RC Checker",
+    "avatar_url": "https://avatars.githubusercontent.com/u/189789277?v=4",
   }
   response = requests.post(webhook_url, json=message)
   if response.status_code == 204:

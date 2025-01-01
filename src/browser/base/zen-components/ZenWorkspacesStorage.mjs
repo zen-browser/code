@@ -4,6 +4,7 @@ var ZenWorkspacesStorage = {
   async init() {
     ChromeUtils.defineESModuleGetters(this.lazy, {
       PlacesUtils: "resource://gre/modules/PlacesUtils.sys.mjs",
+      Weave: "resource://services-sync/main.sys.mjs",
     });
 
     await this._ensureTable();
@@ -65,11 +66,10 @@ var ZenWorkspacesStorage = {
         CREATE INDEX IF NOT EXISTS idx_zen_workspaces_changes_uuid ON zen_workspaces_changes(uuid)
       `);
 
-      if (!Weave.Service.engineManager.get('workspaces')) {
-        Weave.Service.engineManager.register(ZenWorkspacesEngine);
+      if (!this.lazy.Weave.Service.engineManager.get('workspaces')) {
+        this.lazy.Weave.Service.engineManager.register(ZenWorkspacesEngine);
         await ZenWorkspacesStorage.migrateWorkspacesFromJSON();
       }
-
     });
   },
 

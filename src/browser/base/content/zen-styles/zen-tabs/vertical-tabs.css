@@ -812,6 +812,10 @@
     --toolbarbutton-inner-padding: var(--zen-toolbar-button-inner-padding) !important;
   }
 
+  :root[zen-single-toolbar='true'] & {
+    --toolbarbutton-inner-padding: calc(var(--zen-toolbar-button-inner-padding) - 2px) !important;
+  }
+
   & #zen-sidebar-top-buttons-customization-target {
     height: 100%;
     align-items: center;

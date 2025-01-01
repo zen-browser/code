@@ -41,7 +41,7 @@
     bottom: 0;
     z-index: 0;
     pointer-events: none;
-    transition: backdrop-filter var(--inactive-window-transition);
+    transition: background-color var(--inactive-window-transition);
   }
 
   @media (-moz-bool-pref: 'zen.theme.gradient') {

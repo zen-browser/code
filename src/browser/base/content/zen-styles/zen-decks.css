@@ -51,7 +51,7 @@
 
 #tabbrowser-tabbox:has(#tabbrowser-tabpanels[zen-split-view='true']) {
   --zen-split-row-gap: calc(var(--zen-element-separation) + 1px);
-  --zen-split-column-gap: calc(var(--zen-element-separation) + 1px);
+  --zen-split-column-gap: calc(var(--zen-element-separation)*3 + 1px);
   margin-right: calc(-1 * var(--zen-split-column-gap));
 
   :root[zen-right-side='true'] & {

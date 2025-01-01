@@ -173,6 +173,8 @@ jobs:
         run: |
           set -x
           export SURFER_PLATFORM="win32"
+          export ZEN_CROSS_COMPILING=1
+          export ZEN_RELEASE=1
           pnpm package
           mv ./dist/zen-$(pnpm surfer get version | xargs).en-US.win64${{ matrix.arch == 'aarch64' && '-aarch64' || '' }}.zip zen.win64.zip
           ls ./dist

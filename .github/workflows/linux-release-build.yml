@@ -143,6 +143,7 @@ jobs:
           SURFER_COMPAT: ${{ matrix.arch }}
         run: |
           export SURFER_PLATFORM="linux"
+          export ZEN_RELEASE=1
           pnpm package
 
       - name: Rename artifacts

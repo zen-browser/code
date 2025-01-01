@@ -140,6 +140,7 @@ jobs:
         run: |
           export SURFER_PLATFORM="darwin"
           export MACOS_APPLE_DEVELOPER_ID="${{ secrets.macOS_AppleDeveloperId }}"
+          export ZEN_RELEASE=1
           pnpm package
 
       - name: Rename artifacts

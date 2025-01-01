@@ -54,11 +54,12 @@
   }
 
   @media (-moz-windows-accent-color-in-titlebar) {
-    background-color: var(--toolbox-non-lwt-bgcolor);
+    background-color: var(--toolbox-bgcolor);
+    color: var(--toolbox-textcolor);
     transition: background-color var(--inactive-window-transition);
     &:-moz-window-inactive {
-      background-color: var(--toolbox-non-lwt-bgcolor-inactive);
-      color: var(--toolbox-non-lwt-textcolor-inactive);
+      background-color: var(--toolbox-bgcolor-inactive);
+      color: var(--toolbox-textcolor-inactive);
     }
     &::after {
       display: none;
@@ -67,10 +68,10 @@
 
   @media (not (-moz-windows-accent-color-in-titlebar)) and (not (-moz-windows-mica)) {
     transition: color var(--inactive-window-transition);
-    color: var(--toolbox-non-lwt-textcolor-inactive);
     &:-moz-window-inactive {
       &::after {
-        backdrop-filter: grayscale(0.8);
+        background-color: var(--toolbox-bgcolor-inactive);
+        color: var(--toolbox-textcolor-inactive);
       }
     }
   }

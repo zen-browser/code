@@ -310,9 +310,13 @@ class KeyShortcut {
 
   static parseFromSaved(json) {
     let rv = [];
-
     for (let key of json) {
-      rv.push(this.#parseFromJSON(key));
+      if (this.#shortcutIsValid(key)) {
+        rv.push(this.#parseFromJSON(key));
+      } else {
+        console.warn('[zen CKS]: Invalid shortcut', key['id']);
+        throw new Error('Invalid shortcut found');
+      }
     }
 
     return rv;
@@ -328,6 +332,12 @@ class KeyShortcut {
       }
     }
     return 'other';
+  }
+
+  static #shortcutIsValid(shortcut) {
+    // See https://github.com/zen-browser/desktop/issues/4071, some *old* shortcuts dont have
+    //  any of `key`, `keycode`, `l10nId`. This fix also allows us to avoid any future issues
+    return !(shortcut['key'] == '' && shortcut['keycode'] == '' && shortcut['l10nId'] == null);
   }
 
   static #parseFromJSON(json) {
@@ -465,6 +475,10 @@ class KeyShortcut {
 
   isInternal() {
     return this.#internal;
+  }
+
+  isInvalid() {
+    return this.#key == '' && this.#keycode == '' && this.#l10nId == null;
   }
 
   setModifiers(modifiers) {
@@ -899,6 +913,15 @@ var gZenKeyboardShortcutsManager = {
         return KeyShortcut.parseFromSaved(data);
       } catch (e) {
         console.error('Zen CKS: Error parsing saved shortcuts. Resetting to defaults...', e);
+        gNotificationBox.appendNotification(
+          "zen-shortcuts-corrupted",
+          {
+            label: { "l10n-id": "zen-shortcuts-corrupted" },
+            image: "chrome://browser/skin/notification-icons/persistent-storage-blocked.svg",
+            priority: gNotificationBox.PRIORITY_WARNING_HIGH,
+          },
+          []
+        );
         return null;
       }
     };
@@ -962,7 +985,7 @@ var gZenKeyboardShortcutsManager = {
       //}
 
       for (let key of this._currentShortcutList) {
-        if (key.isEmpty() || key.isInternal()) {
+        if (key.isEmpty() || key.isInternal() || key.isInvalid()) {
           continue;
         }
         let child = key.toXHTMLElement(browser);

@@ -651,6 +651,11 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
 
   async _propagateWorkspaceData({ ignoreStrip = false, clearCache = true } = {}) {
     await this.foreachWindowAsActive(async (browser) => {
+      // Do not update the window if workspaces are not enabled in it.
+      // For example, when the window is in private browsing mode.
+      if (!browser.ZenWorkspaces.workspaceEnabled) {
+        return;
+      }
       await browser.ZenWorkspaces.updateWorkspaceIndicator();
       let workspaceList = browser.document.getElementById('PanelUI-zen-workspaces-list');
       const createWorkspaceElement = (workspace) => {

@@ -1320,6 +1320,7 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     const visibleTabs = new Set();
     const lastSelectedTab = this._lastSelectedWorkspaceTabs[workspaceUuid];
 
+    this.tabContainer.setAttribute('dont-animate-tabs', 'true');
     for (const tab of gBrowser.tabs) {
       const tabWorkspaceId = tab.getAttribute('zen-workspace-id');
       const isEssential = tab.getAttribute("zen-essential") === "true";
@@ -1343,6 +1344,9 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
         gBrowser.hideTab(tab, undefined, true);
       }
     }
+    window.requestAnimationFrame(() => {
+      this.tabContainer.removeAttribute('dont-animate-tabs');
+    });
 
     return visibleTabs;
   }

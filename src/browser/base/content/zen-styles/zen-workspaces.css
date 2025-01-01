@@ -215,6 +215,14 @@
   justify-content: space-between;
   align-content: space-between;
   max-height: 250px;
+
+  .workspace-icon-button {
+    min-width: 24px;
+    min-height: 24px;
+    font-size: 16px;
+    margin: 2px;
+    padding: 4px;
+  }
 }
 
 #PanelUI-zen-workspaces-list {
@@ -277,14 +285,6 @@
   width: 100%;
   margin: 0;
   box-sizing: border-box;
-}
-
-.workspace-icon-button {
-  min-width: 24px;
-  min-height: 24px;
-  font-size: 16px;
-  margin: 2px;
-  padding: 4px;
 }
 
 #PanelUI-zen-workspaces-icon-search-input {

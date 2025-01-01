@@ -252,7 +252,7 @@
       if (
         (tab.pinned && !ignoreTimestamp) ||
         tab.selected ||
-        tab.multiselected ||
+        (tab.multiselected && !ignoreTimestamp) ||
         tab.hasAttribute('busy') ||
         tab.hasAttribute('pending') ||
         !tab.linkedPanel ||

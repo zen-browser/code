@@ -53,11 +53,9 @@ var gZenStylesheetManager = {
 
 var gZenThemesImporter = new (class {
   constructor() {
-    console.info('[ZenThemesImporter]: Initializing Zen Themes Importer');
-
     try {
       window.SessionStore.promiseInitialized.then(async () => {
-        if (Services.prefs.getBoolPref('zen.themes.disable-all', false)) {
+        if (Services.prefs.getBoolPref('zen.themes.disable-all', false) || Services.appinfo.inSafeMode) {
           console.log('[ZenThemesImporter]: Disabling all themes.');
           return;
         }
@@ -315,5 +313,5 @@ gZenActorsManager.addJSWindowActor("ZenThemeMarketplace", {
       DOMContentLoaded: {},
     },
   },
-  matches: ["https://*.zen-browser.app/*", "about:preferences"],
+  matches: [...Services.prefs.getStringPref("zen.injections.match-urls").split(","), "about:preferences"],
 });

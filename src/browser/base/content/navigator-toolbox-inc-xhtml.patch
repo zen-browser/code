@@ -1,13 +1,13 @@
 diff --git a/browser/base/content/navigator-toolbox.inc.xhtml b/browser/base/content/navigator-toolbox.inc.xhtml
-index eb2d8670874bd5bcaf9253caafb98444cb8cfcd9..51e6c01c279e0105ec8ac08df0763027179c0616 100644
+index 00391af141d9015fe5839534e5e6b22a91ba65d9..17d8ac96986e698b09033b870c24fc2f61c47a05 100644
 --- a/browser/base/content/navigator-toolbox.inc.xhtml
 +++ b/browser/base/content/navigator-toolbox.inc.xhtml
 @@ -2,7 +2,7 @@
  # License, v. 2.0. If a copy of the MPL was not distributed with this
  # file, You can obtain one at http://mozilla.org/MPL/2.0/.
  
--<toolbox id="navigator-toolbox">
-+<toolbox id="navigator-toolbox" persist="width style">
+-<toolbox id="navigator-toolbox" class="browser-toolbox-background">
++<toolbox id="navigator-toolbox" class="browser-toolbox-background" persist="width style">
    <script src="chrome://browser/content/navigator-toolbox.js" />
  
    <!-- Menu -->

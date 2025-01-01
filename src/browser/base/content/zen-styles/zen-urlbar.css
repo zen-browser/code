@@ -1,3 +1,8 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 /* URL and tool bars */
 
 #urlbar-container {
@@ -124,6 +129,10 @@
     transition: all 0.2s;
   }
 
+  #identity-permission-box > *:not(#permissions-granted-icon) {
+    visibility: collapse;
+  }
+
   #urlbar[open] :is(#tracking-protection-icon-container, .urlbar-page-action),
   #urlbar:hover :is(#tracking-protection-icon-container, .urlbar-page-action),
   .urlbar-page-action[open],
@@ -134,7 +143,7 @@
 
   #identity-permission-box:not([open]),
   #notification-popup-box:not([open]) {
-    margin-inline-start: calc(-16px - 2 * var(--urlbar-icon-padding));
+    margin-inline-start: calc(-10px - 2 * var(--urlbar-icon-padding));
     opacity: 0;
     transition: all 0.2s;
   }
@@ -302,8 +311,18 @@ button.popup-notification-dropmarker {
   align-items: center;
 }
 
-:root:not([zen-single-toolbar='true']) #nav-bar {
-  margin-bottom: -1px;
+:root:not([zen-single-toolbar='true']) {
+  & #nav-bar {
+    margin-bottom: -1px;
+  }
+
+  &[zen-right-side='true']:not([zen-window-buttons-reversed='true']) #nav-bar {
+    margin-inline-start: var(--zen-element-separation);
+  }
+
+  &:not([zen-right-side='true'])[zen-window-buttons-reversed='true'] #nav-bar {
+    margin-inline-end: var(--zen-element-separation);
+  }
 }
 
 /* Other small tweaks */
@@ -338,38 +357,51 @@ button.popup-notification-dropmarker {
 }
 
 #urlbar[open] {
-  --urlbar-container-height: 55px !important;
-  --urlbar-margin-inline: 10px !important;
-  font-size: 1.1em;
-
-  & #urlbar-background {
-    /* We cant have a transparent background with a backdrop-filter because on normal websites,
-      the backdrop woudn't work, we would need to apply a clip-path to the site and that's not recommended
-      due to performance issues */
-    background-color: var(--zen-branding-bg) !important;
-    box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.1) !important;
-    outline: 1px solid light-dark(rgba(20, 20, 20, 0.2), rgba(235, 235, 235, 0.2)) !important;
-    outline-offset: -1px !important;
-  }
-}
-
-#urlbar[open][zen-floating-urlbar='true'] {
-  z-index: 1000;
-  min-width: 45vw;
-  max-width: 45vw;
-  top: 0 !important;
+  --urlbar-margin-inline: 5px !important;
 
   & #identity-box {
     margin-right: var(--urlbar-margin-inline);
   }
 
-  :root[zen-right-side='true'] & {
+  & #urlbar-background {
+    /* We cant have a transparent background with a backdrop-filter because on normal websites,
+      the backdrop woudn't work, we would need to apply a clip-path to the site and that's not recommended
+      due to performance issues */
+    background-color: light-dark(rgb(247, 247, 247), var(--zen-branding-bg)) !important;
+    box-shadow: 0 0 1px 1px light-dark(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.1)) !important;
+    outline: 1px solid light-dark(rgba(20, 20, 20, 0.2), rgba(235, 235, 235, 0.2)) !important;
+    outline-offset: -1px !important;
+  }
+}
+
+:root[zen-single-toolbar='true'] {
+  #urlbar[open] {
+    min-width: 30vw;
+  }
+
+  &[zen-right-side='true'] #urlbar[open]:not([zen-floating-urlbar='true']) {
     right: 0;
   }
+}
+
+#urlbar[open][zen-floating-urlbar='true'] {
+  z-index: 1000;
+  max-width: 45vw;
+  min-width: 45vw !important;
+  font-size: 1.1em;
+  --urlbar-container-height: 55px !important;
+  --urlbar-margin-inline: 10px !important;
   position: absolute;
 
   top: calc(var(--zen-toolbar-height) * 2) !important;
-  left: 28vw;
+
+  :root[zen-right-side='true'] & {
+    right: 28vw !important;
+  }
+
+  :root:not([zen-right-side='true']) & {
+    left: 28vw !important;
+  }
 
   #urlbar-container:has(&) {
     border-radius: 10px;
@@ -435,7 +467,7 @@ button.popup-notification-dropmarker {
   }
 
   &:hover {
-    background-color: var(--zen-colors-primary) !important;
+    background-color: light-dark(var(--zen-colors-secondary), var(--zen-colors-primary)) !important;
 
     .urlbarView-favicon {
       background-color: color-mix(in srgb, var(--zen-branding-bg-reverse) 20%, transparent 80%) !important;

@@ -1,6 +1,5 @@
 var ZenPinnedTabsStorage = {
   async init() {
-    console.log('ZenPinnedTabsStorage: Initializing...');
     await this._ensureTable();
   },
 
@@ -337,3 +336,5 @@ var ZenPinnedTabsStorage = {
     });
   }
 };
+
+ZenPinnedTabsStorage.init();

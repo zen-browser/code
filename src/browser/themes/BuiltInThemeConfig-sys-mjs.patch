@@ -1,5 +1,5 @@
 diff --git a/browser/themes/BuiltInThemeConfig.sys.mjs b/browser/themes/BuiltInThemeConfig.sys.mjs
-index f738f7f1e37d20d9d9158f052572334714475107..f4b0e9a7077076f2fbe8ac17fa6aadf586c6b37c 100644
+index 4e5a4f1795c18241d9143d159f7d040142e728d4..f4b0e9a7077076f2fbe8ac17fa6aadf586c6b37c 100644
 --- a/browser/themes/BuiltInThemeConfig.sys.mjs
 +++ b/browser/themes/BuiltInThemeConfig.sys.mjs
 @@ -33,13 +33,6 @@ export const BuiltInThemeConfig = new Map([
@@ -9,7 +9,7 @@ index f738f7f1e37d20d9d9158f052572334714475107..f4b0e9a7077076f2fbe8ac17fa6aadf5
 -  [
 -    "firefox-alpenglow@mozilla.org",
 -    {
--      version: "1.4",
+-      version: "1.5",
 -      path: "resource://builtin-themes/alpenglow/",
 -    },
 -  ],

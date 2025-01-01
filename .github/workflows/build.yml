@@ -16,10 +16,10 @@ on:
       update_branch:
         description: 'Update branch with new version'
         required: true
-        default: 'beta'
+        default: 'stable'
         type: 'choice'
         options:
-          - 'beta'
+          - 'stable'
           - 'twilight'
   workflow_call:
     inputs:
@@ -36,7 +36,7 @@ on:
       update_branch:
         description: 'Update branch with new version'
         required: true
-        default: 'beta'
+        default: 'stable'
         type: 'string'
 
 jobs:
@@ -72,9 +72,7 @@ jobs:
           git status
           git branch --show-current
           branch="${{ inputs.update_branch }}"
-          if [[ $branch == "beta" ]]; then
-            branch="stable"
-          elif [[ $branch == "twilight" ]]; then
+          if [[ $branch == "twilight" ]]; then
             branch="dev"
           fi
           if [[ $(git branch --show-current) != $branch ]]; then
@@ -124,7 +122,7 @@ jobs:
           npm i -g @zen-browser/surfer
 
       - name: Bump version
-        if: ${{ inputs.update_version && inputs.update_branch == 'beta' }}
+        if: ${{ inputs.update_version && inputs.update_branch == 'stable' }}
         run: |
           pnpm surfer ci --brand ${{ inputs.update_branch }} --bump prerelease
 
@@ -258,6 +256,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
+          retention-days: 5
           name: zen.source.tar.gz
           path: ./zen.source.tar.gz
 
@@ -321,13 +320,13 @@ jobs:
       release-branch: ${{ inputs.update_branch }}
 
   appimage:
-    name: AppImage build - Linux ${{ matrix.arch == 'x86_64' && 'generic' || matrix.arch == 'x86_64-v3' && 'specific' || matrix.arch == 'aarch64' && 'aarch64' }}
+    name: AppImage build - Linux ${{ matrix.arch }}
     permissions:
       contents: write
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        arch: [x86_64, x86_64-v3, aarch64]
+        arch: [x86_64, aarch64]
     needs: [linux]
     steps:
       - name: Checkout repository
@@ -350,7 +349,7 @@ jobs:
       - name: Download Linux build
         uses: actions/download-artifact@v4
         with:
-          name: zen.linux-${{ matrix.arch == 'x86_64' && 'generic' || matrix.arch == 'x86_64-v3' && 'specific' || matrix.arch == 'aarch64' && 'aarch64' }}.tar.bz2
+          name: zen.linux-${{ matrix.arch }}.tar.bz2
 
       - name: Execute AppImage build
         run: |
@@ -361,7 +360,7 @@ jobs:
 
           if [ "${{ inputs.update_branch }}" = "twilight" ]; then
             sed -i -e 's/Name=Zen Browser/Name=Zen Twilight/g' AppDir/zen.desktop
-            sed -i -e 's/StartupWMClass=zen-beta/StartupWMClass=zen-twilight/g' AppDir/zen.desktop
+            sed -i -e 's/StartupWMClass=zen-stable/StartupWMClass=zen-twilight/g' AppDir/zen.desktop
           fi
 
           APPDIR=AppDir
@@ -374,23 +373,25 @@ jobs:
           ls -al
           find .
           ls -al "$APPDIR"
-          ARCH=${{ matrix.arch == 'aarch64' && 'aarch64' || 'x86_64' }} ./appimagetool-x86_64.AppImage --comp zstd --mksquashfs-opt -Xcompression-level --mksquashfs-opt 10 \
-          -u "gh-releases-zsync|$GITHUB_REPOSITORY_OWNER|desktop|latest|zen-${{ matrix.arch == 'x86_64' && 'generic' || matrix.arch == 'x86_64-v3' && 'specific' || matrix.arch == 'aarch64' && 'aarch64' }}.AppImage.zsync" \
-          "$APPDIR" zen-${{ matrix.arch == 'x86_64' && 'generic' || matrix.arch == 'x86_64-v3' && 'specific' || matrix.arch == 'aarch64' && 'aarch64' }}.AppImage
+          ARCH=${{ matrix.arch }} ./appimagetool-x86_64.AppImage --comp zstd --mksquashfs-opt -Xcompression-level --mksquashfs-opt 10 \
+          -u "gh-releases-zsync|$GITHUB_REPOSITORY_OWNER|desktop|latest|zen-${{ matrix.arch }}.AppImage.zsync" \
+          "$APPDIR" zen-${{ matrix.arch }}.AppImage
           mkdir dist
           mv zen*AppImage* dist/.
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: zen-${{ matrix.arch == 'x86_64' && 'generic' || matrix.arch == 'x86_64-v3' && 'specific' || matrix.arch == 'aarch64' && 'aarch64' }}.AppImage
-          path: ./dist/zen-${{ matrix.arch == 'x86_64' && 'generic' || matrix.arch == 'x86_64-v3' && 'specific' || matrix.arch == 'aarch64' && 'aarch64' }}.AppImage
+          retention-days: 5
+          name: zen-${{ matrix.arch }}.AppImage
+          path: ./dist/zen-${{ matrix.arch }}.AppImage
 
       - name: Upload artifact (ZSync)
         uses: actions/upload-artifact@v4
         with:
-          name: zen-${{ matrix.arch == 'x86_64' && 'generic' || matrix.arch == 'x86_64-v3' && 'specific' || matrix.arch == 'aarch64' && 'aarch64' }}.AppImage.zsync
-          path: ./dist/zen-${{ matrix.arch == 'x86_64' && 'generic' || matrix.arch == 'x86_64-v3' && 'specific' || matrix.arch == 'aarch64' && 'aarch64' }}.AppImage.zsync
+          retention-days: 5
+          name: zen-${{ matrix.arch }}.AppImage.zsync
+          path: ./dist/zen-${{ matrix.arch }}.AppImage.zsync
 
   release:
     if: ${{ inputs.create_release || inputs.update_branch == 'twilight' }}
@@ -399,7 +400,7 @@ jobs:
     needs: [build-data, linux, windows-step-3, check-release, mac, appimage, source]
     runs-on: ubuntu-latest
     environment:
-      name: ${{ inputs.update_branch == 'beta' && 'Deploy-Release' || 'Deploy-Twilight' }}
+      name: ${{ inputs.update_branch == 'stable' && 'Deploy-Release' || 'Deploy-Twilight' }}
 
     steps:
       - name: Checkout repository
@@ -435,17 +436,14 @@ jobs:
         run: |
           cd updates-server
           mkdir -p updates
-          cp -a ../linux_update_manifest_generic/.  updates/
-          cp -a ../linux_update_manifest_specific/.  updates/
+          cp -a ../linux_update_manifest_x86_64/.  updates/
           cp -a ../linux_update_manifest_aarch64/.  updates/
 
-          if [[ $RELEASE_BRANCH == 'beta' ]]; then
-            cp -a ../.github/workflows/object/windows-x64-signed-generic/update_manifest/.  updates/
-            cp -a ../.github/workflows/object/windows-x64-signed-specific/update_manifest/.  updates/
+          if [[ $RELEASE_BRANCH == 'stable' ]]; then
+            cp -a ../.github/workflows/object/windows-x64-signed-x86_64/update_manifest/.  updates/
             cp -a ../.github/workflows/object/windows-x64-signed-arm64/update_manifest/.  updates/
           else
-            cp -a ../windows_update_manifest_generic/.  updates/
-            cp -a ../windows_update_manifest_specific/.  updates/
+            cp -a ../windows_update_manifest_x86_64/.  updates/
             cp -a ../windows_update_manifest_arm64/.  updates/
           fi
 
@@ -467,28 +465,21 @@ jobs:
         with:
           files: |
             zen.source.tar.gz
-            zen.linux-generic.tar.bz2
-            zen.linux-specific.tar.bz2
+            zen.linux-x86_64.tar.bz2
             zen.linux-aarch64.tar.bz2
-            zen-generic.AppImage
-            zen-generic.AppImage.zsync
-            zen-specific.AppImage
-            zen-specific.AppImage.zsync
+            zen-x86_64.AppImage
+            zen-x86_64.AppImage.zsync
             zen-aarch64.AppImage
             zen-aarch64.AppImage.zsync
-            zen.win-generic.zip
-            zen.win-specific.zip
+            zen.win-x86_64.zip
             zen.win-arm64.zip
             linux.mar
-            linux-generic.mar
             linux-aarch64.mar
-            windows-generic.mar
             windows.mar
             windows-arm64.mar
             macos-x86_64.mar
             macos-aarch64.mar
             zen.installer.exe
-            zen.installer-generic.exe
             zen.installer-arm64.exe
             zen.macos-x86_64.dmg
             zen.macos-aarch64.dmg
@@ -502,42 +493,35 @@ jobs:
 
       - name: Release
         uses: marvinpinto/action-automatic-releases@master
-        if: ${{ inputs.update_branch == 'beta' }}
+        if: ${{ inputs.update_branch == 'stable' }}
         with:
           repo_token: '${{ secrets.DEPLOY_KEY }}'
           automatic_release_tag: ${{ needs.build-data.outputs.version }}
           prerelease: false
-          title: 'Beta build - ${{ needs.build-data.outputs.version }} (${{ needs.build-data.outputs.build_date }})'
+          title: 'Stable build - ${{ needs.build-data.outputs.version }} (${{ needs.build-data.outputs.build_date }})'
           files: |
             zen.source.tar.gz
-            zen.linux-generic.tar.bz2
-            zen.linux-specific.tar.bz2
+            zen.linux-x86_64.tar.bz2
             zen.linux-aarch64.tar.bz2
-            zen-generic.AppImage
-            zen-generic.AppImage.zsync
-            zen-specific.AppImage
-            zen-specific.AppImage.zsync
+            zen-x86_64.AppImage
+            zen-x86_64.AppImage.zsync
             zen-aarch64.AppImage
             zen-aarch64.AppImage.zsync
-            .github/workflows/object/windows-x64-signed-generic/zen.win-generic.zip
-            .github/workflows/object/windows-x64-signed-specific/zen.win-specific.zip
+            .github/workflows/object/windows-x64-signed-x86_64/zen.win-x86_64.zip
             .github/workflows/object/windows-x64-signed-arm64/zen.win-arm64.zip
             linux.mar
-            linux-generic.mar
             linux-aarch64.mar
-            .github/workflows/object/windows-x64-signed-generic/windows-generic.mar
-            .github/workflows/object/windows-x64-signed-specific/windows.mar
+            .github/workflows/object/windows-x64-signed-x86_64/windows.mar
             .github/workflows/object/windows-x64-signed-arm64/windows-arm64.mar
             macos-x86_64.mar
             macos-aarch64.mar
-            .github/workflows/object/windows-x64-signed-specific/zen.installer.exe
-            .github/workflows/object/windows-x64-signed-generic/zen.installer-generic.exe
+            .github/workflows/object/windows-x64-signed-x86_64/zen.installer.exe
             .github/workflows/object/windows-x64-signed-arm64/zen.installer-arm64.exe
             zen.macos-x86_64.dmg
             zen.macos-aarch64.dmg
 
   prepare-flatpak:
-    if: ${{ inputs.create_release && inputs.update_branch == 'beta' }}
+    if: ${{ inputs.create_release && inputs.update_branch == 'stable' }}
     permissions: write-all
     name: Prepare Flatpak
     needs: [release, linux, build-data]
@@ -592,11 +576,11 @@ jobs:
           commit_user_email: zen-browser-auto@users.noreply.github.com
           repository: ./flatpak
 
-      - name: Wait 4 minutes for the Flatpak repo to update
-        run: sleep 240
+      - name: Wait 2 minutes for the Flatpak repo to update
+        run: sleep 120
 
   release-flatpak:
-    if: ${{ inputs.create_release && inputs.update_branch == 'beta' }}
+    if: ${{ inputs.create_release && inputs.update_branch == 'stable' }}
     permissions: write-all
     name: Release Flatpak
     needs: [prepare-flatpak, build-data]
@@ -609,10 +593,10 @@ jobs:
           repository: flathub/io.github.zen_browser.zen
           token: ${{ secrets.DEPLOY_KEY }}
 
-      - name: Download Linux generic build
+      - name: Download Linux x86_64 build
         uses: actions/download-artifact@v4
         with:
-          name: zen.linux-generic.tar.bz2
+          name: zen.linux-x86_64.tar.bz2
 
       - name: Update repository
         uses: actions/checkout@v4
@@ -634,7 +618,7 @@ jobs:
           python3 ./zen-browser/scripts/prepare-flatpak-release.py \
             --flatpak-archive archive.tar \
             --version ${{ needs.build-data.outputs.version }} \
-            --linux-archive zen.linux-generic.tar.bz2 \
+            --linux-archive zen.linux-x86_64.tar.bz2 \
             --output io.github.zen_browser.zen.yml \
             --template-root ./zen-browser/flatpak
 
@@ -647,11 +631,12 @@ jobs:
         run: |
           rm -rf zen-browser
           rm -rf archive.tar
-          rm -rf zen.linux-generic.tar.bz2
+          rm -rf zen.linux-x86_64.tar.bz2
 
       - name: Upload Flatpak manifest
         uses: actions/upload-artifact@v4
         with:
+          retention-days: 5
           name: io.github.zen_browser.zen.yml
           path: ./io.github.zen_browser.zen.yml
 
@@ -672,53 +657,3 @@ jobs:
           base: master
           git-token: ${{ secrets.DEPLOY_KEY }}
           delete-branch: true
-
-  release-homebrew-beta:
-    if: ${{ inputs.create_release && inputs.update_branch == 'beta' }}
-    permissions: write-all
-    name: Homebrew release for beta build
-    needs: [release, mac, build-data]
-    runs-on: macos-latest
-
-    steps:
-      - name: Setup Homebrew
-        uses: Homebrew/actions/setup-homebrew@master
-        with:
-          cask: true
-          test-bot: false
-
-      - name: Setup Git
-        uses: Homebrew/actions/git-user-config@master
-        with:
-          username: zen-browser-auto
-
-      - name: Bump cask
-        uses: Homebrew/actions/bump-packages@master
-        with:
-          token: ${{ secrets.DEPLOY_KEY }}
-          casks: zen-browser
-
-  release-homebrew-twilight:
-    if: ${{ inputs.create_release && inputs.update_branch == 'twilight' }}
-    permissions: write-all
-    name: Homebrew release for twilight build
-    needs: [release, mac, build-data]
-    runs-on: macos-latest
-
-    steps:
-      - name: Set up Homebrew
-        uses: Homebrew/actions/setup-homebrew@master
-        with:
-          cask: true
-          test-bot: false
-
-      - name: Setup git
-        uses: Homebrew/actions/git-user-config@master
-        with:
-          username: zen-browser-auto
-
-      - name: Bump cask
-        uses: Homebrew/actions/bump-packages@master
-        with:
-          token: ${{ secrets.DEPLOY_KEY }}
-          casks: zen-browser@twilight

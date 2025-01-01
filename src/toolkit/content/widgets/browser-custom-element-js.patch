@@ -1,11 +1,11 @@
 diff --git a/toolkit/content/widgets/browser-custom-element.js b/toolkit/content/widgets/browser-custom-element.js
-index 887f59c742c7cb540773f18ce680e1e5b6fd5314..0431d97412b69a9f33042fcc885edb1115a79716 100644
+index a531577a29212cdb9e745b88e17fe4177be76635..ae976ecef71d0d659fa6a1d6fea60f5270073544 100644
 --- a/toolkit/content/widgets/browser-custom-element.js
 +++ b/toolkit/content/widgets/browser-custom-element.js
-@@ -411,11 +411,11 @@
-     }
- 
-     set docShellIsActive(val) {
+@@ -556,11 +556,11 @@
+       if (!this.browsingContext) {
+         return;
+       }
 -      this.browsingContext.isActive = val;
 +      this.browsingContext.isActive = val || this.zenModeActive;
        if (this.isRemoteBrowser) {

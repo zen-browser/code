@@ -92,7 +92,6 @@
       this.initContextMenu();
       this.initThemePicker();
 
-
       this._hasInitialized = true;
       this.onDarkModeChange(null);
     }
@@ -246,9 +245,7 @@
 
     onThemePickerClick(event) {
       event.preventDefault();
-
       if (event.button !== 0 || this.dragging ) return;
-
       const gradient = this.panel.querySelector('.zen-theme-picker-gradient');
       const rect = gradient.getBoundingClientRect();
       const padding = 90; // each side
@@ -274,7 +271,6 @@
 
         const relativeX = event.clientX - rect.left;
         const relativeY = event.clientY - rect.top;
-
 
         const color = this.getColorFromPosition(relativeX, relativeY);
 
@@ -358,7 +354,6 @@
       listItems.querySelector('.zen-theme-picker-dot-custom').style.setProperty('--zen-theme-picker-dot-color', color);
       listItems.querySelector('.zen-theme-picker-custom-list-item-label').textContent = color;
 
-
       this.customColorList.appendChild(listItems);
     }
 
@@ -384,8 +379,6 @@
       await this.updateCurrentWorkspace();
     }
 
-
-
     onThemePickerClick(event) {
       event.preventDefault();
 
@@ -407,10 +400,8 @@
         return;
       }
 
-
       const clickedElement = event.target;
       const isExistingDot = clickedElement.classList.contains('zen-theme-picker-dot');
-
 
       if (!isExistingDot && this.numberOfDots < ZenThemePicker.MAX_DOTS) {
         const relativeX = event.clientX - rect.left;
@@ -500,11 +491,17 @@
       this.updateCurrentWorkspace();
     }
 
+    getToolbarModifiedBase() {
+      return this.isDarkMode ?
+        'color-mix(in srgb, var(--zen-themed-toolbar-bg) 80%, #fff 20%)'
+      : 'color-mix(in srgb, var(--zen-themed-toolbar-bg) 95%, #000 5%)';
+    }
+
     getSingleRGBColor(color, forToolbar = false) {
       if (color.isCustom) {
         return color.c;
       }
-      const toolbarBg = forToolbar ? 'var(--zen-themed-toolbar-bg)' : 'var(--zen-themed-toolbar-bg-transparent)';
+      const toolbarBg = forToolbar ? this.getToolbarModifiedBase() : 'var(--zen-themed-toolbar-bg-transparent)';
       return `color-mix(in srgb, rgb(${color.c[0]}, ${color.c[1]}, ${color.c[2]}) ${this.currentOpacity * 100}%, ${toolbarBg} ${(1 - this.currentOpacity) * 100}%)`;
     }
 
@@ -518,10 +515,10 @@
       return `linear-gradient(${this.currentRotation}deg, ${themedColors.map(color => this.getSingleRGBColor(color, forToolbar)).join(', ')})`;
     }
 
-    getTheme(colors, opacity = 0.5, rotation = 45, texture = 0) {
+    static getTheme(colors = [], opacity = 0.5, rotation = 45, texture = 0) {
       return {
         type: 'gradient',
-        gradientColors: colors.filter(color => color), // remove undefined
+        gradientColors: colors ? colors.filter(color => color) : [], // remove undefined
         opacity,
         rotation,
         texture,
@@ -601,7 +598,7 @@
       let workspaceTheme = theme || workspace.theme;
 
       await this.foreachWindowAsActive(async (browser) => {
-        if (!browser.gZenThemePicker._hasInitialized) {
+        if (!browser.gZenThemePicker?._hasInitialized) {
           return;
         }
         // Do not rebuild if the workspace is not the same as the current one
@@ -620,17 +617,20 @@
         }
 
 
-        const appWrapper = browser.document.getElementById('zen-main-app-wrapper');
-        if (!skipUpdate) {
+        const appWrapper = browser.document.getElementById('browser');
+        if (!skipUpdate && !this._animatingBackground) {
+          this._animatingBackground = true;
           appWrapper.removeAttribute('animating');
-          appWrapper.setAttribute('animating', 'true');
-          browser.document.body.style.setProperty('--zen-main-browser-background-old',
-            browser.document.body.style.getPropertyValue('--zen-main-browser-background')
+          browser.document.documentElement.style.setProperty('--zen-main-browser-background-old',
+            browser.document.documentElement.style.getPropertyValue('--zen-main-browser-background')
           );
           browser.window.requestAnimationFrame(() => {
+            appWrapper.setAttribute('animating', 'true');
             setTimeout(() => {
+              this._animatingBackground = false;
               appWrapper.removeAttribute('animating');
-            }, 500);
+              browser.document.documentElement.style.removeProperty('--zen-main-browser-background-old');
+            }, 700);
           });
         }
 
@@ -665,8 +665,8 @@
           }
         }
 
-        browser.document.documentElement.style.setProperty('--zen-main-browser-background', gradient);
         browser.document.documentElement.style.setProperty('--zen-main-browser-background-toolbar', gradientToolbar);
+        browser.document.documentElement.style.setProperty('--zen-main-browser-background', gradient);
 
         const dominantColor = this.getMostDominantColor(workspaceTheme.gradientColors);
         if (dominantColor) {
@@ -677,6 +677,18 @@
           browser.gZenThemePicker.recalculateDots(workspaceTheme.gradientColors);
         }
       });
+    }
+
+    get riceManager() {
+      if (!this._riceManager) {
+        this._riceManager = new window.ZenRiceManager();
+      }
+      return this._riceManager;
+    }
+
+    shareTheme() {
+      const manager = this.riceManager;
+      manager.openShareDialog();
     }
 
     getNativeAccentColor() {
@@ -720,7 +732,7 @@
         const isCustom = dot.classList.contains('custom');
         return {c: isCustom ? color : color.match(/\d+/g).map(Number), isCustom};
       });
-      const gradient = this.getTheme(colors, this.currentOpacity, this.currentRotation, this.currentTexture);
+      const gradient = ZenThemePicker.getTheme(colors, this.currentOpacity, this.currentRotation, this.currentTexture);
       let currentWorkspace = await ZenWorkspaces.getActiveWorkspace();
 
       if(!skipSave) {

@@ -250,6 +250,7 @@ class ZenBrowserManagerSidebar extends ZenDOMOperatedFeature {
       '#zenWebPanelContextMenu',
       '#zen-sidebar-web-panel-splitter',
       '#contentAreaContextMenu',
+      '#zen-sidepanel-button',
     ].join(', ');
     if (target.closest(closestSelector)) {
       return;

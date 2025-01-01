@@ -12,7 +12,6 @@ export MOZ_APP_PROFILE=${binName}
 export MOZ_APP_DISPLAYNAME="${name}"
 export MOZ_BRANDING_DIRECTORY=${brandingDir}
 export MOZ_OFFICIAL_BRANDING_DIRECTORY=${brandingDir}
-export MOZ_DISTRIBUTION_ID=${appId}
 
 # Uncomment if builds are too resource hungry
 # mk_add_options MOZ_MAKE_FLAGS="-j4"
@@ -24,9 +23,9 @@ export MOZ_SOURCE_CHANGESET=${changeset}
 export MOZ_INCLUDE_SOURCE_INFO=1
 
 ac_add_options --enable-application=browser
-#ac_add_options --enable-clang-plugin
 
 if test "$ZEN_RELEASE"; then
+  ac_add_options --enable-clang-plugin
   ac_add_options --enable-bootstrap
 
   ac_add_options --enable-release
@@ -50,7 +49,6 @@ if test "$ZEN_RELEASE"; then
   ac_add_options --disable-geckodriver
   ac_add_options --disable-rust-tests
 
-  # Done by vlad, if something fails, it's his fault
   ac_add_options --disable-default-browser-agent
 
   if ! test "$ZEN_DISABLE_LTO"; then
@@ -98,7 +96,3 @@ mk_add_options MOZ_TELEMETRY_REPORTING=
 # Allow loading unsigned extensions
 export MOZ_REQUIRE_SIGNING=
 mk_add_options MOZ_REQUIRE_SIGNING=
-
-# Sorry ptr, I didnt mean to!
-# Edit: ok, ill remove it, goodbye top #1 on fastest browsers benchmark :[
-# ac_add_options --without-wasm-sandboxed-libraries

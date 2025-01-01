@@ -27,13 +27,19 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
       console.warn('ZenWorkspaces: !!! ZenWorkspaces is disabled in hidden windows !!!');
       return; // We are in a hidden window, don't initialize ZenWorkspaces
     }
+
     this.ownerWindow = window;
     XPCOMUtils.defineLazyPreferenceGetter(
       this,
       'activationMethod',
       'zen.workspaces.scroll-modifier-key',
       'ctrl',
-      this._expandWorkspacesStrip.bind(this)
+    );
+    XPCOMUtils.defineLazyPreferenceGetter(
+      this,
+      'naturalScroll',
+      'zen.workspaces.natural-scroll',
+      true
     );
     XPCOMUtils.defineLazyPreferenceGetter(
       this,
@@ -68,10 +74,13 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     );
     ChromeUtils.defineLazyGetter(this, 'tabContainer', () => document.getElementById('tabbrowser-tabs'));
     this._activeWorkspace = Services.prefs.getStringPref('zen.workspaces.active', '');
-    await ZenWorkspacesStorage.init();
+    this._delayedStartup();
   }
 
   async _delayedStartup() {
+    if (!this.workspaceEnabled) {
+      return;
+    }
     await this.initializeWorkspaces();
     console.info('ZenWorkspaces: ZenWorkspaces initialized');
 
@@ -109,14 +118,16 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
       return;
     }
 
+    const direction = this.naturalScroll ? -1 : 1;
+    // event is forward or back
     switch (event.command) {
       case "Forward":
-        this.changeWorkspaceShortcut(1);
+        this.changeWorkspaceShortcut(1 * direction);
         event.stopImmediatePropagation();
         event.preventDefault();
         break;
       case "Back":
-        this.changeWorkspaceShortcut(-1);
+        this.changeWorkspaceShortcut(-1 * direction);
         event.stopImmediatePropagation();
         event.preventDefault();
         break;
@@ -169,26 +180,10 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
       if (Math.abs(delta) < scrollThreshold) return;
 
       // Determine scroll direction
-      const direction = delta > 0 ? -1 : 1;
+      let rawDirection = delta > 0 ? 1 : -1;
 
-      // Workspace logic
-      const workspaces = (await this._workspaces()).workspaces;
-      const currentIndex = workspaces.findIndex(w => w.uuid === this.activeWorkspace);
-      if (currentIndex === -1) return; // No valid current workspace
-
-      let targetIndex = currentIndex + direction;
-
-      if (this.shouldWrapAroundNavigation) {
-        // Add length to handle negative indices and loop
-        targetIndex = (targetIndex + workspaces.length) % workspaces.length;
-      } else {
-        // Clamp within bounds to disable looping
-        targetIndex = Math.max(0, Math.min(workspaces.length - 1, targetIndex));
-      }
-
-      if (targetIndex !== currentIndex) {
-        await this.changeWorkspace(workspaces[targetIndex]);
-      }
+      let direction = this.naturalScroll ? -1 : 1;
+      this.changeWorkspaceShortcut(rawDirection * direction);
 
       this._lastScrollTime = currentTime;
     }, { passive: true });
@@ -253,40 +248,22 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
 
     // Determine swipe direction based on cumulative delta
     if (Math.abs(this._swipeState.cumulativeDelta) > 0.25) {
-      this._swipeState.direction = this._swipeState.cumulativeDelta > 0 ? 'right' : 'left';
+      this._swipeState.direction = this._swipeState.cumulativeDelta > 0 ? 'left' : 'right';
     }
-
   }
 
   async _handleSwipeEnd(event) {
     if (!this.workspaceEnabled || !this._swipeState?.isGestureActive) return;
     event.preventDefault();
     event.stopPropagation();
+    const isRTL = document.documentElement.matches(':-moz-locale-dir(rtl)');
+    const moveForward = (this._swipeState.direction === 'right') !== isRTL;
 
+    let rawDirection = moveForward ? 1 : -1;
     if (this._swipeState.direction) {
-      const workspaces = (await this._workspaces()).workspaces;
-      const currentIndex = workspaces.findIndex(w => w.uuid === this.activeWorkspace);
 
-      if (currentIndex !== -1) {
-        const isRTL = document.documentElement.matches(':-moz-locale-dir(rtl)');
-        const moveForward = (this._swipeState.direction === 'right') !== isRTL;
-
-        let targetIndex = moveForward
-          ? currentIndex + 1
-          : currentIndex - 1;
-
-        if (this.shouldWrapAroundNavigation) {
-          // Add length to handle negative indices and clamp within bounds
-          targetIndex = (targetIndex + workspaces.length) % workspaces.length;
-        } else {
-          // Clamp within bounds for to remove looping
-          targetIndex = Math.max(0, Math.min(workspaces.length - 1, targetIndex));
-        }
-
-        if (targetIndex !== currentIndex) {
-          await this.changeWorkspace(workspaces[targetIndex]);
-        }
-      }
+      let direction = this.naturalScroll ? -1 : 1;
+      this.changeWorkspaceShortcut(rawDirection * direction);
     }
 
     // Reset swipe state
@@ -424,10 +401,11 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
       window.addEventListener('TabBrowserInserted', this.onTabBrowserInserted.bind(this));
       await SessionStore.promiseInitialized;
       let workspaces = await this._workspaces();
+      let activeWorkspace = null;
       if (workspaces.workspaces.length === 0) {
-        await this.createAndSaveWorkspace('Default Workspace', true, '🏠');
+        activeWorkspace = await this.createAndSaveWorkspace('Default Workspace', true, '🏠');
       } else {
-        let activeWorkspace = await this.getActiveWorkspace();
+        activeWorkspace = await this.getActiveWorkspace();
         if (!activeWorkspace) {
           activeWorkspace = workspaces.workspaces.find((workspace) => workspace.default);
           this.activeWorkspace = activeWorkspace?.uuid;
@@ -439,7 +417,9 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
         await this.changeWorkspace(activeWorkspace, true);
       }
       try {
-        window.gZenThemePicker = new ZenThemePicker();
+        if (activeWorkspace) {
+          window.gZenThemePicker = new ZenThemePicker();
+        }
       } catch (e) {
         console.error('ZenWorkspaces: Error initializing theme picker', e);
       }
@@ -496,11 +476,85 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     typeof Intl.Segmenter !== 'undefined' ? new Intl.Segmenter().segment(icon).containing().segment : Array.from(icon)[0]
   );
 
+  searchIcons(input, icons) {
+    input = input.toLowerCase();
+
+    if ((input === ':') || (input === '')) {
+      return icons;
+    }
+    const emojiScores = [];
+
+    function calculateSearchScore(inputLength, targetLength, weight = 100) {
+      return parseInt((inputLength / targetLength) * weight);
+    }
+
+    for (let currentEmoji of icons) {
+      let alignmentScore = -1;
+
+      let normalizedEmojiName = currentEmoji[1].toLowerCase();
+      let keywordList = currentEmoji[2].split(',').map(keyword => keyword.trim().toLowerCase());
+      if (input[0] === ":") {
+        let searchTerm = input.slice(1);
+        let nameMatchIndex = normalizedEmojiName.indexOf(searchTerm);
+
+        if (nameMatchIndex !== -1 && nameMatchIndex === 0) {
+          alignmentScore = calculateSearchScore(searchTerm.length, normalizedEmojiName.length, 100);
+        }
+      } else {
+        if (input === currentEmoji[0]) {
+          alignmentScore = 999;
+        }
+        let nameMatchIndex = normalizedEmojiName.replace(/_/g, ' ').indexOf(input);
+        if (nameMatchIndex !== -1) {
+          if (nameMatchIndex === 0) {
+            alignmentScore = calculateSearchScore(input.length, normalizedEmojiName.length, 150);
+          } else if (input[input.length - 1] !== " ") {
+            alignmentScore += calculateSearchScore(input.length, normalizedEmojiName.length, 40);
+          }
+        }
+        for (let keyword of keywordList) {
+          let keywordMatchIndex = keyword.indexOf(input);
+          if (keywordMatchIndex !== -1) {
+            if (keywordMatchIndex === 0) {
+              alignmentScore += calculateSearchScore(input.length, keyword.length, 50);
+            } else if (input[input.length - 1] !== " ") {
+              alignmentScore += calculateSearchScore(input.length, keyword.length, 5);
+            }
+          }
+        }
+      }
+
+      //if match score is not -1, add it
+      if (alignmentScore !== -1) {
+        emojiScores.push({ "emoji": currentEmoji[0], "score": alignmentScore });
+      }
+    }
+    // Sort the emojis by their score in descending order
+    emojiScores.sort((a, b) => b.score - a.score);
+
+    // Return the emojis in the order of their rank
+    let filteredEmojiScores = emojiScores;
+    return filteredEmojiScores.map(score => score.emoji);
+  }
+
+  resetWorkspaceIconSearch(){
+    let container = document.getElementById('PanelUI-zen-workspaces-icon-picker-wrapper');
+    let searchInput = document.getElementById('PanelUI-zen-workspaces-icon-search-input');
+
+    // Clear the search input field
+    searchInput.value = '';
+    for (let button of container.querySelectorAll('.toolbarbutton-1')) {
+      button.style.display = '';
+    }
+  }
+
   _initializeWorkspaceCreationIcons() {
     let container = document.getElementById('PanelUI-zen-workspaces-icon-picker-wrapper');
+    let searchInput = document.getElementById('PanelUI-zen-workspaces-icon-search-input');
+    searchInput.value = '';
     for (let icon of this._kIcons) {
       let button = document.createXULElement('toolbarbutton');
-      button.className = 'toolbarbutton-1';
+      button.className = 'toolbarbutton-1 workspace-icon-button';
       button.setAttribute('label', icon);
       button.onclick = (event) => {
         const button = event.target;
@@ -519,6 +573,32 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
       };
       container.appendChild(button);
     }
+  }
+
+  conductSearch() {
+    const container = document.getElementById('PanelUI-zen-workspaces-icon-picker-wrapper');
+    const searchInput = document.getElementById('PanelUI-zen-workspaces-icon-search-input');
+    const query = searchInput.value.toLowerCase();
+
+    if (query === '') {
+      this.resetWorkspaceIconSearch();
+      return;
+    }
+
+    const buttons = Array.from(container.querySelectorAll('.toolbarbutton-1'));
+    buttons.forEach(button => button.style.display = 'none');
+
+    const filteredIcons = this.searchIcons(query, this.emojis);
+
+    filteredIcons.forEach(emoji => {
+      const matchingButton = buttons.find(button =>
+        button.getAttribute('label') === emoji
+      );
+      if (matchingButton) {
+        matchingButton.style.display = '';
+        container.appendChild(matchingButton);
+      }
+    });
   }
 
   async saveWorkspace(workspaceData) {
@@ -634,6 +714,11 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
 
   async _propagateWorkspaceData({ ignoreStrip = false, clearCache = true } = {}) {
     await this.foreachWindowAsActive(async (browser) => {
+      // Do not update the window if workspaces are not enabled in it.
+      // For example, when the window is in private browsing mode.
+      if (!browser.ZenWorkspaces.workspaceEnabled) {
+        return;
+      }
       await browser.ZenWorkspaces.updateWorkspaceIndicator();
       let workspaceList = browser.document.getElementById('PanelUI-zen-workspaces-list');
       const createWorkspaceElement = (workspace) => {
@@ -647,9 +732,14 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
         if (workspace.default) {
           element.setAttribute('default', 'true');
         }
-        const containerGroup = browser.ContextualIdentityService.getPublicIdentities().find(
-          (container) => container.userContextId === workspace.containerTabId
-        );
+        let containerGroup = undefined;
+        try {
+          containerGroup = browser.ContextualIdentityService.getPublicIdentities().find(
+            (container) => container.userContextId === workspace.containerTabId
+          );
+        } catch (e) {
+          console.warn('ZenWorkspaces: Error setting container color', e);
+        }
         if (containerGroup) {
           element.classList.add('identity-color-' + containerGroup.color);
           element.setAttribute('data-usercontextid', containerGroup.userContextId);
@@ -657,7 +747,6 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
         if (this.isReorderModeOn(browser)) {
           element.setAttribute('draggable', 'true');
         }
-
         element.addEventListener(
           'dragstart',
           function (event) {
@@ -868,6 +957,8 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
 
     workspacesList?.removeAttribute('reorder-mode');
     reorderModeButton?.removeAttribute('active');
+    this.resetWorkspaceIconSearch();
+    this.clearEmojis();
   }
 
   async moveWorkspaceToEnd(draggedWorkspaceId) {
@@ -1181,6 +1272,7 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
       return;
     }
 
+    await SessionStore.promiseInitialized;
     this._inChangingWorkspace = true;
     try {
       await this._performWorkspaceChange(window, onInit);
@@ -1228,6 +1320,7 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     const visibleTabs = new Set();
     const lastSelectedTab = this._lastSelectedWorkspaceTabs[workspaceUuid];
 
+    this.tabContainer.setAttribute('dont-animate-tabs', 'true');
     for (const tab of gBrowser.tabs) {
       const tabWorkspaceId = tab.getAttribute('zen-workspace-id');
       const isEssential = tab.getAttribute("zen-essential") === "true";
@@ -1251,6 +1344,9 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
         gBrowser.hideTab(tab, undefined, true);
       }
     }
+    window.requestAnimationFrame(() => {
+      this.tabContainer.removeAttribute('dont-animate-tabs');
+    });
 
     return visibleTabs;
   }
@@ -1415,6 +1511,7 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
       default: isDefault,
       icon: icon,
       name: name,
+      theme: ZenThemePicker.getTheme([]),
     };
     this._prepareNewWorkspace(window);
     return window;
@@ -1427,6 +1524,7 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     let workspaceData = this._createWorkspaceData(name, isDefault, icon);
     await this.saveWorkspace(workspaceData);
     await this.changeWorkspace(workspaceData);
+    return workspaceData;
   }
 
   async onTabBrowserInserted(event) {
@@ -1454,6 +1552,9 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     const isEssential = tab.getAttribute("zen-essential") === "true";
     if (!isEssential) {
       const activeWorkspace = await parent.ZenWorkspaces.getActiveWorkspace();
+      if (!activeWorkspace) {
+        return;
+      }
 
       // Only update last selected tab for non-essential tabs in their workspace
       if (!isEssential && workspaceID === activeWorkspace.uuid) {
@@ -1548,14 +1649,38 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     await this.openEditDialog(this._contextMenuId);
   }
 
-  async changeWorkspaceShortcut(offset = 1) {
+  get emojis() {
+    if (this._emojis) {
+      return this._emojis;
+    }
+    const lazy = {};
+    Services.scriptloader.loadSubScript("chrome://browser/content/zen-components/ZenEmojies.mjs", lazy);
+    this._emojis = lazy.zenGlobalEmojis();
+    return this._emojis;
+  }
+
+  clearEmojis() {
+    // Unload from memory
+    this._emojis = null;
+  }
+
+  async changeWorkspaceShortcut(offset = 1){
     // Cycle through workspaces
     let workspaces = await this._workspaces();
     let activeWorkspace = await this.getActiveWorkspace();
     let workspaceIndex = workspaces.workspaces.indexOf(activeWorkspace);
+
     // note: offset can be negative
-    let nextWorkspace =
-      workspaces.workspaces[(workspaceIndex + offset + workspaces.workspaces.length) % workspaces.workspaces.length];
+    let targetIndex = workspaceIndex + offset;
+    if (this.shouldWrapAroundNavigation) {
+      // Add length to handle negative indices and loop
+      targetIndex = (targetIndex + workspaces.workspaces.length) % workspaces.workspaces.length;
+    } else {
+      // Clamp within bounds to disable looping
+      targetIndex = Math.max(0, Math.min(workspaces.workspaces.length - 1, targetIndex));
+    }
+
+    let nextWorkspace = workspaces.workspaces[(targetIndex)];
     await this.changeWorkspace(nextWorkspace);
   }
 
@@ -1575,6 +1700,7 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
 
   async changeTabWorkspace(workspaceID) {
     const tabs = TabContextMenu.contextTab.multiselected ? gBrowser.selectedTabs : [TabContextMenu.contextTab];
+    document.getElementById('tabContextMenu').hidePopup();
     const previousWorkspaceID = document.documentElement.getAttribute('zen-workspace-id');
     for (let tab of tabs) {
       tab.setAttribute('zen-workspace-id', workspaceID);

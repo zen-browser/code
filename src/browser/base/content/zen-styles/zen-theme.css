@@ -1,3 +1,8 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
   /* Here, we contain all the theme related variables, for example theme
  * colors, border radius, etc.
  * We have `--zen-border-radius` and `--zen-primary-color` as variables.
@@ -17,7 +22,7 @@
   /* Branding */
   --zen-branding-dark: #202020;
   --zen-branding-coral: #F76F53;
-  --zen-branding-paper: #F2F0E3;
+  --zen-branding-paper: #ebebeb;
 
   --zen-branding-bg: light-dark(var(--zen-branding-paper), var(--zen-branding-dark));
   --zen-branding-bg-reverse: light-dark(var(--zen-branding-dark), var(--zen-branding-paper));
@@ -75,6 +80,10 @@
   --color-accent-primary: var(--button-primary-bgcolor) !important;
   --color-accent-primary-hover: var(--button-primary-hover-bgcolor) !important;
   --color-accent-primary-active: var(--button-primary-active-bgcolor) !important;
+
+  --link-color: var(--zen-branding-bg-reverse) !important;
+  --link-color-hover: var(--zen-colors-primary-foreground) !important;
+  --link-color-active: color-mix(in srgb, var(--zen-colors-primary-foreground) 80%, transparent 20%) !important;
 
   --in-content-page-background: var(--zen-colors-tertiary) !important;
   --zen-in-content-dialog-background: var(--zen-colors-tertiary);

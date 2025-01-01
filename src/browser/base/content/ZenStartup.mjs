@@ -2,7 +2,6 @@
   const lazy = {};
   var ZenStartup = {
     init() {
-      this.logHeader();
       this.openWatermark();
       window.SessionStore.promiseInitialized.then(() => {
         this._changeSidebarLocation();
@@ -27,9 +26,12 @@
         }
 
         // Fix notification deck
-        document
-          .getElementById('zen-appcontent-navbar-container')
-          .appendChild(document.getElementById('tab-notification-deck-template'));
+        const deckTemplate = document.getElementById('tab-notification-deck-template');
+        if (deckTemplate) {
+          document
+            .getElementById('zen-appcontent-navbar-container')
+            .appendChild(deckTemplate);
+        }
 
         // Disable smooth scroll
         gBrowser.tabContainer.arrowScrollbox.smoothScroll = false;
@@ -103,21 +105,6 @@
       gURLBar._initCopyCutController();
       gURLBar._initPasteAndGo();
       gURLBar._initStripOnShare();
-    },
-
-    logHeader() {
-      console.info(`
-
-    Welcome to Zen Browser!
-
-  If you are seeing this message, it means that you have successfully opened Zen's developer console.
-  Here you can see all the logs and errors that Zen is generating.
-
-  If you have any questions or need help, please contact us in any media in https://zen-browser.app/
-
-  Note: This developer console is not the same as the browser console, it has access to Zen's internal functions and variables, including your passwords and other sensitive information. Please do not paste any code here unless you know what you are doing.
-
-  `);
     },
   };
 

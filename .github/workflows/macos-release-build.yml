@@ -36,8 +36,7 @@ jobs:
 
       - name: Setup Python
         uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
+        # note: This will use the version defined in '.python-version' by default
 
       - name: Setup Git
         run: |
@@ -141,6 +140,7 @@ jobs:
         run: |
           export SURFER_PLATFORM="darwin"
           export MACOS_APPLE_DEVELOPER_ID="${{ secrets.macOS_AppleDeveloperId }}"
+          export ZEN_RELEASE=1
           pnpm package
 
       - name: Rename artifacts
@@ -160,34 +160,23 @@ jobs:
             --wait
           xcrun stapler staple "zen.macos-${{ matrix.arch }}.dmg"
 
-      - name: Sign .dmg again if failed
-        if: failure()
-        run: |
-          set -ex
-          hdiutil convert ./dist/*.dmg -format UDZO -imagekey zlib-level=9 -o zen.macos-${{ matrix.arch }}.dmg
-          xattr -cr zen.macos-${{ matrix.arch }}.dmg
-          codesign -s "${{ secrets.macOS_AppleDeveloperId }}" zen.macos-${{ matrix.arch }}.dmg
-          xcrun notarytool submit "zen.macos-${{ matrix.arch }}.dmg" \
-            --apple-id "${{ secrets.macOS_AppleAccountId }}" \
-            --team-id "${{ secrets.macOS_AppleDeveloperIdTeamId }}" \
-            --password "${{ secrets.macOS_AppleDeveloperIdPassword }}" \
-            --wait
-          xcrun stapler staple "zen.macos-${{ matrix.arch }}.dmg"
-
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
+          retention-days: 5
           name: zen.macos-${{ matrix.arch }}.dmg
           path: ./zen.macos-${{ matrix.arch }}.dmg
 
       - name: Upload build artifact (.mar)
         uses: actions/upload-artifact@v4
         with:
+          retention-days: 5
           name: macos-${{ matrix.arch }}.mar
           path: ./macos-${{ matrix.arch }}.mar
 
       - name: Upload build artifact (update manifests)
         uses: actions/upload-artifact@v4
         with:
+          retention-days: 5
           name: macos_update_manifest_${{ matrix.arch }}
           path: ./dist/update

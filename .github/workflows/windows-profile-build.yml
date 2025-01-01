@@ -19,13 +19,11 @@ on:
 jobs:
   windows-profile-build:
     name: |
-      Windows Profile Build - ${{ matrix.arch == 'x86_64' && 'generic' ||
-                                   matrix.arch == 'x86_64-v3' && 'specific' ||
-                                   matrix.arch == 'aarch64' && 'arm64' }}
+      Windows Profile Build - ${{ matrix.arch }}
     strategy:
       fail-fast: false
       matrix:
-        arch: [x86_64, x86_64-v3, aarch64]
+        arch: [x86_64, aarch64]
 
     runs-on: windows-latest
 
@@ -40,8 +38,8 @@ jobs:
 
       - name: Setup Git
         run: |
-          git config --global user.email "mauro-balades@users.noreply.github.com"
-          git config --global user.name "mauro-balades"
+          git config --global user.email "mr-cheff@users.noreply.github.com"
+          git config --global user.name "mr-cheff"
 
       - name: Setup pnpm
         run: npm install -g pnpm
@@ -50,14 +48,14 @@ jobs:
         run: npm i -g @zen-browser/surfer
 
       - name: Download artifact
+        if: ${{ matrix.arch == 'x86_64' }}
         uses: actions/download-artifact@v4
         with:
           path: C:\artifact
-          name: ${{ matrix.arch == 'x86_64' && 'generic' ||
-                   matrix.arch == 'x86_64-v3' && 'specific' ||
-                   matrix.arch == 'aarch64' && 'generic' }}-zen-windows-profile-data-and-jarlog.zip
+          name: ${{ matrix.arch == 'aarch64' && 'arm64' || matrix.arch }}-zen-windows-profile-data-and-jarlog.zip
 
       - name: Unpack artifact
+        if: ${{ matrix.arch == 'x86_64' }}
         run: |
           cd C:\artifact
           ls
@@ -70,16 +68,19 @@ jobs:
           C:\MozillaBuildSetup-Latest.exe /S | out-null
 
       - name: Download Firefox and dependencies
+        if: ${{ matrix.arch == 'x86_64' }}
         run: |
           git config --global core.safecrlf false
           pnpm surfer download
 
       - name: Import patches
+        if: ${{ matrix.arch == 'x86_64' }}
         env:
           SURFER_NO_BRANDING_PATCH: true
         run: pnpm surfer import
 
       - name: Generate
+        if: ${{ matrix.arch == 'x86_64' }}
         run: |
           ls
           $Env:USE_MINTTY = "0"
@@ -99,6 +100,7 @@ jobs:
         timeout-minutes: 15
 
       - name: Move profile data
+        if: ${{ matrix.arch == 'x86_64' }}
         run: |
           dir
           dir engine
@@ -106,11 +108,11 @@ jobs:
           mv engine/en-US.log en-US.log
 
       - name: Upload artifacts
+        if: ${{ matrix.arch == 'x86_64' }}
         uses: actions/upload-artifact@v4
         with:
+          retention-days: 1
           path: |
             merged.profdata
             en-US.log
-          name: windows-profdata-${{ matrix.arch == 'x86_64' && 'generic' ||
-                                   matrix.arch == 'x86_64-v3' && 'specific' ||
-                                   matrix.arch == 'aarch64' && 'arm64' }}
+          name: windows-profdata-${{ matrix.arch == 'aarch64' && 'arm64' || matrix.arch }}

@@ -4,6 +4,7 @@
 
 [![Downloads](https://img.shields.io/github/downloads/zen-browser/desktop/total.svg)](https://github.com/zen-browser/desktop/releases)
 [![Crowdin](https://badges.crowdin.net/zen-browser/localized.svg)](https://crowdin.com/project/zen-browser)
+[![Zen Release builds](https://github.com/zen-browser/desktop/actions/workflows/build.yml/badge.svg?branch=stable)](https://github.com/zen-browser/desktop/actions/workflows/build.yml)
 
 
 ✨ Experience tranquillity while browsing the web without people tracking you! Zen is a privacy-focused browser that blocks trackers, ads, and other unwanted content while offering the best browsing experience!
@@ -37,6 +38,25 @@ Zen is currently built using firefox version `133.0.3`! 🚀
 
 Zen is an open-source project, and we welcome contributions from the community! Please take a look at the [contribution guidelines](./docs/contribute.md) before getting started!
 
+### Issue metrics
+
+We keep track of how many issues are closed at the end of the month in [docs/issue-metrics](./docs/issue-metrics). This is to keep track of how many issues are being closed, because who doesn't like to see progress? 📈
+
+### Versioning
+
+Zen uses [Semantic Versioning](https://semver.org/) for versioning. Meaning, versions are displayed as `a.b-c.d` where:
+
+- `a` is the major version
+- `b` is the minor version
+- `c` is the branch prefix
+- `d` is the patch version
+
+### Branches
+
+Zen is divided into 2 main branches. We use `dev` for development and `stable` for stable releases. The `dev` branch is where all the new features are added and where `twilight` builds are generated. The `stable` branch is where the stable releases are generated. 
+
+We divide into 2 branches in case there's any really important security update (for example) that needs to be released before the next stable release. This allows us to do patches without releasing unstable versions to the public.
+
 ## ⚡ Performance
 
 Zen is built with performance in mind, and we have optimized the browser to be as fast as possible! Checkout the latest [performance benchmarks](https://docs.zen-browser.app/benchmarks)!
@@ -54,11 +74,7 @@ If you dont see your OS listed below, that's because we already have it in our [
 ##### Winget
 
 ```ps
-# Generic version
 winget install --id Zen-Team.Zen-Browser
-
-# Optimized version
-winget install --id Zen-Team.Zen-Browser.Optimized
 ```
 
 #### macOS
@@ -77,11 +93,7 @@ brew install --cask zen-browser
 ##### Arch-based distributions
 
 ```sh
-# For generic version
 yay -S zen-browser-bin
-
-# For optimized version
-yay -S zen-browser-avx2-bin
 ```
 
 ##### Other Linux distributions (AppImage with automated system integration)
@@ -120,15 +132,9 @@ Zen couldn't be in its current state without the help of these amazing projects!
 
 ### 🖥️ Comparison with other browsers
 
-As you can see, chromium based browsers are the most popular browsers, help us change that by starring the project and spreading the word! 🌟
+Thanks everyone for making zen stand out amongs these giants!
 
-<a href="https://star-history.com/#zen-browser/desktop&Date">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=zen-browser/desktop,chromium/chromium,brave/brave-browser&type=Date&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=zen-browser/desktop,chromium/chromium,brave/brave-browser&type=Date" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=chromium/chromium,zen-browser/desktop,brave/brave-browser&type=Date" />
- </picture>
-</a>
+[![Star History Chart](https://api.star-history.com/svg?repos=zen-browser/desktop,chromium/chromium,brave/brave-browser&type=Date)](https://star-history.com/#zen-browser/desktop&chromium/chromium&brave/brave-browser&Date)
 
 ## 📄 License
 

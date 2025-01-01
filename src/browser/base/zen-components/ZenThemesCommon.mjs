@@ -42,7 +42,7 @@ var ZenThemesCommon = {
           {
             label: { "l10n-id": "zen-themes-corrupted" },
             image: "chrome://browser/skin/notification-icons/persistent-storage-blocked.svg",
-            priority: gNotificationBox.PRIORITY_INFO_MEDIUM,
+            priority: gNotificationBox.PRIORITY_WARNING_HIGH,
           },
           []
         );

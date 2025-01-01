@@ -6,8 +6,10 @@ ac_add_options --enable-eme=widevine
 export MOZ_MACBUNDLE_ID=${appId}
 export MOZ_MACBUNDLE_NAME="Zen Browser.app"
 
-export MOZ_PGO=1
-ac_add_options MOZ_PGO=1
+if test "$ZEN_RELEASE"; then
+  export MOZ_PGO=1
+  ac_add_options MOZ_PGO=1
+fi
 
 if test "$SURFER_COMPAT" = "x86_64"; then
     ac_add_options --target=x86_64-apple-darwin
@@ -39,4 +41,5 @@ export VERBOSE=1
 
 # Enable polly for macos, since they have a more stable set of GPU drivers,
 # unlike Linux, which has a lot of different drivers.
-export POLLY="-mllvm -polly -mllvm -polly-2nd-level-tiling -mllvm -polly-loopfusion-greedy -mllvm -polly-pattern-matching-based-opts -mllvm -polly-position=before-vectorizer -mllvm -polly-vectorizer=stripmine"
+# Edit: let's run some experiments, see if RAM usage lowers significantly
+# export POLLY="-mllvm -polly -mllvm -polly-2nd-level-tiling -mllvm -polly-loopfusion-greedy -mllvm -polly-pattern-matching-based-opts -mllvm -polly-position=before-vectorizer -mllvm -polly-vectorizer=stripmine"

@@ -20,8 +20,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        arch: [x86_64, x86_64-v3, aarch64]
-    name: Build Linux - ${{ matrix.arch == 'x86_64' && 'Generic' || matrix.arch == 'x86_64-v3' && 'Specific' || matrix.arch == 'aarch64' && 'aarch64' }}
+        arch: [x86_64, aarch64]
+    name: Build Linux - ${{ matrix.arch }}
 
     steps:
       - name: Free Disk Space (Ubuntu)
@@ -143,27 +143,31 @@ jobs:
           SURFER_COMPAT: ${{ matrix.arch }}
         run: |
           export SURFER_PLATFORM="linux"
+          export ZEN_RELEASE=1
           pnpm package
 
       - name: Rename artifacts
         run: |
-          mv dist/zen-*.tar.bz2 "zen.linux-${{ matrix.arch == 'x86_64' && 'generic' || matrix.arch == 'x86_64-v3' && 'specific' || matrix.arch == 'aarch64' && 'aarch64' }}.tar.bz2"
-          mv dist/output.mar linux${{ matrix.arch == 'x86_64' && '-generic' || matrix.arch == 'aarch64' && '-aarch64' || '' }}.mar
+          mv dist/zen-*.tar.bz2 "zen.linux-${{ matrix.arch }}.tar.bz2"
+          mv dist/output.mar linux${{ matrix.arch == 'aarch64' && '-aarch64' || '' }}.mar
 
       - name: Upload build artifact (binary)
         uses: actions/upload-artifact@v4
         with:
-          name: zen.linux-${{ matrix.arch == 'x86_64' && 'generic' || matrix.arch == 'x86_64-v3' && 'specific' || matrix.arch == 'aarch64' && 'aarch64' }}.tar.bz2
-          path: ./zen.linux-${{ matrix.arch == 'x86_64' && 'generic' || matrix.arch == 'x86_64-v3' && 'specific' || matrix.arch == 'aarch64' && 'aarch64' }}.tar.bz2
+          retention-days: 5
+          name: zen.linux-${{ matrix.arch }}.tar.bz2
+          path: ./zen.linux-${{ matrix.arch }}.tar.bz2
 
       - name: Upload build artifact (.mar)
         uses: actions/upload-artifact@v4
         with:
-          name: linux${{ matrix.arch == 'x86_64' && '-generic' || matrix.arch == 'aarch64' && '-aarch64' || '' }}.mar
-          path: ./linux${{ matrix.arch == 'x86_64' && '-generic' || matrix.arch == 'aarch64' && '-aarch64' || '' }}.mar
+          retention-days: 5
+          name: linux${{ matrix.arch == 'aarch64' && '-aarch64' || '' }}.mar
+          path: ./linux${{ matrix.arch == 'aarch64' && '-aarch64' || '' }}.mar
 
       - name: Upload build artifact (update manifests)
         uses: actions/upload-artifact@v4
         with:
-          name: linux_update_manifest_${{ matrix.arch == 'x86_64' && 'generic' || matrix.arch == 'x86_64-v3' && 'specific' || matrix.arch == 'aarch64' && 'aarch64' }}
+          retention-days: 5
+          name: linux_update_manifest_${{ matrix.arch }}
           path: ./dist/update

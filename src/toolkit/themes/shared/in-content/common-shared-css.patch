@@ -1,5 +1,5 @@
 diff --git a/toolkit/themes/shared/in-content/common-shared.css b/toolkit/themes/shared/in-content/common-shared.css
-index 646a11b699a0b34204cd766836678bfc17e8548e..14ebf803000ccea0de7c4f09ed2a9528bb017778 100644
+index 646a11b699a0b34204cd766836678bfc17e8548e..3fc584bc42d7c3acbd7cb2d86d7fa013c1f2406d 100644
 --- a/toolkit/themes/shared/in-content/common-shared.css
 +++ b/toolkit/themes/shared/in-content/common-shared.css
 @@ -5,6 +5,8 @@
@@ -38,3 +38,21 @@ index 646a11b699a0b34204cd766836678bfc17e8548e..14ebf803000ccea0de7c4f09ed2a9528
    }
  
    #categories > .category[selected]:not(:hover) {
+@@ -839,7 +841,7 @@ html|*#categories[last-input-type="mouse"] > html|button.category:focus-visible
+   fill-opacity: 1;
+ }
+ 
+-@media (max-width: 830px) {
++@media (max-width: 130px) {
+   :root {
+     --in-content-sidebar-width: 118px;
+   }
+@@ -1219,7 +1221,7 @@ xul|*.sidebar-footer-link {
+   user-select: none;
+ }
+ 
+-@media (max-width: 830px) {
++@media (max-width: 130px) {
+   .sidebar-footer-list {
+     margin-inline-start: 40px;
+     align-items: flex-start;

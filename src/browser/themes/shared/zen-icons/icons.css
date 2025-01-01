@@ -26,19 +26,11 @@
 #forward-button,
 #zen-sidebar-web-panel-forward {
   list-style-image: url('forward.svg') !important;
-
-  @media (max-width: 650px) {
-    display: none;
-  }
 }
 
 #reload-button,
 #zen-sidebar-web-panel-reload {
   list-style-image: url('reload.svg') !important;
-
-  @media (max-width: 650px) {
-    display: none;
-  }
 }
 
 #stop-button,
@@ -82,10 +74,6 @@
 #appMenu-downloads-button,
 #appMenu-library-downloads-button {
   list-style-image: url('downloads.svg') !important;
-
-  @media (max-width: 650px) {
-    display: none;
-  }
 }
 
 #appMenu-translate-button {
@@ -106,6 +94,10 @@
 
 #nav-bar-overflow-button {
   list-style-image: url('chevron.svg') !important;
+}
+
+#zen-rice-share-options .options-header {
+  list-style-image: url('arrow-right.svg');
 }
 
 #PanelUI-menu-button > * {
@@ -410,6 +402,10 @@
   list-style-image: url('customize.svg') !important;
 }
 
+#appmenu-zen-share-rice {
+  list-style-image: url('share.svg');
+}
+
 .bookmark-item[container] {
   list-style-image: url('folder.svg') !important;
 }
@@ -646,9 +642,11 @@
   fill: currentColor !important;
 }
 
-menu > .menu-iconic-text,
-menuitem > .menu-iconic-text {
-  padding-inline-start: var(--fp-contextmenu-menuicon-margin-inline) !important;
+@media not (-moz-platform: windows) {
+  menu > .menu-iconic-text,
+  menuitem > .menu-iconic-text {
+    padding-inline-start: var(--fp-contextmenu-menuicon-margin-inline) !important;
+  }
 }
 
 #context-savepage {
@@ -1084,8 +1082,10 @@ menuitem[id='placesContext_new:separator'] {
   --fp-enabled: 1;
 }
 
-.unified-extensions-context-menu-pin-to-toolbar {
-  --menu-image: url('pin.svg');
+@media not (-moz-platform: linux) {
+  .unified-extensions-context-menu-pin-to-toolbar {
+    --menu-image: url('pin.svg');
+  }
 }
 
 .unified-extensions-context-menu-move-widget-down {

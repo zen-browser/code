@@ -266,7 +266,7 @@ groupbox h2 {
 
   padding: 7px;
 
-  &[left] div {
+  &[top] div {
     width: 100%;
     background: var(--zen-primary-color);
     border-radius: 5px;
@@ -274,7 +274,7 @@ groupbox h2 {
     box-shadow: var(--zen-compact-mode-styles-shadow);
   }
 
-  &[top] div {
+  &[left] div {
     width: 18px;
     background: var(--zen-primary-color);
     border-radius: 5px;

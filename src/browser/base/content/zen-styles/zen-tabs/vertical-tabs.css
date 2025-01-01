@@ -1,3 +1,8 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 
 #tabbrowser-tabs,
 #TabsToolbar,
@@ -166,6 +171,13 @@
     &[should-hide='true'] {
 %include vertical-tabs-topbar.inc.css
     }
+
+    :root[inDOMFullscreen='true'] & {
+      max-height: 0 !important;
+      min-height: unset !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+    }
   }
 }
 
@@ -224,14 +236,14 @@
   }
 
   & .tabbrowser-tab {
-    transition: scale 0.1s ease-in-out;
-    &[fadein='true']:not([zen-essential='true']) {
+    transition: scale 0.07s ease;
+    #tabbrowser-tabs:not([dont-animate-tabs='true']) &[fadein='true']:not([zen-essential='true']) {
       #tabbrowser-tabs[zen-workspace-animation='previous'] & {
-        animation: zen-slide-in 0.2s ease-in-out;
+        animation: zen-slide-in 0.3s ease;
       }
 
       #tabbrowser-tabs[zen-workspace-animation='next'] & {
-        animation: zen-slide-in-reverse 0.2s ease-in-out;
+        animation: zen-slide-in-reverse 0.3s ease;
       }
     }
 
@@ -372,7 +384,6 @@
 
     :root[zen-single-toolbar='true'] & {
       margin-left: var(--zen-toolbox-padding);
-      width: calc(100% - var(--zen-toolbox-padding));
       & #urlbar:not([breakout-extend='true']) .urlbar-input-container {
         padding-left: 4px;
         padding-right: 4px;
@@ -380,7 +391,6 @@
 
       :root[zen-right-side='true'] & {
         margin-left: 0;
-        margin-right: var(--zen-toolbox-padding);
       }
     }
   }
@@ -573,9 +583,6 @@
     padding-top: var(--zen-element-separation);
     align-items: center;
   }
-  :root:has(&) #zen-sidebar-splitter {
-    display: none !important;
-  }
   & #tabbrowser-arrowscrollbox-periphery {
     & > toolbarbutton {
       margin: 0 auto !important;
@@ -677,10 +684,15 @@
   }
 }
 
+:root:not([zen-sidebar-expanded='true']) #zen-sidebar-splitter {
+  display: none !important;
+}
+
 /* Mark: Separator styling */
 #zen-sidebar-splitter {
   opacity: 0;
-  width: var(--zen-toolbox-padding);
+  max-width: var(--zen-toolbox-padding) !important;
+  min-width: var(--zen-toolbox-padding) !important;
   height: 100%;
   transition: opacity 0.2s ease-in-out;
   background: var(--zen-colors-border);
@@ -797,6 +809,10 @@
   min-width: unset !important;
 
   :root[zen-sidebar-expanded='true'] & {
+    --toolbarbutton-inner-padding: var(--zen-toolbar-button-inner-padding) !important;
+  }
+
+  :root[zen-single-toolbar='true'] & {
     --toolbarbutton-inner-padding: calc(var(--zen-toolbar-button-inner-padding) - 2px) !important;
   }
 
@@ -808,7 +824,7 @@
       padding-inline-start: var(--zen-toolbox-padding);
     }
 
-    #nav-bar:has(&) & {
+    #nav-bar & {
       padding-inline-start: var(--toolbarbutton-outer-padding);
     }
 
@@ -938,7 +954,7 @@
 @media not (-moz-bool-pref: 'zen.view.compact') {
   :root[zen-right-side='true']:not([zen-sidebar-expanded='true']):not([zen-window-buttons-reversed='true']) {
     & #navigator-toolbox {
-      padding-top: var(--zen-toolbar-height);
+      margin-top: var(--zen-toolbar-height) !important;
     }
 
     & .titlebar-buttonbox-container {
@@ -956,11 +972,13 @@
     & #zen-appcontent-navbar-container {
       padding-left: var(--zen-element-separation);
     }
+
+%include vertical-tabs-topbuttons-fix.css
   }
 
   :root:not([zen-right-side='true']):not([zen-sidebar-expanded='true'])[zen-window-buttons-reversed='true'] {
     & #navigator-toolbox {
-      padding-top: var(--zen-toolbar-height);
+      margin-top: var(--zen-toolbar-height) !important;
     }
 
     & .titlebar-buttonbox-container {
@@ -978,5 +996,7 @@
     & #zen-appcontent-navbar-container {
       padding-right: var(--zen-element-separation);
     }
+
+%include vertical-tabs-topbuttons-fix.css
   }
 }

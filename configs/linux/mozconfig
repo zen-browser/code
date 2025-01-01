@@ -33,23 +33,6 @@ elif test "$SURFER_COMPAT" = "aarch64"; then
     export CXXFLAGS="$CXXFLAGS -O3"
     export LDFLAGS="$LDFLAGS -Wl,-O3"
     export RUSTFLAGS="$RUSTFLAGS -C codegen-units=1 -Clink-args=--icf=safe"
-elif test "$ZEN_RELEASE"; then
-    ac_add_options --target=x86_64-pc-linux
-    ac_add_options --enable-eme=widevine
-
-    # Enable Profile Guided Optimization
-    export MOZ_PGO=1
-    ac_add_options MOZ_PGO=1
-
-    # Optimization flags for general release
-    ac_add_options --enable-wasm-avx
-    ac_add_options --enable-optimize="-O3 -march=x86-64-v3 -msse3 -mssse3 -msse4.1 -msse4.2 -mavx -maes -mpopcnt -mpclmul"
-        
-    export CFLAGS="$CFLAGS -O3 -ffp-contract=fast -march=x86-64-v3 -msse3 -mssse3 -msse4.1 -msse4.2 -mavx -mavx2 -mfma -maes -mpopcnt -mpclmul"
-    export CPPFLAGS="$CPPFLAGS -O3 -ffp-contract=fast -march=x86-64-v3 -msse3 -mssse3 -msse4.1 -msse4.2 -mavx -mavx2 -mfma -maes -mpopcnt -mpclmul"
-    export CXXFLAGS="$CXXFLAGS -O3 -flto=thin -ffp-contract=fast -march=x86-64-v3 -msse3 -mssse3 -msse4.1 -msse4.2 -mavx -mavx2 -mfma -maes -mpopcnt -mpclmul"
-    export LDFLAGS="$LDFLAGS -Wl,-O3 -Wl,-mllvm,-fp-contract=fast -march=x86-64-v3"
-    export RUSTFLAGS="$RUSTFLAGS -C target-cpu=x86-64-v3 -C target-feature=+sse4.1 -C target-feature=+avx2 -C codegen-units=1 -Clink-args=--icf=safe"
 fi
 
     export VERBOSE=1

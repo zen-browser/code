@@ -240,13 +240,13 @@
     #tabbrowser-tabs:not([dont-animate-tabs='true']) &[fadein='true']:not([zen-essential='true']) {
       #tabbrowser-tabs[zen-workspace-animation='previous'] & {
         animation: zen-slide-in 0.4s ease;
+        animation-delay: 0.2s;
       }
 
       #tabbrowser-tabs[zen-workspace-animation='next'] & {
         animation: zen-slide-in-reverse 0.4s ease;
+        animation-delay: 0.2s;
       }
-
-      animation-delay: 0.2s;
     }
 
     &:not([zen-essential='true']):active {

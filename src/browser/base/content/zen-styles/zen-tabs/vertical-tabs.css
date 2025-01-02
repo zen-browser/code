@@ -254,6 +254,10 @@
         animation-duration: 0.2s;
         animation-timing-function: ease;
       }
+
+      #tabbrowser-tabs[dont-animate-tabs] & {
+        opacity: 0;
+      }
     }
 
     &:not([zen-essential='true']):active {

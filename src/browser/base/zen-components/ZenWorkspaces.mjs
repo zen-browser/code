@@ -1331,7 +1331,6 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     for (const tab of gBrowser.tabs) {
       const tabWorkspaceId = tab.getAttribute('zen-workspace-id');
       const isEssential = tab.getAttribute("zen-essential") === "true";
-      const tabContextId = tab.getAttribute("usercontextid");
 
       // Always hide last selected tabs from other workspaces
       if (lastSelectedTab === tab && tabWorkspaceId !== workspaceUuid && !isEssential) {

@@ -578,155 +578,155 @@ class ZenKeyboardShortcutsLoader {
   async remove() {
     await IOUtils.remove(this.shortcutsFile);
   }
-}
 
-function zenGetDefaultShortcuts() {
-  // DO NOT CHANGE ANYTHING HERE
-  // For adding new default shortcuts, add them to inside the migration function
-  //  and increment the version number.
+  static zenGetDefaultShortcuts() {
+    // DO NOT CHANGE ANYTHING HERE
+    // For adding new default shortcuts, add them to inside the migration function
+    //  and increment the version number.
 
-  let keySet = document.getElementById(ZEN_MAIN_KEYSET_ID);
-  let newShortcutList = [];
+    let keySet = document.getElementById(ZEN_MAIN_KEYSET_ID);
+    let newShortcutList = [];
 
-  // Firefox's standard keyset. Reverse order to keep the order of the keys
-  for (let i = keySet.children.length - 1; i >= 0; i--) {
-    let key = keySet.children[i];
-    let parsed = KeyShortcut.parseFromXHTML(key);
-    newShortcutList.push(parsed);
-  }
+    // Firefox's standard keyset. Reverse order to keep the order of the keys
+    for (let i = keySet.children.length - 1; i >= 0; i--) {
+      let key = keySet.children[i];
+      let parsed = KeyShortcut.parseFromXHTML(key);
+      newShortcutList.push(parsed);
+    }
 
-  // Compact mode's keyset
-  newShortcutList.push(
-    new KeyShortcut(
-      'zen-compact-mode-toggle',
-      'C',
-      '',
-      ZEN_COMPACT_MODE_SHORTCUTS_GROUP,
-      KeyShortcutModifiers.fromObject({ accel: true, alt: true }),
-      'code:gZenCompactModeManager.toggle()',
-      'zen-compact-mode-shortcut-toggle'
-    )
-  );
-  newShortcutList.push(
-    new KeyShortcut(
-      'zen-compact-mode-show-sidebar',
-      'S',
-      '',
-      ZEN_COMPACT_MODE_SHORTCUTS_GROUP,
-      KeyShortcutModifiers.fromObject({ accel: true, alt: true }),
-      'code:gZenCompactModeManager.toggleSidebar()',
-      'zen-compact-mode-shortcut-show-sidebar'
-    )
-  );
-  newShortcutList.push(
-    new KeyShortcut(
-      'zen-compact-mode-show-toolbar',
-      'T',
-      '',
-      ZEN_COMPACT_MODE_SHORTCUTS_GROUP,
-      KeyShortcutModifiers.fromObject({ accel: true, alt: true }),
-      'code:gZenCompactModeManager.toggleToolbar()',
-      'zen-compact-mode-shortcut-show-toolbar'
-    )
-  );
-
-  // Workspace's keyset
-  for (let i = 10; i > 0; i--) {
+    // Compact mode's keyset
     newShortcutList.push(
       new KeyShortcut(
-        `zen-workspace-switch-${i}`,
+        'zen-compact-mode-toggle',
+        'C',
         '',
-        '',
-        ZEN_WORKSPACE_SHORTCUTS_GROUP,
-        KeyShortcutModifiers.fromObject({}),
-        `code:ZenWorkspaces.shortcutSwitchTo(${i - 1})`,
-        `zen-workspace-shortcut-switch-${i}`
+        ZEN_COMPACT_MODE_SHORTCUTS_GROUP,
+        KeyShortcutModifiers.fromObject({ accel: true, alt: true }),
+        'code:gZenCompactModeManager.toggle()',
+        'zen-compact-mode-shortcut-toggle'
       )
     );
+    newShortcutList.push(
+      new KeyShortcut(
+        'zen-compact-mode-show-sidebar',
+        'S',
+        '',
+        ZEN_COMPACT_MODE_SHORTCUTS_GROUP,
+        KeyShortcutModifiers.fromObject({ accel: true, alt: true }),
+        'code:gZenCompactModeManager.toggleSidebar()',
+        'zen-compact-mode-shortcut-show-sidebar'
+      )
+    );
+    newShortcutList.push(
+      new KeyShortcut(
+        'zen-compact-mode-show-toolbar',
+        'T',
+        '',
+        ZEN_COMPACT_MODE_SHORTCUTS_GROUP,
+        KeyShortcutModifiers.fromObject({ accel: true, alt: true }),
+        'code:gZenCompactModeManager.toggleToolbar()',
+        'zen-compact-mode-shortcut-show-toolbar'
+      )
+    );
+
+    // Workspace's keyset
+    for (let i = 10; i > 0; i--) {
+      newShortcutList.push(
+        new KeyShortcut(
+          `zen-workspace-switch-${i}`,
+          '',
+          '',
+          ZEN_WORKSPACE_SHORTCUTS_GROUP,
+          KeyShortcutModifiers.fromObject({}),
+          `code:ZenWorkspaces.shortcutSwitchTo(${i - 1})`,
+          `zen-workspace-shortcut-switch-${i}`
+        )
+      );
+    }
+    newShortcutList.push(
+      new KeyShortcut(
+        'zen-workspace-forward',
+        'E',
+        '',
+        ZEN_WORKSPACE_SHORTCUTS_GROUP,
+        KeyShortcutModifiers.fromObject({ accel: true, alt: true }),
+        'code:ZenWorkspaces.changeWorkspaceShortcut()',
+        'zen-workspace-shortcut-forward'
+      )
+    );
+    newShortcutList.push(
+      new KeyShortcut(
+        'zen-workspace-backward',
+        'Q',
+        '',
+        ZEN_WORKSPACE_SHORTCUTS_GROUP,
+        KeyShortcutModifiers.fromObject({ accel: true, alt: true }),
+        'code:ZenWorkspaces.changeWorkspaceShortcut(-1)',
+        'zen-workspace-shortcut-backward'
+      )
+    );
+
+    // Other keyset
+    newShortcutList.push(
+      new KeyShortcut(
+        'zen-toggle-web-panel',
+        'P',
+        '',
+        ZEN_OTHER_SHORTCUTS_GROUP,
+        KeyShortcutModifiers.fromObject({ alt: true }),
+        'code:gZenBrowserManagerSidebar.toggle()',
+        'zen-web-panel-shortcut-toggle'
+      )
+    );
+
+    // Split view
+    newShortcutList.push(
+      new KeyShortcut(
+        'zen-split-view-grid',
+        'G',
+        '',
+        ZEN_SPLIT_VIEW_SHORTCUTS_GROUP,
+        KeyShortcutModifiers.fromObject({ accel: true, alt: true }),
+        "code:gZenViewSplitter.toggleShortcut('grid')",
+        'zen-split-view-shortcut-grid'
+      )
+    );
+    newShortcutList.push(
+      new KeyShortcut(
+        'zen-split-view-vertical',
+        'V',
+        '',
+        ZEN_SPLIT_VIEW_SHORTCUTS_GROUP,
+        KeyShortcutModifiers.fromObject({ accel: true, alt: true }),
+        "code:gZenViewSplitter.toggleShortcut('vsep')",
+        'zen-split-view-shortcut-vertical'
+      )
+    );
+    newShortcutList.push(
+      new KeyShortcut(
+        'zen-split-view-horizontal',
+        'H',
+        '',
+        ZEN_SPLIT_VIEW_SHORTCUTS_GROUP,
+        KeyShortcutModifiers.fromObject({ accel: true, alt: true }),
+        "code:gZenViewSplitter.toggleShortcut('hsep')",
+        'zen-split-view-shortcut-horizontal'
+      )
+    );
+    newShortcutList.push(
+      new KeyShortcut(
+        'zen-split-view-unsplit',
+        'U',
+        '',
+        ZEN_SPLIT_VIEW_SHORTCUTS_GROUP,
+        KeyShortcutModifiers.fromObject({ accel: true, alt: true }),
+        "code:gZenViewSplitter.toggleShortcut('unsplit')",
+        'zen-split-view-shortcut-unsplit'
+      )
+    );
+
+    return newShortcutList;
   }
-  newShortcutList.push(
-    new KeyShortcut(
-      'zen-workspace-forward',
-      'E',
-      '',
-      ZEN_WORKSPACE_SHORTCUTS_GROUP,
-      KeyShortcutModifiers.fromObject({ accel: true, alt: true }),
-      'code:ZenWorkspaces.changeWorkspaceShortcut()',
-      'zen-workspace-shortcut-forward'
-    )
-  );
-  newShortcutList.push(
-    new KeyShortcut(
-      'zen-workspace-backward',
-      'Q',
-      '',
-      ZEN_WORKSPACE_SHORTCUTS_GROUP,
-      KeyShortcutModifiers.fromObject({ accel: true, alt: true }),
-      'code:ZenWorkspaces.changeWorkspaceShortcut(-1)',
-      'zen-workspace-shortcut-backward'
-    )
-  );
-
-  // Other keyset
-  newShortcutList.push(
-    new KeyShortcut(
-      'zen-toggle-web-panel',
-      'P',
-      '',
-      ZEN_OTHER_SHORTCUTS_GROUP,
-      KeyShortcutModifiers.fromObject({ alt: true }),
-      'code:gZenBrowserManagerSidebar.toggle()',
-      'zen-web-panel-shortcut-toggle'
-    )
-  );
-
-  // Split view
-  newShortcutList.push(
-    new KeyShortcut(
-      'zen-split-view-grid',
-      'G',
-      '',
-      ZEN_SPLIT_VIEW_SHORTCUTS_GROUP,
-      KeyShortcutModifiers.fromObject({ accel: true, alt: true }),
-      "code:gZenViewSplitter.toggleShortcut('grid')",
-      'zen-split-view-shortcut-grid'
-    )
-  );
-  newShortcutList.push(
-    new KeyShortcut(
-      'zen-split-view-vertical',
-      'V',
-      '',
-      ZEN_SPLIT_VIEW_SHORTCUTS_GROUP,
-      KeyShortcutModifiers.fromObject({ accel: true, alt: true }),
-      "code:gZenViewSplitter.toggleShortcut('vsep')",
-      'zen-split-view-shortcut-vertical'
-    )
-  );
-  newShortcutList.push(
-    new KeyShortcut(
-      'zen-split-view-horizontal',
-      'H',
-      '',
-      ZEN_SPLIT_VIEW_SHORTCUTS_GROUP,
-      KeyShortcutModifiers.fromObject({ accel: true, alt: true }),
-      "code:gZenViewSplitter.toggleShortcut('hsep')",
-      'zen-split-view-shortcut-horizontal'
-    )
-  );
-  newShortcutList.push(
-    new KeyShortcut(
-      'zen-split-view-unsplit',
-      'U',
-      '',
-      ZEN_SPLIT_VIEW_SHORTCUTS_GROUP,
-      KeyShortcutModifiers.fromObject({ accel: true, alt: true }),
-      "code:gZenViewSplitter.toggleShortcut('unsplit')",
-      'zen-split-view-shortcut-unsplit'
-    )
-  );
-
-  return newShortcutList;
 }
 
 class ZenKeyboardShortcutsVersioner {
@@ -789,7 +789,7 @@ class ZenKeyboardShortcutsVersioner {
       // Migrate from 0 to 1
       // Here, we do a complet reset of the shortcuts,
       // since nothing seems to work properly.
-      data = zenGetDefaultShortcuts();
+      data = ZenKeyboardShortcutsLoader.zenGetDefaultShortcuts();
     }
     if (version < 2) {
       // Migrate from 1 to 2
@@ -819,7 +819,7 @@ class ZenKeyboardShortcutsVersioner {
       //  detection for internal keys was not working properly, so every internal
       //  shortcut was being saved as a user-editable shortcut.
       // This migration will fix this issue.
-      const defaultShortcuts = zenGetDefaultShortcuts();
+      const defaultShortcuts = ZenKeyboardShortcutsLoader.zenGetDefaultShortcuts();
       // Get the default shortcut, compare the id and set the internal flag if needed
       for (let shortcut of data) {
         for (let defaultShortcut of defaultShortcuts) {

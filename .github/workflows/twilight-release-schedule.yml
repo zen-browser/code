@@ -29,4 +29,3 @@ jobs:
         with:
           node-version-file: '.nvmrc'
 
-      # TODO:

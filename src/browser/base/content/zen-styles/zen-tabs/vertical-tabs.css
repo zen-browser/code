@@ -928,6 +928,7 @@
   &:not([selected]) .tab-background {
     background: var(--zen-toolbar-element-bg);
     backdrop-filter: none !important;
+    border: 1px solid light-dark(transparent, rgba(255, 255, 255, 0.05));
   }
 
   & .tab-content {

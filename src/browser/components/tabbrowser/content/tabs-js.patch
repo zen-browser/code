@@ -1,5 +1,5 @@
 diff --git a/browser/components/tabbrowser/content/tabs.js b/browser/components/tabbrowser/content/tabs.js
-index f7c39fe804182e2bdf53045ba3b6a5ba17079fc3..bc8361d14f27a3ae00b791f15691c0317076f26d 100644
+index f7c39fe804182e2bdf53045ba3b6a5ba17079fc3..14c15935c4d7decfb011312d15c8bb71924b19e9 100644
 --- a/browser/components/tabbrowser/content/tabs.js
 +++ b/browser/components/tabbrowser/content/tabs.js
 @@ -649,7 +649,7 @@
@@ -48,7 +48,26 @@ index f7c39fe804182e2bdf53045ba3b6a5ba17079fc3..bc8361d14f27a3ae00b791f15691c031
          ...children,
        ];
        return this.#allTabs;
-@@ -1790,10 +1791,12 @@
+@@ -1556,6 +1557,7 @@
+       }
+ 
+       this.#focusableItems = [
++        ...document.getElementById("zen-essentials-container").children,
+         ...verticalPinnedTabsContainer.children,
+         ...focusableItems,
+       ];
+@@ -1579,8 +1581,8 @@
+     #isContainerVerticalPinnedExpanded(tab) {
+       return (
+         this.verticalMode &&
+-        tab.hasAttribute("pinned") &&
+-        this.hasAttribute("expanded")
++        (tab.hasAttribute("zen-essential")) &&
++        (this.hasAttribute("expanded") || document.documentElement.hasAttribute("zen-sidebar-expanded"))
+       );
+     }
+ 
+@@ -1790,10 +1792,12 @@
  
      _handleTabSelect(aInstant) {
        let selectedTab = this.selectedItem;
@@ -64,7 +83,7 @@ index f7c39fe804182e2bdf53045ba3b6a5ba17079fc3..bc8361d14f27a3ae00b791f15691c031
        selectedTab._notselectedsinceload = false;
      }
  
-@@ -1841,7 +1844,7 @@
+@@ -1841,7 +1845,7 @@
          if (isEndTab && !this._hasTabTempMaxWidth) {
            return;
          }
@@ -73,7 +92,7 @@ index f7c39fe804182e2bdf53045ba3b6a5ba17079fc3..bc8361d14f27a3ae00b791f15691c031
          // Force tabs to stay the same width, unless we're closing the last tab,
          // which case we need to let them expand just enough so that the overall
          // tabbar width is the same.
-@@ -1856,7 +1859,7 @@
+@@ -1856,7 +1860,7 @@
          let tabsToReset = [];
          for (let i = numPinned; i < tabs.length; i++) {
            let tab = tabs[i];
@@ -82,7 +101,7 @@ index f7c39fe804182e2bdf53045ba3b6a5ba17079fc3..bc8361d14f27a3ae00b791f15691c031
            if (!isEndTab) {
              // keep tabs the same width
              tab.style.transition = "none";
-@@ -1922,13 +1925,13 @@
+@@ -1922,13 +1926,13 @@
        let verticalTabsContainer = document.getElementById(
          "vertical-pinned-tabs-container"
        );
@@ -98,7 +117,7 @@ index f7c39fe804182e2bdf53045ba3b6a5ba17079fc3..bc8361d14f27a3ae00b791f15691c031
          }
        }
  
-@@ -1952,7 +1955,7 @@
+@@ -1952,7 +1956,7 @@
  
      _positionPinnedTabs() {
        let tabs = this.visibleTabs;
@@ -107,7 +126,7 @@ index f7c39fe804182e2bdf53045ba3b6a5ba17079fc3..bc8361d14f27a3ae00b791f15691c031
        let absPositionHorizontalTabs =
          this.overflowing && tabs.length > numPinned && numPinned > 0;
  
-@@ -2033,7 +2036,7 @@
+@@ -2033,7 +2037,7 @@
          return;
        }
  
@@ -116,7 +135,7 @@ index f7c39fe804182e2bdf53045ba3b6a5ba17079fc3..bc8361d14f27a3ae00b791f15691c031
  
        let directionX = screenX > dragData.animLastScreenX;
        let directionY = screenY > dragData.animLastScreenY;
-@@ -2221,7 +2224,7 @@
+@@ -2221,7 +2225,7 @@
        }
  
        let pinned = draggedTab.pinned;
@@ -125,7 +144,7 @@ index f7c39fe804182e2bdf53045ba3b6a5ba17079fc3..bc8361d14f27a3ae00b791f15691c031
        let tabs = this.visibleTabs.slice(
          pinned ? 0 : numPinned,
          pinned ? numPinned : undefined
-@@ -2456,8 +2459,8 @@
+@@ -2456,8 +2460,8 @@
        );
      }
  

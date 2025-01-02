@@ -288,12 +288,15 @@
 
       for (let otherTab of gBrowser.tabs) {
         if (otherTab.pinned && otherTab._tPos > tab.position) {
-          otherTab.position = otherTab._tPos;
-          await ZenPinnedTabsStorage.savePin(otherTab, false);
+          const actualPin = this._pinsCache.find(pin => pin.uuid === otherTab.getAttribute("zen-pin-id"));
+          actualPin.position = otherTab._tPos;
+          await ZenPinnedTabsStorage.savePin(actualPin, false);
         }
       }
 
-      await ZenPinnedTabsStorage.savePin(tab);
+      const actualPin = this._pinsCache.find(pin => pin.uuid === tab.getAttribute("zen-pin-id"));
+      actualPin.position = tab.position;
+      await ZenPinnedTabsStorage.savePin(actualPin);
     }
 
     _onTabClick(e) {

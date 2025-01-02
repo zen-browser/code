@@ -120,6 +120,10 @@
   order: 2 !important;
 }
 
+#urlbar[breakout-extend='true'] #urlbar-background {
+  border: 1px solid var(--zen-colors-border) !important;
+}
+
 :root[zen-single-toolbar='true'] {
 
   .urlbar-page-action:not(#star-button-box):not([open]),

@@ -69,9 +69,9 @@
   @media (not (-moz-windows-accent-color-in-titlebar)) and (not (-moz-windows-mica)) {
     transition: color var(--inactive-window-transition);
     &:-moz-window-inactive {
+      color: var(--toolbox-textcolor-inactive);
       &::after {
         background-color: var(--toolbox-bgcolor-inactive);
-        color: var(--toolbox-textcolor-inactive);
       }
     }
   }

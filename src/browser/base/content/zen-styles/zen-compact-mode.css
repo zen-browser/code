@@ -124,7 +124,7 @@
       #navigator-toolbox[has-popup-menu],
       #navigator-toolbox[movingtab],
       #navigator-toolbox:has(.tabbrowser-tab:active),
-      #navigator-toolbox:has(*:is([panelopen='true'], #nav-bar:focus-within):not(.zen-compact-mode-ignore)) {
+      #navigator-toolbox:has(*:is([panelopen='true'], [open='true'], #nav-bar:focus-within):not(tab):not(.zen-compact-mode-ignore)) {
         &:not([animate='true']) {
           transition: left 0.25s ease, right 0.25s ease;
           opacity: 1;

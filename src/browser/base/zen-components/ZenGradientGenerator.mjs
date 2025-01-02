@@ -629,7 +629,12 @@
             setTimeout(() => {
               this._animatingBackground = false;
               appWrapper.removeAttribute('animating');
+              appWrapper.setAttribute('post-animating', 'true');
               browser.document.documentElement.style.removeProperty('--zen-main-browser-background-old');
+              setTimeout(() => {
+                // Reactivate the transition after the animation
+                appWrapper.removeAttribute('post-animating');
+              });
             }, 700);
           });
         }

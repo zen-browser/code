@@ -205,7 +205,7 @@
         & #zen-appcontent-navbar-container:focus-within,
         & #zen-appcontent-navbar-container[zen-user-show],
         & #zen-appcontent-navbar-container[has-popup-menu],
-        & #zen-appcontent-navbar-container:has(*[panelopen='true']) {
+        & #zen-appcontent-navbar-container:has(*[panelopen='true'], [open='true']) {
           opacity: 1;
           border-top-width: 1px;
 

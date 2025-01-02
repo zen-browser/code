@@ -272,7 +272,7 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
-  gap: 2px;
+  gap: 5px;
 }
 
 #PanelUI-zen-workspaces-icon-search-bar {

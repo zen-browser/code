@@ -685,6 +685,13 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     event.preventDefault();
     const parentPanel = document.getElementById('PanelUI-zen-workspaces-edit');
     PanelUI.showSubView('PanelUI-zen-workspaces-icon-picker', parentPanel);
+
+    const container = parentPanel.parentNode.querySelector('.panel-viewcontainer');
+    setTimeout(() => {
+      if (container) {
+        container.style.minHeight = 'unset';
+      }
+    });
   }
 
   goToPreviousSubView() {
@@ -1311,7 +1318,7 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
       setTimeout(() => {
         this._animatingChange = false;
         gBrowser.tabContainer.removeAttribute('zen-workspace-animation');
-      }, 300);
+      }, 500);
     }
   }
 

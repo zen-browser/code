@@ -41,6 +41,9 @@
     bottom: 0;
     z-index: 0;
     pointer-events: none;
+  }
+
+  &:not([post-animating='true'])::after {
     transition: background-color var(--inactive-window-transition);
   }
 

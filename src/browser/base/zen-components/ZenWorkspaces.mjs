@@ -1202,7 +1202,7 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
   }
 
   _createNewTabForWorkspace(window) {
-    let tab = gZenUIManager.openAndChangeToTab(Services.prefs.getStringPref('browser.startup.homepage'));
+    let tab = gZenUIManager.openAndChangeToTab(BROWSER_NEW_TAB_URL);
 
     if(window.uuid){
       tab.setAttribute('zen-workspace-id', window.uuid);

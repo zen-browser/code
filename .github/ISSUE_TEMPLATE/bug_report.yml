@@ -20,8 +20,6 @@ body:
         - label: I have read the instructions.
         - label: I have searched existing issues and avoided creating duplicates.
         - label: I am not filing an enhancement request.
-      validations:
-        required: true
   - type: textarea
     id: what-happened
     attributes:

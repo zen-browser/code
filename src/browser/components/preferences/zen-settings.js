@@ -757,11 +757,9 @@ var gZenCKSSettings = {
     this.__hasInitialized = true;
     this._currentActionID = null;
     this._initializeEvents();
-    gZenKeyboardShortcutsManager._devToolsEvents = ZenMultiWindowFeature.currentBrowser.gZenKeyboardShortcutsManager._devToolsEvents;
     window.addEventListener('unload', () => {
       this.__hasInitialized = false;
       document.getElementById(ZEN_CKS_WRAPPER_ID).innerHTML = '';
-      gZenKeyboardShortcutsManager._devToolsEvents = {};
     });
   },
 

@@ -1,18 +1,8 @@
 diff --git a/devtools/startup/DevToolsStartup.sys.mjs b/devtools/startup/DevToolsStartup.sys.mjs
-index 0c9db6cb85c491a9f0fc216071afc66e553dcd51..f0e7911c1e284c9d9f20fc8a6a370f387419c8da 100644
+index 0c9db6cb85c491a9f0fc216071afc66e553dcd51..10faeb699a35bb53bd0bd4bce36f18626a8f3288 100644
 --- a/devtools/startup/DevToolsStartup.sys.mjs
 +++ b/devtools/startup/DevToolsStartup.sys.mjs
-@@ -798,14 +798,18 @@ DevToolsStartup.prototype = {
- 
-     const keyset = doc.createXULElement("keyset");
-     keyset.setAttribute("id", "devtoolsKeyset");
-+    this._zenTempWindow = window;
- 
-     this.attachKeys(doc, lazy.KeyShortcuts, keyset);
- 
-+    this._zenTempWindow = null;
-     // Appending a <key> element is not always enough. The <keyset> needs
-     // to be detached and reattached to make sure the <key> is taken into
+@@ -806,6 +806,8 @@ DevToolsStartup.prototype = {
      // account (see bug 832984).
      const mainKeyset = doc.getElementById("mainKeyset");
      mainKeyset.parentNode.insertBefore(keyset, mainKeyset);
@@ -21,11 +11,3 @@ index 0c9db6cb85c491a9f0fc216071afc66e553dcd51..f0e7911c1e284c9d9f20fc8a6a370f38
    },
  
    /**
-@@ -935,6 +939,7 @@ DevToolsStartup.prototype = {
-       k.setAttribute("modifiers", mod);
-     }
- 
-+    this._zenTempWindow.gZenKeyboardShortcutsManager._devToolsEvents[k.id] = oncommand;
-     k.addEventListener("command", oncommand);
- 
-     return k;

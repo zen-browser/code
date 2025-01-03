@@ -999,13 +999,18 @@ var gZenKeyboardShortcutsManager = {
   getZenDevtoolsKeyset() {
     // note: we use `this` here because we are in the context of the browser
     if (!this._zenDevtoolsKeyset) {
-      const existingKeyset = document.getElementById(ZEN_DEVTOOLS_KEYSET_ID);
+      const id = `zen-${ZEN_DEVTOOLS_KEYSET_ID}`;
+      const existingKeyset = document.getElementById(id);
       if (existingKeyset) {
         this._zenDevtoolsKeyset = existingKeyset;
         return existingKeyset;
       }
 
-      throw new Error('[zen CKS]: Devtools keyset not found!');
+      this._zenDevtoolsKeyset = document.createXULElement('keyset');
+      this._zenDevtoolsKeyset.id = id;
+
+      const mainKeyset = document.getElementById(ZEN_DEVTOOLS_KEYSET_ID);
+      mainKeyset.before(this._zenDevtoolsKeyset);
     }
     return this._zenDevtoolsKeyset;
   },
@@ -1069,9 +1074,8 @@ var gZenKeyboardShortcutsManager = {
         keyset.appendChild(child);
       }
 
-      mainKeyset.after(keyset);
-
       this._applyDevtoolsShortcuts(browser);
+      mainKeyset.after(keyset);
     }
   },
 
@@ -1091,11 +1095,16 @@ var gZenKeyboardShortcutsManager = {
       // We do not want to remove and create a new key in these cases,
       // because it will lose the event listeners.
       key.replaceWithChild(originalKey);
+      // Move the key to the main keyset if it's not there, this is because
+      //  changing modifiers will not work if they are under the devtools keyset
+      //  for some really weird reason.
+      if (originalKey.parentElement.id === ZEN_DEVTOOLS_KEYSET_ID) {
+        devtoolsKeyset.prepend(originalKey);
+      }
     }
 
-    const mainKeyset = browser.document.getElementById(ZEN_MAIN_KEYSET_ID);
-    mainKeyset.after(devtoolsKeyset);
-    mainKeyset.before(devtoolsKeyset);
+    const originalDevKeyset = browser.document.getElementById(ZEN_DEVTOOLS_KEYSET_ID);
+    originalDevKeyset.after(devtoolsKeyset);
   },
 
   async resetAllShortcuts() {

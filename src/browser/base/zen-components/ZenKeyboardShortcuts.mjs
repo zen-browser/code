@@ -103,6 +103,7 @@ const defaultKeyboardGroups = {
     'zen-bidi-switch-direction-shortcut',
     'zen-screenshot-shortcut',
   ],
+  devTools: [/*Filled automatically*/],
 };
 
 const fixedL10nIds = {
@@ -110,9 +111,25 @@ const fixedL10nIds = {
   'Browser:ReloadSkipCache': 'zen-nav-reload-shortcut-skip-cache',
   cmd_close: 'zen-close-tab-shortcut',
   'History:RestoreLastClosedTabOrWindowOrSession': 'zen-restore-last-closed-tab-shortcut',
+
+  // Devtools
+  key_toggleToolbox: 'zen-devtools-toggle-shortcut',
+  key_browserToolbox: 'zen-devtools-toggle-browser-toolbox-shortcut',
+  key_browserConsole: 'zen-devtools-toggle-browser-console-shortcut',
+  key_responsiveDesignMode: 'zen-devtools-toggle-responsive-design-mode-shortcut',
+  key_inspector: 'zen-devtools-toggle-inspector-shortcut',
+  key_webconsole: 'zen-devtools-toggle-web-console-shortcut',
+  key_jsdebugger: 'zen-devtools-toggle-js-debugger-shortcut',
+  key_netmonitor: 'zen-devtools-toggle-net-monitor-shortcut',
+  key_styleeditor: 'zen-devtools-toggle-style-editor-shortcut',
+  key_performance: 'zen-devtools-toggle-performance-shortcut',
+  key_storage: 'zen-devtools-toggle-storage-shortcut',
+  key_dom: 'zen-devtools-toggle-dom-shortcut',
+  key_accessibility: 'zen-devtools-toggle-accessibility-shortcut',
 };
 
 const ZEN_MAIN_KEYSET_ID = 'mainKeyset';
+const ZEN_DEVTOOLS_KEYSET_ID = 'devtoolsKeyset';
 const ZEN_KEYSET_ID = 'zenKeyset';
 
 const ZEN_COMPACT_MODE_SHORTCUTS_GROUP = 'zen-compact-mode';
@@ -355,12 +372,12 @@ class KeyShortcut {
     );
   }
 
-  static parseFromXHTML(key) {
+  static parseFromXHTML(key, { group = undefined } = {}) {
     return new KeyShortcut(
       key.getAttribute('id'),
       key.getAttribute('key'),
       key.getAttribute('keycode'),
-      KeyShortcut.getGroupFromL10nId(KeyShortcut.sanitizeL10nId(key.getAttribute('data-l10n-id')), key.getAttribute('id')),
+      group ?? KeyShortcut.getGroupFromL10nId(KeyShortcut.sanitizeL10nId(key.getAttribute('data-l10n-id')), key.getAttribute('id')),
       KeyShortcutModifiers.parseFromXHTMLAttribute(key.getAttribute('modifiers')),
       key.getAttribute('command'),
       key.getAttribute('data-l10n-id'),
@@ -727,10 +744,26 @@ class ZenKeyboardShortcutsLoader {
 
     return newShortcutList;
   }
+
+  static IGNORED_DEVTOOLS_SHORTCUTS = ['key_toggleToolboxF12'];
+
+  static zenGetDefaultDevToolsShortcuts() {
+    let keySet = document.getElementById(ZEN_DEVTOOLS_KEYSET_ID);
+    let newShortcutList = [];
+
+    for (let i = keySet.children.length - 1; i >= 0; i--) {
+      let key = keySet.children[i];
+      if (this.IGNORED_DEVTOOLS_SHORTCUTS.includes(key.id)) {
+        continue;
+      }
+      let parsed = KeyShortcut.parseFromXHTML(key, { group: 'devTools' });
+      newShortcutList.push(parsed);
+    }
+  }
 }
 
 class ZenKeyboardShortcutsVersioner {
-  static LATEST_KBS_VERSION = 6;
+  static LATEST_KBS_VERSION = 7;
 
   constructor() {}
 
@@ -865,6 +898,12 @@ class ZenKeyboardShortcutsVersioner {
         )
       );
     }
+    if (version < 7) {
+      // Migrate from 6 to 7
+      // In this new version, we add the devtools shortcuts
+      const devToolsShortcuts = ZenKeyboardShortcutsLoader.zenGetDefaultDevToolsShortcuts();
+      data.push(...devToolsShortcuts);
+    }
     return data;
   }
 }
@@ -948,6 +987,18 @@ var gZenKeyboardShortcutsManager = {
     return browser.gZenKeyboardShortcutsManager._zenKeyset;
   },
 
+  getZenDevtoolsKeyset(browser = window) {
+    if (!browser.gZenKeyboardShortcutsManager._zenDevtoolsKeyset) {
+      const existingKeyset = browser.document.getElementById(ZEN_DEVTOOLS_KEYSET_ID);
+      if (existingKeyset) {
+        browser.gZenKeyboardShortcutsManager._zenDevtoolsKeyset = existingKeyset;
+        return browser.gZenKeyboardShortcutsManager._zenDevtoolsKeyset;
+      }
+
+      throw new Error('[zen CKS]: Devtools keyset not found!');
+    }
+  },
+
   clearMainKeyset(element) {
     if (this._hasCleared) {
       return;
@@ -993,6 +1044,32 @@ var gZenKeyboardShortcutsManager = {
       }
 
       mainKeyset.after(keyset);
+
+      this._applyDevtoolsShortcuts(browser);
+    }
+  },
+
+  _applyDevtoolsShortcuts(browser) {
+    let devtoolsKeyset = browser.gZenKeyboardShortcutsManager.getZenDevtoolsKeyset(browser);
+    const remainingChildren = [];
+    for (let i = devtoolsKeyset.children.length - 1; i >= 0; i--) {
+      const key = devtoolsKeyset.children[i];
+      if (ZenKeyboardShortcutsLoader.IGNORED_DEVTOOLS_SHORTCUTS.includes(key.id)) {
+        remainingChildren.push(key);
+      }
+    }
+
+    devtoolsKeyset.innerHTML = '';
+    for (let key of this._currentShortcutList) {
+      if (key.getGroup() != 'devTools') {
+        continue;
+      }
+      let child = key.toXHTMLElement(browser);
+      devtoolsKeyset.appendChild(child);
+    }
+
+    for (let key of remainingChildren) {
+      devtoolsKeyset.appendChild(key);
     }
   },
 

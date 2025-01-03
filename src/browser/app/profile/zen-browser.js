@@ -350,10 +350,10 @@ pref("privacy.resistFingerprinting.letterboxing.dimensions", "");
 pref("devtools.accessibility.enabled", false);
 
 // Enable GPU by default
-//pref('gfx.webrender.all', true);
+// pref('gfx.webrender.all', true);
 
 // VAAPI/FFMPEG is Linux only
-#ifdef UNIX_BUT_NOT_MAC
+#ifdef MOZ_WIDGET_GTK
 pref('media.ffmpeg.vaapi.enabled', true);
 pref('media.ffmpeg.encoder.enabled', true);
 #endif

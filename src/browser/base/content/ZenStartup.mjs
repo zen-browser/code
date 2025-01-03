@@ -34,7 +34,7 @@
         }
 
         // Disable smooth scroll
-        gBrowser.tabContainer.arrowScrollbox.smoothScroll = false;
+        gBrowser.tabContainer.arrowScrollbox.smoothScroll = Services.prefs.getBoolPref('zen.startup.smooth-scroll-in-tabs', false);
 
         ZenWorkspaces.init();
         gZenUIManager.init();

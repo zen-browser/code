@@ -181,6 +181,9 @@ pref('zen.splitView.min-resize-width', 7);
 pref('zen.splitView.change-on-hover', false);
 pref('zen.splitView.rearrange-hover-size', 24);
 
+// Startup flags
+pref('zen.startup.smooth-scroll-in-tabs', true);
+
 // Zen Workspaces
 pref('zen.workspaces.enabled', true);
 pref('zen.workspaces.hide-deactivated-workspaces', false);

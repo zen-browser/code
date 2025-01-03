@@ -208,7 +208,7 @@ var gZenVerticalTabsManager = {
 
   async _preCustomize() {
     await this._multiWindowFeature.foreachWindowAsActive(async (browser) => {
-      browser.gZenVerticalTabsManager._updateEvent({ forceMultipleToolbar: true, dontRebuildAreas: true });
+      browser.gZenVerticalTabsManager._updateEvent({ forCustomizableMode: true, dontRebuildAreas: true });
     });
     this.rebuildAreas();
     this.navigatorToolbox.setAttribute('zen-sidebar-expanded', 'true');
@@ -268,7 +268,7 @@ var gZenVerticalTabsManager = {
     );
   },
 
-  _updateEvent({ forceMultipleToolbar = false, dontRebuildAreas = false } = {}) {
+  _updateEvent({ forCustomizableMode = false, dontRebuildAreas = false } = {}) {
     if (this._isUpdating) {
       return;
     }
@@ -282,11 +282,11 @@ var gZenVerticalTabsManager = {
         .rollupAllPopups();
 
       const topButtons = document.getElementById('zen-sidebar-top-buttons');
-      const isCompactMode = this._prefsCompactMode;
-      const isVerticalTabs = this._prefsVerticalTabs || forceMultipleToolbar;
+      const isCompactMode = this._prefsCompactMode && !forCustomizableMode;
+      const isVerticalTabs = this._prefsVerticalTabs || forCustomizableMode;
       const isSidebarExpanded = this._prefsSidebarExpanded || !isVerticalTabs;
       const isRightSide = this._prefsRightSide && isVerticalTabs;
-      const isSingleToolbar = ((this._prefsUseSingleToolbar && (isVerticalTabs && isSidebarExpanded) )|| !isVerticalTabs) && !forceMultipleToolbar && !this.hidesTabsToolbar;
+      const isSingleToolbar = ((this._prefsUseSingleToolbar && (isVerticalTabs && isSidebarExpanded) )|| !isVerticalTabs) && !forCustomizableMode && !this.hidesTabsToolbar;
       const titlebar = document.getElementById('titlebar');
 
       gBrowser.tabContainer.setAttribute('orient', isVerticalTabs ? 'vertical' : 'horizontal');

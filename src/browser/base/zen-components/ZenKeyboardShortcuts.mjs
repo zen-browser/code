@@ -226,14 +226,14 @@ class KeyShortcutModifiers {
     if (this.#control) {
       str += 'control,';
     }
-    if (this.#alt) {
-      str += 'alt,';
+    if (this.#accel) {
+      str += 'accel,';
     }
     if (this.#shift) {
       str += 'shift,';
     }
-    if (this.#accel) {
-      str += 'accel,';
+    if (this.#alt) {
+      str += 'alt,';
     }
     if (this.#meta) {
       str += 'meta,';
@@ -385,13 +385,19 @@ class KeyShortcut {
 
   toXHTMLElement(window) {
     let key = window.document.createXULElement('key');
+    return this.replaceWithChild(key);
+  }
+
+  replaceWithChild(key) {
     key.id = this.#id;
     if (this.#keycode) {
       key.setAttribute('keycode', this.#keycode);
+      key.removeAttribute('key');
     } else {
       // note to "mr. macos": Better use setAttribute, because without it, there's a
       //  risk of malforming the XUL element.
       key.setAttribute('key', this.#key);
+      key.removeAttribute('keycode');
     }
     key.setAttribute('group', this.#group);
 
@@ -899,6 +905,8 @@ class ZenKeyboardShortcutsVersioner {
         window.removeEventListener('zen-devtools-keyset-added', listener);
       };
 
+      // We need to load after an event because the devtools keyset is not in the DOM yet
+      // and we need to wait for it to be added.
       gZenKeyboardShortcutsManager._hasToLoadDefaultDevtools = true;
       window.addEventListener('zen-devtools-keyset-added', listener);
     }
@@ -909,24 +917,6 @@ class ZenKeyboardShortcutsVersioner {
 var gZenKeyboardShortcutsManager = {
   loader: new ZenKeyboardShortcutsLoader(),
   _hasToLoadDevtools: false,
-
-  devtoolsShortcutListener: {
-    //async onKey(window, key) {
-    //  try {
-    //    // Record the timing at which this event started in order to compute later in
-    //    // gDevTools.showToolbox, the complete time it takes to open the toolbox.
-    //    // i.e. especially take `initDevTools` into account.
-    //    const startTime = Cu.now();
-    //    const require = this.initDevTools("KeyShortcut", key);
-    //    const {
-    //      gDevToolsBrowser,
-    //    } = require("devtools/client/framework/devtools-browser");
-    //    await gDevToolsBrowser.onKeyShortcut(window, key, startTime);
-    //  } catch (e) {
-    //    console.error(`Exception while trigerring key ${key}: ${e}\n${e.stack}`);
-    //  }
-    //},
-  },
 
   beforeInit() {
     if (!this.inBrowserView) {
@@ -1090,29 +1080,21 @@ var gZenKeyboardShortcutsManager = {
       return;
     }
     let devtoolsKeyset = browser.gZenKeyboardShortcutsManager.getZenDevtoolsKeyset(browser);
-    const remainingChildren = [];
-    for (let i = devtoolsKeyset.children.length - 1; i >= 0; i--) {
-      const key = devtoolsKeyset.children[i];
-      if (ZenKeyboardShortcutsLoader.IGNORED_DEVTOOLS_SHORTCUTS.includes(key.id)) {
-        remainingChildren.push(key);
-      }
-    }
-
-    devtoolsKeyset.innerHTML = '';
     for (let key of this._currentShortcutList) {
       if (key.getGroup() != 'devTools') {
         continue;
       }
-      let child = key.toXHTMLElement(browser);
-   // child.addEventListener('command', event);
-      devtoolsKeyset.appendChild(child);
-    }
-
-    for (let key of remainingChildren) {
-      devtoolsKeyset.appendChild(key);
+      if (ZenKeyboardShortcutsLoader.IGNORED_DEVTOOLS_SHORTCUTS.includes(key.getID())) {
+        continue;
+      }
+      const originalKey = browser.document.getElementById(key.getID());
+      // We do not want to remove and create a new key in these cases,
+      // because it will lose the event listeners.
+      key.replaceWithChild(originalKey);
     }
 
     const mainKeyset = browser.document.getElementById(ZEN_MAIN_KEYSET_ID);
+    mainKeyset.after(devtoolsKeyset);
     mainKeyset.before(devtoolsKeyset);
   },
 

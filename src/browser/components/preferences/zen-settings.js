@@ -733,6 +733,21 @@ var zenMissingKeyboardShortcutL10n = {
 
   goHome: 'zen-key-go-home',
   key_redo: 'zen-key-redo',
+
+  // Devtools
+  key_toggleToolbox: 'zen-devtools-toggle-shortcut',
+  key_browserToolbox: 'zen-devtools-toggle-browser-toolbox-shortcut',
+  key_browserConsole: 'zen-devtools-toggle-browser-console-shortcut',
+  key_responsiveDesignMode: 'zen-devtools-toggle-responsive-design-mode-shortcut',
+  key_inspector: 'zen-devtools-toggle-inspector-shortcut',
+  key_webconsole: 'zen-devtools-toggle-web-console-shortcut',
+  key_jsdebugger: 'zen-devtools-toggle-js-debugger-shortcut',
+  key_netmonitor: 'zen-devtools-toggle-net-monitor-shortcut',
+  key_styleeditor: 'zen-devtools-toggle-style-editor-shortcut',
+  key_performance: 'zen-devtools-toggle-performance-shortcut',
+  key_storage: 'zen-devtools-toggle-storage-shortcut',
+  key_dom: 'zen-devtools-toggle-dom-shortcut',
+  key_accessibility: 'zen-devtools-toggle-accessibility-shortcut',
 };
 
 var gZenCKSSettings = {

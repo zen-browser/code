@@ -12,3 +12,4 @@
 - Overall UX
 - Themes Page
 - Settings Page
+- Keyboard shortcuts, check if there are any missing or not working

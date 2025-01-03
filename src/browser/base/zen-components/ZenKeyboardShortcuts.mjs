@@ -730,7 +730,10 @@ class ZenKeyboardShortcutsLoader {
     return newShortcutList;
   }
 
-  static IGNORED_DEVTOOLS_SHORTCUTS = ['key_toggleToolboxF12'];
+  // Make sure to stay in sync with https://searchfox.org/mozilla-central/source/devtools/startup/DevToolsStartup.sys.mjs#879
+  static IGNORED_DEVTOOLS_SHORTCUTS = ['key_toggleToolboxF12', 'profilerStartStop',
+      'profilerStartStopAlternate', 'profilerCapture', 'profilerCaptureAlternate',
+      'javascriptTracingToggle'];
 
   static zenGetDefaultDevToolsShortcuts() {
     let keySet = document.getElementById(ZEN_DEVTOOLS_KEYSET_ID);
@@ -906,6 +909,25 @@ class ZenKeyboardShortcutsVersioner {
 var gZenKeyboardShortcutsManager = {
   loader: new ZenKeyboardShortcutsLoader(),
   _hasToLoadDevtools: false,
+
+  devtoolsShortcutListener: {
+    //async onKey(window, key) {
+    //  try {
+    //    // Record the timing at which this event started in order to compute later in
+    //    // gDevTools.showToolbox, the complete time it takes to open the toolbox.
+    //    // i.e. especially take `initDevTools` into account.
+    //    const startTime = Cu.now();
+    //    const require = this.initDevTools("KeyShortcut", key);
+    //    const {
+    //      gDevToolsBrowser,
+    //    } = require("devtools/client/framework/devtools-browser");
+    //    await gDevToolsBrowser.onKeyShortcut(window, key, startTime);
+    //  } catch (e) {
+    //    console.error(`Exception while trigerring key ${key}: ${e}\n${e.stack}`);
+    //  }
+    //},
+  },
+
   beforeInit() {
     if (!this.inBrowserView) {
       return;

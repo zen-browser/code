@@ -76,7 +76,8 @@ index f7c39fe804182e2bdf53045ba3b6a5ba17079fc3..93be23da305a5e2e51bff1c5b5f28743
 -      }
 +      this.arrowScrollbox.ensureElementIsVisible(selectedTab, aInstant);
  
-+      if (!aInstant && Services.prefs.getBoolPref('zen.view.compact')
++      if (!aInstant && !gZenGlanceManager.animatingOpen
++          && Services.prefs.getBoolPref('zen.view.compact')
 +          && Services.prefs.getBoolPref('zen.view.compact.toolbar-flash-popup')) {
 +        gZenCompactModeManager.flashSidebar();
 +      }

@@ -69,7 +69,7 @@
     }
   }
 
-  @media (not (-moz-windows-accent-color-in-titlebar)) and (not (-moz-windows-mica)) {
+  @media (not (-moz-windows-accent-color-in-titlebar)) and (not (-moz-windows-mica)) and (-moz-bool-pref: 'zen.view.grey-out-inactive-windows') {
     transition: color var(--inactive-window-transition);
     &:-moz-window-inactive {
       color: var(--toolbox-textcolor-inactive);

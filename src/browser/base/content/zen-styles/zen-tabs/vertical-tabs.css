@@ -850,7 +850,7 @@
       padding: 0 var(--toolbarbutton-outer-padding) !important;
     }
 
-    & toolbarspring {
+    :root:not([zen-sidebar-expanded='true']) & toolbarspring {
       display: none;
     }
   }

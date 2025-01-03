@@ -9,3 +9,4 @@ __pycache__/
 dist/
 
 windsign-temp/
+venv/

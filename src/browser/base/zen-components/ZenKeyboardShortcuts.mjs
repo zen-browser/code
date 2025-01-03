@@ -759,6 +759,8 @@ class ZenKeyboardShortcutsLoader {
       let parsed = KeyShortcut.parseFromXHTML(key, { group: 'devTools' });
       newShortcutList.push(parsed);
     }
+
+    return newShortcutList;
   }
 }
 
@@ -901,8 +903,16 @@ class ZenKeyboardShortcutsVersioner {
     if (version < 7) {
       // Migrate from 6 to 7
       // In this new version, we add the devtools shortcuts
-      const devToolsShortcuts = ZenKeyboardShortcutsLoader.zenGetDefaultDevToolsShortcuts();
-      data.push(...devToolsShortcuts);
+      const listener = (event) => {
+        event.stopPropagation();
+
+        const devToolsShortcuts = ZenKeyboardShortcutsLoader.zenGetDefaultDevToolsShortcuts();
+        gZenKeyboardShortcutsManager.updatedDefaultDevtoolsShortcuts(devToolsShortcuts);
+
+        window.removeEventListener('zen-devtools-keyset-added', listener);
+      };
+
+      window.addEventListener('zen-devtools-keyset-added', listener);
     }
     return data;
   }
@@ -910,6 +920,7 @@ class ZenKeyboardShortcutsVersioner {
 
 var gZenKeyboardShortcutsManager = {
   loader: new ZenKeyboardShortcutsLoader(),
+  _hasToLoadDevtools: false,
   beforeInit() {
     if (!this.inBrowserView) {
       return;
@@ -920,6 +931,7 @@ var gZenKeyboardShortcutsManager = {
     void(this.getZenKeyset());
 
     this._hasCleared = Services.prefs.getBoolPref('zen.keyboard.shortcuts.disable-mainkeyset-clear', false);
+    window.addEventListener('zen-devtools-keyset-added', this._hasAddedDevtoolShortcuts.bind(this));
 
     this.init();
   },
@@ -987,16 +999,18 @@ var gZenKeyboardShortcutsManager = {
     return browser.gZenKeyboardShortcutsManager._zenKeyset;
   },
 
-  getZenDevtoolsKeyset(browser = window) {
-    if (!browser.gZenKeyboardShortcutsManager._zenDevtoolsKeyset) {
-      const existingKeyset = browser.document.getElementById(ZEN_DEVTOOLS_KEYSET_ID);
+  getZenDevtoolsKeyset() {
+    // note: we use `this` here because we are in the context of the browser
+    if (!this._zenDevtoolsKeyset) {
+      const existingKeyset = document.getElementById(ZEN_DEVTOOLS_KEYSET_ID);
       if (existingKeyset) {
-        browser.gZenKeyboardShortcutsManager._zenDevtoolsKeyset = existingKeyset;
-        return browser.gZenKeyboardShortcutsManager._zenDevtoolsKeyset;
+        this._zenDevtoolsKeyset = existingKeyset;
+        return existingKeyset;
       }
 
       throw new Error('[zen CKS]: Devtools keyset not found!');
     }
+    return this._zenDevtoolsKeyset;
   },
 
   clearMainKeyset(element) {
@@ -1017,6 +1031,17 @@ var gZenKeyboardShortcutsManager = {
     const parent = element.parentElement;
     element.remove();
     parent.prepend(element);
+  },
+
+  async updatedDefaultDevtoolsShortcuts(shortcuts) {
+    this._currentShortcutList = this._currentShortcutList.concat(shortcuts);
+    await this._saveShortcuts();
+    this._hasAddedDevtoolShortcuts();
+  },
+
+  _hasAddedDevtoolShortcuts() {
+    this._hasToLoadDevtools = true;
+    this.triggerShortcutRebuild();
   },
 
   _applyShortcuts() {
@@ -1050,6 +1075,9 @@ var gZenKeyboardShortcutsManager = {
   },
 
   _applyDevtoolsShortcuts(browser) {
+    if (!browser.gZenKeyboardShortcutsManager?._hasToLoadDevtools) {
+      return;
+    }
     let devtoolsKeyset = browser.gZenKeyboardShortcutsManager.getZenDevtoolsKeyset(browser);
     const remainingChildren = [];
     for (let i = devtoolsKeyset.children.length - 1; i >= 0; i--) {

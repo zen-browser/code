@@ -67,6 +67,6 @@ body:
   - type: textarea
     id: support
     attributes:
-      label: Raw data from about:support if applicable
+      label: Data from about:support if applicable (click on the "Copy text to clipboard" button)
       description: Please copy and paste about:support data if you think it might be relevant. This will help us understand your environment.
       render: shell

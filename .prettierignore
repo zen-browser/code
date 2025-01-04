@@ -10,3 +10,6 @@ src/browser/app/profile/*.js
 pnpm-lock.yaml
 
 **/engine/
+
+# Some CSS files are preprocessed and prettier doesn't handle them well
+src/browser/base/content/zen-styles/zen-tabs/vertical-tabs.css

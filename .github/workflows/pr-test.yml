@@ -25,6 +25,12 @@ jobs:
       - name: Install Surfer
         run: npm i -g @zen-browser/surfer
 
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Lint
+        run: pnpm lint
+
       - name: Download Firefox and dependencies
         run: surfer download
 

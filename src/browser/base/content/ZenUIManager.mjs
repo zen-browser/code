@@ -315,7 +315,7 @@ var gZenVerticalTabsManager = {
       if (isSingleToolbar) {
         this._navbarParent = navBar.parentElement;
         let elements = document.querySelectorAll(
-          '#nav-bar-customization-target > :is([cui-areatype="toolbar"], .chromeclass-toolbar-additional):not(#urlbar-container)'
+          '#nav-bar-customization-target > :is([cui-areatype="toolbar"], .chromeclass-toolbar-additional):not(#urlbar-container):not(toolbarspring)'
         );
         elements = Array.from(elements).reverse();
         // Add separator if it doesn't exist

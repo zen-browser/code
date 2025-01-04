@@ -102,6 +102,10 @@
 
   & #nav-bar {
     margin-bottom: 6px;
+
+    & toolbarspring {
+      display: none;
+    }
   }
 
   & #zen-sidebar-top-buttons {

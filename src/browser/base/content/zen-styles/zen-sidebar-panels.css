@@ -111,6 +111,13 @@
   border: none;
   cursor: ew-resize;
 
+  &:is(.zen-split-view-splitter[orient='vertical']) {
+    /* Bit of a hacky solution, but it works */
+    width: calc(var(--zen-element-separation) - 3px);
+    margin-left: calc(-1 * var(--zen-element-separation) / 2 - 2px);
+    height: unset;
+  }
+
   &::before {
     height: 30px;
     width: 3px;

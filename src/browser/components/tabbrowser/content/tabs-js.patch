@@ -1,5 +1,5 @@
 diff --git a/browser/components/tabbrowser/content/tabs.js b/browser/components/tabbrowser/content/tabs.js
-index f7c39fe804182e2bdf53045ba3b6a5ba17079fc3..93be23da305a5e2e51bff1c5b5f287439a8fafa8 100644
+index f7c39fe804182e2bdf53045ba3b6a5ba17079fc3..84359791101c500ed354da8d0b4bf3c7e8be4563 100644
 --- a/browser/components/tabbrowser/content/tabs.js
 +++ b/browser/components/tabbrowser/content/tabs.js
 @@ -649,7 +649,7 @@
@@ -158,3 +158,73 @@ index f7c39fe804182e2bdf53045ba3b6a5ba17079fc3..93be23da305a5e2e51bff1c5b5f28743
          return;
        }
  
+@@ -2726,12 +2730,14 @@
+               selectedTab = {
+                 left: selectedTab.left,
+                 right: selectedTab.right,
++                top: selectedTab.top,
++                bottom: selectedTab.bottom,
+               };
+             }
+             return [
+               this._lastTabToScrollIntoView,
+               this.arrowScrollbox.scrollClientRect,
+-              { left: lastTabRect.left, right: lastTabRect.right },
++              lastTabRect,
+               selectedTab,
+             ];
+           })
+@@ -2748,8 +2754,11 @@
+             delete this._lastTabToScrollIntoView;
+             // Is the new tab already completely visible?
+             if (
+-              scrollRect.left <= tabRect.left &&
+-              tabRect.right <= scrollRect.right
++              this.verticalMode
++                ? scrollRect.top <= tabRect.top &&
++                  tabRect.bottom <= scrollRect.bottom
++                : scrollRect.left <= tabRect.left &&
++                  tabRect.right <= scrollRect.right
+             ) {
+               return;
+             }
+@@ -2757,21 +2766,29 @@
+             if (this.arrowScrollbox.smoothScroll) {
+               // Can we make both the new tab and the selected tab completely visible?
+               if (
+-                !selectedRect ||
+-                Math.max(
+-                  tabRect.right - selectedRect.left,
+-                  selectedRect.right - tabRect.left
+-                ) <= scrollRect.width
++                !selectedRect || this.verticalMode
++                  ? Math.max(
++                      tabRect.bottom - selectedRect.top,
++                      selectedRect.bottom - tabRect.top
++                    ) <= scrollRect.height
++                  : Math.max(
++                      tabRect.right - selectedRect.left,
++                      selectedRect.right - tabRect.left
++                    ) <= scrollRect.width
+               ) {
+                 this.arrowScrollbox.ensureElementIsVisible(tabToScrollIntoView);
+                 return;
+               }
+ 
+-              this.arrowScrollbox.scrollByPixels(
+-                this.#rtlMode
+-                  ? selectedRect.right - scrollRect.right
+-                  : selectedRect.left - scrollRect.left
+-              );
++              let scrollPixels;
++              if (this.verticalMode) {
++                scrollPixels = tabRect.top - selectedRect.top;
++              } else if (this.#rtlMode) {
++                scrollPixels = selectedRect.right - scrollRect.right;
++              } else {
++                scrollPixels = selectedRect.left - scrollRect.left;
++              }
++              this.arrowScrollbox.scrollByPixels(scrollPixels);
+             }
+ 
+             if (!this._animateElement.hasAttribute("highlight")) {

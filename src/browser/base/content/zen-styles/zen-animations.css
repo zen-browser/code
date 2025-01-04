@@ -51,7 +51,7 @@
     transform: translateY(-25px);
   }
   60% {
-    opacity: 0.8  ;
+    opacity: 0.8;
     transform: translateY(4px);
   }
   100% {

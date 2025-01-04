@@ -4,7 +4,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 panel[type='arrow'][animate][animate='open']::part(content) {
-  animation: zen-jello-animation .35s ease;
+  animation: zen-jello-animation 0.35s ease;
 }
 
 panel[type='arrow'][animate]:not([animate='open'])::part(content) {

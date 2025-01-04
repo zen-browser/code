@@ -259,7 +259,7 @@ groupbox h2 {
   --zen-compact-mode-styles-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.1);
 
   @media not (prefers-color-scheme: dark) {
-    --zen-compact-mode-styles-shadow: 0 0 .5px .5px rgba(0, 0, 0, 0.1);
+    --zen-compact-mode-styles-shadow: 0 0 0.5px 0.5px rgba(0, 0, 0, 0.1);
   }
 
   box-shadow: var(--zen-compact-mode-styles-shadow);
@@ -644,5 +644,5 @@ groupbox h2 {
 
 .sync-engine-workspaces .checkbox-icon,
 .sync-engine-workspaces.sync-engine-image {
-  list-style-image: url("chrome://devtools/skin/images/tool-storage.svg");
+  list-style-image: url('chrome://devtools/skin/images/tool-storage.svg');
 }

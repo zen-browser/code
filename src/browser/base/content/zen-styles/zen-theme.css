@@ -3,7 +3,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-  /* Here, we contain all the theme related variables, for example theme
+/* Here, we contain all the theme related variables, for example theme
  * colors, border radius, etc.
  * We have `--zen-border-radius` and `--zen-primary-color` as variables.
  */
@@ -21,7 +21,7 @@
 
   /* Branding */
   --zen-branding-dark: #202020;
-  --zen-branding-coral: #F76F53;
+  --zen-branding-coral: #f76f53;
   --zen-branding-paper: #ebebeb;
 
   --zen-branding-bg: light-dark(var(--zen-branding-paper), var(--zen-branding-dark));
@@ -43,9 +43,21 @@
 
   --zen-secondary-btn-color: var(--zen-colors-primary-foreground);
 
-  --in-content-primary-button-background: color-mix(in srgb, var(--zen-primary-color) 10%, var(--zen-branding-bg) 90%) !important;
-  --in-content-primary-button-background-hover: color-mix(in srgb, var(--zen-primary-color) 15%, var(--zen-branding-bg) 85%) !important;
-  --in-content-primary-button-background-active: color-mix(in srgb, var(--zen-primary-color) 20%, var(--zen-branding-bg) 80%) !important;
+  --in-content-primary-button-background: color-mix(
+    in srgb,
+    var(--zen-primary-color) 10%,
+    var(--zen-branding-bg) 90%
+  ) !important;
+  --in-content-primary-button-background-hover: color-mix(
+    in srgb,
+    var(--zen-primary-color) 15%,
+    var(--zen-branding-bg) 85%
+  ) !important;
+  --in-content-primary-button-background-active: color-mix(
+    in srgb,
+    var(--zen-primary-color) 20%,
+    var(--zen-branding-bg) 80%
+  ) !important;
   --button-text-color-primary: var(--zen-branding-bg-reverse) !important;
   --in-content-primary-button-text-color: var(--zen-colors-primary-foreground) !important;
   --in-content-primary-button-border-color: transparent !important;
@@ -91,10 +103,7 @@
   --zen-button-border-radius: 5px;
   --zen-button-padding: 0.6rem 1.2rem;
 
-  --zen-toolbar-element-bg: light-dark(
-    rgba(255, 255, 255, 0.4),
-    rgba(170, 170, 170, 0.2)
-  );
+  --zen-toolbar-element-bg: light-dark(rgba(255, 255, 255, 0.4), rgba(170, 170, 170, 0.2));
 
   /* Toolbar */
   --zen-toolbar-height: 38px;
@@ -137,7 +146,10 @@
   --fp-contextmenu-bgcolor: light-dark(Menu, rgb(43 42 51 / 0.95));
   --toolbar-bgcolor: transparent;
 
-  --toolbarbutton-active-background: light-dark(rgba(255, 255, 255, .9), color-mix(in srgb, var(--zen-primary-color) 50%, rgba(255, 255, 255, .1)));
+  --toolbarbutton-active-background: light-dark(
+    rgba(255, 255, 255, 0.9),
+    color-mix(in srgb, var(--zen-primary-color) 50%, rgba(255, 255, 255, 0.1))
+  );
 
   --input-bgcolor: var(--zen-colors-tertiary) !important;
   --input-border-color: var(--zen-input-border-color) !important;
@@ -147,13 +159,16 @@
   @media (-moz-windows-mica) or (-moz-platform: macos) {
     background: transparent;
     --zen-themed-toolbar-bg-transparency: 0;
-    --zen-themed-toolbar-bg-transparent: light-dark(rgba(255, 255, 255, var(--zen-themed-toolbar-bg-transparency)), rgba(0, 0, 0, var(--zen-themed-toolbar-bg-transparency)));
+    --zen-themed-toolbar-bg-transparent: light-dark(
+      rgba(255, 255, 255, var(--zen-themed-toolbar-bg-transparency)),
+      rgba(0, 0, 0, var(--zen-themed-toolbar-bg-transparency))
+    );
   }
 
   --toolbar-field-background-color: var(--zen-colors-input-bg) !important;
   --arrowpanel-background: var(--zen-dialog-background) !important;
 
-  --tab-selected-shadow: 0 0 1px 1px rgba(0,0,0,.1) !important;
+  --tab-selected-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.1) !important;
 }
 
 @media (prefers-color-scheme: dark) {

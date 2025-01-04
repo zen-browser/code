@@ -51,7 +51,7 @@
     &[animating='true']::after {
       background: var(--zen-main-browser-background-old);
       backdrop-filter: blur(5px);
-      animation: zen-main-app-wrapper-animation .6s ease forwards;
+      animation: zen-main-app-wrapper-animation 0.6s ease forwards;
       transition: 0s;
     }
   }
@@ -98,7 +98,6 @@
   /** Sidebar is already hidden in full screen mode */
   border: none;
 }
-
 
 @supports (-moz-osx-font-smoothing: auto) {
   #zen-main-app-wrapper,

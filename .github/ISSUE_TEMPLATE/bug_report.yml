@@ -4,12 +4,13 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thank you for filing a bug report.
+        Thank you for filing a bug report!
 
         ## Important
         - Please search existing issues to avoid creating duplicates.
         - For enhancement requests, please use GitHub Discussions.
         - Please fill out the template below to the best of your ability.
+        - Please describe the issue as much as possible and provide steps to reproduce it along with visual aids if possible.
   - type: checkboxes
     id: captchas
     attributes:
@@ -38,7 +39,7 @@ body:
     id: version
     attributes:
       label: Version
-      description: What version of our software are you running? Please DO NOT report Classic bugs.
+      description: What version of our software are you running? Please do not use "latest" or "newest" as version numbers. Go to `Help -> About Zen` to find the version number.
       placeholder: 1.0.0
     validations:
       required: true
@@ -48,15 +49,24 @@ body:
       label: What platform are you seeing the problem on?
       multiple: true
       options:
-        - Linux
+        - Linux (AppImage)
+        - Linux (Flatpak)
+        - Linux (Tarball)
         - macOS - aarch64
         - macOS - Intel
         - Windows
+        - Other
     validations:
       required: true
   - type: textarea
     id: logs
     attributes:
-      label: Relevant log output
+      label: Relevant log output if applicable
       description: Please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks.
+      render: shell
+  - type: textarea
+    id: support
+    attributes:
+      label: Data from about:support if applicable (click on the "Copy text to clipboard" button)
+      description: Please copy and paste about:support data if you think it might be relevant. This will help us understand your environment.
       render: shell

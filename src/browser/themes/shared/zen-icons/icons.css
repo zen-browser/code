@@ -577,7 +577,6 @@
   fill: white !important;
 }
 
-
 /* reload/stop animation */
 #stop-reload-button[animate]
   > #reload-button[displaystop]

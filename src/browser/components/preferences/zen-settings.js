@@ -439,7 +439,7 @@ var gZenMarketplaceManager = {
               }
 
               input.addEventListener(
-                'keydown',
+                'input',
                 ZenThemesCommon.debounce((event) => {
                   const value = event.target.value;
 

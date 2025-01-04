@@ -28,7 +28,6 @@ if test "$ZEN_RELEASE"; then
   export MOZ_AUTOMATION=1
 
   ac_add_options --enable-clang-plugin
-  ac_add_options --enable-bootstrap
 
   ac_add_options --enable-release
   ac_add_options --disable-debug

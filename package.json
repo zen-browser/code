@@ -36,8 +36,8 @@
     "@zen-browser/surfer": "^1.8.5"
   },
   "devDependencies": {
-    "husky": "^9.1.5",
-    "lint-staged": "^15.2.10",
-    "prettier": "^3.3.3"
+    "husky": "^9.1.7",
+    "lint-staged": "^15.3.0",
+    "prettier": "^3.4.2"
   }
 }

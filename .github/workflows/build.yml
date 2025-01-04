@@ -153,9 +153,34 @@ jobs:
           commit_user_name: Zen Browser Robot
           commit_user_email: zen-browser-auto@users.noreply.github.com
 
-  check-release:
+  lint:
     runs-on: ubuntu-latest
     needs: [build-data]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          token: ${{ secrets.DEPLOY_KEY }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+
+      - name: Setup pnpm
+        run: npm install -g pnpm
+
+      - name: Install dependencies
+        run: |
+          pnpm install
+
+      - name: Lint
+        run: pnpm lint
+
+  check-release:
+    runs-on: ubuntu-latest
+    needs: [build-data, lint]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -397,7 +422,7 @@ jobs:
     if: ${{ inputs.create_release || inputs.update_branch == 'twilight' }}
     permissions: write-all
     name: Release
-    needs: [build-data, linux, windows-step-3, check-release, mac, appimage, source]
+    needs: [build-data, linux, windows-step-3, check-release, mac, appimage, source, lint]
     runs-on: ubuntu-latest
     environment:
       name: ${{ inputs.update_branch == 'stable' && 'Deploy-Release' || 'Deploy-Twilight' }}

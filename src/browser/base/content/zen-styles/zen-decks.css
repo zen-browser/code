@@ -9,6 +9,7 @@
 #tabbrowser-tabpanels[zen-split-view='true'] {
   display: flex;
   flex-direction: row;
+  margin-top: calc(var(--zen-split-column-gap) / -2);
 }
 
 #tabbrowser-tabpanels[zen-split-view='true'] > *:not([zen-split='true']) {
@@ -28,8 +29,9 @@
 #tabbrowser-tabpanels[zen-split-view='true'] > [zen-split='true'],
 #zen-splitview-dropzone {
   flex: 1;
-  margin: calc(var(--zen-split-column-gap) / 2) calc(var(--zen-split-row-gap) / 2 + 1px) !important;
+  margin: var(--zen-split-column-gap) calc(var(--zen-split-row-gap) + 1px) !important;
   margin-bottom: 0 !important;
+  margin-left: 0 !important;
   position: absolute !important;
   overflow: hidden;
 }
@@ -52,7 +54,7 @@
 
 #tabbrowser-tabbox:has(#tabbrowser-tabpanels[zen-split-view='true']) {
   --zen-split-row-gap: calc(var(--zen-element-separation) + 1px);
-  --zen-split-column-gap: calc(var(--zen-element-separation) * 3 + 1px);
+  --zen-split-column-gap: calc(var(--zen-element-separation) + 1px);
   margin-right: calc(-1 * var(--zen-split-column-gap));
 
   :root[zen-right-side='true'] & {
@@ -63,23 +65,17 @@
 
 #tabbrowser-tabpanels:has(> [zen-split='true']),
 #zen-splitview-overlay {
-  margin-right: calc(var(--zen-element-separation) - var(--zen-split-row-gap) / 2);
-  margin-bottom: calc(var(--zen-element-separation) - var(--zen-split-column-gap) / 2);
-
-  margin-left: calc(var(--zen-split-row-gap) / -2);
-  margin-top: calc(var(--zen-split-column-gap) / -2);
-
   @media (-moz-bool-pref: 'zen.view.compact') {
     :root:not([customizing]) & {
       @media (-moz-bool-pref: 'zen.view.compact.hide-tabbar') {
         & {
-          margin-left: 0;
+          margin-left: 1px;
         }
       }
 
       @media (-moz-bool-pref: 'zen.view.compact.hide-toolbar') {
         & {
-          margin-top: 0;
+          margin-top: calc(var(--zen-split-column-gap) / -2);
         }
       }
     }
@@ -102,8 +98,6 @@
 #zen-splitview-overlay {
   position: relative;
   flex: 1;
-  padding-right: var(--zen-element-separation);
-  padding-bottom: var(--zen-element-separation);
   z-index: 2;
 }
 
@@ -122,7 +116,6 @@
 
 .zen-split-view-splitter[orient='horizontal'] {
   height: var(--zen-split-column-gap);
-  margin-top: calc(var(--zen-split-column-gap) / -2);
   cursor: ns-resize;
 }
 

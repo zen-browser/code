@@ -20,7 +20,7 @@ if ! command -v Xvfb &> /dev/null; then
 else
   echo "Xvfb could not be found, running without it"
   echo "ASSUMING YOU ARE RUNNING THIS ON MACOS"
-  
+
   set -v
   export ZEN_RELEASE=1
   pnpm build

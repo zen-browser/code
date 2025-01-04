@@ -20,17 +20,3 @@ The `stable` branch may have hotfixes directly from the `stable` branch, and the
 # Code Of Conduct
 
 Please read our [Code of Conduct](../CODE_OF_CONDUCT.md) before contributing.
-
-# Releasing/Merging branches
-
-To merge zen twilight branch from the central branch, you can use the following command:
-
-```bash
-sh ./scripts/merge-to-branch.sh twilight
-```
-
-To merge zen stable branch from the twilight branch, you can use the following command:
-
-```bash
-sh ./scripts/merge-to-branch.sh stable
-```

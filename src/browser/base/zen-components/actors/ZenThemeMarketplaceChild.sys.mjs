@@ -33,7 +33,7 @@ export class ZenThemeMarketplaceChild extends JSWindowActorChild {
         id: meta.getAttribute('data-id'),
         name: meta.getAttribute('data-name'),
         author: meta.getAttribute('data-author'),
-      }
+      };
     }
     return null;
   }
@@ -94,13 +94,9 @@ export class ZenThemeMarketplaceChild extends JSWindowActorChild {
   }
 
   injectMarkplaceAPI() {
-    Cu.exportFunction(
-      this.installTheme.bind(this),
-      this.contentWindow,
-      {
-        defineAs: "ZenInstallTheme",
-      }
-    );
+    Cu.exportFunction(this.installTheme.bind(this), this.contentWindow, {
+      defineAs: 'ZenInstallTheme',
+    });
   }
 
   async addIntallButtons() {

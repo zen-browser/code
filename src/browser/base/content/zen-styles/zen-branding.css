@@ -24,6 +24,6 @@
   font-feature-settings: 'swsh' 1;
 
   & .zen-branding-title-italic {
-    font-family: "Zen-Junicode-Italic", serif;
+    font-family: 'Zen-Junicode-Italic', serif;
   }
 }

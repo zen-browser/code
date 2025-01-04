@@ -341,6 +341,6 @@ menuitem {
   cursor: pointer;
 }
 
-#editBMPanel_workspaceList input[type="checkbox"] {
+#editBMPanel_workspaceList input[type='checkbox'] {
   margin-right: 8px;
 }

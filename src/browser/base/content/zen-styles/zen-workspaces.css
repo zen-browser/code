@@ -266,7 +266,6 @@
   }
 }
 
-
 /* Workspace icon picker styles */
 #PanelUI-zen-workspaces-icon-picker-wrapper {
   display: flex;
@@ -391,7 +390,6 @@
   background-color: var(--toolbarbutton-icon-fill-attention);
 }
 
-
 #PanelUI-zen-workspaces-reorder-mode[active='true'] {
   color: var(--toolbarbutton-icon-fill-attention) !important;
 }
@@ -476,7 +474,7 @@
     max-width: calc(100% - var(--zen-toolbox-padding) * 4);
   }
 
-  & #zen-current-workspace-indicator-icon:not([hidden]) + #zen-current-workspace-indicator-name  {
+  & #zen-current-workspace-indicator-icon:not([hidden]) + #zen-current-workspace-indicator-name {
     padding-left: 24px;
   }
 }

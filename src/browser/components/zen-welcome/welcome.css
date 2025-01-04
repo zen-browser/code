@@ -53,8 +53,8 @@ body {
 
   & button {
     opacity: 0;
-    animation: fadeIn .5s ease-in-out forwards;
-    animation-delay: .8s;
+    animation: fadeIn 0.5s ease-in-out forwards;
+    animation-delay: 0.8s;
   }
 
   & button:nth-child(2) {
@@ -258,7 +258,7 @@ input[type='checkbox'] {
 .delay-animation,
 .delay-animation-2 {
   opacity: 0;
-  animation: fadeIn .5s ease-in-out forwards;
+  animation: fadeIn 0.5s ease-in-out forwards;
 }
 
 #importBrowser {
@@ -345,7 +345,7 @@ input[type='checkbox'] {
 
 #welcome {
   & h1 {
-    animation-duration: .8s !important;
+    animation-duration: 0.8s !important;
   }
 }
 
@@ -405,7 +405,8 @@ input[type='checkbox'] {
   border: 3px solid light-dark(#000, #fff);
 }
 
-#welcome, #thanks {
+#welcome,
+#thanks {
   justify-content: center;
 }
 

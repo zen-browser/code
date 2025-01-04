@@ -48,7 +48,10 @@
         &:not([animate='true']) {
           position: absolute;
           z-index: 10;
-          transition: left 0.25s ease, right 0.25s ease, opacity 1.5s ease;
+          transition:
+            left 0.25s ease,
+            right 0.25s ease,
+            opacity 1.5s ease;
           top: 0;
           bottom: var(--zen-element-separation);
           opacity: 0;
@@ -124,9 +127,13 @@
       #navigator-toolbox[has-popup-menu],
       #navigator-toolbox[movingtab],
       #navigator-toolbox:has(.tabbrowser-tab:active),
-      #navigator-toolbox:has(*:is([panelopen='true'], [open='true'], #nav-bar:focus-within):not(tab):not(.zen-compact-mode-ignore)) {
+      #navigator-toolbox:has(
+          *:is([panelopen='true'], [open='true'], #nav-bar:focus-within):not(tab):not(.zen-compact-mode-ignore)
+        ) {
         &:not([animate='true']) {
-          transition: left 0.25s ease, right 0.25s ease;
+          transition:
+            left 0.25s ease,
+            right 0.25s ease;
           opacity: 1;
 
           left: -1px;

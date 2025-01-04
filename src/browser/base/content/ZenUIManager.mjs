@@ -6,20 +6,18 @@ var gZenUIManager = {
     document.addEventListener('popupshowing', this.onPopupShowing.bind(this));
     document.addEventListener('popuphidden', this.onPopupHidden.bind(this));
     XPCOMUtils.defineLazyPreferenceGetter(this, 'sidebarHeightThrottle', 'zen.view.sidebar-height-throttle', 500);
-    XPCOMUtils.defineLazyPreferenceGetter(
-      this,
-      'contentElementSeparation',
-      'zen.theme.content-element-separation',
-      0
-    );
+    XPCOMUtils.defineLazyPreferenceGetter(this, 'contentElementSeparation', 'zen.theme.content-element-separation', 0);
 
     new ResizeObserver(gZenCommonActions.throttle(this.updateTabsToolbar.bind(this), this.sidebarHeightThrottle)).observe(
       document.getElementById('tabbrowser-tabs')
     );
 
-    new ResizeObserver(gZenCommonActions.throttle(gZenCompactModeManager.getAndApplySidebarWidth.bind(gZenCompactModeManager), this.sidebarHeightThrottle)).observe(
-      document.getElementById('navigator-toolbox')
-    );
+    new ResizeObserver(
+      gZenCommonActions.throttle(
+        gZenCompactModeManager.getAndApplySidebarWidth.bind(gZenCompactModeManager),
+        this.sidebarHeightThrottle
+      )
+    ).observe(document.getElementById('navigator-toolbox'));
   },
 
   updateTabsToolbar() {
@@ -30,7 +28,7 @@ var gZenUIManager = {
     const toolbarRect = toolbarItems.getBoundingClientRect();
     let height = toolbarRect.height;
     // -5 for the controls padding
-    let totalHeight = toolbarRect.height - (this.contentElementSeparation * 2) - 5;
+    let totalHeight = toolbarRect.height - this.contentElementSeparation * 2 - 5;
     // remove the height from other elements that aren't hidden
     const otherElements = document.querySelectorAll('#tabbrowser-tabs > *:not([hidden="true"])');
     for (let tab of otherElements) {
@@ -83,7 +81,10 @@ var gZenUIManager = {
     for (const el of this._popupTrackingElements) {
       // target may be inside a shadow root, not directly under the element
       // we also ignore menus inside panels
-      if (!el.contains(showEvent.explicitOriginalTarget) || (showEvent.explicitOriginalTarget instanceof Element && showEvent.explicitOriginalTarget?.closest('panel'))) {
+      if (
+        !el.contains(showEvent.explicitOriginalTarget) ||
+        (showEvent.explicitOriginalTarget instanceof Element && showEvent.explicitOriginalTarget?.closest('panel'))
+      ) {
         continue;
       }
       document.removeEventListener('mousemove', this.__removeHasPopupAttribute);
@@ -115,8 +116,11 @@ var gZenVerticalTabsManager = {
     this._multiWindowFeature = new ZenMultiWindowFeature();
 
     ChromeUtils.defineLazyGetter(this, 'isWindowsStyledButtons', () => {
-      return !(window.AppConstants.platform === 'macosx' || window.matchMedia('(-moz-gtk-csd-reversed-placement)').matches
-        || Services.prefs.getBoolPref('zen.view.experimental-force-window-controls-left'));
+      return !(
+        window.AppConstants.platform === 'macosx' ||
+        window.matchMedia('(-moz-gtk-csd-reversed-placement)').matches ||
+        Services.prefs.getBoolPref('zen.view.experimental-force-window-controls-left')
+      );
     });
 
     ChromeUtils.defineLazyGetter(this, 'hidesTabsToolbar', () => {
@@ -144,7 +148,7 @@ var gZenVerticalTabsManager = {
     XPCOMUtils.defineLazyPreferenceGetter(this, 'canOpenTabOnMiddleClick', 'zen.tabs.newtab-on-middle-click', true);
 
     if (!this.isWindowsStyledButtons) {
-      document.documentElement.setAttribute("zen-window-buttons-reversed", true);
+      document.documentElement.setAttribute('zen-window-buttons-reversed', true);
     }
 
     if (tabs) {
@@ -199,9 +203,9 @@ var gZenVerticalTabsManager = {
   get actualWindowButtons() {
     // we have multiple ".titlebar-buttonbox-container" in the DOM, because of the titlebar
     if (!this.__actualWindowButtons) {
-      this.__actualWindowButtons = (!this.isWindowsStyledButtons) ?
-          document.querySelector('.titlebar-buttonbox-container') : // TODO: test if it works 100% of the time
-          document.querySelector('#nav-bar .titlebar-buttonbox-container');
+      this.__actualWindowButtons = !this.isWindowsStyledButtons
+        ? document.querySelector('.titlebar-buttonbox-container') // TODO: test if it works 100% of the time
+        : document.querySelector('#nav-bar .titlebar-buttonbox-container');
     }
     return this.__actualWindowButtons;
   },
@@ -225,44 +229,20 @@ var gZenVerticalTabsManager = {
   initializePreferences(updateEvent) {
     XPCOMUtils.defineLazyPreferenceGetter(
       this,
-      "_prefsCompactMode",
-      "zen.view.compact",
+      '_prefsCompactMode',
+      'zen.view.compact',
       false
       // no need to update the event, it's handled by the compact mode manager
     );
 
+    XPCOMUtils.defineLazyPreferenceGetter(this, '_prefsVerticalTabs', 'zen.tabs.vertical', true, updateEvent);
+    XPCOMUtils.defineLazyPreferenceGetter(this, '_prefsRightSide', 'zen.tabs.vertical.right-side', false, updateEvent);
+    XPCOMUtils.defineLazyPreferenceGetter(this, '_prefsUseSingleToolbar', 'zen.view.use-single-toolbar', false, updateEvent);
+    XPCOMUtils.defineLazyPreferenceGetter(this, '_prefsSidebarExpanded', 'zen.view.sidebar-expanded', false, updateEvent);
     XPCOMUtils.defineLazyPreferenceGetter(
       this,
-      "_prefsVerticalTabs",
-      "zen.tabs.vertical",
-      true,
-      updateEvent
-    );
-    XPCOMUtils.defineLazyPreferenceGetter(
-      this,
-      "_prefsRightSide",
-      "zen.tabs.vertical.right-side",
-      false,
-      updateEvent
-    );
-    XPCOMUtils.defineLazyPreferenceGetter(
-      this,
-      "_prefsUseSingleToolbar",
-      "zen.view.use-single-toolbar",
-      false,
-      updateEvent
-    );
-    XPCOMUtils.defineLazyPreferenceGetter(
-      this,
-      "_prefsSidebarExpanded",
-      "zen.view.sidebar-expanded",
-      false,
-      updateEvent
-    );
-    XPCOMUtils.defineLazyPreferenceGetter(
-      this,
-      "_prefsSidebarExpandedMaxWidth",
-      "zen.view.sidebar-expanded.max-width",
+      '_prefsSidebarExpandedMaxWidth',
+      'zen.view.sidebar-expanded.max-width',
       300,
       updateEvent
     );
@@ -276,17 +256,17 @@ var gZenVerticalTabsManager = {
     try {
       this._updateMaxWidth();
 
-      window.docShell.treeOwner
-        .QueryInterface(Ci.nsIInterfaceRequestor)
-        .getInterface(Ci.nsIAppWindow)
-        .rollupAllPopups();
+      window.docShell.treeOwner.QueryInterface(Ci.nsIInterfaceRequestor).getInterface(Ci.nsIAppWindow).rollupAllPopups();
 
       const topButtons = document.getElementById('zen-sidebar-top-buttons');
       const isCompactMode = this._prefsCompactMode && !forCustomizableMode;
       const isVerticalTabs = this._prefsVerticalTabs || forCustomizableMode;
       const isSidebarExpanded = this._prefsSidebarExpanded || !isVerticalTabs;
       const isRightSide = this._prefsRightSide && isVerticalTabs;
-      const isSingleToolbar = ((this._prefsUseSingleToolbar && (isVerticalTabs && isSidebarExpanded) )|| !isVerticalTabs) && !forCustomizableMode && !this.hidesTabsToolbar;
+      const isSingleToolbar =
+        ((this._prefsUseSingleToolbar && isVerticalTabs && isSidebarExpanded) || !isVerticalTabs) &&
+        !forCustomizableMode &&
+        !this.hidesTabsToolbar;
       const titlebar = document.getElementById('titlebar');
 
       gBrowser.tabContainer.setAttribute('orient', isVerticalTabs ? 'vertical' : 'horizontal');
@@ -311,10 +291,12 @@ var gZenVerticalTabsManager = {
 
       const appContentNavbarContaienr = document.getElementById('zen-appcontent-navbar-container');
       let shouldHide = false;
-      if (((!isRightSide && this.isWindowsStyledButtons) || (isRightSide && !this.isWindowsStyledButtons)
-        || (
-          isCompactMode && isSingleToolbar && this.isWindowsStyledButtons
-        )) && isSingleToolbar) {
+      if (
+        ((!isRightSide && this.isWindowsStyledButtons) ||
+          (isRightSide && !this.isWindowsStyledButtons) ||
+          (isCompactMode && isSingleToolbar && this.isWindowsStyledButtons)) &&
+        isSingleToolbar
+      ) {
         appContentNavbarContaienr.setAttribute('should-hide', 'true');
         shouldHide = true;
       } else {
@@ -322,10 +304,7 @@ var gZenVerticalTabsManager = {
       }
 
       // Check if the sidebar is in hover mode
-      if (
-        !this.navigatorToolbox.hasAttribute('zen-right-side') &&
-        !isCompactMode
-      ) {
+      if (!this.navigatorToolbox.hasAttribute('zen-right-side') && !isCompactMode) {
         this.navigatorToolbox.prepend(topButtons);
       }
 
@@ -335,7 +314,9 @@ var gZenVerticalTabsManager = {
 
       if (isSingleToolbar) {
         this._navbarParent = navBar.parentElement;
-        let elements = document.querySelectorAll('#nav-bar-customization-target > :is([cui-areatype="toolbar"], .chromeclass-toolbar-additional):not(#urlbar-container)');
+        let elements = document.querySelectorAll(
+          '#nav-bar-customization-target > :is([cui-areatype="toolbar"], .chromeclass-toolbar-additional):not(#urlbar-container)'
+        );
         elements = Array.from(elements).reverse();
         // Add separator if it doesn't exist
         if (!buttonsTarget.contains(this._topButtonsSeparatorElement)) {
@@ -356,18 +337,20 @@ var gZenVerticalTabsManager = {
           titlebar.before(topButtons);
           titlebar.before(navBar);
         }
-        document.documentElement.setAttribute("zen-single-toolbar", true);
+        document.documentElement.setAttribute('zen-single-toolbar', true);
         this._hasSetSingleToolbar = true;
       } else if (this._hasSetSingleToolbar) {
         this._hasSetSingleToolbar = false;
         // Do the opposite
         this._navbarParent.prepend(navBar);
-        const elements = document.querySelectorAll('#zen-sidebar-top-buttons-customization-target > :is([cui-areatype="toolbar"], .chromeclass-toolbar-additional)');
+        const elements = document.querySelectorAll(
+          '#zen-sidebar-top-buttons-customization-target > :is([cui-areatype="toolbar"], .chromeclass-toolbar-additional)'
+        );
         for (const button of elements) {
           document.getElementById('nav-bar-customization-target').append(button);
         }
         this._topButtonsSeparatorElement.remove();
-        document.documentElement.removeAttribute("zen-single-toolbar");
+        document.documentElement.removeAttribute('zen-single-toolbar');
         navBar.appendChild(document.getElementById('PanelUI-button'));
         this._toolbarOriginalParent.prepend(navBar);
         if (!dontRebuildAreas) {
@@ -398,7 +381,7 @@ var gZenVerticalTabsManager = {
         if (isRightSide && !isSidebarExpanded) {
           navBar.appendChild(windowButtons);
         } else {
-          document.getElementById("zen-sidebar-top-buttons-customization-target").appendChild(windowButtons);
+          document.getElementById('zen-sidebar-top-buttons-customization-target').appendChild(windowButtons);
         }
       } else if (!isSingleToolbar && !isCompactMode) {
         if (this.isWindowsStyledButtons) {
@@ -407,7 +390,8 @@ var gZenVerticalTabsManager = {
           } else {
             navBar.append(windowButtons);
           }
-        } else { // not windows styled buttons
+        } else {
+          // not windows styled buttons
           if (isRightSide || !isSidebarExpanded) {
             navBar.prepend(windowButtons);
           } else {

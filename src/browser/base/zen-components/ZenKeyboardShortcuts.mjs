@@ -103,7 +103,9 @@ const defaultKeyboardGroups = {
     'zen-bidi-switch-direction-shortcut',
     'zen-screenshot-shortcut',
   ],
-  devTools: [/*Filled automatically*/],
+  devTools: [
+    /*Filled automatically*/
+  ],
 };
 
 const fixedL10nIds = {
@@ -215,9 +217,9 @@ class KeyShortcutModifiers {
       this.#shift == other.#shift &&
       this.#control == other.#control &&
       (AppConstants.platform == 'macosx'
-        ? ((this.#meta || this.#accel) == (other.#meta || other.#accel) && this.#control == other.#control)
-        // In other platforms, we can have control and accel counting as the same thing
-        : (this.#meta == other.#meta && (this.#control || this.#accel) == (other.#control || other.#accel)))
+        ? (this.#meta || this.#accel) == (other.#meta || other.#accel) && this.#control == other.#control
+        : // In other platforms, we can have control and accel counting as the same thing
+          this.#meta == other.#meta && (this.#control || this.#accel) == (other.#control || other.#accel))
     );
   }
 
@@ -362,7 +364,8 @@ class KeyShortcut {
       key.getAttribute('id'),
       key.getAttribute('key'),
       key.getAttribute('keycode'),
-      group ?? KeyShortcut.getGroupFromL10nId(KeyShortcut.sanitizeL10nId(key.getAttribute('data-l10n-id')), key.getAttribute('id')),
+      group ??
+        KeyShortcut.getGroupFromL10nId(KeyShortcut.sanitizeL10nId(key.getAttribute('data-l10n-id')), key.getAttribute('id')),
       KeyShortcutModifiers.parseFromXHTMLAttribute(key.getAttribute('modifiers')),
       key.getAttribute('command'),
       key.getAttribute('data-l10n-id'),
@@ -737,9 +740,14 @@ class ZenKeyboardShortcutsLoader {
   }
 
   // Make sure to stay in sync with https://searchfox.org/mozilla-central/source/devtools/startup/DevToolsStartup.sys.mjs#879
-  static IGNORED_DEVTOOLS_SHORTCUTS = ['key_toggleToolboxF12', 'profilerStartStop',
-      'profilerStartStopAlternate', 'profilerCapture', 'profilerCaptureAlternate',
-      'javascriptTracingToggle'];
+  static IGNORED_DEVTOOLS_SHORTCUTS = [
+    'key_toggleToolboxF12',
+    'profilerStartStop',
+    'profilerStartStopAlternate',
+    'profilerCapture',
+    'profilerCaptureAlternate',
+    'javascriptTracingToggle',
+  ];
 
   static zenGetDefaultDevToolsShortcuts() {
     let keySet = document.getElementById(ZEN_DEVTOOLS_KEYSET_ID);
@@ -925,7 +933,7 @@ var gZenKeyboardShortcutsManager = {
     // Create the main keyset before calling the async init function,
     // This is because other browser-sets needs this element and the JS event
     //  handled wont wait for the async function to finish.
-    void(this.getZenKeyset());
+    void this.getZenKeyset();
 
     this._hasCleared = Services.prefs.getBoolPref('zen.keyboard.shortcuts.disable-mainkeyset-clear', false);
     window.addEventListener('zen-devtools-keyset-added', this._hasAddedDevtoolShortcuts.bind(this));
@@ -962,10 +970,10 @@ var gZenKeyboardShortcutsManager = {
       } catch (e) {
         console.error('Zen CKS: Error parsing saved shortcuts. Resetting to defaults...', e);
         gNotificationBox.appendNotification(
-          "zen-shortcuts-corrupted",
+          'zen-shortcuts-corrupted',
           {
-            label: { "l10n-id": "zen-shortcuts-corrupted" },
-            image: "chrome://browser/skin/notification-icons/persistent-storage-blocked.svg",
+            label: { 'l10n-id': 'zen-shortcuts-corrupted' },
+            image: 'chrome://browser/skin/notification-icons/persistent-storage-blocked.svg',
             priority: gNotificationBox.PRIORITY_WARNING_HIGH,
           },
           []
@@ -1179,8 +1187,12 @@ var gZenKeyboardShortcutsManager = {
   },
 };
 
-document.addEventListener("MozBeforeInitialXULLayout", () => {
-  if (Services.prefs.getBoolPref('zen.keyboard.shortcuts.enabled', false)) {
-    gZenKeyboardShortcutsManager.beforeInit();
-  }
-}, { once: true });
+document.addEventListener(
+  'MozBeforeInitialXULLayout',
+  () => {
+    if (Services.prefs.getBoolPref('zen.keyboard.shortcuts.enabled', false)) {
+      gZenKeyboardShortcutsManager.beforeInit();
+    }
+  },
+  { once: true }
+);

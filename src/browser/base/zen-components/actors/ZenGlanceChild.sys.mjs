@@ -108,7 +108,7 @@ export class ZenGlanceChild extends JSWindowActorChild {
       return;
     } else if (activationMethod === 'meta' && !event.metaKey) {
       return;
-    }else if (activationMethod === 'mantain' || typeof activationMethod === 'undefined') {
+    } else if (activationMethod === 'mantain' || typeof activationMethod === 'undefined') {
       return;
     }
     // get closest A element

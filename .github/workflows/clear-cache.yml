@@ -20,7 +20,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
             })
-            
+
             for (const cache of caches.data.actions_caches) {
               console.log(cache)
               await github.rest.actions.deleteActionsCacheById({
@@ -29,5 +29,5 @@ jobs:
                 cache_id: cache.id,
               })
             }
-            
+
             console.log("Clear completed")

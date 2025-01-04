@@ -292,7 +292,7 @@ var gZenMarketplaceManager = {
         preferencesWrapper.setAttribute('flex', '1');
 
         for (const entry of preferences) {
-          const { property, label, type, placeholder } = entry;
+          const { property, label, type, placeholder, defaultValue } = entry;
 
           switch (type) {
             case 'dropdown': {
@@ -309,7 +309,7 @@ var gZenMarketplaceManager = {
               menulist.setAttribute('sizetopopup', 'none');
               menulist.setAttribute('id', property + '-popup-menulist');
 
-              const savedValue = Services.prefs.getStringPref(property, 'none');
+              const savedValue = Services.prefs.getStringPref(property, defaultValue ?? 'none');
 
               menulist.setAttribute('value', savedValue);
               menulist.setAttribute('tooltiptext', property);
@@ -395,7 +395,7 @@ var gZenMarketplaceManager = {
               checkboxElement.setAttribute('zen-pref', property);
 
               // Checkbox only works with "true" and "false" values, it's not like HTML checkboxes.
-              if (Services.prefs.getBoolPref(property, false)) {
+              if (Services.prefs.getBoolPref(property, defaultValue ?? false)) {
                 checkboxElement.setAttribute('checked', 'true');
               }
 
@@ -423,7 +423,7 @@ var gZenMarketplaceManager = {
               container.setAttribute('align', 'center');
               container.setAttribute('role', 'group');
 
-              const savedValue = Services.prefs.getStringPref(property, '');
+              const savedValue = Services.prefs.getStringPref(property, defaultValue ?? '');
               const sanitizedProperty = property?.replaceAll(/\./g, '-');
 
               const input = document.createElement('input');
@@ -439,8 +439,8 @@ var gZenMarketplaceManager = {
               }
 
               input.addEventListener(
-                'change',
-                ZenThemesCommon.throttle((event) => {
+                'input',
+                ZenThemesCommon.debounce((event) => {
                   const value = event.target.value;
 
                   Services.prefs.setStringPref(property, value);

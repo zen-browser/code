@@ -65,7 +65,6 @@
 
 #tabbrowser-tabpanels:has(> [zen-split='true']),
 #zen-splitview-overlay {
-
   @media (-moz-bool-pref: 'zen.view.compact') {
     :root:not([customizing]) & {
       @media (-moz-bool-pref: 'zen.view.compact.hide-tabbar') {

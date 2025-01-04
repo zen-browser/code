@@ -36,7 +36,7 @@ if test "$SURFER_COMPAT" = "x86_64"; then
   export CPPFLAGS="-O3 -Qvec -w"
   export CXXFLAGS="-O3 -Qvec -w"
   export LDFLAGS="-Wl,-O3"
-  export RUSTFLAGS="-Clink-args=--icf=safe -C codegen-units=1 -Ctarget-cpu=x86-64"
+  export RUSTFLAGS="-Clink-args=--icf=safe"
 elif test "$SURFER_COMPAT" = "aarch64"; then
   ac_add_options --target=aarch64-pc-windows-msvc
   ac_add_options --enable-eme=widevine

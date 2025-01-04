@@ -1,4 +1,5 @@
 #!/bin/bash
+
 set -euo pipefail  # Exit immediately if a command exits with a non-zero status, treat unset variables as errors, and fail on pipe errors.
 
 CURRENT_DIR=$(pwd)
@@ -13,6 +14,7 @@ FIREFOX_L10N_REPO="https://github.com/mozilla-l10n/firefox-l10n"
 
 mkdir -p "$L10N_DIR"  # Ensure the l10n directory exists
 cd "$L10N_DIR"
+
 if [ ! -d "firefox-l10n" ]; then
   git clone "$FIREFOX_L10N_REPO"
 else
@@ -28,7 +30,7 @@ update_language() {
   LANG_DIR="$L10N_DIR/$langId"
 
   echo "Updating $langId..."
-  
+
   # Check if the language directory exists
   if [ -d "../firefox-l10n/$langId" ]; then
     rsync -av --progress "../firefox-l10n/$langId/" "$LANG_DIR/" --exclude .git
@@ -52,6 +54,7 @@ fi
 
 # Move all the files to the correct location
 sh scripts/copy-language-pack.sh en-US
+
 while read -r lang; do
   sh scripts/copy-language-pack.sh "$lang"
 done < "$L10N_DIR/l10n/supported-languages"

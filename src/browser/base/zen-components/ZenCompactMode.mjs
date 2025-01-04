@@ -69,7 +69,11 @@ var gZenCompactModeManager = {
   updateCompactModeContext(isSingleToolbar) {
     this.getAndApplySidebarWidth(); // Ignore return value
 
-    const IDs = ['zen-context-menu-compact-mode-hide-sidebar', 'zen-context-menu-compact-mode-hide-toolbar', 'zen-context-menu-compact-mode-hide-both'];
+    const IDs = [
+      'zen-context-menu-compact-mode-hide-sidebar',
+      'zen-context-menu-compact-mode-hide-toolbar',
+      'zen-context-menu-compact-mode-hide-both',
+    ];
     for (let id of IDs) {
       document.getElementById(id).disabled = isSingleToolbar;
     }
@@ -104,7 +108,7 @@ var gZenCompactModeManager = {
   getAndApplySidebarWidth() {
     let sidebarWidth = this.sidebar.getBoundingClientRect().width;
     if (sidebarWidth > 1) {
-      this.sidebar.style.setProperty("--zen-sidebar-width", `${sidebarWidth}px`);
+      this.sidebar.style.setProperty('--zen-sidebar-width', `${sidebarWidth}px`);
     }
     return sidebarWidth;
   },
@@ -118,40 +122,40 @@ var gZenCompactModeManager = {
     this._isAnimating = true;
     // Do this so we can get the correct width ONCE compact mode styled have been applied
     if (this._canAnimateSidebar) {
-      this.sidebar.setAttribute("animate", "true");
+      this.sidebar.setAttribute('animate', 'true');
     }
     window.requestAnimationFrame(() => {
       let sidebarWidth = this.getAndApplySidebarWidth();
       if (!this._canAnimateSidebar) {
-        this.sidebar.removeAttribute("animate");
+        this.sidebar.removeAttribute('animate');
         this._isAnimating = false;
         return;
       }
       if (canHideSidebar && isCompactMode) {
         window.requestAnimationFrame(() => {
-          this.sidebar.style.position = "unset";
-          this.sidebar.style.transition = "margin .4s ease";
-          this.sidebar.style.left = "0";
+          this.sidebar.style.position = 'unset';
+          this.sidebar.style.transition = 'margin .4s ease';
+          this.sidebar.style.left = '0';
           if (!this.sidebarIsOnRight) {
             this.sidebar.style.marginLeft = `${-1 * sidebarWidth}px`;
           } else {
             this.sidebar.style.marginRight = `${-1 * sidebarWidth}px`;
           }
-          this.sidebar.style.pointerEvents = "none";
+          this.sidebar.style.pointerEvents = 'none';
 
           window.requestAnimationFrame(() => {
             setTimeout(() => {
               window.requestAnimationFrame(() => {
-                this.sidebar.style.removeProperty("pointer-events");
-                this.sidebar.style.removeProperty("position");
-                this.sidebar.style.removeProperty("margin-left");
-                this.sidebar.style.removeProperty("margin-right");
-                this.sidebar.style.removeProperty("transform");
-                this.sidebar.style.removeProperty("left");
-                document.getElementById('browser').style.removeProperty("overflow");
-                this.sidebar.removeAttribute("animate");
+                this.sidebar.style.removeProperty('pointer-events');
+                this.sidebar.style.removeProperty('position');
+                this.sidebar.style.removeProperty('margin-left');
+                this.sidebar.style.removeProperty('margin-right');
+                this.sidebar.style.removeProperty('transform');
+                this.sidebar.style.removeProperty('left');
+                document.getElementById('browser').style.removeProperty('overflow');
+                this.sidebar.removeAttribute('animate');
                 window.requestAnimationFrame(() => {
-                  this.sidebar.style.removeProperty("transition");
+                  this.sidebar.style.removeProperty('transition');
                   this._isAnimating = false;
                 });
               });
@@ -159,9 +163,9 @@ var gZenCompactModeManager = {
           });
         });
       } else if (canHideSidebar && !isCompactMode) {
-        document.getElementById('browser').style.overflow = "hidden";
-        this.sidebar.style.position = "relative";
-        this.sidebar.style.left = "0";
+        document.getElementById('browser').style.overflow = 'hidden';
+        this.sidebar.style.position = 'relative';
+        this.sidebar.style.left = '0';
 
         if (!this.sidebarIsOnRight) {
           this.sidebar.style.marginLeft = `${-1 * sidebarWidth}px`;
@@ -171,35 +175,35 @@ var gZenCompactModeManager = {
         }
 
         window.requestAnimationFrame(() => {
-          this.sidebar.style.transition = "margin .3s ease, transform .275s ease, opacity .3s ease";
+          this.sidebar.style.transition = 'margin .3s ease, transform .275s ease, opacity .3s ease';
           // we are in compact mode and we are exiting it
           if (!this.sidebarIsOnRight) {
-            this.sidebar.style.marginLeft = "0";
+            this.sidebar.style.marginLeft = '0';
           } else {
-            this.sidebar.style.marginRight = "0";
-            this.sidebar.style.transform = "translateX(0)";
+            this.sidebar.style.marginRight = '0';
+            this.sidebar.style.transform = 'translateX(0)';
           }
-          this.sidebar.style.pointerEvents = "none";
+          this.sidebar.style.pointerEvents = 'none';
 
           setTimeout(() => {
             window.requestAnimationFrame(() => {
               this._isAnimating = false;
-              this.sidebar.style.removeProperty("position");
-              this.sidebar.style.removeProperty("pointer-events");
-              this.sidebar.style.removeProperty("opacity");
-              this.sidebar.style.removeProperty("margin-left");
-              this.sidebar.style.removeProperty("margin-right");
-              this.sidebar.style.removeProperty("transform");
-              this.sidebar.style.removeProperty("transition");
-              this.sidebar.style.removeProperty("left");
+              this.sidebar.style.removeProperty('position');
+              this.sidebar.style.removeProperty('pointer-events');
+              this.sidebar.style.removeProperty('opacity');
+              this.sidebar.style.removeProperty('margin-left');
+              this.sidebar.style.removeProperty('margin-right');
+              this.sidebar.style.removeProperty('transform');
+              this.sidebar.style.removeProperty('transition');
+              this.sidebar.style.removeProperty('left');
 
-              document.getElementById('browser').style.removeProperty("overflow");
-              this.sidebar.removeAttribute("animate");
+              document.getElementById('browser').style.removeProperty('overflow');
+              this.sidebar.removeAttribute('animate');
             });
           }, 400);
         });
       } else {
-        this.sidebar.removeAttribute("animate"); // remove the attribute if we are not animating
+        this.sidebar.removeAttribute('animate'); // remove the attribute if we are not animating
       }
     });
   },

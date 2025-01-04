@@ -1,6 +1,10 @@
-name: Pull request test
+name: Code Linter
 
 on:
+  push:
+    branches:
+      - dev
+  workflow_dispatch:
   pull_request:
     branches:
       - dev
@@ -22,14 +26,8 @@ jobs:
       - name: Setup pnpm
         run: npm install -g pnpm
 
-      - name: Install Surfer
-        run: npm i -g @zen-browser/surfer
-
       - name: Install dependencies
         run: pnpm install
 
-      - name: Download Firefox and dependencies
-        run: surfer download
-
-      - name: Import patches
-        run: surfer i
+      - name: Lint
+        run: pnpm lint

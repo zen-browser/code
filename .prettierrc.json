@@ -8,5 +8,5 @@
   "jsxSingleQuote": false,
   "semi": true,
   "printWidth": 128,
-  "plugins": []
+  "plugins": ["prettier-plugin-sh"]
 }

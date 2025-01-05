@@ -1,5 +1,5 @@
 diff --git a/browser/components/tabbrowser/content/tabs.js b/browser/components/tabbrowser/content/tabs.js
-index f7c39fe804182e2bdf53045ba3b6a5ba17079fc3..8b594d9d13b60c51c6f9306e28178e75b5f49782 100644
+index f7c39fe804182e2bdf53045ba3b6a5ba17079fc3..63e55af47b30d49e8636d43cae41622626906f16 100644
 --- a/browser/components/tabbrowser/content/tabs.js
 +++ b/browser/components/tabbrowser/content/tabs.js
 @@ -649,7 +649,7 @@
@@ -85,23 +85,15 @@ index f7c39fe804182e2bdf53045ba3b6a5ba17079fc3..8b594d9d13b60c51c6f9306e28178e75
            if (tab && rect(tab).width <= this._tabClipWidth) {
              this.setAttribute("closebuttons", "activetab");
            } else {
-@@ -1790,10 +1792,12 @@
+@@ -1794,6 +1796,7 @@
+         this.arrowScrollbox.ensureElementIsVisible(selectedTab, aInstant);
+       }
  
-     _handleTabSelect(aInstant) {
-       let selectedTab = this.selectedItem;
--      if (this.overflowing) {
--        this.arrowScrollbox.ensureElementIsVisible(selectedTab, aInstant);
--      }
-+      this.arrowScrollbox.ensureElementIsVisible(selectedTab, aInstant);
- 
-+      if (!aInstant && Services.prefs.getBoolPref('zen.view.compact')
-+          && Services.prefs.getBoolPref('zen.view.compact.toolbar-flash-popup')) {
-+        gZenCompactModeManager.flashSidebar();
-+      }
++      gZenCompactModeManager.flashSidebarIfNecessary(aInstant);
        selectedTab._notselectedsinceload = false;
      }
  
-@@ -1841,7 +1845,7 @@
+@@ -1841,7 +1844,7 @@
          if (isEndTab && !this._hasTabTempMaxWidth) {
            return;
          }
@@ -110,7 +102,7 @@ index f7c39fe804182e2bdf53045ba3b6a5ba17079fc3..8b594d9d13b60c51c6f9306e28178e75
          // Force tabs to stay the same width, unless we're closing the last tab,
          // which case we need to let them expand just enough so that the overall
          // tabbar width is the same.
-@@ -1856,7 +1860,7 @@
+@@ -1856,7 +1859,7 @@
          let tabsToReset = [];
          for (let i = numPinned; i < tabs.length; i++) {
            let tab = tabs[i];
@@ -119,7 +111,7 @@ index f7c39fe804182e2bdf53045ba3b6a5ba17079fc3..8b594d9d13b60c51c6f9306e28178e75
            if (!isEndTab) {
              // keep tabs the same width
              tab.style.transition = "none";
-@@ -1922,13 +1926,13 @@
+@@ -1922,13 +1925,13 @@
        let verticalTabsContainer = document.getElementById(
          "vertical-pinned-tabs-container"
        );
@@ -135,7 +127,7 @@ index f7c39fe804182e2bdf53045ba3b6a5ba17079fc3..8b594d9d13b60c51c6f9306e28178e75
          }
        }
  
-@@ -1952,7 +1956,7 @@
+@@ -1952,7 +1955,7 @@
  
      _positionPinnedTabs() {
        let tabs = this.visibleTabs;
@@ -144,7 +136,7 @@ index f7c39fe804182e2bdf53045ba3b6a5ba17079fc3..8b594d9d13b60c51c6f9306e28178e75
        let absPositionHorizontalTabs =
          this.overflowing && tabs.length > numPinned && numPinned > 0;
  
-@@ -2033,7 +2037,7 @@
+@@ -2033,7 +2036,7 @@
          return;
        }
  
@@ -153,7 +145,7 @@ index f7c39fe804182e2bdf53045ba3b6a5ba17079fc3..8b594d9d13b60c51c6f9306e28178e75
  
        let directionX = screenX > dragData.animLastScreenX;
        let directionY = screenY > dragData.animLastScreenY;
-@@ -2221,9 +2225,9 @@
+@@ -2221,9 +2224,9 @@
        }
  
        let pinned = draggedTab.pinned;
@@ -165,7 +157,7 @@ index f7c39fe804182e2bdf53045ba3b6a5ba17079fc3..8b594d9d13b60c51c6f9306e28178e75
          pinned ? numPinned : undefined
        );
  
-@@ -2456,8 +2460,8 @@
+@@ -2456,8 +2459,8 @@
        );
      }
  
@@ -176,7 +168,7 @@ index f7c39fe804182e2bdf53045ba3b6a5ba17079fc3..8b594d9d13b60c51c6f9306e28178e75
          return;
        }
  
-@@ -2622,9 +2626,9 @@
+@@ -2622,9 +2625,9 @@
        function newIndex(aTab, index) {
          // Don't allow mixing pinned and unpinned tabs.
          if (aTab.pinned) {
@@ -188,7 +180,7 @@ index f7c39fe804182e2bdf53045ba3b6a5ba17079fc3..8b594d9d13b60c51c6f9306e28178e75
        }
      }
  
-@@ -2726,12 +2730,14 @@
+@@ -2726,12 +2729,14 @@
                selectedTab = {
                  left: selectedTab.left,
                  right: selectedTab.right,
@@ -204,7 +196,7 @@ index f7c39fe804182e2bdf53045ba3b6a5ba17079fc3..8b594d9d13b60c51c6f9306e28178e75
                selectedTab,
              ];
            })
-@@ -2748,8 +2754,11 @@
+@@ -2748,8 +2753,11 @@
              delete this._lastTabToScrollIntoView;
              // Is the new tab already completely visible?
              if (
@@ -218,7 +210,7 @@ index f7c39fe804182e2bdf53045ba3b6a5ba17079fc3..8b594d9d13b60c51c6f9306e28178e75
              ) {
                return;
              }
-@@ -2757,21 +2766,29 @@
+@@ -2757,21 +2765,29 @@
              if (this.arrowScrollbox.smoothScroll) {
                // Can we make both the new tab and the selected tab completely visible?
                if (

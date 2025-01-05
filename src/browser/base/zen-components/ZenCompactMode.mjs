@@ -7,13 +7,27 @@ XPCOMUtils.defineLazyPreferenceGetter(
   800
 );
 
+XPCOMUtils.defineLazyPreferenceGetter(
+  lazyCompactMode,
+  'COMPACT_MODE_FLASH_ENABLED',
+  'zen.view.compact.toolbar-flash-popup',
+  true
+);
+
 var gZenCompactModeManager = {
   _flashTimeouts: {},
   _evenListeners: [],
   _removeHoverFrames: {},
 
   init() {
-    Services.prefs.addObserver('zen.view.compact', this._updateEvent.bind(this));
+    XPCOMUtils.defineLazyPreferenceGetter(
+      lazyCompactMode,
+      'COMPACT_MODE_ENABLED',
+      'zen.view.compact',
+      true,
+      this._updateEvent.bind(this)
+    );
+
     Services.prefs.addObserver('zen.view.sidebar-expanded.on-hover', this._disableTabsOnHoverIfConflict.bind(this));
     Services.prefs.addObserver('zen.tabs.vertical.right-side', this._updateSidebarIsOnRight.bind(this));
 
@@ -27,7 +41,7 @@ var gZenCompactModeManager = {
   },
 
   get prefefence() {
-    return Services.prefs.getBoolPref('zen.view.compact');
+    return lazyCompactMode.COMPACT_MODE_ENABLED;
   },
 
   set preference(value) {
@@ -48,6 +62,12 @@ var gZenCompactModeManager = {
       this._sidebar = document.getElementById('navigator-toolbox');
     }
     return this._sidebar;
+  },
+
+  flashSidebarIfNecessary(aInstant = false) {
+    if (!aInstant && this.prefefence && lazyCompactMode.COMPACT_MODE_FLASH_ENABLED && !gZenGlanceManager.animatingOpen) {
+      this.flashSidebar();
+    }
   },
 
   addContextMenu() {

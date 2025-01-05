@@ -60,8 +60,8 @@
           :root[zen-single-toolbar='true'] & {
             top: var(--zen-element-separation);
 
-            & #nav-bar {
-              margin-left: calc(var(--zen-toolbox-padding) / 2) !important;
+            &:not([zen-right-side='true']) #nav-bar {
+              margin-left: 0 !important;
             }
           }
         }

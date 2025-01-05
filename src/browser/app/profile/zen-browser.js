@@ -430,3 +430,8 @@ pref("media.cache_resume_threshold", 3600);
 pref("media.memory_caches_combined_limit_kb", 2560000);
 
 pref("image.mem.decode_bytes_at_a_time", 32768);
+
+// Enable GPU by default
+pref("gfx.canvas.accelerated", true);
+pref("media.hardware-video-decoding.enabled", true);
+pref("layers.gpu-process.enabled", true);

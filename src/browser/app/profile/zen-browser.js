@@ -228,15 +228,6 @@ pref("browser.xul.error_pages.expert_bad_cert", true);
 pref("security.tls.enable_0rtt_data", false);
 pref("network.http.http3.enable_0rtt", false);
 
-// Media
-pref("media.memory_cache_max_size", 1048576);
-pref("media.cache_readahead_limit", 9000);
-pref("media.cache_resume_threshold", 3600);
-pref("media.memory_caches_combined_limit_kb", 2560000);
-
-// Image decoding
-pref("image.mem.decode_bytes_at_a_time", 32768);
-
 // Network
 pref("network.http.max-urgent-start-excessive-connections-per-host", 5);
 pref("network.dnsCacheExpiration", 3600);
@@ -321,8 +312,6 @@ pref('browser.newtabpage.activity-stream.system.showWeather', true);
 
 // Enable experimental settings page (Used for Zen Labs)
 pref('browser.preferences.experimental', true);
-
-// Jang's personal speedups (Thanks to Jang for these!)
 
 // Prefetching:
 pref("network.dns.disablePrefetch", false);
@@ -429,3 +418,15 @@ pref("browser.newtabpage.activity-stream.asrouter.userprefs.cfr.addons", false);
 pref("browser.newtabpage.activity-stream.asrouter.userprefs.cfr.features", false);
 pref("browser.preferences.moreFromMozilla", false, locked);
 pref("browser.aboutwelcome.enabled", false);
+
+// ---- Experimental settings to try make zen faster
+pref("gfx.canvas.accelerated.cache-items", 32768);
+pref("gfx.canvas.accelerated.cache-size", 4096);
+pref("gfx.content.skia-font-cache-size", 80);
+
+pref("media.memory_cache_max_size", 1048576);
+pref("media.cache_readahead_limit", 9000);
+pref("media.cache_resume_threshold", 3600);
+pref("media.memory_caches_combined_limit_kb", 2560000);
+
+pref("image.mem.decode_bytes_at_a_time", 32768);

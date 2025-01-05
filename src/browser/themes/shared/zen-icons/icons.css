@@ -1125,7 +1125,7 @@ menupopup > menuitem:is([type='checkbox']) .menu-iconic-left {
 }
 
 @media (-moz-platform: windows) {
-  menupopup > menuitem[checked="true"] {
+  menupopup > menuitem[checked='true'] {
     padding-inline-start: 6px;
   }
 }

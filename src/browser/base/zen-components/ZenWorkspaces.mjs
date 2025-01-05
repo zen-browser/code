@@ -1274,6 +1274,7 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
       await this._performWorkspaceChange(window, onInit);
     } finally {
       this._inChangingWorkspace = false;
+      this.tabContainer.removeAttribute('dont-animate-tabs');
     }
   }
 
@@ -1304,6 +1305,7 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
         workspaces.workspaces.findIndex((w) => w.uuid === previousWorkspace.uuid) <
           workspaces.workspaces.findIndex((w) => w.uuid === window.uuid);
       gBrowser.tabContainer.setAttribute('zen-workspace-animation', isNextWorkspace ? 'next' : 'previous');
+      this.tabContainer.removeAttribute('dont-animate-tabs');
       this._animatingChange = true;
       setTimeout(() => {
         this._animatingChange = false;
@@ -1339,9 +1341,6 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
         gBrowser.hideTab(tab, undefined, true);
       }
     }
-    window.requestAnimationFrame(() => {
-      this.tabContainer.removeAttribute('dont-animate-tabs');
-    });
 
     return visibleTabs;
   }

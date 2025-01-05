@@ -16,10 +16,10 @@ on:
       update_branch:
         description: 'Update branch with new version'
         required: true
-        default: 'stable'
+        default: 'release'
         type: 'choice'
         options:
-          - 'stable'
+          - 'release'
           - 'twilight'
   workflow_call:
     inputs:
@@ -36,7 +36,7 @@ on:
       update_branch:
         description: 'Update branch with new version'
         required: true
-        default: 'stable'
+        default: 'release'
         type: 'string'
 
 jobs:
@@ -122,7 +122,7 @@ jobs:
           npm i -g @zen-browser/surfer
 
       - name: Bump version
-        if: ${{ inputs.update_version && inputs.update_branch == 'stable' }}
+        if: ${{ inputs.update_version && inputs.update_branch == 'release' }}
         run: |
           pnpm surfer ci --brand ${{ inputs.update_branch }} --bump prerelease
 
@@ -385,7 +385,7 @@ jobs:
 
           if [ "${{ inputs.update_branch }}" = "twilight" ]; then
             sed -i -e 's/Name=Zen Browser/Name=Zen Twilight/g' AppDir/zen.desktop
-            sed -i -e 's/StartupWMClass=zen-stable/StartupWMClass=zen-twilight/g' AppDir/zen.desktop
+            sed -i -e 's/StartupWMClass=zen-release/StartupWMClass=zen-twilight/g' AppDir/zen.desktop
           fi
 
           APPDIR=AppDir
@@ -425,7 +425,7 @@ jobs:
     needs: [build-data, linux, windows-step-3, check-release, mac, appimage, source, lint]
     runs-on: ubuntu-latest
     environment:
-      name: ${{ inputs.update_branch == 'stable' && 'Deploy-Release' || 'Deploy-Twilight' }}
+      name: ${{ inputs.update_branch == 'release' && 'Deploy-Release' || 'Deploy-Twilight' }}
 
     steps:
       - name: Checkout repository
@@ -464,7 +464,7 @@ jobs:
           cp -a ../linux_update_manifest_x86_64/.  updates/
           cp -a ../linux_update_manifest_aarch64/.  updates/
 
-          if [[ $RELEASE_BRANCH == 'stable' ]]; then
+          if [[ $RELEASE_BRANCH == 'release' ]]; then
             cp -a ../.github/workflows/object/windows-x64-signed-x86_64/update_manifest/.  updates/
             cp -a ../.github/workflows/object/windows-x64-signed-arm64/update_manifest/.  updates/
           else
@@ -518,12 +518,12 @@ jobs:
 
       - name: Release
         uses: marvinpinto/action-automatic-releases@master
-        if: ${{ inputs.update_branch == 'stable' }}
+        if: ${{ inputs.update_branch == 'release' }}
         with:
           repo_token: '${{ secrets.DEPLOY_KEY }}'
           automatic_release_tag: ${{ needs.build-data.outputs.version }}
           prerelease: false
-          title: 'Stable build - ${{ needs.build-data.outputs.version }} (${{ needs.build-data.outputs.build_date }})'
+          title: 'Release build - ${{ needs.build-data.outputs.version }} (${{ needs.build-data.outputs.build_date }})'
           files: |
             zen.source.tar.gz
             zen.linux-x86_64.tar.bz2
@@ -546,7 +546,7 @@ jobs:
             zen.macos-aarch64.dmg
 
   prepare-flatpak:
-    if: ${{ inputs.create_release && inputs.update_branch == 'stable' }}
+    if: ${{ inputs.create_release && inputs.update_branch == 'release' }}
     permissions: write-all
     name: Prepare Flatpak
     needs: [release, linux, build-data]
@@ -605,7 +605,7 @@ jobs:
         run: sleep 120
 
   release-flatpak:
-    if: ${{ inputs.create_release && inputs.update_branch == 'stable' }}
+    if: ${{ inputs.create_release && inputs.update_branch == 'release' }}
     permissions: write-all
     name: Release Flatpak
     needs: [prepare-flatpak, build-data]

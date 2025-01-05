@@ -25,6 +25,7 @@ export MOZ_INCLUDE_SOURCE_INFO=1
 ac_add_options --enable-application=browser
 
 if test "$ZEN_RELEASE"; then
+
   ac_add_options --enable-clang-plugin
   ac_add_options --enable-bootstrap
 
@@ -33,6 +34,7 @@ if test "$ZEN_RELEASE"; then
   ac_add_options --disable-debug-symbols
   ac_add_options --disable-debug-js-modules
   ac_add_options --disable-tests
+  ac_add_options --disable-js-shell
 
   ac_add_options --disable-vtune
 

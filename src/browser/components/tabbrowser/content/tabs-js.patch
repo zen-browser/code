@@ -1,5 +1,5 @@
 diff --git a/browser/components/tabbrowser/content/tabs.js b/browser/components/tabbrowser/content/tabs.js
-index f7c39fe804182e2bdf53045ba3b6a5ba17079fc3..84359791101c500ed354da8d0b4bf3c7e8be4563 100644
+index f7c39fe804182e2bdf53045ba3b6a5ba17079fc3..8b594d9d13b60c51c6f9306e28178e75b5f49782 100644
 --- a/browser/components/tabbrowser/content/tabs.js
 +++ b/browser/components/tabbrowser/content/tabs.js
 @@ -649,7 +649,7 @@
@@ -11,6 +11,15 @@ index f7c39fe804182e2bdf53045ba3b6a5ba17079fc3..84359791101c500ed354da8d0b4bf3c7
          let tabsPerRow = 0;
          let position = 0;
          for (let pinnedTab of pinnedTabs) {
+@@ -997,7 +997,7 @@
+           }
+         } else {
+           let pinned = draggedTab.pinned;
+-          let numPinned = gBrowser.pinnedTabCount;
++          let numPinned = gBrowser._numVisiblePinTabs;
+           let tabs = this.visibleTabs.slice(
+             pinned ? 0 : numPinned,
+             pinned ? numPinned : undefined
 @@ -1076,7 +1076,7 @@
                let postTransitionCleanup = () => {
                  tab.removeAttribute("tabdrop-samewindow");
@@ -67,6 +76,15 @@ index f7c39fe804182e2bdf53045ba3b6a5ba17079fc3..84359791101c500ed354da8d0b4bf3c7
        );
      }
  
+@@ -1778,7 +1780,7 @@
+           let rect = ele => {
+             return window.windowUtils.getBoundsWithoutFlushing(ele);
+           };
+-          let tab = this.visibleTabs[gBrowser.pinnedTabCount];
++          let tab = this.visibleTabs[gBrowser._numVisiblePinTabs];
+           if (tab && rect(tab).width <= this._tabClipWidth) {
+             this.setAttribute("closebuttons", "activetab");
+           } else {
 @@ -1790,10 +1792,12 @@
  
      _handleTabSelect(aInstant) {
@@ -157,6 +175,18 @@ index f7c39fe804182e2bdf53045ba3b6a5ba17079fc3..84359791101c500ed354da8d0b4bf3c7
 +      if (!this.hasAttribute("movingtab") && !always) {
          return;
        }
+ 
+@@ -2622,9 +2626,9 @@
+       function newIndex(aTab, index) {
+         // Don't allow mixing pinned and unpinned tabs.
+         if (aTab.pinned) {
+-          return Math.min(index, gBrowser.pinnedTabCount - 1);
++          return Math.min(index, gBrowser._numVisiblePinTabs - 1);
+         }
+-        return Math.max(index, gBrowser.pinnedTabCount);
++        return Math.max(index, gBrowser._numVisiblePinTabs);
+       }
+     }
  
 @@ -2726,12 +2730,14 @@
                selectedTab = {

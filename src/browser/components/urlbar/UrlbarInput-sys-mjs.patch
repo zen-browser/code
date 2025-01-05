@@ -1,5 +1,5 @@
 diff --git a/browser/components/urlbar/UrlbarInput.sys.mjs b/browser/components/urlbar/UrlbarInput.sys.mjs
-index 3ab07e5864b3bb200608e7f619645f92ade129fe..0f9722f985abca2fdd4ea0265c020fc4228f2565 100644
+index 3ab07e5864b3bb200608e7f619645f92ade129fe..19efe7e6b78a1ba87c93f39ca8bde5046312b0a9 100644
 --- a/browser/components/urlbar/UrlbarInput.sys.mjs
 +++ b/browser/components/urlbar/UrlbarInput.sys.mjs
 @@ -67,6 +67,13 @@ XPCOMUtils.defineLazyPreferenceGetter(
@@ -22,10 +22,10 @@ index 3ab07e5864b3bb200608e7f619645f92ade129fe..0f9722f985abca2fdd4ea0265c020fc4
  
 +    if (lazy.ZEN_URLBAR_BEHAVIOR == 'float' || (lazy.ZEN_URLBAR_BEHAVIOR == 'floating-on-type' && !this.focusedViaMousedown)) {
 +      this.setAttribute("zen-floating-urlbar", "true");
-+      this.textbox.classList.add("zen-floating-urlbar");
++      this.textbox.classList.add("zen-compact-mode-ignore");
 +    } else {
 +      this.removeAttribute("zen-floating-urlbar");
-+      this.textbox.classList.remove("zen-floating-urlbar");
++      this.textbox.classList.remove("zen-compact-mode-ignore");
 +    }
      // Enable the animation only after the first extend call to ensure it
      // doesn't run when opening a new window.

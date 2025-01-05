@@ -3,7 +3,7 @@
     #currentBrowser = null;
     #currentTab = null;
 
-    #animating = false;
+    _animating = false;
 
     init() {
       document.documentElement.setAttribute('zen-glance-uuid', gZenUIManager.generateUuidv4());
@@ -86,6 +86,8 @@
       const currentTab = gBrowser.selectedTab;
 
       this.animatingOpen = true;
+      this._animating = true;
+
       const browserElement = this.createBrowserElement(url, currentTab);
 
       this.overlay = browserElement.closest('.browserSidebarContainer');
@@ -107,18 +109,17 @@
 
         this.overlay.removeAttribute('fade-out');
         this.browserWrapper.setAttribute('animate', true);
-        this.#animating = true;
         setTimeout(() => {
           this.browserWrapper.setAttribute('animate-end', true);
           this.browserWrapper.setAttribute('has-finished-animation', true);
-          this.#animating = false;
+          this._animating = false;
           this.animatingOpen = false;
         }, 500);
       });
     }
 
     closeGlance({ noAnimation = false, onTabClose = false } = {}) {
-      if (this.#animating || !this.#currentBrowser || this.animatingOpen || this._duringOpening) {
+      if (this._animating || !this.#currentBrowser || this.animatingOpen || this._duringOpening) {
         return;
       }
 
@@ -129,6 +130,8 @@
         this.#currentTab = null;
         return;
       }
+
+      this._animating = true;
 
       gBrowser._insertTabAtIndex(this.#currentTab, {
         index: this.currentParentTab._tPos + 1,
@@ -195,6 +198,8 @@
 
             this.lastCurrentTab = null;
             this._duringOpening = false;
+
+            this._animating = false;
           }, 400);
         });
       });

@@ -621,7 +621,7 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     let parentPanel = document.getElementById('PanelUI-zen-workspaces-multiview');
 
     // randomly select an icon
-    let icon = this._kIcons[Math.floor(Math.random() * this._kIcons.length)];
+    let icon = this._kIcons[Math.floor(Math.random() * (this._kIcons.length - 257))];
     this._workspaceCreateInput.textContent = '';
     this._workspaceCreateInput.value = '';
     this._workspaceCreateInput.setAttribute('data-initial-value', '');

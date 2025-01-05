@@ -463,10 +463,6 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     return tab;
   }
 
-  _kIcons = JSON.parse(Services.prefs.getStringPref('zen.workspaces.icons')).map((icon) =>
-    typeof Intl.Segmenter !== 'undefined' ? new Intl.Segmenter().segment(icon).containing().segment : Array.from(icon)[0]
-  );
-
   searchIcons(input, icons) {
     input = input.toLowerCase();
 
@@ -543,7 +539,8 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     let container = document.getElementById('PanelUI-zen-workspaces-icon-picker-wrapper');
     let searchInput = document.getElementById('PanelUI-zen-workspaces-icon-search-input');
     searchInput.value = '';
-    for (let icon of this._kIcons) {
+    for (let iconData of this.emojis) {
+      const icon = iconData[0];
       let button = document.createXULElement('toolbarbutton');
       button.className = 'toolbarbutton-1 workspace-icon-button';
       button.setAttribute('label', icon);
@@ -621,7 +618,7 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     let parentPanel = document.getElementById('PanelUI-zen-workspaces-multiview');
 
     // randomly select an icon
-    let icon = this._kIcons[Math.floor(Math.random() * (this._kIcons.length - 257))];
+    let icon = this.emojis[Math.floor(Math.random() * (this.emojis.length - 257))][0];
     this._workspaceCreateInput.textContent = '';
     this._workspaceCreateInput.value = '';
     this._workspaceCreateInput.setAttribute('data-initial-value', '');
@@ -1274,6 +1271,7 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
       await this._performWorkspaceChange(window, onInit);
     } finally {
       this._inChangingWorkspace = false;
+      this.tabContainer.removeAttribute('dont-animate-tabs');
     }
   }
 
@@ -1304,6 +1302,7 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
         workspaces.workspaces.findIndex((w) => w.uuid === previousWorkspace.uuid) <
           workspaces.workspaces.findIndex((w) => w.uuid === window.uuid);
       gBrowser.tabContainer.setAttribute('zen-workspace-animation', isNextWorkspace ? 'next' : 'previous');
+      this.tabContainer.removeAttribute('dont-animate-tabs');
       this._animatingChange = true;
       setTimeout(() => {
         this._animatingChange = false;
@@ -1339,9 +1338,6 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
         gBrowser.hideTab(tab, undefined, true);
       }
     }
-    window.requestAnimationFrame(() => {
-      this.tabContainer.removeAttribute('dont-animate-tabs');
-    });
 
     return visibleTabs;
   }

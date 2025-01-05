@@ -65,7 +65,7 @@ var gZenCompactModeManager = {
   },
 
   flashSidebarIfNecessary(aInstant = false) {
-    if (!aInstant && this.prefefence && lazyCompactMode.COMPACT_MODE_FLASH_ENABLED && !gZenGlanceManager.animatingOpen) {
+    if (!aInstant && this.prefefence && lazyCompactMode.COMPACT_MODE_FLASH_ENABLED && !gZenGlanceManager._animating) {
       this.flashSidebar();
     }
   },

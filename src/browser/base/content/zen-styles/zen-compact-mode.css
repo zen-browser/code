@@ -59,11 +59,11 @@
 
           :root[zen-single-toolbar='true'] & {
             top: var(--zen-element-separation);
-
-            &:not([zen-right-side='true']) #nav-bar {
-              margin-left: 0 !important;
-            }
           }
+        }
+
+        &:not([zen-right-side='true']) #nav-bar {
+          margin-left: 0 !important;
         }
 
         & #urlbar[open] {

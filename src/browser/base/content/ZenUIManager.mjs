@@ -256,7 +256,9 @@ var gZenVerticalTabsManager = {
     try {
       this._updateMaxWidth();
 
-      window.docShell.treeOwner.QueryInterface(Ci.nsIInterfaceRequestor).getInterface(Ci.nsIAppWindow).rollupAllPopups();
+      if (window.docShell) {
+        window.docShell.treeOwner.QueryInterface(Ci.nsIInterfaceRequestor).getInterface(Ci.nsIAppWindow).rollupAllPopups();
+      }
 
       const topButtons = document.getElementById('zen-sidebar-top-buttons');
       const isCompactMode = this._prefsCompactMode && !forCustomizableMode;

@@ -128,7 +128,7 @@
       #navigator-toolbox[movingtab],
       #navigator-toolbox:has(.tabbrowser-tab:active),
       #navigator-toolbox:has(
-          *:is([panelopen='true'], [open='true'], #nav-bar:focus-within):not(tab):not(.zen-compact-mode-ignore)
+          *:is([panelopen='true'], [open], #nav-bar:focus-within):not(tab):not(.zen-compact-mode-ignore)
         ) {
         &:not([animate='true']) {
           transition:

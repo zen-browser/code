@@ -20,14 +20,6 @@ var gZenCompactModeManager = {
   _removeHoverFrames: {},
 
   init() {
-    XPCOMUtils.defineLazyPreferenceGetter(
-      lazyCompactMode,
-      'COMPACT_MODE_ENABLED',
-      'zen.view.compact',
-      true,
-      this._updateEvent.bind(this)
-    );
-
     Services.prefs.addObserver('zen.view.sidebar-expanded.on-hover', this._disableTabsOnHoverIfConflict.bind(this));
     Services.prefs.addObserver('zen.tabs.vertical.right-side', this._updateSidebarIsOnRight.bind(this));
 
@@ -41,7 +33,7 @@ var gZenCompactModeManager = {
   },
 
   get prefefence() {
-    return lazyCompactMode.COMPACT_MODE_ENABLED;
+    return Services.prefs.getBoolPref('zen.view.compact');
   },
 
   set preference(value) {

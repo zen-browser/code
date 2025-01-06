@@ -1307,7 +1307,7 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
       setTimeout(() => {
         this._animatingChange = false;
         gBrowser.tabContainer.removeAttribute('zen-workspace-animation');
-      }, 500);
+      }, 600);
     }
   }
 

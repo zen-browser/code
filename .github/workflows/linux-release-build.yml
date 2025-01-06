@@ -42,8 +42,8 @@ jobs:
 
       - name: Setup Git
         run: |
-          git config --global user.email "mauro-balades@users.noreply.github.com"
-          git config --global user.name "mauro-balades"
+          git config --global user.email "mr-cheff@users.noreply.github.com"
+          git config --global user.name "mr-cheff"
 
       - name: Install system dependencies
         run: |
@@ -129,15 +129,7 @@ jobs:
         continue-on-error: true
         run: |
           export SURFER_PLATFORM="linux"
-          sh .github/workflows/src/release-build.sh
-
-      - name: Build again if it failed
-        if: failure()
-        env:
-          SURFER_COMPAT: ${{ matrix.arch }}
-        run: |
-          export SURFER_PLATFORM="linux"
-          sh .github/workflows/src/release-build.sh
+          bash .github/workflows/src/release-build.sh
 
       - name: Package
         env:

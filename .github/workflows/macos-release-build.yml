@@ -118,7 +118,7 @@ jobs:
           ZEN_RELEASE_BRANCH: ${{ inputs.release-branch }}
         run: |
           export SURFER_PLATFORM="darwin"
-          sh .github/workflows/src/release-build.sh
+          bash .github/workflows/src/release-build.sh
 
       - name: Import APPLE DEVELOPER ID CERTIFICATE for .app
         uses: Apple-Actions/import-codesign-certs@v3

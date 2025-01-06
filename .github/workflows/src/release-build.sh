@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -ex
+set -xe
 
 if command -v apt-get &> /dev/null; then
   sudo apt-get update
@@ -9,7 +9,7 @@ fi
 
 ulimit -n 4096
 
-if ! command -v Xvfb &> /dev/null; then
+if command -v Xvfb &> /dev/null; then
   if ! test "$ZEN_CROSS_COMPILING"; then
     Xvfb :2 -screen 0 1024x768x24 &
     export LLVM_PROFDATA=$HOME/.mozbuild/clang/bin/llvm-profdata

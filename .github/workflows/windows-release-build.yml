@@ -165,7 +165,7 @@ jobs:
           if test ${{ inputs.generate-gpo }} = true; then
             export ZEN_GA_GENERATE_PROFILE=1
           fi
-          sh .github/workflows/src/release-build.sh
+          bash .github/workflows/src/release-build.sh
 
       - name: Package
         if: ${{ !(inputs.generate-gpo && matrix.arch == 'aarch64') }}

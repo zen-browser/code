@@ -21,7 +21,7 @@ if test "$SURFER_COMPAT" = "x86_64"; then
     export CPPFLAGS="-O3 -march=nehalem"
     export CXXFLAGS="-O3 -march=nehalem"
     export LDFLAGS="-Wl,-O3 -march=nehalem"
-    export RUSTFLAGS="-Ctarget-cpu=nehalem -C codegen-units=1"
+    export RUSTFLAGS="-Ctarget-cpu=nehalem"
 else
     ac_add_options --target=aarch64-apple-darwin
 
@@ -34,7 +34,7 @@ else
     export CPPFLAGS="-O3 -march=armv8.3-a+simd -mcpu=apple-m1"
     export CXXFLAGS="-O3 -march=armv8.3-a+simd -mcpu=apple-m1"
     export LDFLAGS="-Wl,-O3 -march=armv8.3-a+simd -mcpu=apple-m1"
-    export RUSTFLAGS="-C target-feature=+v8.3a -C codegen-units=1 -Ctarget-cpu=apple-m1"
+    export RUSTFLAGS="-C target-feature=+v8.3a -Ctarget-cpu=apple-m1"
 fi
 
 export VERBOSE=1

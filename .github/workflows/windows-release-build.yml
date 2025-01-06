@@ -22,7 +22,7 @@ on:
 jobs:
   windows-build:
     name: Build Windows - ${{ matrix.arch }}
-    runs-on: ubuntu-latest
+    runs-on: ${{ (inputs.release-branch == 'release' && !(inputs.generate-gpo && matrix.arch == 'aarch64')) && 'warp-ubuntu-latest-x64-8x' || 'ubuntu-latest' }}
 
     strategy:
       fail-fast: false
@@ -156,6 +156,7 @@ jobs:
         if: ${{ !(inputs.generate-gpo && matrix.arch == 'aarch64') }}
         env:
           SURFER_COMPAT: ${{ matrix.arch }}
+          ZEN_RELEASE_BRANCH: ${{ inputs.release-branch }}
         run: |
           set -x
           dos2unix configs/windows/mozconfig

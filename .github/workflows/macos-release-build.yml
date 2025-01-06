@@ -15,7 +15,7 @@ on:
 jobs:
   mac-build:
     name: Build macOS - ${{ matrix.arch }}
-    runs-on: macos-14
+    runs-on: ${{ inputs.release-branch == 'release' && 'warp-macos-14-arm64-6x' || 'macos-14' }}
 
     strategy:
       fail-fast: false
@@ -115,15 +115,7 @@ jobs:
       - name: Build Zen
         env:
           SURFER_COMPAT: ${{ matrix.arch }}
-        run: |
-          export SURFER_PLATFORM="darwin"
-          if test "${{ matrix.arch }}" = "x86_64"; then
-            export ZEN_DISABLE_LTO=1
-          fi
-          sh .github/workflows/src/release-build.sh
-
-      - name: Rebuild Zen if failed
-        if: failure()
+          ZEN_RELEASE_BRANCH: ${{ inputs.release-branch }}
         run: |
           export SURFER_PLATFORM="darwin"
           sh .github/workflows/src/release-build.sh

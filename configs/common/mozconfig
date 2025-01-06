@@ -54,8 +54,14 @@ if test "$ZEN_RELEASE"; then
   ac_add_options --disable-default-browser-agent
 
   if ! test "$ZEN_DISABLE_LTO"; then
-    export MOZ_LTO=cross,thin
-    ac_add_options --enable-lto=cross,thin
+    # only enable full LTO when ZEN_RELEASE_BRANCH is 'release'
+    if test "$ZEN_RELEASE_BRANCH" = "release"; then
+      export MOZ_LTO=cross,full
+      ac_add_options --enable-lto=cross,full
+    else
+      export MOZ_LTO=cross,thin
+      ac_add_options --enable-lto=cross,thin
+    fi
   fi
 
   ac_add_options --enable-jemalloc

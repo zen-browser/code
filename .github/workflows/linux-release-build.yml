@@ -16,7 +16,7 @@ jobs:
   build-linux:
     permissions:
       contents: write
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.release-branch == 'release' && 'warp-ubuntu-latest-x64-8x' || 'ubuntu-latest' }}
     strategy:
       fail-fast: false
       matrix:
@@ -125,6 +125,7 @@ jobs:
       - name: Build
         env:
           SURFER_COMPAT: ${{ matrix.arch }}
+          ZEN_RELEASE_BRANCH: ${{ inputs.release-branch }}
         continue-on-error: true
         run: |
           export SURFER_PLATFORM="linux"

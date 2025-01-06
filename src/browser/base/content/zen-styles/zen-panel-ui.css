@@ -5,6 +5,10 @@
  */
 panel[type='arrow'][animate][animate='open']::part(content) {
   animation: zen-jello-animation 0.35s ease;
+
+  @media (-moz-platform: macos) {
+    animation: zen-jello-animation-alt 0.35s ease;
+  }
 }
 
 panel[type='arrow'][animate]:not([animate='open'])::part(content) {

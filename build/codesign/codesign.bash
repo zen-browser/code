@@ -150,6 +150,12 @@ codesign --force -o runtime --verbose --sign "$IDENTITY" --deep \
 # Validate
 codesign -vvv --deep --strict "${BUNDLE}"
 
+echo "Showing up app entitlements"
+codesign -d --entitlements :- "${BUNDLE}"
+
+echo "Verifying app"
+codesign --verify --deep --strict "${BUNDLE}"
+
 # Create a DMG
 if [ ! -z "${OUTPUT_DMG_FILE}" ]; then
   DISK_IMAGE_DIR=`mktemp -d`

@@ -167,7 +167,7 @@ var gZenMarketplaceManager = {
     const browser = ZenMultiWindowFeature.currentBrowser;
     const themeList = document.createElement('div');
 
-    for (const theme of Object.values(themes)) {
+    for (const theme of Object.values(themes).sort((a, b) => a.name.localeCompare(b.name))) {
       const sanitizedName = `theme-${theme.name?.replaceAll(/\s/g, '-')?.replaceAll(/[^A-z_-]+/g, '')}`;
       const isThemeEnabled = theme.enabled === undefined || theme.enabled;
 

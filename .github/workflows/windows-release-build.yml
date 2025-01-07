@@ -32,6 +32,7 @@ jobs:
     steps:
       - name: Free Disk Space (Ubuntu)
         uses: jlumbroso/free-disk-space@main
+        if: ${{ !(inputs.generate-gpo && matrix.arch == 'aarch64') }}
         with:
           tool-cache: false
 
@@ -62,6 +63,7 @@ jobs:
         run: pnpm surfer ci --brand ${{ inputs.release-branch }} --display-version ${{ inputs.build-version }}
 
       - name: Download Firefox and dependencies
+        if: ${{ !(inputs.generate-gpo && matrix.arch == 'aarch64') }}
         run: pnpm surfer download
 
       - name: win-cross Cache
@@ -81,7 +83,7 @@ jobs:
             core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
 
       - name: Setup for Windows
-        if: steps.cache-win-cross.outputs.cache-hit != 'true'
+        if: steps.cache-win-cross.outputs.cache-hit != 'true' && !(inputs.generate-gpo && matrix.arch == 'aarch64')
         run: |
           set -x
           mkdir -p ~/win-cross
@@ -95,6 +97,7 @@ jobs:
           ./mach python --virtualenv build taskcluster/scripts/misc/get_vs.py build/vs/vs2022.yaml ~/win-cross/vs2022
 
       - name: Bootstrap
+        if: ${{ !(inputs.generate-gpo && matrix.arch == 'aarch64') }}
         run: |
           set -x
           cd engine/
@@ -113,6 +116,7 @@ jobs:
           ls ~/win-cross/vs2022 || true
 
       - name: Setup Rust
+        if: ${{ !(inputs.generate-gpo && matrix.arch == 'aarch64') }}
         run: |
           cd engine/
           curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain 1.79
@@ -129,11 +133,13 @@ jobs:
           echo "export MOZ_WINDOWS_RS_DIR=$(pwd)/windows-0.58.0" >> ../configs/common/mozconfig
 
       - name: Import
+        if: ${{ !(inputs.generate-gpo && matrix.arch == 'aarch64') }}
         env:
           SURFER_COMPAT: ${{ matrix.arch }}
         run: pnpm surfer import --verbose
 
       - name: Build language packs
+        if: ${{ !(inputs.generate-gpo && matrix.arch == 'aarch64') }}
         run: sh scripts/download-language-packs.sh
 
       - name: Download artifact (if use profdata)

@@ -93,7 +93,49 @@ jobs:
           tar --zstd -xvf wine.tar.zst -C ~/win-cross
           rm wine.tar.zst
           echo Setup Visual Studio
-          sudo apt install -y msitools python3-pip
+          sudo apt-get update
+          sudo apt-get install -y msitools python3-pip       autoconf \
+            autoconf2.13 \
+            automake \
+            bison \
+            build-essential \
+            cabextract \
+            curl \
+            clang-13 \
+            cmake \
+            flex \
+            gawk \
+            gcc-multilib \
+            git \
+            gnupg \
+            jq \
+            libbz2-dev \
+            libexpat1-dev \
+            libffi-dev \
+            libncursesw5-dev \
+            libsqlite3-dev \
+            libssl-dev \
+            libtool \
+            libucl-dev \
+            libxml2-dev \
+            lld-13 \
+            msitools \
+            ninja-build \
+            openssh-client \
+            p7zip-full \
+            pkg-config \
+            procps \
+            python3-requests \
+            python3-toml \
+            scons \
+            subversion \
+            tar \
+            unzip \
+            uuid \
+            uuid-dev \
+            wget \
+            zip \
+            zlib1g-dev
           ./mach python --virtualenv build taskcluster/scripts/misc/get_vs.py build/vs/vs2022.yaml ~/win-cross/vs2022
 
       - name: Bootstrap

@@ -58,6 +58,9 @@ if test "$ZEN_RELEASE"; then
     if test "$ZEN_RELEASE_BRANCH" = "release"; then
       export MOZ_LTO=cross,full
       ac_add_options --enable-lto=cross,full
+    else
+      export MOZ_LTO=cross,thin
+      ac_add_options --enable-lto=cross,thin
     fi
   fi
 

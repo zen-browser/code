@@ -38,7 +38,6 @@ usage ()
   echo  "    -i <IDENTITY>"
   echo  "    -b <ENTITLEMENTS-FILE>"
   echo  "    -p <CHILD-ENTITLEMENTS-FILE>"
-  echo  "    -f <PROVOSION-PROFILE>"
   echo  "    [-o <OUTPUT-DMG-FILE>]"
   exit -1
 }
@@ -63,7 +62,6 @@ while getopts "a:i:b:o:p:" opt; do
     i ) IDENTITY=$OPTARG ;;
     b ) BROWSER_ENTITLEMENTS_FILE=$OPTARG ;;
     p ) PLUGINCONTAINER_ENTITLEMENTS_FILE=$OPTARG ;;
-    f ) PROVISIONING_PROFILE=$OPTARG ;;
     o ) OUTPUT_DMG_FILE=$OPTARG ;;
     \? ) usage; exit -1 ;;
   esac
@@ -106,7 +104,6 @@ fi
 echo "-------------------------------------------------------------------------"
 echo "bundle:                              $BUNDLE"
 echo "identity:                            $IDENTITY"
-echo "Provisioning profile:                $PROVISIONING_PROFILE"
 echo "browser entitlements file:           $BROWSER_ENTITLEMENTS_FILE"
 echo "plugin-container entitlements file:  $PLUGINCONTAINER_ENTITLEMENTS_FILE"
 echo "output dmg file (optional):          $OUTPUT_DMG_FILE"
@@ -130,7 +127,6 @@ codesign --force -o runtime --verbose --sign "$IDENTITY" --deep \
 
 # Sign zen main executable
 codesign --force -o runtime --verbose --sign "$IDENTITY" --deep \
---provisioning-profile ${PROVISIONING_PROFILE} \
 --entitlements ${BROWSER_ENTITLEMENTS_FILE} \
 "${BUNDLE}"/Contents/MacOS/zen
 
@@ -144,7 +140,6 @@ codesign --force -o runtime --verbose --sign "$IDENTITY" {} \;
 
 # Sign the main bundle
 codesign --force -o runtime --verbose --sign "$IDENTITY" \
---provisioning-profile ${PROVISIONING_PROFILE} \
 --entitlements ${BROWSER_ENTITLEMENTS_FILE} "${BUNDLE}"
 
 # Sign the plugin-container bundle with deep

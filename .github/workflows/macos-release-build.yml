@@ -134,6 +134,9 @@ jobs:
           p12-file-base64: ${{ secrets.macOS_CERTIFICATES_P12_For_App_BASE64 }}
           p12-password: ${{ secrets.macOS_CERTIFICATES_P12_PASSWORD }}
 
+      - name: Import provisioning profile for .app
+        run: echo "${{ secrets.macOS_PROVISIONING_PROFILE }}" | base64 --decode > zen.provisionprofile
+
       - name: Package
         env:
           SURFER_COMPAT: ${{ matrix.arch }}

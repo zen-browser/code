@@ -217,6 +217,7 @@ jobs:
         if: ${{ !(inputs.generate-gpo && matrix.arch == 'aarch64') }}
         env:
           SURFER_COMPAT: ${{ matrix.arch }}
+          ZEN_GA_DISABLE_PGO: true
         run: |
           set -x
           export SURFER_PLATFORM="win32"

@@ -1,4 +1,3 @@
-
 set -ex
 
 CURRENT_DIR=$(pwd)

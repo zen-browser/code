@@ -22,7 +22,7 @@ on:
 jobs:
   windows-build:
     name: Build Windows - ${{ matrix.arch }}
-    runs-on: ubuntu-latest
+    runs-on: ${{ (inputs.release-branch == 'release' && !(inputs.generate-gpo && matrix.arch == 'aarch64')) && 'warp-ubuntu-latest-x64-6x' || 'ubuntu-latest' }}
 
     strategy:
       fail-fast: false
@@ -156,6 +156,7 @@ jobs:
         if: ${{ !(inputs.generate-gpo && matrix.arch == 'aarch64') }}
         env:
           SURFER_COMPAT: ${{ matrix.arch }}
+          ZEN_RELEASE_BRANCH: ${{ inputs.release-branch }}
         run: |
           set -x
           dos2unix configs/windows/mozconfig
@@ -164,7 +165,7 @@ jobs:
           if test ${{ inputs.generate-gpo }} = true; then
             export ZEN_GA_GENERATE_PROFILE=1
           fi
-          sh .github/workflows/src/release-build.sh
+          bash .github/workflows/src/release-build.sh
 
       - name: Package
         if: ${{ !(inputs.generate-gpo && matrix.arch == 'aarch64') }}
@@ -173,6 +174,8 @@ jobs:
         run: |
           set -x
           export SURFER_PLATFORM="win32"
+          export ZEN_CROSS_COMPILING=1
+          export ZEN_RELEASE=1
           pnpm package
           mv ./dist/zen-$(pnpm surfer get version | xargs).en-US.win64${{ matrix.arch == 'aarch64' && '-aarch64' || '' }}.zip zen.win64.zip
           ls ./dist

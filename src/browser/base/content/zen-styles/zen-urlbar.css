@@ -32,7 +32,7 @@
 }
 
 #urlbar-background {
-  border: transparent !important;
+  border: 1px solid light-dark(transparent, rgba(255, 255, 255, 0.1)) !important;
   margin: 1px;
 
   box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.1) !important;
@@ -48,7 +48,7 @@
   outline-color: none !important;
 }
 
-#identity-box.chromeUI:not([pageproxystate="invalid"]) {
+#identity-box.chromeUI:not([pageproxystate='invalid']) {
   & #identity-icon-box {
     background: light-dark(rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.1)) !important;
   }
@@ -120,8 +120,11 @@
   order: 2 !important;
 }
 
-:root[zen-single-toolbar='true'] {
+#urlbar[breakout-extend='true'] #urlbar-background {
+  border: 1px solid var(--zen-colors-border) !important;
+}
 
+:root[zen-single-toolbar='true'] {
   .urlbar-page-action:not(#star-button-box):not([open]),
   #tracking-protection-icon-container {
     margin-inline-end: calc(-16px - 2 * var(--urlbar-icon-padding)) !important;
@@ -433,7 +436,10 @@ button.popup-notification-dropmarker {
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **/
-.urlbarView-title, .urlbarView-title-separator, .urlbarView-action, .urlbarView-url {
+.urlbarView-title,
+.urlbarView-title-separator,
+.urlbarView-action,
+.urlbarView-url {
   margin-top: auto !important;
   margin-bottom: auto !important;
 }
@@ -443,7 +449,8 @@ button.popup-notification-dropmarker {
   font-weight: 500 !important;
 }
 
-.urlbarView-url, .urlbarView-title-separator::before {
+.urlbarView-url,
+.urlbarView-title-separator::before {
   font-size: 14px !important;
   font-weight: 500 !important;
   color: #aaa !important;
@@ -456,7 +463,7 @@ button.popup-notification-dropmarker {
   border-radius: 6px !important;
 }
 
-.urlbarView-row[has-action]:is([type="switchtab"], [type="remotetab"], [type="clipboard"]) .urlbarView-action {
+.urlbarView-row[has-action]:is([type='switchtab'], [type='remotetab'], [type='clipboard']) .urlbarView-action {
   margin-left: auto !important;
   margin-right: 0 !important;
 }
@@ -473,7 +480,8 @@ button.popup-notification-dropmarker {
       background-color: color-mix(in srgb, var(--zen-branding-bg-reverse) 20%, transparent 80%) !important;
     }
 
-    .urlbarView-url, .urlbarView-title-separator::before {
+    .urlbarView-url,
+    .urlbarView-title-separator::before {
       color: color-mix(in srgb, var(--zen-colors-primary) 30%, lightgray) !important;
     }
   }

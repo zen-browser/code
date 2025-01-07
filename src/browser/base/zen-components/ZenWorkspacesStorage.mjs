@@ -3,7 +3,8 @@ var ZenWorkspacesStorage = {
 
   async init() {
     ChromeUtils.defineESModuleGetters(this.lazy, {
-      PlacesUtils: "resource://gre/modules/PlacesUtils.sys.mjs",
+      PlacesUtils: 'resource://gre/modules/PlacesUtils.sys.mjs',
+      Weave: 'resource://services-sync/main.sys.mjs',
     });
 
     await this._ensureTable();
@@ -31,7 +32,7 @@ var ZenWorkspacesStorage = {
       // SQLite doesn't have a direct "ADD COLUMN IF NOT EXISTS" syntax,
       // so we need to check if the columns exist first
       const columns = await db.execute(`PRAGMA table_info(zen_workspaces)`);
-      const columnNames = columns.map(row => row.getResultByName('name'));
+      const columnNames = columns.map((row) => row.getResultByName('name'));
 
       // Helper function to add column if it doesn't exist
       const addColumnIfNotExists = async (columnName, definition) => {
@@ -65,11 +66,10 @@ var ZenWorkspacesStorage = {
         CREATE INDEX IF NOT EXISTS idx_zen_workspaces_changes_uuid ON zen_workspaces_changes(uuid)
       `);
 
-      if (!Weave.Service.engineManager.get('workspaces')) {
-        Weave.Service.engineManager.register(ZenWorkspacesEngine);
+      if (!this.lazy.Weave.Service.engineManager.get('workspaces')) {
+        this.lazy.Weave.Service.engineManager.register(ZenWorkspacesEngine);
         await ZenWorkspacesStorage.migrateWorkspacesFromJSON();
       }
-
     });
   },
 
@@ -111,7 +111,9 @@ var ZenWorkspacesStorage = {
         // Handle default workspace
         if (workspace.default) {
           await db.execute(`UPDATE zen_workspaces SET is_default = 0 WHERE uuid != :uuid`, { uuid: workspace.uuid });
-          const unsetDefaultRows = await db.execute(`SELECT uuid FROM zen_workspaces WHERE is_default = 0 AND uuid != :uuid`, { uuid: workspace.uuid });
+          const unsetDefaultRows = await db.execute(`SELECT uuid FROM zen_workspaces WHERE is_default = 0 AND uuid != :uuid`, {
+            uuid: workspace.uuid,
+          });
           for (const row of unsetDefaultRows) {
             changedUUIDs.add(row.getResultByName('uuid'));
           }
@@ -128,7 +130,8 @@ var ZenWorkspacesStorage = {
         }
 
         // Insert or replace the workspace
-        await db.executeCached(`
+        await db.executeCached(
+          `
           INSERT OR REPLACE INTO zen_workspaces (
           uuid, name, icon, is_default, container_id, created_at, updated_at, "position",
           theme_type, theme_colors, theme_opacity, theme_rotation, theme_texture
@@ -139,29 +142,34 @@ var ZenWorkspacesStorage = {
           :position,
           :theme_type, :theme_colors, :theme_opacity, :theme_rotation, :theme_texture
         )
-        `, {
-          uuid: workspace.uuid,
-          name: workspace.name,
-          icon: workspace.icon || null,
-          is_default: workspace.default ? 1 : 0,
-          container_id: workspace.containerTabId || null,
-          now,
-          position: newPosition,
-          theme_type: workspace.theme?.type || null,
-          theme_colors: workspace.theme ? JSON.stringify(workspace.theme.gradientColors) : null,
-          theme_opacity: workspace.theme?.opacity || null,
-          theme_rotation: workspace.theme?.rotation || null,
-          theme_texture: workspace.theme?.texture || null
-        });
+        `,
+          {
+            uuid: workspace.uuid,
+            name: workspace.name,
+            icon: workspace.icon || null,
+            is_default: workspace.default ? 1 : 0,
+            container_id: workspace.containerTabId || null,
+            now,
+            position: newPosition,
+            theme_type: workspace.theme?.type || null,
+            theme_colors: workspace.theme ? JSON.stringify(workspace.theme.gradientColors) : null,
+            theme_opacity: workspace.theme?.opacity || null,
+            theme_rotation: workspace.theme?.rotation || null,
+            theme_texture: workspace.theme?.texture || null,
+          }
+        );
 
         // Record the change
-        await db.execute(`
+        await db.execute(
+          `
           INSERT OR REPLACE INTO zen_workspaces_changes (uuid, timestamp)
         VALUES (:uuid, :timestamp)
-        `, {
-          uuid: workspace.uuid,
-          timestamp: Math.floor(now / 1000)
-        });
+        `,
+          {
+            uuid: workspace.uuid,
+            timestamp: Math.floor(now / 1000),
+          }
+        );
 
         changedUUIDs.add(workspace.uuid);
 
@@ -170,7 +178,7 @@ var ZenWorkspacesStorage = {
     });
 
     if (notifyObservers) {
-      this._notifyWorkspacesChanged("zen-workspace-updated", Array.from(changedUUIDs));
+      this._notifyWorkspacesChanged('zen-workspace-updated', Array.from(changedUUIDs));
     }
   },
 
@@ -186,13 +194,15 @@ var ZenWorkspacesStorage = {
       default: !!row.getResultByName('is_default'),
       containerTabId: row.getResultByName('container_id'),
       position: row.getResultByName('position'),
-      theme: row.getResultByName('theme_type') ? {
-        type: row.getResultByName('theme_type'),
-        gradientColors: JSON.parse(row.getResultByName('theme_colors')),
-        opacity: row.getResultByName('theme_opacity'),
-        rotation: row.getResultByName('theme_rotation'),
-        texture: row.getResultByName('theme_texture')
-      } : null
+      theme: row.getResultByName('theme_type')
+        ? {
+            type: row.getResultByName('theme_type'),
+            gradientColors: JSON.parse(row.getResultByName('theme_colors')),
+            opacity: row.getResultByName('theme_opacity'),
+            rotation: row.getResultByName('theme_rotation'),
+            texture: row.getResultByName('theme_texture'),
+          }
+        : null,
     }));
   },
 
@@ -201,27 +211,30 @@ var ZenWorkspacesStorage = {
 
     await this.lazy.PlacesUtils.withConnectionWrapper('ZenWorkspacesStorage.removeWorkspace', async (db) => {
       await db.execute(
-          `
+        `
             DELETE FROM zen_workspaces WHERE uuid = :uuid
           `,
-          { uuid }
+        { uuid }
       );
 
       // Record the removal as a change
       const now = Date.now();
-      await db.execute(`
+      await db.execute(
+        `
         INSERT OR REPLACE INTO zen_workspaces_changes (uuid, timestamp)
         VALUES (:uuid, :timestamp)
-      `, {
-        uuid,
-        timestamp: Math.floor(now / 1000)
-      });
+      `,
+        {
+          uuid,
+          timestamp: Math.floor(now / 1000),
+        }
+      );
 
       await this.updateLastChangeTimestamp(db);
     });
 
     if (notifyObservers) {
-      this._notifyWorkspacesChanged("zen-workspace-removed", changedUUIDs);
+      this._notifyWorkspacesChanged('zen-workspace-removed', changedUUIDs);
     }
   },
 
@@ -243,7 +256,9 @@ var ZenWorkspacesStorage = {
         await db.execute(`UPDATE zen_workspaces SET is_default = 0 WHERE uuid != :uuid`, { uuid });
 
         // Collect UUIDs of workspaces that were unset as default
-        const unsetDefaultRows = await db.execute(`SELECT uuid FROM zen_workspaces WHERE is_default = 0 AND uuid != :uuid`, { uuid });
+        const unsetDefaultRows = await db.execute(`SELECT uuid FROM zen_workspaces WHERE is_default = 0 AND uuid != :uuid`, {
+          uuid,
+        });
         for (const row of unsetDefaultRows) {
           changedUUIDs.push(row.getResultByName('uuid'));
         }
@@ -252,13 +267,16 @@ var ZenWorkspacesStorage = {
         await db.execute(`UPDATE zen_workspaces SET is_default = 1 WHERE uuid = :uuid`, { uuid });
 
         // Record the change for the specified workspace
-        await db.execute(`
+        await db.execute(
+          `
           INSERT OR REPLACE INTO zen_workspaces_changes (uuid, timestamp)
           VALUES (:uuid, :timestamp)
-        `, {
-          uuid,
-          timestamp: Math.floor(now / 1000)
-        });
+        `,
+          {
+            uuid,
+            timestamp: Math.floor(now / 1000),
+          }
+        );
 
         // Add the main workspace UUID to the changed set
         changedUUIDs.push(uuid);
@@ -268,27 +286,31 @@ var ZenWorkspacesStorage = {
     });
 
     if (notifyObservers) {
-      this._notifyWorkspacesChanged("zen-workspace-updated", changedUUIDs);
+      this._notifyWorkspacesChanged('zen-workspace-updated', changedUUIDs);
     }
   },
 
   async markChanged(uuid) {
     await this.lazy.PlacesUtils.withConnectionWrapper('ZenWorkspacesStorage.markChanged', async (db) => {
       const now = Date.now();
-      await db.execute(`
+      await db.execute(
+        `
         INSERT OR REPLACE INTO zen_workspaces_changes (uuid, timestamp)
         VALUES (:uuid, :timestamp)
-      `, {
-        uuid,
-        timestamp: Math.floor(now / 1000)
-      });
+      `,
+        {
+          uuid,
+          timestamp: Math.floor(now / 1000),
+        }
+      );
     });
   },
 
   async saveWorkspaceTheme(uuid, theme, notifyObservers = true) {
     const changedUUIDs = [uuid];
     await this.lazy.PlacesUtils.withConnectionWrapper('saveWorkspaceTheme', async (db) => {
-      await db.execute(`
+      await db.execute(
+        `
         UPDATE zen_workspaces
         SET
           theme_type = :type,
@@ -298,22 +320,24 @@ var ZenWorkspacesStorage = {
           theme_texture = :texture,
           updated_at = :now
         WHERE uuid = :uuid
-      `, {
-        type: theme.type,
-        colors: JSON.stringify(theme.gradientColors),
-        opacity: theme.opacity,
-        rotation: theme.rotation,
-        texture: theme.texture,
-        now: Date.now(),
-        uuid
-      });
+      `,
+        {
+          type: theme.type,
+          colors: JSON.stringify(theme.gradientColors),
+          opacity: theme.opacity,
+          rotation: theme.rotation,
+          texture: theme.texture,
+          now: Date.now(),
+          uuid,
+        }
+      );
 
       await this.markChanged(uuid);
       await this.updateLastChangeTimestamp(db);
     });
 
     if (notifyObservers) {
-      this._notifyWorkspacesChanged("zen-workspace-updated", changedUUIDs);
+      this._notifyWorkspacesChanged('zen-workspace-updated', changedUUIDs);
     }
   },
 
@@ -349,21 +373,27 @@ var ZenWorkspacesStorage = {
 
     for (let i = 0; i < workspaces.length; i++) {
       const newPosition = (i + 1) * 1000; // Use large increments
-      await db.execute(`
+      await db.execute(
+        `
         UPDATE zen_workspaces
         SET "position" = :newPosition
         WHERE uuid = :uuid
-      `, { newPosition, uuid: workspaces[i].getResultByName('uuid') });
+      `,
+        { newPosition, uuid: workspaces[i].getResultByName('uuid') }
+      );
       changedUUIDs.add(workspaces[i].getResultByName('uuid'));
     }
   },
 
   async updateLastChangeTimestamp(db) {
     const now = Date.now();
-    await db.execute(`
+    await db.execute(
+      `
       INSERT OR REPLACE INTO moz_meta (key, value)
     VALUES ('zen_workspaces_last_change', :now)
-    `, { now });
+    `,
+      { now }
+    );
   },
 
   async getLastChangeTimestamp() {
@@ -385,29 +415,35 @@ var ZenWorkspacesStorage = {
           const workspace = workspaces[i];
           const newPosition = (i + 1) * 1000;
 
-          await db.execute(`
+          await db.execute(
+            `
           UPDATE zen_workspaces
           SET "position" = :newPosition
           WHERE uuid = :uuid
-        `, { newPosition, uuid: workspace.uuid });
+        `,
+            { newPosition, uuid: workspace.uuid }
+          );
 
           changedUUIDs.add(workspace.uuid);
 
           // Record the change
-          await db.execute(`
+          await db.execute(
+            `
           INSERT OR REPLACE INTO zen_workspaces_changes (uuid, timestamp)
           VALUES (:uuid, :timestamp)
-        `, {
-            uuid: workspace.uuid,
-            timestamp: Math.floor(now / 1000)
-          });
+        `,
+            {
+              uuid: workspace.uuid,
+              timestamp: Math.floor(now / 1000),
+            }
+          );
         }
 
         await this.updateLastChangeTimestamp(db);
       });
     });
 
-    this._notifyWorkspacesChanged("zen-workspace-updated", Array.from(changedUUIDs));
+    this._notifyWorkspacesChanged('zen-workspace-updated', Array.from(changedUUIDs));
   },
 };
 
@@ -458,7 +494,6 @@ var ZenWorkspaceBookmarksStorage = {
         CREATE INDEX IF NOT EXISTS idx_bookmarks_workspaces_changes
           ON zen_bookmarks_workspaces_changes(bookmark_guid, workspace_uuid)
       `);
-
     });
   },
 
@@ -468,10 +503,13 @@ var ZenWorkspaceBookmarksStorage = {
    */
   async updateLastChangeTimestamp(db) {
     const now = Date.now();
-    await db.execute(`
+    await db.execute(
+      `
       INSERT OR REPLACE INTO moz_meta (key, value)
       VALUES ('zen_bookmarks_workspaces_last_change', :now)
-    `, { now });
+    `,
+      { now }
+    );
   },
 
   /**
@@ -489,13 +527,16 @@ var ZenWorkspaceBookmarksStorage = {
   async getBookmarkWorkspaces(bookmarkGuid) {
     const db = await ZenWorkspacesStorage.lazy.PlacesUtils.promiseDBConnection();
 
-    const rows = await db.execute(`
+    const rows = await db.execute(
+      `
       SELECT workspace_uuid
       FROM zen_bookmarks_workspaces
       WHERE bookmark_guid = :bookmark_guid
-    `, { bookmark_guid: bookmarkGuid });
+    `,
+      { bookmark_guid: bookmarkGuid }
+    );
 
-    return rows.map(row => row.getResultByName("workspace_uuid"));
+    return rows.map((row) => row.getResultByName('workspace_uuid'));
   },
 
   /**
@@ -519,8 +560,8 @@ var ZenWorkspaceBookmarksStorage = {
 
     const result = {};
     for (const row of rows) {
-      const workspaceUuid = row.getResultByName("workspace_uuid");
-      const bookmarkGuids = row.getResultByName("bookmark_guids");
+      const workspaceUuid = row.getResultByName('workspace_uuid');
+      const bookmarkGuids = row.getResultByName('bookmark_guids');
       result[workspaceUuid] = bookmarkGuids ? bookmarkGuids.split(',') : [];
     }
 
@@ -543,7 +584,7 @@ var ZenWorkspaceBookmarksStorage = {
       const key = `${row.getResultByName('bookmark_guid')}:${row.getResultByName('workspace_uuid')}`;
       changes[key] = {
         type: row.getResultByName('change_type'),
-        timestamp: row.getResultByName('timestamp')
+        timestamp: row.getResultByName('timestamp'),
       };
     }
     return changes;
@@ -553,11 +594,13 @@ var ZenWorkspaceBookmarksStorage = {
    * Clear all recorded changes.
    */
   async clearChangedIDs() {
-    await ZenWorkspacesStorage.lazy.PlacesUtils.withConnectionWrapper('ZenWorkspaceBookmarksStorage.clearChangedIDs', async (db) => {
-      await db.execute(`DELETE FROM zen_bookmarks_workspaces_changes`);
-    });
+    await ZenWorkspacesStorage.lazy.PlacesUtils.withConnectionWrapper(
+      'ZenWorkspaceBookmarksStorage.clearChangedIDs',
+      async (db) => {
+        await db.execute(`DELETE FROM zen_bookmarks_workspaces_changes`);
+      }
+    );
   },
-
 };
 
 ZenWorkspacesStorage.init();

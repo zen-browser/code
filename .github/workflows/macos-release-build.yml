@@ -15,7 +15,7 @@ on:
 jobs:
   mac-build:
     name: Build macOS - ${{ matrix.arch }}
-    runs-on: macos-14
+    runs-on: ${{ inputs.release-branch == 'release' && 'warp-macos-14-arm64-6x' || 'macos-14' }}
 
     strategy:
       fail-fast: false
@@ -115,18 +115,10 @@ jobs:
       - name: Build Zen
         env:
           SURFER_COMPAT: ${{ matrix.arch }}
+          ZEN_RELEASE_BRANCH: ${{ inputs.release-branch }}
         run: |
           export SURFER_PLATFORM="darwin"
-          if test "${{ matrix.arch }}" = "x86_64"; then
-            export ZEN_DISABLE_LTO=1
-          fi
-          sh .github/workflows/src/release-build.sh
-
-      - name: Rebuild Zen if failed
-        if: failure()
-        run: |
-          export SURFER_PLATFORM="darwin"
-          sh .github/workflows/src/release-build.sh
+          bash .github/workflows/src/release-build.sh
 
       - name: Import APPLE DEVELOPER ID CERTIFICATE for .app
         uses: Apple-Actions/import-codesign-certs@v3
@@ -143,6 +135,7 @@ jobs:
         run: |
           export SURFER_PLATFORM="darwin"
           export MACOS_APPLE_DEVELOPER_ID="${{ secrets.macOS_AppleDeveloperId }}"
+          export ZEN_RELEASE=1
           pnpm package
 
       - name: Rename artifacts
@@ -150,20 +143,6 @@ jobs:
           mv ./dist/output.mar macos-${{ matrix.arch }}.mar
 
       - name: Sign .dmg
-        run: |
-          set -ex
-          hdiutil convert ./dist/*.dmg -format UDZO -imagekey zlib-level=9 -o zen.macos-${{ matrix.arch }}.dmg
-          xattr -cr zen.macos-${{ matrix.arch }}.dmg
-          codesign -s "${{ secrets.macOS_AppleDeveloperId }}" zen.macos-${{ matrix.arch }}.dmg
-          xcrun notarytool submit "zen.macos-${{ matrix.arch }}.dmg" \
-            --apple-id "${{ secrets.macOS_AppleAccountId }}" \
-            --team-id "${{ secrets.macOS_AppleDeveloperIdTeamId }}" \
-            --password "${{ secrets.macOS_AppleDeveloperIdPassword }}" \
-            --wait
-          xcrun stapler staple "zen.macos-${{ matrix.arch }}.dmg"
-
-      - name: Sign .dmg again if failed
-        if: failure()
         run: |
           set -ex
           hdiutil convert ./dist/*.dmg -format UDZO -imagekey zlib-level=9 -o zen.macos-${{ matrix.arch }}.dmg

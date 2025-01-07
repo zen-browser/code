@@ -1,8 +1,8 @@
 diff --git a/browser/components/urlbar/UrlbarInput.sys.mjs b/browser/components/urlbar/UrlbarInput.sys.mjs
-index c504c9afc43785b5f003bb1f9f1dfbddef38d78b..b08cb1d9fee5f76070c70ea928209b15b6146cb3 100644
+index 3ab07e5864b3bb200608e7f619645f92ade129fe..31085d82271b0259cd69ec9691ea5f33fe29e19e 100644
 --- a/browser/components/urlbar/UrlbarInput.sys.mjs
 +++ b/browser/components/urlbar/UrlbarInput.sys.mjs
-@@ -65,6 +65,13 @@ XPCOMUtils.defineLazyPreferenceGetter(
+@@ -67,6 +67,13 @@ XPCOMUtils.defineLazyPreferenceGetter(
    false
  );
  
@@ -16,17 +16,19 @@ index c504c9afc43785b5f003bb1f9f1dfbddef38d78b..b08cb1d9fee5f76070c70ea928209b15
  const DEFAULT_FORM_HISTORY_NAME = "searchbar-history";
  const SEARCH_BUTTON_CLASS = "urlbar-search-button";
  
-@@ -2154,6 +2161,9 @@ export class UrlbarInput {
+@@ -2152,6 +2159,11 @@ export class UrlbarInput {
  
      this.setAttribute("breakout-extend", "true");
  
 +    if (lazy.ZEN_URLBAR_BEHAVIOR == 'float' || (lazy.ZEN_URLBAR_BEHAVIOR == 'floating-on-type' && !this.focusedViaMousedown)) {
 +      this.setAttribute("zen-floating-urlbar", "true");
-+    } else this.removeAttribute("zen-floating-urlbar");
++    } else {
++      this.removeAttribute("zen-floating-urlbar");
++    }
      // Enable the animation only after the first extend call to ensure it
      // doesn't run when opening a new window.
      if (!this.hasAttribute("breakout-extend-animate")) {
-@@ -3901,6 +3911,11 @@ export class UrlbarInput {
+@@ -3875,6 +3887,11 @@ export class UrlbarInput {
    }
  
    _on_click(event) {
@@ -38,7 +40,7 @@ index c504c9afc43785b5f003bb1f9f1dfbddef38d78b..b08cb1d9fee5f76070c70ea928209b15
      if (
        event.target == this.inputField ||
        event.target == this._inputContainer ||
-@@ -4012,9 +4027,12 @@ export class UrlbarInput {
+@@ -3986,9 +4003,12 @@ export class UrlbarInput {
    }
  
    _on_mousedown(event) {
@@ -52,7 +54,7 @@ index c504c9afc43785b5f003bb1f9f1dfbddef38d78b..b08cb1d9fee5f76070c70ea928209b15
  
          if (
            event.target != this.inputField &&
-@@ -4024,8 +4042,8 @@ export class UrlbarInput {
+@@ -3998,8 +4018,8 @@ export class UrlbarInput {
            break;
          }
  

@@ -292,7 +292,7 @@ var gZenMarketplaceManager = {
         preferencesWrapper.setAttribute('flex', '1');
 
         for (const entry of preferences) {
-          const { property, label, type, placeholder } = entry;
+          const { property, label, type, placeholder, defaultValue } = entry;
 
           switch (type) {
             case 'dropdown': {
@@ -309,7 +309,7 @@ var gZenMarketplaceManager = {
               menulist.setAttribute('sizetopopup', 'none');
               menulist.setAttribute('id', property + '-popup-menulist');
 
-              const savedValue = Services.prefs.getStringPref(property, 'none');
+              const savedValue = Services.prefs.getStringPref(property, defaultValue ?? 'none');
 
               menulist.setAttribute('value', savedValue);
               menulist.setAttribute('tooltiptext', property);
@@ -395,7 +395,7 @@ var gZenMarketplaceManager = {
               checkboxElement.setAttribute('zen-pref', property);
 
               // Checkbox only works with "true" and "false" values, it's not like HTML checkboxes.
-              if (Services.prefs.getBoolPref(property, false)) {
+              if (Services.prefs.getBoolPref(property, defaultValue ?? false)) {
                 checkboxElement.setAttribute('checked', 'true');
               }
 
@@ -423,7 +423,7 @@ var gZenMarketplaceManager = {
               container.setAttribute('align', 'center');
               container.setAttribute('role', 'group');
 
-              const savedValue = Services.prefs.getStringPref(property, '');
+              const savedValue = Services.prefs.getStringPref(property, defaultValue ?? '');
               const sanitizedProperty = property?.replaceAll(/\./g, '-');
 
               const input = document.createElement('input');
@@ -439,8 +439,8 @@ var gZenMarketplaceManager = {
               }
 
               input.addEventListener(
-                'change',
-                ZenThemesCommon.throttle((event) => {
+                'input',
+                ZenThemesCommon.debounce((event) => {
                   const value = event.target.value;
 
                   Services.prefs.setStringPref(property, value);
@@ -733,6 +733,21 @@ var zenMissingKeyboardShortcutL10n = {
 
   goHome: 'zen-key-go-home',
   key_redo: 'zen-key-redo',
+
+  // Devtools
+  key_toggleToolbox: 'zen-devtools-toggle-shortcut',
+  key_browserToolbox: 'zen-devtools-toggle-browser-toolbox-shortcut',
+  key_browserConsole: 'zen-devtools-toggle-browser-console-shortcut',
+  key_responsiveDesignMode: 'zen-devtools-toggle-responsive-design-mode-shortcut',
+  key_inspector: 'zen-devtools-toggle-inspector-shortcut',
+  key_webconsole: 'zen-devtools-toggle-web-console-shortcut',
+  key_jsdebugger: 'zen-devtools-toggle-js-debugger-shortcut',
+  key_netmonitor: 'zen-devtools-toggle-net-monitor-shortcut',
+  key_styleeditor: 'zen-devtools-toggle-style-editor-shortcut',
+  key_performance: 'zen-devtools-toggle-performance-shortcut',
+  key_storage: 'zen-devtools-toggle-storage-shortcut',
+  key_dom: 'zen-devtools-toggle-dom-shortcut',
+  key_accessibility: 'zen-devtools-toggle-accessibility-shortcut',
 };
 
 var gZenCKSSettings = {
@@ -845,7 +860,7 @@ var gZenCKSSettings = {
           if (!target.nextElementSibling) {
             target.after(
               window.MozXULElement.parseXULToFragment(`
-              <label class="${ZEN_CKS_CLASS_BASE}-unsafed" data-l10n-id="zen-key-unsafed"></label>
+              <label class="${ZEN_CKS_CLASS_BASE}-unsafed" data-l10n-id="zen-key-unsaved"></label>
             `)
             );
             target.value = 'Not set';
@@ -1068,38 +1083,38 @@ Preferences.addAll([
     default: false,
   },
   {
-    id: "zen.glance.activation-method",
-    type: "string",
-    default: "ctrl",
+    id: 'zen.glance.activation-method',
+    type: 'string',
+    default: 'ctrl',
   },
   {
-    id: "zen.glance.enabled",
-    type: "bool",
+    id: 'zen.glance.enabled',
+    type: 'bool',
     default: true,
   },
   {
-    id: "zen.theme.color-prefs.use-workspace-colors",
-    type: "bool",
+    id: 'zen.theme.color-prefs.use-workspace-colors',
+    type: 'bool',
     default: false,
   },
   {
-    id: "zen.view.compact.color-toolbar",
-    type: "bool",
+    id: 'zen.view.compact.color-toolbar',
+    type: 'bool',
     default: true,
   },
   {
-    id: "zen.urlbar.behavior",
-    type: "string",
-    default: "float",
+    id: 'zen.urlbar.behavior',
+    type: 'string',
+    default: 'float',
   },
   {
-    id: "zen.view.compact.color-sidebar",
-    type: "bool",
+    id: 'zen.view.compact.color-sidebar',
+    type: 'bool',
     default: true,
   },
   {
-    id: "zen.essentials.enabled",
-    type: "bool",
+    id: 'zen.essentials.enabled',
+    type: 'bool',
     default: true,
   },
   {
@@ -1108,18 +1123,18 @@ Preferences.addAll([
     default: false,
   },
   {
-    id: "zen.tabs.show-newtab-vertical",
-    type: "bool",
+    id: 'zen.tabs.show-newtab-vertical',
+    type: 'bool',
     default: true,
   },
   {
-    id: "zen.view.show-newtab-button-border-top",
-    type: "bool",
+    id: 'zen.view.show-newtab-button-border-top',
+    type: 'bool',
     default: false,
   },
   {
-    id: "zen.view.show-newtab-button-top",
-    type: "bool",
+    id: 'zen.view.show-newtab-button-top',
+    type: 'bool',
     default: true,
   },
 ]);

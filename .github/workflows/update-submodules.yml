@@ -11,7 +11,7 @@ jobs:
   update-submodules:
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -26,6 +26,6 @@ jobs:
       - name: Commit
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "[skip ci] 📦 Update submodules"
+          commit_message: '[skip ci] 📦 Update submodules'
           commit_user_name: Zen Browser Robot
           commit_user_email: zen-browser-auto@users.noreply.github.com

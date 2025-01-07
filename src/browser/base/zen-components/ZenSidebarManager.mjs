@@ -303,7 +303,7 @@ class ZenBrowserManagerSidebar extends ZenDOMOperatedFeature {
 
     // Don't reload content if at least one of the panel tabs was loaded
     if (this._lastOpenedPanel) {
-        return;
+      return;
     }
 
     let data = this.sidebarData;

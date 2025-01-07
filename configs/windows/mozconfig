@@ -28,19 +28,14 @@ ac_add_options --disable-bits-download
 ac_add_options --disable-clang-plugin
 
 if test "$SURFER_COMPAT" = "x86_64"; then
-  # FIXME: For some reason, the clang plugin is not working on generic x86_64 builds
-  ac_add_options --disable-clang-plugin
 
   ac_add_options --target=x86_64-pc-windows-msvc
   ac_add_options --enable-eme=widevine
 
-  ac_add_options --enable-optimize="-O3 -w -ftree-vectorize"
+  ac_add_options --enable-optimize="-O3 -w -ftree-vectorize -Qvec -mfpmath=sse -mprfchw -msse3 -mcx16 -msahf"
 
-  export CFLAGS="-mtune=haswell -march=x86-64 -O2 -Qvec -w"
-  export CPPFLAGS="-mtune=haswell -march=x86-64 -O2 -Qvec -w"
-  export CXXFLAGS="-flto=thin -mtune=haswell -march=x86-64 -O2 -Qvec -w"
-  export LDFLAGS="-Wl,-O2"
-  export RUSTFLAGS="-Clink-args=--icf=safe -C codegen-units=1 -Ctarget-cpu=x86-64"
+  export LDFLAGS="-Wl,-O3"
+  export RUSTFLAGS="-Clink-args=--icf=safe"
 elif test "$SURFER_COMPAT" = "aarch64"; then
   ac_add_options --target=aarch64-pc-windows-msvc
   ac_add_options --enable-eme=widevine
@@ -51,7 +46,7 @@ elif test "$SURFER_COMPAT" = "aarch64"; then
   export CPPFLAGS="-O2 -march=armv8.2-a+simd -mtune=cortex-a55"
   export CXXFLAGS="-O2 -march=armv8.2-a+simd -mtune=cortex-a55"
   export LDFLAGS="-Wl,-O2 -march=armv8.2-a+simd -mtune=cortex-a55"
-  export RUSTFLAGS="-C target-feature=+v8.2a -C codegen-units=1 -Ctarget-cpu=cortex-a55"
+  export RUSTFLAGS="-C target-feature=+v8.2a -Ctarget-cpu=cortex-a55"
 fi
 
 #export POLLY="-mllvm -polly -mllvm -polly-2nd-level-tiling -mllvm -polly-loopfusion-greedy -mllvm -polly-pattern-matching-based-opts -mllvm -polly-position=before-vectorizer -mllvm -polly-vectorizer=stripmine"

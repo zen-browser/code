@@ -190,6 +190,9 @@
     </panelview>
     <panelview id="PanelUI-zen-workspaces-icon-picker" class="PanelUI-subView" role="document" mainview-with-header="true" has-custom-header="true">
       <vbox id="PanelUI-zen-workspaces-icon-picker-wrapper">
+        <html:div id="PanelUI-zen-workspaces-icon-search-bar">
+          <html:input autofocus="true" type="text" id="PanelUI-zen-workspaces-icon-search-input" oninput="ZenWorkspaces.conductSearch();"/>
+        </html:div>
       </vbox>
     </panelview>
   </panelmultiview>

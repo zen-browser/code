@@ -1,0 +1,12 @@
+diff --git a/browser/components/sessionstore/SessionStore.sys.mjs b/browser/components/sessionstore/SessionStore.sys.mjs
+index 8125c1afc07f3365a2ad030adaf6a560453d7fe6..2856c5f93bfc9d68b98e09b2f26e3d5266c1f46a 100644
+--- a/browser/components/sessionstore/SessionStore.sys.mjs
++++ b/browser/components/sessionstore/SessionStore.sys.mjs
+@@ -3679,6 +3679,7 @@ var SessionStoreInternal = {
+         aWindow.gBrowser.selectedTab = newTab;
+       }
+ 
++      if (aTab.hasAttribute("zenDefaultUserContextId")) newTab.setAttribute("zenDefaultUserContextId", true);
+       // Restore the state into the new tab.
+       this.restoreTab(newTab, tabState, {
+         restoreImmediately: aRestoreImmediately,

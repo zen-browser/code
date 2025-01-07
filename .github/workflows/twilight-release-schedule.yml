@@ -2,7 +2,7 @@ name: Zen Twilight Scheduled Releases
 
 on:
   schedule:
-    - cron: '0 0 * * *'
+    - cron: '0 23 * * *'
   workflow_dispatch:
 
 jobs:
@@ -28,5 +28,3 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version-file: '.nvmrc'
-
-      # TODO:

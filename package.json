@@ -25,6 +25,9 @@
     "type": "git",
     "url": "git+https://github.com/zen-browser/core.git"
   },
+  "hooks": {
+    "pre-commit": "npm run prepare"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -36,8 +39,9 @@
     "@zen-browser/surfer": "^1.9.2"
   },
   "devDependencies": {
-    "husky": "^9.1.5",
-    "lint-staged": "^15.2.10",
-    "prettier": "^3.3.3"
+    "husky": "^9.1.7",
+    "lint-staged": "^15.3.0",
+    "prettier": "^3.4.2",
+    "prettier-plugin-sh": "^0.14.0"
   }
 }

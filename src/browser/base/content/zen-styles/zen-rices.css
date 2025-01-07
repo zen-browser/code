@@ -1,4 +1,3 @@
-
 #zen-rice-share-dialog-overlay:not([hidden]) {
   position: absolute;
   top: 0;
@@ -17,15 +16,15 @@
   color: var(--panel-color);
   background: var(--arrowpanel-background);
   border-radius: var(--zen-panel-radius);
-  box-shadow: 0 0 1px 1px hsla(0,0%,0%,.2);;
+  box-shadow: 0 0 1px 1px hsla(0, 0%, 0%, 0.2);
   border: var(--zen-appcontent-border);
   overflow: hidden;
 
   animation: zen-jello-animation-large 0.4s ease;
   max-width: 400px;
 
-  &[animate="true"] {
-    animation: zen-rice-submit-animation 1s cubic-bezier(.77,0,.18,1);
+  &[animate='true'] {
+    animation: zen-rice-submit-animation 1s cubic-bezier(0.77, 0, 0.18, 1);
   }
 
   & .zen-rice-share-content {
@@ -47,7 +46,7 @@
       padding: 0 10px;
     }
 
-    & #zen-rice-share-first-form input[type="text"] {
+    & #zen-rice-share-first-form input[type='text'] {
       width: 100%;
       padding: 1px 2px;
       border: 0;
@@ -78,8 +77,10 @@
 
     max-height: 30px;
     overflow: hidden;
-    transition: max-height 0.3s ease, height 0.3s ease;
-    &[zen-collapsed="false"] {
+    transition:
+      max-height 0.3s ease,
+      height 0.3s ease;
+    &[zen-collapsed='false'] {
       max-height: 350px;
     }
 
@@ -106,7 +107,7 @@
       height: 15px;
     }
 
-    &[zen-collapsed="false"] > .options-header image {
+    &[zen-collapsed='false'] > .options-header image {
       transform: rotate(90deg);
     }
 
@@ -162,7 +163,7 @@
       overflow: hidden;
 
       &::before {
-        content: "";
+        content: '';
         position: absolute;
         top: 0;
         left: 0;

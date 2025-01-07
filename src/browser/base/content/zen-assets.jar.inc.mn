@@ -23,6 +23,7 @@
         content/browser/zen-components/ZenGlanceManager.mjs     (zen-components/ZenGlanceManager.mjs)
         content/browser/zen-components/ZenActorsManager.mjs     (zen-components/ZenActorsManager.mjs)
         content/browser/zen-components/ZenRices.mjs             (zen-components/ZenRices.mjs)
+        content/browser/zen-components/ZenEmojies.mjs           (zen-components/ZenEmojies.mjs)
 
         content/browser/zen-styles/zen-theme.css                (content/zen-styles/zen-theme.css)
         content/browser/zen-styles/zen-buttons.css              (content/zen-styles/zen-buttons.css)

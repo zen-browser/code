@@ -25,6 +25,7 @@ export MOZ_INCLUDE_SOURCE_INFO=1
 ac_add_options --enable-application=browser
 
 if test "$ZEN_RELEASE"; then
+
   ac_add_options --enable-clang-plugin
   ac_add_options --enable-bootstrap
 
@@ -33,6 +34,7 @@ if test "$ZEN_RELEASE"; then
   ac_add_options --disable-debug-symbols
   ac_add_options --disable-debug-js-modules
   ac_add_options --disable-tests
+  ac_add_options --disable-js-shell
 
   ac_add_options --disable-vtune
 
@@ -49,12 +51,17 @@ if test "$ZEN_RELEASE"; then
   ac_add_options --disable-geckodriver
   ac_add_options --disable-rust-tests
 
-  # Done by vlad, if something fails, it's his fault
   ac_add_options --disable-default-browser-agent
 
   if ! test "$ZEN_DISABLE_LTO"; then
-    export MOZ_LTO=cross,thin
-    ac_add_options --enable-lto=cross,thin
+    # only enable full LTO when ZEN_RELEASE_BRANCH is 'release'
+    if test "$ZEN_RELEASE_BRANCH" = "release"; then
+      export MOZ_LTO=cross,full
+      ac_add_options --enable-lto=cross,full
+    else
+      export MOZ_LTO=cross,thin
+      ac_add_options --enable-lto=cross,thin
+    fi
   fi
 
   ac_add_options --enable-jemalloc

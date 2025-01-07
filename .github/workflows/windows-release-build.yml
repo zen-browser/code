@@ -22,7 +22,7 @@ on:
 jobs:
   windows-build:
     name: Build Windows - ${{ matrix.arch }}
-    runs-on: ${{ (inputs.release-branch == 'release' && !(inputs.generate-gpo && matrix.arch == 'aarch64')) && 'warp-ubuntu-latest-x64-6x' || 'ubuntu-latest' }}
+    runs-on: ${{ (inputs.release-branch == 'release' && !(inputs.generate-gpo && matrix.arch == 'aarch64')) && 'warp-ubuntu-latest-x64-8x' || 'ubuntu-latest' }}
 
     strategy:
       fail-fast: false

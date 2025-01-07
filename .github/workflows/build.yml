@@ -512,7 +512,7 @@ jobs:
           title: 'Twilight build - ${{ needs.build-data.outputs.version }} (${{ needs.build-data.outputs.build_date }} at ${{ needs.build-data.outputs.build_time }})'
           draft: false
           prerelease: true
-          repo_token: ${{ github.token }}
+          repo_token: ${{ secrets.DEPLOY_KEY }}
         env:
           GITHUB_REPOSITORY: ${{ github.repository }}
 

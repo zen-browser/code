@@ -74,6 +74,8 @@ jobs:
           branch="${{ inputs.update_branch }}"
           if [[ $branch == "twilight" ]]; then
             branch="dev"
+          elif [[ $branch == "release" ]]; then
+            branch="stable"
           fi
           if [[ $(git branch --show-current) != $branch ]]; then
             echo ">>> Branch mismatch"

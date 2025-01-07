@@ -34,9 +34,7 @@
 
     <!-- Required for com.apple.developer.web-browser.public-key-credential -->
     <key>com.apple.application-identifier</key>
-    <string>app.zen-browser.zen</string>
+    <string>H36NPCN86W.app.zen-browser.zen</string>
 
-    <!-- For platform passkey (webauthn) support -->
-    <key>com.apple.developer.web-browser.public-key-credential</key><true/>
   </dict>
 </plist>

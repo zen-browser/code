@@ -127,7 +127,9 @@ jobs:
           p12-password: ${{ secrets.macOS_CERTIFICATES_P12_PASSWORD }}
 
       - name: Import provisioning profile for .app
-        run: echo "${{ secrets.macOS_PROVISIONING_PROFILE }}" | base64 --decode > "zen.provisionprofile"
+        run: |
+          echo "${{ secrets.macOS_PROVISIONING_PROFILE }}" | base64 --decode > ./engine/Zen_Browser.provisionprofile
+          ls -la
 
       - name: Package
         env:
@@ -141,6 +143,10 @@ jobs:
       - name: Rename artifacts
         run: |
           mv ./dist/output.mar macos-${{ matrix.arch }}.mar
+
+      - name: Remove sensitive information
+        run: |
+          rm -f ./engine/Zen_Browser.provisionprofile
 
       - name: Sign .dmg
         run: |

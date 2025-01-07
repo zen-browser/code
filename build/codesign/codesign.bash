@@ -127,6 +127,7 @@ codesign --force -o runtime --verbose --sign "$IDENTITY" --deep \
 
 # Sign zen main executable
 codesign --force -o runtime --verbose --sign "$IDENTITY" --deep \
+--preserve-metadata=identifier,entitlements,requirements \
 --entitlements ${BROWSER_ENTITLEMENTS_FILE} \
 "${BUNDLE}"/Contents/MacOS/zen
 
@@ -140,6 +141,7 @@ codesign --force -o runtime --verbose --sign "$IDENTITY" {} \;
 
 # Sign the main bundle
 codesign --force -o runtime --verbose --sign "$IDENTITY" \
+--preserve-metadata=identifier,entitlements,requirements \
 --entitlements ${BROWSER_ENTITLEMENTS_FILE} "${BUNDLE}"
 
 # Sign the plugin-container bundle with deep

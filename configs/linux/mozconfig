@@ -16,13 +16,10 @@ if test "$SURFER_COMPAT" = "x86_64"; then
     ac_add_options MOZ_PGO=1
 
     # Optimization flags for SURFER_COMPAT
-    ac_add_options --enable-optimize="-O3 -march=x86-64"
+    ac_add_options --enable-optimize="-O3 -w -ftree-vectorize -Qvec -mfpmath=sse -mprfchw -msse3 -mcx16 -msahf"
 
-    export CFLAGS="$CFLAGS -O3 -ffp-contract=fast -march=x86-64"
-    export CPPFLAGS="$CPPFLAGS -O3 -ffp-contract=fast -march=x86-64"
-    export CXXFLAGS="$CXXFLAGS -O3 -flto=thin -ffp-contract=fast -march=x86-64"
-    export LDFLAGS="$LDFLAGS -Wl,-O3 -Wl,-mllvm,-fp-contract=fast -march=x86-64"
-    export RUSTFLAGS="$RUSTFLAGS -C target-cpu=x86-64 -C codegen-units=1 -Clink-args=--icf=safe"
+    export LDFLAGS="$LDFLAGS -Wl,-O3"
+    export RUSTFLAGS="$RUSTFLAGS -Clink-args=--icf=safe"
 elif test "$SURFER_COMPAT" = "aarch64"; then
     ac_add_options --target=aarch64-linux-gnu
 
@@ -32,7 +29,7 @@ elif test "$SURFER_COMPAT" = "aarch64"; then
     export CPPFLAGS="$CPPFLAGS -O3"
     export CXXFLAGS="$CXXFLAGS -O3"
     export LDFLAGS="$LDFLAGS -Wl,-O3"
-    export RUSTFLAGS="$RUSTFLAGS -C codegen-units=1 -Clink-args=--icf=safe"
+    export RUSTFLAGS="$RUSTFLAGS -Clink-args=--icf=safe"
 fi
 
     export VERBOSE=1

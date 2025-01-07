@@ -102,6 +102,10 @@
 
   & #nav-bar {
     margin-bottom: 6px;
+
+    & toolbarspring {
+      display: none;
+    }
   }
 
   & #zen-sidebar-top-buttons {
@@ -237,13 +241,26 @@
 
   & .tabbrowser-tab {
     transition: scale 0.07s ease;
-    &[fadein='true']:not([zen-essential='true']) {
+    #tabbrowser-tabs &:not([zen-essential='true']) {
       #tabbrowser-tabs[zen-workspace-animation='previous'] & {
-        animation: zen-slide-in 0.3s ease-out;
+        animation: zen-slide-in;
       }
 
       #tabbrowser-tabs[zen-workspace-animation='next'] & {
-        animation: zen-slide-in-reverse 0.3s ease-out;
+        animation: zen-slide-in-reverse;
+      }
+
+      #tabbrowser-tabs[zen-workspace-animation] & {
+        opacity: 0;
+        transform: translateX(-100%);
+        animation-delay: 0.2s;
+        animation-fill-mode: forwards;
+        animation-duration: 0.2s;
+        animation-timing-function: ease;
+      }
+
+      #tabbrowser-tabs[dont-animate-tabs] & {
+        opacity: 0;
       }
     }
 
@@ -809,6 +826,10 @@
   min-width: unset !important;
 
   :root[zen-sidebar-expanded='true'] & {
+    --toolbarbutton-inner-padding: var(--zen-toolbar-button-inner-padding) !important;
+  }
+
+  :root[zen-single-toolbar='true'] & {
     --toolbarbutton-inner-padding: calc(var(--zen-toolbar-button-inner-padding) - 2px) !important;
   }
 
@@ -833,7 +854,7 @@
       padding: 0 var(--toolbarbutton-outer-padding) !important;
     }
 
-    & toolbarspring {
+    :root:not([zen-sidebar-expanded='true']) & toolbarspring {
       display: none;
     }
   }
@@ -919,9 +940,10 @@
     box-shadow: 0 0 1px 1px light-dark(rgba(0, 0, 0, 0.07), rgba(0, 0, 0, 0.1));
   }
 
-  &:not([selected]) .tab-background {
+  &:not([selected], [multiselected="true"]) .tab-background {
     background: var(--zen-toolbar-element-bg);
     backdrop-filter: none !important;
+    border: 1px solid light-dark(transparent, rgba(255, 255, 255, 0.05));
   }
 
   & .tab-content {

@@ -101,7 +101,7 @@
 }
 
 .zen-sidebar-web-panel-splitter,
-.zen-split-view-splitter[orient="vertical"] {
+.zen-split-view-splitter[orient='vertical'] {
   position: absolute;
   top: 0;
   left: 0;
@@ -110,6 +110,13 @@
   background: transparent;
   border: none;
   cursor: ew-resize;
+
+  &:is(.zen-split-view-splitter[orient='vertical']) {
+    /* Bit of a hacky solution, but it works */
+    width: calc(var(--zen-element-separation) - 3px);
+    margin-left: calc(-1 * var(--zen-element-separation) / 2 - 2px);
+    height: unset;
+  }
 
   &::before {
     height: 30px;
@@ -131,7 +138,7 @@
   }
 }
 
-.zen-split-view-splitter[orient="vertical"]::before {
+.zen-split-view-splitter[orient='vertical']::before {
   transform: translate(-75%, -50%);
 }
 
@@ -256,7 +263,7 @@
 }
 
 #zen-sidebar-web-panel-title {
-  font-size: .9em;
+  font-size: 0.9em;
   font-weight: 600;
   margin: 0 10px;
   padding: 0;
@@ -316,4 +323,3 @@
 #zen-sidebar-web-panel[hidden] {
   animation: better-sidebar-hide 0.15s ease-in-out forwards !important;
 }
-

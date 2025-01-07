@@ -24,7 +24,6 @@ var ZenPinnedTabsStorage = {
           )
       `);
 
-
       // Create indices
       await db.execute(`
         CREATE INDEX IF NOT EXISTS idx_zen_pins_uuid ON zen_pins(uuid)
@@ -75,17 +74,21 @@ var ZenPinnedTabsStorage = {
           newPosition = pin.position;
         } else {
           // Get the maximum position within the same parent group (or null for root level)
-          const maxPositionResult = await db.execute(`
+          const maxPositionResult = await db.execute(
+            `
             SELECT MAX("position") as max_position
             FROM zen_pins
             WHERE COALESCE(parent_uuid, '') = COALESCE(:parent_uuid, '')
-          `, { parent_uuid: pin.parentUuid || null });
+          `,
+            { parent_uuid: pin.parentUuid || null }
+          );
           const maxPosition = maxPositionResult[0].getResultByName('max_position') || 0;
           newPosition = maxPosition + 1000;
         }
 
         // Insert or replace the pin
-        await db.executeCached(`
+        await db.executeCached(
+          `
           INSERT OR REPLACE INTO zen_pins (
             uuid, title, url, container_id, workspace_uuid, position,
             is_essential, is_group, parent_uuid, created_at, updated_at
@@ -95,26 +98,31 @@ var ZenPinnedTabsStorage = {
             COALESCE((SELECT created_at FROM zen_pins WHERE uuid = :uuid), :now),
             :now
           )
-        `, {
-          uuid: pin.uuid,
-          title: pin.title,
-          url: pin.isGroup ? null : pin.url,
-          container_id: pin.containerTabId || null,
-          workspace_uuid: pin.workspaceUuid || null,
-          position: newPosition,
-          is_essential: pin.isEssential || false,
-          is_group: pin.isGroup || false,
-          parent_uuid: pin.parentUuid || null,
-          now
-        });
+        `,
+          {
+            uuid: pin.uuid,
+            title: pin.title,
+            url: pin.isGroup ? null : pin.url,
+            container_id: pin.containerTabId || null,
+            workspace_uuid: pin.workspaceUuid || null,
+            position: newPosition,
+            is_essential: pin.isEssential || false,
+            is_group: pin.isGroup || false,
+            parent_uuid: pin.parentUuid || null,
+            now,
+          }
+        );
 
-        await db.execute(`
+        await db.execute(
+          `
           INSERT OR REPLACE INTO zen_pins_changes (uuid, timestamp)
           VALUES (:uuid, :timestamp)
-        `, {
-          uuid: pin.uuid,
-          timestamp: Math.floor(now / 1000)
-        });
+        `,
+          {
+            uuid: pin.uuid,
+            timestamp: Math.floor(now / 1000),
+          }
+        );
 
         changedUUIDs.add(pin.uuid);
         await this.updateLastChangeTimestamp(db);
@@ -122,7 +130,7 @@ var ZenPinnedTabsStorage = {
     });
 
     if (notifyObservers) {
-      this._notifyPinsChanged("zen-pin-updated", Array.from(changedUUIDs));
+      this._notifyPinsChanged('zen-pin-updated', Array.from(changedUUIDs));
     }
   },
 
@@ -141,17 +149,20 @@ var ZenPinnedTabsStorage = {
       position: row.getResultByName('position'),
       isEssential: Boolean(row.getResultByName('is_essential')),
       isGroup: Boolean(row.getResultByName('is_group')),
-      parentUuid: row.getResultByName('parent_uuid')
+      parentUuid: row.getResultByName('parent_uuid'),
     }));
   },
 
   async getGroupChildren(groupUuid) {
     const db = await PlacesUtils.promiseDBConnection();
-    const rows = await db.executeCached(`
+    const rows = await db.executeCached(
+      `
       SELECT * FROM zen_pins
       WHERE parent_uuid = :groupUuid
       ORDER BY position ASC
-    `, { groupUuid });
+    `,
+      { groupUuid }
+    );
 
     return rows.map((row) => ({
       uuid: row.getResultByName('uuid'),
@@ -162,7 +173,7 @@ var ZenPinnedTabsStorage = {
       position: row.getResultByName('position'),
       isEssential: Boolean(row.getResultByName('is_essential')),
       isGroup: Boolean(row.getResultByName('is_group')),
-      parentUuid: row.getResultByName('parent_uuid')
+      parentUuid: row.getResultByName('parent_uuid'),
     }));
   },
 
@@ -172,10 +183,7 @@ var ZenPinnedTabsStorage = {
     await PlacesUtils.withConnectionWrapper('ZenPinnedTabsStorage.removePin', async (db) => {
       await db.executeTransaction(async () => {
         // Get all child UUIDs first for change tracking
-        const children = await db.execute(
-            `SELECT uuid FROM zen_pins WHERE parent_uuid = :uuid`,
-            { uuid }
-        );
+        const children = await db.execute(`SELECT uuid FROM zen_pins WHERE parent_uuid = :uuid`, { uuid });
 
         // Add child UUIDs to changedUUIDs array
         for (const child of children) {
@@ -183,27 +191,24 @@ var ZenPinnedTabsStorage = {
         }
 
         // Delete all children in a single statement
-        await db.execute(
-            `DELETE FROM zen_pins WHERE parent_uuid = :uuid`,
-            { uuid }
-        );
+        await db.execute(`DELETE FROM zen_pins WHERE parent_uuid = :uuid`, { uuid });
 
         // Delete the pin/group itself
-        await db.execute(
-            `DELETE FROM zen_pins WHERE uuid = :uuid`,
-            { uuid }
-        );
+        await db.execute(`DELETE FROM zen_pins WHERE uuid = :uuid`, { uuid });
 
         // Record the changes
         const now = Math.floor(Date.now() / 1000);
         for (const changedUuid of changedUUIDs) {
-          await db.execute(`
+          await db.execute(
+            `
             INSERT OR REPLACE INTO zen_pins_changes (uuid, timestamp)
             VALUES (:uuid, :timestamp)
-          `, {
-            uuid: changedUuid,
-            timestamp: now
-          });
+          `,
+            {
+              uuid: changedUuid,
+              timestamp: now,
+            }
+          );
         }
 
         await this.updateLastChangeTimestamp(db);
@@ -211,7 +216,7 @@ var ZenPinnedTabsStorage = {
     });
 
     if (notifyObservers) {
-      this._notifyPinsChanged("zen-pin-removed", changedUUIDs);
+      this._notifyPinsChanged('zen-pin-removed', changedUUIDs);
     }
   },
 
@@ -226,13 +231,16 @@ var ZenPinnedTabsStorage = {
   async markChanged(uuid) {
     await PlacesUtils.withConnectionWrapper('ZenPinnedTabsStorage.markChanged', async (db) => {
       const now = Date.now();
-      await db.execute(`
+      await db.execute(
+        `
         INSERT OR REPLACE INTO zen_pins_changes (uuid, timestamp)
         VALUES (:uuid, :timestamp)
-      `, {
-        uuid,
-        timestamp: Math.floor(now / 1000)
-      });
+      `,
+        {
+          uuid,
+          timestamp: Math.floor(now / 1000),
+        }
+      );
     });
   },
 
@@ -268,21 +276,27 @@ var ZenPinnedTabsStorage = {
 
     for (let i = 0; i < pins.length; i++) {
       const newPosition = (i + 1) * 1000; // Use large increments
-      await db.execute(`
+      await db.execute(
+        `
         UPDATE zen_pins
         SET position = :newPosition
         WHERE uuid = :uuid
-      `, { newPosition, uuid: pins[i].getResultByName('uuid') });
+      `,
+        { newPosition, uuid: pins[i].getResultByName('uuid') }
+      );
       changedUUIDs.add(pins[i].getResultByName('uuid'));
     }
   },
 
   async updateLastChangeTimestamp(db) {
     const now = Date.now();
-    await db.execute(`
+    await db.execute(
+      `
       INSERT OR REPLACE INTO moz_meta (key, value)
       VALUES ('zen_pins_last_change', :now)
-    `, { now });
+    `,
+      { now }
+    );
   },
 
   async getLastChangeTimestamp() {
@@ -304,29 +318,35 @@ var ZenPinnedTabsStorage = {
           const pin = pins[i];
           const newPosition = (i + 1) * 1000;
 
-          await db.execute(`
+          await db.execute(
+            `
             UPDATE zen_pins
             SET position = :newPosition
             WHERE uuid = :uuid
-          `, { newPosition, uuid: pin.uuid });
+          `,
+            { newPosition, uuid: pin.uuid }
+          );
 
           changedUUIDs.add(pin.uuid);
 
           // Record the change
-          await db.execute(`
+          await db.execute(
+            `
             INSERT OR REPLACE INTO zen_pins_changes (uuid, timestamp)
             VALUES (:uuid, :timestamp)
-          `, {
-            uuid: pin.uuid,
-            timestamp: Math.floor(now / 1000)
-          });
+          `,
+            {
+              uuid: pin.uuid,
+              timestamp: Math.floor(now / 1000),
+            }
+          );
         }
 
         await this.updateLastChangeTimestamp(db);
       });
     });
 
-    this._notifyPinsChanged("zen-pin-updated", Array.from(changedUUIDs));
+    this._notifyPinsChanged('zen-pin-updated', Array.from(changedUUIDs));
   },
 
   async __dropTables() {
@@ -334,7 +354,7 @@ var ZenPinnedTabsStorage = {
       await db.execute(`DROP TABLE IF EXISTS zen_pins`);
       await db.execute(`DROP TABLE IF EXISTS zen_pins_changes`);
     });
-  }
+  },
 };
 
 ZenPinnedTabsStorage.init();

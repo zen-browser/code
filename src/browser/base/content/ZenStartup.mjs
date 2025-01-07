@@ -28,18 +28,19 @@
         // Fix notification deck
         const deckTemplate = document.getElementById('tab-notification-deck-template');
         if (deckTemplate) {
-          document
-            .getElementById('zen-appcontent-navbar-container')
-            .appendChild(deckTemplate);
+          document.getElementById('zen-appcontent-navbar-container').appendChild(deckTemplate);
         }
 
         // Disable smooth scroll
-        gBrowser.tabContainer.arrowScrollbox.smoothScroll = false;
+        gBrowser.tabContainer.arrowScrollbox.smoothScroll = Services.prefs.getBoolPref(
+          'zen.startup.smooth-scroll-in-tabs',
+          false
+        );
 
-        ZenWorkspaces.init();
-        gZenUIManager.init();
-        gZenVerticalTabsManager.init();
         gZenCompactModeManager.init();
+        ZenWorkspaces.init();
+        gZenVerticalTabsManager.init();
+        gZenUIManager.init();
 
         document.l10n.setAttributes(document.getElementById('tabs-newtab-button'), 'tabs-toolbar-new-tab');
       } catch (e) {

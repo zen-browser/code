@@ -6,20 +6,20 @@ on:
   workflow_dispatch:
 
 jobs:
-  check_tag:
+  check_candidates:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Check out repository
-      uses: actions/checkout@v2
+      - name: Check out repository
+        uses: actions/checkout@v2
 
-    - name: Fetch JSON Response
-      run: |
-        curl -s "https://hg.mozilla.org/releases/mozilla-release/json-tags" > rc-response.json
+      - name: Fetch JSON Response
+        run: |
+          curl -s "https://hg.mozilla.org/releases/mozilla-release/json-tags" > rc-response.json
 
-    - name: Check for any updates
-      env:
-        DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-        DISCORD_PING_IDS: ${{ secrets.DISCORD_PING_IDS }}
-      run: |
-        python3 scripts/check-rc-response.py
+      - name: Check for any updates
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          DISCORD_PING_IDS: ${{ secrets.DISCORD_PING_IDS }}
+        run: |
+          python3 scripts/check-rc-response.py || true

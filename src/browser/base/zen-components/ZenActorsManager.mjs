@@ -1,4 +1,3 @@
-
 // Utility to register JSWindowActors
 var gZenActorsManager = {
   _actors: new Set(),
@@ -16,4 +15,4 @@ var gZenActorsManager = {
       console.warn(`Failed to register JSWindowActor: ${e}`);
     }
   },
-}
+};

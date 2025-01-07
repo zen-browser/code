@@ -303,15 +303,15 @@ var gZenThemesImporter = new (class {
   }
 })();
 
-gZenActorsManager.addJSWindowActor("ZenThemeMarketplace", {
+gZenActorsManager.addJSWindowActor('ZenThemeMarketplace', {
   parent: {
-    esModuleURI: "chrome://browser/content/zen-components/actors/ZenThemeMarketplaceParent.sys.mjs",
+    esModuleURI: 'chrome://browser/content/zen-components/actors/ZenThemeMarketplaceParent.sys.mjs',
   },
   child: {
-    esModuleURI: "chrome://browser/content/zen-components/actors/ZenThemeMarketplaceChild.sys.mjs",
+    esModuleURI: 'chrome://browser/content/zen-components/actors/ZenThemeMarketplaceChild.sys.mjs',
     events: {
       DOMContentLoaded: {},
     },
   },
-  matches: [...Services.prefs.getStringPref("zen.injections.match-urls").split(","), "about:preferences"],
+  matches: [...Services.prefs.getStringPref('zen.injections.match-urls').split(','), 'about:preferences'],
 });

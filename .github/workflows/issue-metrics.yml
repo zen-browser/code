@@ -10,56 +10,55 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.DEPLOY_KEY }}
 
-    - name: Checkout code
-      uses: actions/checkout@v2
-      with:
-        token: ${{ secrets.DEPLOY_KEY }}
+      - name: Get dates for last month
+        shell: bash
+        run: |
+          # Get the current date
+          current_date=$(date +'%Y-%m-%d')
 
-    - name: Get dates for last month
-      shell: bash
-      run: |
-        # Get the current date
-        current_date=$(date +'%Y-%m-%d')
+          # Calculate the previous month
+          previous_date=$(date -d "$current_date -1 month" +'%Y-%m-%d')
 
-        # Calculate the previous month
-        previous_date=$(date -d "$current_date -1 month" +'%Y-%m-%d')
+          # Extract the year and month from the previous date
+          previous_year=$(date -d "$previous_date" +'%Y')
+          previous_month=$(date -d "$previous_date" +'%m')
 
-        # Extract the year and month from the previous date
-        previous_year=$(date -d "$previous_date" +'%Y')
-        previous_month=$(date -d "$previous_date" +'%m')
+          # Calculate the first day of the previous month
+          first_day=$(date -d "$previous_year-$previous_month-01" +'%Y-%m-%d')
 
-        # Calculate the first day of the previous month
-        first_day=$(date -d "$previous_year-$previous_month-01" +'%Y-%m-%d')
+          # Calculate the last day of the previous month
+          last_day=$(date -d "$first_day +1 month -1 day" +'%Y-%m-%d')
 
-        # Calculate the last day of the previous month
-        last_day=$(date -d "$first_day +1 month -1 day" +'%Y-%m-%d')
+          echo "$first_day..$last_day"
+          echo "last_month=$first_day..$last_day" >> "$GITHUB_ENV"
+          echo "last_month_year=$previous_year" >> "$GITHUB_ENV"
 
-        echo "$first_day..$last_day"
-        echo "last_month=$first_day..$last_day" >> "$GITHUB_ENV"
-        echo "last_month_year=$previous_year" >> "$GITHUB_ENV"
+      - name: Run issue-metrics tool
+        uses: github/issue-metrics@v2
+        env:
+          GH_TOKEN: ${{ secrets.DEPLOY_KEY }}
+          HIDE_AUTHOR: true
+          HIDE_TIME_TO_ANSWER: true
+          SEARCH_QUERY: 'repo:zen-browser/desktop is:issue created:${{ env.last_month }}'
 
-    - name: Run issue-metrics tool
-      uses: github/issue-metrics@v2
-      env:
-        GH_TOKEN: ${{ secrets.DEPLOY_KEY }}
-        HIDE_AUTHOR: true
-        HIDE_TIME_TO_ANSWER: true
-        SEARCH_QUERY: 'repo:zen-browser/desktop is:issue created:${{ env.last_month }}'
+      - name: Move metrics to docs folder
+        run: |
+          mkdir -p docs/issue-metrics
+          rm -f docs/issue-metrics/${{ env.last_month_year }}_${{ env.last_month }}.md
+          mv issue_metrics.md docs/issue-metrics/${{ env.last_month_year }}_${{ env.last_month }}.md
 
-    - name: Move metrics to docs folder
-      run: |
-        mkdir -p docs/issue-metrics
-        rm -f docs/issue-metrics/${{ env.last_month_year }}_${{ env.last_month }}.md
-        mv issue_metrics.md docs/issue-metrics/${{ env.last_month_year }}_${{ env.last_month }}.md
+      - name: Remove metrisc JSON
+        run: |
+          rm -f issue_metrics.json
 
-    - name: Remove metrisc JSON
-      run: |
-        rm -f issue_metrics.json
-
-    - name: Commit changes
-      uses: stefanzweifel/git-auto-commit-action@v5
-      with:
-        commit_message: 'Update monthly issue metrics'
-        commit_user_name: Zen Browser Robot
-        commit_user_email: zen-browser-auto@users.noreply.github.com
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 'Update monthly issue metrics'
+          commit_user_name: Zen Browser Robot
+          commit_user_email: zen-browser-auto@users.noreply.github.com

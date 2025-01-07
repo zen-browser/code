@@ -215,6 +215,14 @@
   justify-content: space-between;
   align-content: space-between;
   max-height: 250px;
+
+  .workspace-icon-button {
+    min-width: 24px;
+    min-height: 24px;
+    font-size: 16px;
+    margin: 2px;
+    padding: 4px;
+  }
 }
 
 #PanelUI-zen-workspaces-list {
@@ -256,6 +264,36 @@
       width: 100%;
     }
   }
+}
+
+/* Workspace icon picker styles */
+#PanelUI-zen-workspaces-icon-picker-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 5px;
+}
+
+#PanelUI-zen-workspaces-icon-search-bar {
+  display: flex;
+  position: sticky;
+  top: 0;
+  background-color: inherit;
+  z-index: 1000;
+  padding: 8px;
+  width: 100%;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+#PanelUI-zen-workspaces-icon-search-input {
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 14px;
+  border: 1px solid var(--panel-separator-color, #ccc);
+  border-radius: 4px;
+  box-sizing: border-box;
+  margin: 0;
 }
 
 #PanelUI-zen-workspaces-list toolbarbutton {
@@ -352,7 +390,6 @@
   background-color: var(--toolbarbutton-icon-fill-attention);
 }
 
-
 #PanelUI-zen-workspaces-reorder-mode[active='true'] {
   color: var(--toolbarbutton-icon-fill-attention) !important;
 }
@@ -437,7 +474,7 @@
     max-width: calc(100% - var(--zen-toolbox-padding) * 4);
   }
 
-  & #zen-current-workspace-indicator-icon:not([hidden]) + #zen-current-workspace-indicator-name  {
+  & #zen-current-workspace-indicator-icon:not([hidden]) + #zen-current-workspace-indicator-name {
     padding-left: 24px;
   }
 }

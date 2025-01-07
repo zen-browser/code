@@ -45,7 +45,7 @@ export class ZenThemeMarketplaceParent extends JSWindowActorParent {
     window.gZenThemePicker.riceManager.openRicePage(data);
   }
 
-  compareversion(version1, version2) {
+  compareVersions(version1, version2) {
     var result = false;
     if (typeof version1 !== 'object') {
       version1 = version1.toString().split('.');
@@ -73,22 +73,31 @@ export class ZenThemeMarketplaceParent extends JSWindowActorParent {
 
   async checkForThemeUpdates() {
     console.info('ZenThemeMarketplaceParent: Checking for theme updates');
+
     let updates = [];
     this._themes = null;
+
     for (const theme of Object.values(await this.getThemes())) {
       const themeInfo = await this.sendQuery('ZenThemeMarketplace:GetThemeInfo', { themeId: theme.id });
+
       if (!themeInfo) {
         continue;
       }
-      if (!this.compareversion(themeInfo.version, theme.version || '0.0.0') && themeInfo.version != theme.version) {
+
+      if (!this.compareVersions(themeInfo.version, theme.version || '0.0.0') && themeInfo.version != theme.version) {
         console.info('ZenThemeMarketplaceParent: Theme update found', theme.id, theme.version, themeInfo.version);
+
         themeInfo.enabled = theme.enabled;
         updates.push(themeInfo);
+
         await this.removeTheme(theme.id, false);
+
         this._themes[themeInfo.id] = themeInfo;
       }
     }
+
     await this.updateThemes(this._themes);
+
     this.sendAsyncMessage('ZenThemeMarketplace:CheckForUpdatesFinished', { updates });
   }
 
@@ -166,27 +175,30 @@ export class ZenThemeMarketplaceParent extends JSWindowActorParent {
 
   async checkForThemeChanges() {
     const themes = await this.getThemes();
+
     const themeIds = Object.keys(themes);
-    let changed = false;
+
     for (const themeId of themeIds) {
       const theme = themes[themeId];
+
       if (!theme) {
         continue;
       }
+
       const themePath = PathUtils.join(this.themesRootPath, themeId);
+
       if (!(await IOUtils.exists(themePath))) {
         await this.installTheme(theme);
-        changed = true;
       }
     }
-    if (changed) {
-      this.triggerThemeUpdate();
-    }
+
+    this.triggerThemeUpdate();
   }
 
   async removeTheme(themeId, triggerUpdate = true) {
     const themePath = PathUtils.join(this.themesRootPath, themeId);
     await IOUtils.remove(themePath, { recursive: true, ignoreAbsent: true });
+
     if (triggerUpdate) {
       this.triggerThemeUpdate();
     }

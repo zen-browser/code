@@ -29,12 +29,12 @@
          Firefox which rely on Apple Events to signal other processes. -->
     <key>com.apple.security.automation.apple-events</key><true/>
 
+    <!-- For SmartCardServices(7) -->
+    <key>com.apple.security.smartcard</key><true/>
 
     <!-- Required for com.apple.developer.web-browser.public-key-credential -->
     <key>com.apple.application-identifier</key>
     <string>H36NPCN86W.app.zen-browser.zen</string>
 
-    <!-- For platform passkey (webauthn) support -->
-    <key>com.apple.developer.web-browser.public-key-credential</key><true/>
   </dict>
 </plist>

@@ -60,7 +60,7 @@ if test "$ZEN_CROSS_COMPILING"; then
   elif test "$SURFER_COMPAT" = "x86_64"; then
     # Dont use PGO on aarch64 builds and the ZEN_GA_DISABLE_PGO flag is not set
     if test "$ZEN_GA_DISABLE_PGO"; then
-      echo "PGO is disabled"
+      export ZEN_DUMMY=1
     else
       ac_add_options --enable-profile-use=cross
       ac_add_options --with-pgo-profile-path=$(echo ~)/artifact/merged.profdata

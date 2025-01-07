@@ -860,7 +860,7 @@ var gZenCKSSettings = {
           if (!target.nextElementSibling) {
             target.after(
               window.MozXULElement.parseXULToFragment(`
-              <label class="${ZEN_CKS_CLASS_BASE}-unsafed" data-l10n-id="zen-key-unsafed"></label>
+              <label class="${ZEN_CKS_CLASS_BASE}-unsafed" data-l10n-id="zen-key-unsaved"></label>
             `)
             );
             target.value = 'Not set';

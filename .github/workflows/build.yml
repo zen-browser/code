@@ -63,7 +63,6 @@ jobs:
         with:
           submodules: recursive
           token: ${{ secrets.DEPLOY_KEY }}
-          fetch-depth: 0
 
       - name: Check if correct branch
         run: |

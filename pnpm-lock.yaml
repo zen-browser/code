@@ -9,13 +9,8 @@ importers:
   .:
     dependencies:
       '@zen-browser/surfer':
-<<<<<<< HEAD
-        specifier: ^1.9.2
-        version: 1.9.2
-=======
-        specifier: ^1.9.1
-        version: 1.9.1(glob@7.2.3)
->>>>>>> 34e5e6c151ccf30add3f477cc243a84f4648e558
+        specifier: ^1.9.3
+        version: 1.9.3(glob@7.2.3)
     devDependencies:
       husky:
         specifier: ^9.1.7
@@ -127,13 +122,8 @@ packages:
   '@types/node@17.0.45':
     resolution: {integrity: sha512-w+tIMs3rq2afQdsPJlODhoUEKzFP1ayaoyl1CcnwtIlsVe7K7bA1NGm4s3PraqTLlXnbIN84zuBlxBWo1u9BLw==}
 
-<<<<<<< HEAD
-  '@zen-browser/surfer@1.9.2':
-    resolution: {integrity: sha512-QysaMuuESQfLySWBQSHsr6ezEBJUdcIx2kpY21gc+NjGxz4RyPnlBbZ5AxL2Ws98YYer6+0b761umidqWLAv/g==}
-=======
-  '@zen-browser/surfer@1.9.1':
-    resolution: {integrity: sha512-IM3ru9bzcLdeB995s7pHVZRlvJZ399IkUHNe16UYV95YCTtlJDEkkepbvz/oHXZGjDUnx43ip9kQqTZit69/1g==}
->>>>>>> 34e5e6c151ccf30add3f477cc243a84f4648e558
+  '@zen-browser/surfer@1.9.3':
+    resolution: {integrity: sha512-D53XK4/jQcgJKHESjixezCazYTw7orN3Bnogv5RzITRvm79ftYtzSvkrdNwMsmoTJRro8am7VvBLIDfsj2UBeA==}
     hasBin: true
 
   ansi-escapes@7.0.0:
@@ -1046,11 +1036,7 @@ snapshots:
 
   '@types/node@17.0.45': {}
 
-<<<<<<< HEAD
-  '@zen-browser/surfer@1.9.2':
-=======
-  '@zen-browser/surfer@1.9.1(glob@7.2.3)':
->>>>>>> 34e5e6c151ccf30add3f477cc243a84f4648e558
+  '@zen-browser/surfer@1.9.3(glob@7.2.3)':
     dependencies:
       '@resvg/resvg-js': 1.4.0
       async-icns: 1.0.2

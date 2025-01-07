@@ -126,7 +126,7 @@ codesign --force -o runtime --verbose --sign "$IDENTITY" --deep \
 "${BUNDLE}"/Contents/MacOS/updater.app
 
 # Sign zen main executable
-codesign --force -o runtime --verbose --sign "$IDENTITY" \
+codesign --force -o runtime --verbose --sign "$IDENTITY" --deep \
 --entitlements ${BROWSER_ENTITLEMENTS_FILE} \
 "${BUNDLE}"/Contents/MacOS/zen
 
@@ -149,12 +149,6 @@ codesign --force -o runtime --verbose --sign "$IDENTITY" --deep \
 
 # Validate
 codesign -vvv --deep --strict "${BUNDLE}"
-
-echo "Showing up app entitlements"
-codesign -d --entitlements :- "${BUNDLE}"
-
-echo "Verifying app"
-codesign --verify --deep --strict "${BUNDLE}"
 
 # Create a DMG
 if [ ! -z "${OUTPUT_DMG_FILE}" ]; then

@@ -126,7 +126,7 @@ codesign --force -o runtime --verbose --sign "$IDENTITY" --deep \
 "${BUNDLE}"/Contents/MacOS/updater.app
 
 # Sign zen main executable
-codesign --force -o runtime --verbose --sign "$IDENTITY" --deep \
+codesign --force -o runtime --verbose --sign "$IDENTITY" \
 --entitlements ${BROWSER_ENTITLEMENTS_FILE} \
 "${BUNDLE}"/Contents/MacOS/zen
 

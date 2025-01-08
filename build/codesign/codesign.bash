@@ -111,9 +111,6 @@ echo "-------------------------------------------------------------------------"
 
 set -x
 
-# move Zen_Browser.provisionprofile to the Contents directory
-cp Zen_Browser.provisionprofile "${BUNDLE}"/Contents/embedded.provisionprofile
-
 # Clear extended attributes which cause codesign to fail
 xattr -cr "${BUNDLE}"
 
@@ -140,6 +137,10 @@ codesign --force -o runtime --verbose --sign "$IDENTITY" --deep \
 # Sign gmp-clearkey files
 find "${BUNDLE}"/Contents/Resources/gmp-clearkey -type f -exec \
 codesign --force -o runtime --verbose --sign "$IDENTITY" {} \;
+
+
+# move Zen_Browser.provisionprofile to the Contents directory
+cp Zen_Browser.provisionprofile "${BUNDLE}"/Contents/embedded.provisionprofile
 
 # Sign the main bundle
 codesign --force -o runtime --verbose --sign "$IDENTITY" \

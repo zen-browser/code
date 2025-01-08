@@ -15,7 +15,7 @@ on:
 jobs:
   mac-build:
     name: Build macOS - ${{ matrix.arch }}
-    runs-on: ${{ inputs.release-branch == 'release' && 'macos-14' || 'macos-14' }}
+    runs-on: ${{ inputs.release-branch == 'release' && 'warp-macos-14-arm64-6x' || 'macos-14' }}
 
     strategy:
       fail-fast: false

@@ -153,6 +153,9 @@ codesign -vvv --deep --strict "${BUNDLE}"
 # move Zen_Browser.provisionprofile to the Contents directory
 cp Zen_Browser.provisionprofile "${BUNDLE}"/Contents/embedded.provisionprofile
 
+# Staple the ticket
+xcrun stapler staple "${BUNDLE}" --verbose || exit 0
+
 # Create a DMG
 if [ ! -z "${OUTPUT_DMG_FILE}" ]; then
   DISK_IMAGE_DIR=`mktemp -d`

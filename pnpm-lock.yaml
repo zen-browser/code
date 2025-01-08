@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@zen-browser/surfer':
-        specifier: ^1.9.5
-        version: 1.9.5(glob@7.2.3)
+        specifier: ^1.9.6
+        version: 1.9.6(glob@7.2.3)
     devDependencies:
       husky:
         specifier: ^9.1.7
@@ -122,8 +122,8 @@ packages:
   '@types/node@17.0.45':
     resolution: {integrity: sha512-w+tIMs3rq2afQdsPJlODhoUEKzFP1ayaoyl1CcnwtIlsVe7K7bA1NGm4s3PraqTLlXnbIN84zuBlxBWo1u9BLw==}
 
-  '@zen-browser/surfer@1.9.5':
-    resolution: {integrity: sha512-daM+h1XP4OlIhMuN5aRIrkbau6w6vtNFH9Ezw2fZwZTgUvTiTQEJ2Ih4/Nghr/1CNUq24200X/aGUNyM7ix2DQ==}
+  '@zen-browser/surfer@1.9.6':
+    resolution: {integrity: sha512-UdtxmgQ+ft03cD8YMqRMwrXf3Lj1OUN1vWPcZxJYLnI41N2UXGlpiOg7U/q4pEC/YNRkJnywiqAaCRJ1n1J8ZQ==}
     hasBin: true
 
   ansi-escapes@7.0.0:
@@ -152,8 +152,8 @@ packages:
   asap@2.0.6:
     resolution: {integrity: sha512-BSHWgDSAiKs50o2Re8ppvp3seVHXSRM44cdSsT9FfNEUUZLOGWVCsiWaRPWM1Znn+mqZ1OfVZ3z3DWEzSp7hRA==}
 
-  async-compat@1.5.1:
-    resolution: {integrity: sha512-itH7HB0C7nzX7ynpIJYEJqpvuXmfWXXbzDrTfJOJJ3fJfgNTGgZUqKVYUT3U17zhceZiTdPdtiUQQns2F3RRCQ==}
+  async-compat@1.6.1:
+    resolution: {integrity: sha512-8ggRAJiUews+8pjzG/fQ0O9QOPxHFa3DGvvMoH67rukjIiRL7AVGcaUSkA6ecZYlDvyom7zet7zy1ZFjRliuqw==}
     engines: {node: '>=0.8'}
 
   async-icns@1.0.2:
@@ -207,8 +207,8 @@ packages:
   buffer@5.7.1:
     resolution: {integrity: sha512-EHcyIPBQ4BSGlvjB16k5KgAJ27CIsHY/2JBmCRReo48y9rQ3MaUzWX3KVlBa4U7MyX02HdVj0K7C3WaB3ju7FQ==}
 
-  call-once-fn@1.0.1:
-    resolution: {integrity: sha512-/MIar5BYO3zAwe0QZCFsr89R6vn6BWiS3BCG2IyCUobkY3rAKK5r+elC3TWdBQW4q6A8aNjS5CDTmtUnAIOa7g==}
+  call-once-fn@1.0.6:
+    resolution: {integrity: sha512-zBcRjl/aFJEJqNSNw0gtzi4ZtDLBqPqIbU8qyXv5M2biF2nYHqcpIXOWo6ZhhDAQDkr9WgXQnLLyXQJvWm5AMg==}
     engines: {node: '>=0.8'}
 
   chalk@4.1.2:
@@ -270,8 +270,8 @@ packages:
     resolution: {integrity: sha512-FveZTNuGw04cxlAiWbzi6zTAL/lhehaWbTtgluJh4/E95DqMwTmha3KZN1aAWA8cFIhHzMZUvLevkw5Rqk+tSQ==}
     engines: {node: '>= 0.6'}
 
-  core-js-pure@3.39.0:
-    resolution: {integrity: sha512-7fEcWwKI4rJinnK+wLTezeg2smbFFdSBP6E2kQZNbnzM2s1rpKQ6aaRteZSSg7FLU3P0HGGVo/gbpfanU36urg==}
+  core-js-pure@3.40.0:
+    resolution: {integrity: sha512-AtDzVIgRrmRKQai62yuSIN5vNiQjcJakJb4fbhVw3ehxx7Lohphvw9SGNWKhLFqSxC4ilD0g/L1huAYFQU3Q6A==}
 
   core-util-is@1.0.3:
     resolution: {integrity: sha512-ZQBvi1DcpJ4GDqanjucZ2Hj3wEO5pZDS89BWbkcrvdxksJorwUDDZamX9ldFkp9aw2lmBDLgkObEA4DWNJ9FYQ==}
@@ -337,12 +337,12 @@ packages:
     resolution: {integrity: sha512-XYfuKMvj4O35f/pOXLObndIRvyQ+/+6AhODh+OKWj9S9498pHHn/IMszH+gt0fBCRWMNfk1ZSp5x3AifmnI2vg==}
     engines: {node: '>=6'}
 
-  extract-base-iterator@1.2.1:
-    resolution: {integrity: sha512-6paYzxwwx215Zj29ZhoCw2wnaGnU8kPPIzth0U71JwZCo9oR5sGUBWQd6Da5YIWmUZKsadCULxr2dRAzhTmKIA==}
+  extract-base-iterator@1.2.10:
+    resolution: {integrity: sha512-xdSKIpRrB+AqUJByl1pIOAyHs2vUfA4pL05SiB/9ZhC4AYS4G9a5TNmKEfY6KKeoPw5eFLoQ/9hVUUq5BIguFA==}
     engines: {node: '>=0.8'}
 
-  fast-extract@1.3.1:
-    resolution: {integrity: sha512-4er0iCszwwY1JX1SfYHQKuoPTmu6ISIG8W4gD8/jHkB7/Ws9i0ZNu+48BpalV+GGsushMvllTFk8txLBGbpYGg==}
+  fast-extract@1.3.10:
+    resolution: {integrity: sha512-XrV3AQLlaW4sDMSOwcBRDBMaEdJKgXT2EhtsqTufdZWWNN2b8zmRSGee/VV/vurO0agKoEVCyxja2DmkBzv6lg==}
     engines: {node: '>=0.8'}
     peerDependencies:
       lzma-native: '*'
@@ -369,8 +369,8 @@ packages:
       debug:
         optional: true
 
-  fs-access-compat@1.0.3:
-    resolution: {integrity: sha512-bIT52oDQuazHSEnu17+MnRGVTTtLpMluu9Zuv25RhJ+iVWrTX95aXK+9yEsQ1ZaIRCWeHjx1IgR38QH/8psWKQ==}
+  fs-access-compat@1.1.4:
+    resolution: {integrity: sha512-Qvy38V5JTnQT9pDulL2HBDiuZ1XbA3IHLJrHZpsP2gcBocflwnrbIcRd/dcH+ax55JEqqc8N1ARpaxITlp7hMg==}
     engines: {node: '>=0.8'}
 
   fs-constants@1.0.0:
@@ -588,8 +588,8 @@ packages:
   mkdirp-classic@0.5.3:
     resolution: {integrity: sha512-gKLcREMhtuZRwRAfqP3RFW+TK4JqApVBtOIftVgjuABpAtpxhPGaDcfvbhNvD0B8iD1oUr/txX35NjcaY6Ns/A==}
 
-  mock-require-lazy@1.0.1:
-    resolution: {integrity: sha512-Sv05IW2MuG7C+gVTHirqF8cbqAM8MeMEIKU3MIQDA1pyXKnv0AGa/3l0iwXk/i+81OoFzt+iU0p8DdphV2Ejww==}
+  mock-require-lazy@1.0.6:
+    resolution: {integrity: sha512-+0sOddS06fxFPJEDulH1Qssavf7D8UWa54Z6LQFuKwWwKwXLIU2JHnNt9Qi449LkqrKtNVa0rHhAzoJCZxvTgg==}
     engines: {node: '>=0.8'}
 
   modern-async@1.1.5:
@@ -717,8 +717,8 @@ packages:
   pumpify@2.0.1:
     resolution: {integrity: sha512-m7KOje7jZxrmutanlkS1daj1dS6z6BgslzOXmcSEpIlCxM3VJH7lG5QLeck/6hgF6F4crFf01UtQmNsJfweTAw==}
 
-  queue-cb@1.4.4:
-    resolution: {integrity: sha512-WHT/6s0nK/TB6/tlCi30NGNh8mQrCVmQAH5Hq/ZLaYFTjKVfsIKmfftJYAHXfGJ2FlRlVSAJjFBbSvSGJriCAw==}
+  queue-cb@1.4.10:
+    resolution: {integrity: sha512-Hi3ZvXvKhrmxJhn6FhwsyW/Dd6OFZy2RWPXrAxQFw0jDnoiOzx2edkarCr5RpR6no7nZ+O4if59M/2HKzFy3hw==}
     engines: {node: '>=0.8'}
 
   rc@1.2.8:
@@ -828,8 +828,8 @@ packages:
   sprintf-js@1.0.3:
     resolution: {integrity: sha512-D9cPgkvLlV3t3IzL0D0YLvGA9Ahk4PcvVwUbN0dSGr1aP0Nrt4AEnTUbuGvquEC0mA64Gqt1fzirlRs5ibXx8g==}
 
-  stack-base-iterator@1.1.5:
-    resolution: {integrity: sha512-wFnKvg6qFFCQBvpBqa4SWnDGIVziYu8A2ATQqcvYwdi774efdRHzXarjW88vaTy2fLbuVVH0g361UfOEJHWmCA==}
+  stack-base-iterator@1.1.11:
+    resolution: {integrity: sha512-c9f/rUFy/GJCEn0kx7gqIM/LByOrvOAq4I0cEVeahcmSGFfFa2xAto6/RcjApT0qbz/+IrA0OCM7CHnSiVDrOw==}
     engines: {node: '>=0.8'}
 
   stream-shift@1.0.3:
@@ -880,8 +880,8 @@ packages:
   tar-fs@2.1.1:
     resolution: {integrity: sha512-V0r2Y9scmbDRLCNex/+hYzvp/zyYjvFbHPNgVTKfQvVrb6guiE/fxP+XblDNR011utopbkex2nM4dHNV6GDsng==}
 
-  tar-iterator@1.2.2:
-    resolution: {integrity: sha512-cFr12lmqNsIBFT++9QJSPNdOXndBU3XyWOx6UDq+2AipKA865i/RKIc+kbHv1i5Ko60+rYSI+/5PPMCQP3fP+g==}
+  tar-iterator@1.2.9:
+    resolution: {integrity: sha512-sHgC+mJjn5n4v1YDQsFyGUg8Up6byOWV8QjQh/ZOYSOVkmg5q9ivpTgIKJrQOUihivsh+4pQlY5gMmXyH4AyOg==}
     engines: {node: '>=0.8'}
 
   tar-stream-compat@2.1.5:
@@ -892,8 +892,8 @@ packages:
     resolution: {integrity: sha512-ujeqbceABgwMZxEJnk2HDY2DlnUZ+9oEcb1KzTVfYHio0UE6dG71n60d8D2I4qNvleWrrXpmjpt7vZeF1LnMZQ==}
     engines: {node: '>=6'}
 
-  temp-suffix@0.1.1:
-    resolution: {integrity: sha512-wcluXJ6A8HhyhEOOTXHPKV9TRTcL7vwmnfrWTZn7c7zrFp16trP1lfpsxaKN52pToFNByQ+y3zsJC8JlDAaKrg==}
+  temp-suffix@0.1.6:
+    resolution: {integrity: sha512-oxSvTMUHbFUEbCIQGJa221DvtpA1oNSlthyGjPJ/yiAum8JgE/Nu4jHh7osM7IKHPomRDCmxmYdTuX442EuZKg==}
     engines: {node: '>=0.8'}
 
   through2@2.0.5:
@@ -957,8 +957,8 @@ packages:
     engines: {node: '>= 14'}
     hasBin: true
 
-  zip-iterator@1.2.1:
-    resolution: {integrity: sha512-56+76FbbgsQySl8wAh9W7SCaSyzFQK3xjL1+6tzai5ER+f7mSVpU9wKgPk+N9ZJ/5xTJqg5Z2rUe9d7SxrbgFQ==}
+  zip-iterator@1.2.7:
+    resolution: {integrity: sha512-hLYAZigng8q3AWJyNJgiUAokV/NXYBXgLeYt+PnkcXMES9syJwiLCBJ1qvoBEip97E5/H0T5OwpZcCrx91FE8A==}
     engines: {node: '>=0.8'}
 
   zip@1.2.0:
@@ -1036,7 +1036,7 @@ snapshots:
 
   '@types/node@17.0.45': {}
 
-  '@zen-browser/surfer@1.9.5(glob@7.2.3)':
+  '@zen-browser/surfer@1.9.6(glob@7.2.3)':
     dependencies:
       '@resvg/resvg-js': 1.4.0
       async-icns: 1.0.2
@@ -1045,7 +1045,7 @@ snapshots:
       cli-progress: 3.12.0
       commander: 6.2.1
       execa: 5.1.1
-      fast-extract: 1.3.1(glob@7.2.3)
+      fast-extract: 1.3.10(glob@7.2.3)
       fs-extra: 10.1.0
       ini: 3.0.1
       is-apple-silicon: https://codeload.github.com/trickypr/is-apple-silicon/tar.gz/5f75501a1d7566ba9f94174b6825d7bd9d302b6a
@@ -1085,7 +1085,7 @@ snapshots:
 
   asap@2.0.6: {}
 
-  async-compat@1.5.1:
+  async-compat@1.6.1:
     dependencies:
       is-error: 2.2.2
       is-promise: 4.0.0
@@ -1153,7 +1153,7 @@ snapshots:
       base64-js: 1.5.1
       ieee754: 1.2.1
 
-  call-once-fn@1.0.1: {}
+  call-once-fn@1.0.6: {}
 
   chalk@4.1.2:
     dependencies:
@@ -1208,7 +1208,7 @@ snapshots:
     dependencies:
       safe-buffer: 5.2.1
 
-  core-js-pure@3.39.0: {}
+  core-js-pure@3.40.0: {}
 
   core-util-is@1.0.3: {}
 
@@ -1277,43 +1277,43 @@ snapshots:
 
   expand-template@2.0.3: {}
 
-  extract-base-iterator@1.2.1(glob@7.2.3):
+  extract-base-iterator@1.2.10(glob@7.2.3):
     dependencies:
-      fs-access-compat: 1.0.3
+      fs-access-compat: 1.1.4
       graceful-fs: 4.2.11
       is-absolute: 1.0.0
       lodash.compact: 3.0.1
       mkdirp-classic: 0.5.3
       object-assign: 4.1.1
-      queue-cb: 1.4.4
+      queue-cb: 1.4.10
       rimraf2: 2.8.2(glob@7.2.3)
-      stack-base-iterator: 1.1.5
+      stack-base-iterator: 1.1.11
     transitivePeerDependencies:
       - glob
 
-  fast-extract@1.3.1(glob@7.2.3):
+  fast-extract@1.3.10(glob@7.2.3):
     dependencies:
       bl: 3.0.1
       buffer-v6-polyfill: 1.0.5
-      call-once-fn: 1.0.1
+      call-once-fn: 1.0.6
       content-disposition: 0.5.4
       end-of-stream: 1.4.4
       flush-write-stream: 2.0.0
       lodash.throttle: 4.1.1
       mkdirp-classic: 0.5.3
-      mock-require-lazy: 1.0.1
+      mock-require-lazy: 1.0.6
       next-tick: 1.1.0
       progress-stream: 2.0.0
       pumpify: 2.0.1
-      queue-cb: 1.4.4
+      queue-cb: 1.4.10
       readable-stream: 2.3.8
       require_optional: 1.0.1
       rimraf2: 2.8.2(glob@7.2.3)
       signal-exit: 3.0.7
-      tar-iterator: 1.2.2(glob@7.2.3)
-      temp-suffix: 0.1.1
+      tar-iterator: 1.2.9(glob@7.2.3)
+      temp-suffix: 0.1.6
       unbzip2-stream: 1.4.3
-      zip-iterator: 1.2.1(glob@7.2.3)
+      zip-iterator: 1.2.7(glob@7.2.3)
     transitivePeerDependencies:
       - glob
 
@@ -1330,7 +1330,7 @@ snapshots:
 
   follow-redirects@1.15.9: {}
 
-  fs-access-compat@1.0.3: {}
+  fs-access-compat@1.1.4: {}
 
   fs-constants@1.0.0: {}
 
@@ -1515,14 +1515,14 @@ snapshots:
 
   mkdirp-classic@0.5.3: {}
 
-  mock-require-lazy@1.0.1:
+  mock-require-lazy@1.0.6:
     dependencies:
       get-caller-file: 2.0.5
       normalize-path: 3.0.0
 
   modern-async@1.1.5:
     dependencies:
-      core-js-pure: 3.39.0
+      core-js-pure: 3.40.0
       nanoassert: 2.0.0
 
   mount-dmg@1.0.1:
@@ -1640,7 +1640,7 @@ snapshots:
       inherits: 2.0.4
       pump: 3.0.2
 
-  queue-cb@1.4.4: {}
+  queue-cb@1.4.10: {}
 
   rc@1.2.8:
     dependencies:
@@ -1752,11 +1752,11 @@ snapshots:
 
   sprintf-js@1.0.3: {}
 
-  stack-base-iterator@1.1.5:
+  stack-base-iterator@1.1.11:
     dependencies:
       asap: 2.0.6
-      async-compat: 1.5.1
-      call-once-fn: 1.0.1
+      async-compat: 1.6.1
+      call-once-fn: 1.0.6
       fifo: 2.4.1
 
   stream-shift@1.0.3: {}
@@ -1808,16 +1808,16 @@ snapshots:
       pump: 3.0.2
       tar-stream: 2.2.0
 
-  tar-iterator@1.2.2(glob@7.2.3):
+  tar-iterator@1.2.9(glob@7.2.3):
     dependencies:
-      call-once-fn: 1.0.1
+      call-once-fn: 1.0.6
       end-of-stream: 1.4.4
-      extract-base-iterator: 1.2.1(glob@7.2.3)
-      fs-access-compat: 1.0.3
+      extract-base-iterator: 1.2.10(glob@7.2.3)
+      fs-access-compat: 1.1.4
       lifecycle: 1.0.4
       lodash.compact: 3.0.1
       mkdirp-classic: 0.5.3
-      queue-cb: 1.4.4
+      queue-cb: 1.4.10
       rimraf2: 2.8.2(glob@7.2.3)
       tar-stream-compat: 2.1.5
     transitivePeerDependencies:
@@ -1840,7 +1840,7 @@ snapshots:
       inherits: 2.0.4
       readable-stream: 3.6.2
 
-  temp-suffix@0.1.1:
+  temp-suffix@0.1.6:
     dependencies:
       imurmurhash: 0.1.4
 
@@ -1902,22 +1902,22 @@ snapshots:
 
   yaml@2.6.1: {}
 
-  zip-iterator@1.2.1(glob@7.2.3):
+  zip-iterator@1.2.7(glob@7.2.3):
     dependencies:
       buffer-v6-polyfill: 1.0.5
-      call-once-fn: 1.0.1
+      call-once-fn: 1.0.6
       end-of-stream: 1.4.4
-      extract-base-iterator: 1.2.1(glob@7.2.3)
-      fs-access-compat: 1.0.3
+      extract-base-iterator: 1.2.10(glob@7.2.3)
+      fs-access-compat: 1.1.4
       lifecycle: 1.0.4
       lodash.compact: 3.0.1
       mkdirp-classic: 0.5.3
       os-shim: 0.1.3
-      queue-cb: 1.4.4
+      queue-cb: 1.4.10
       readable-stream: 2.3.8
       rimraf2: 2.8.2(glob@7.2.3)
       short-hash: 1.0.0
-      temp-suffix: 0.1.1
+      temp-suffix: 0.1.6
       zip: 1.2.0
     transitivePeerDependencies:
       - glob

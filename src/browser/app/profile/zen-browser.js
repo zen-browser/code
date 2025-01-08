@@ -190,7 +190,7 @@ pref('zen.splitView.rearrange-hover-size', 24);
 pref('zen.startup.smooth-scroll-in-tabs', true);
 
 // Zen Workspaces
-pref('zen.workspaces.enabled', true, locked);
+pref('zen.workspaces.disabled_for_testing', false);
 pref('zen.workspaces.hide-deactivated-workspaces', false);
 pref('zen.workspaces.hide-default-container-indicator', true);
 pref('zen.workspaces.individual-pinned-tabs', true);

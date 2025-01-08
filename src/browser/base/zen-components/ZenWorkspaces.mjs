@@ -309,7 +309,7 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
 
   get workspaceEnabled() {
     if (typeof this._workspaceEnabled === 'undefined') {
-      this._workspaceEnabled = Services.prefs.getBoolPref('zen.workspaces.enabled', false) && this.shouldHaveWorkspaces;
+      this._workspaceEnabled = (!Services.prefs.getBoolPref('zen.workspaces.disabled_for_testing', false)) && this.shouldHaveWorkspaces;
       return this._workspaceEnabled;
     }
     return this._workspaceEnabled;
@@ -368,21 +368,7 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     return this._workspaceCache;
   }
 
-  async onWorkspacesEnabledChanged() {
-    if (this.workspaceEnabled) {
-      throw Error("Shoud've had reloaded the window");
-    } else {
-      this._workspaceCache = null;
-      document.getElementById('zen-workspaces-button')?.remove();
-      for (let tab of gBrowser.tabs) {
-        gBrowser.showTab(tab);
-      }
-    }
-  }
-
   async initializeWorkspaces() {
-    Services.prefs.addObserver('zen.workspaces.enabled', this.onWorkspacesEnabledChanged.bind(this));
-
     await this.initializeWorkspacesButton();
     if (this.workspaceEnabled) {
       this._initializeWorkspaceCreationIcons();

@@ -13,6 +13,8 @@ export MOZ_APP_DISPLAYNAME="${name}"
 export MOZ_BRANDING_DIRECTORY=${brandingDir}
 export MOZ_OFFICIAL_BRANDING_DIRECTORY=${brandingDir}
 
+ac_add_options --with-distribution-id=app.zen-browser
+
 # Uncomment if builds are too resource hungry
 # mk_add_options MOZ_MAKE_FLAGS="-j4"
 # ac_add_options --enable-linker=gold

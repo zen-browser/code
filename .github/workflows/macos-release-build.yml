@@ -134,6 +134,7 @@ jobs:
       - name: Package
         env:
           SURFER_COMPAT: ${{ matrix.arch }}
+          ZEN_GA_DISABLE_PGO: true
         run: |
           export SURFER_PLATFORM="darwin"
           export MACOS_APPLE_DEVELOPER_ID="${{ secrets.macOS_AppleDeveloperId }}"
@@ -158,6 +159,7 @@ jobs:
             --apple-id "${{ secrets.macOS_AppleAccountId }}" \
             --team-id "${{ secrets.macOS_AppleDeveloperIdTeamId }}" \
             --password "${{ secrets.macOS_AppleDeveloperIdPassword }}" \
+             --verbose \
             --wait
           xcrun stapler staple "zen.macos-${{ matrix.arch }}.dmg"
 

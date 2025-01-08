@@ -12,8 +12,12 @@ if test "$SURFER_COMPAT" = "x86_64"; then
     ac_add_options --enable-eme=widevine
 
     # Enable Profile Guided Optimization
-    export MOZ_PGO=1
-    ac_add_options MOZ_PGO=1
+    if test "$ZEN_GA_DISABLE_PGO"; then
+      export ZEN_DUMMY=1
+    else
+      export MOZ_PGO=1
+      ac_add_options MOZ_PGO=1
+    fi
 
     # Optimization flags for SURFER_COMPAT
     ac_add_options --enable-optimize="-O3 -w -ftree-vectorize -Qvec -mfpmath=sse -mprfchw -msse3 -mcx16 -msahf"

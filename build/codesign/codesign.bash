@@ -154,7 +154,7 @@ codesign -vvv --deep --strict "${BUNDLE}"
 cp Zen_Browser.provisionprofile "${BUNDLE}"/Contents/embedded.provisionprofile
 
 # Staple the ticket
-xcrun stapler staple "${BUNDLE}" --verbose || exit 0
+xcrun stapler staple --verbose "${BUNDLE}" || exit 0
 
 # Create a DMG
 if [ ! -z "${OUTPUT_DMG_FILE}" ]; then

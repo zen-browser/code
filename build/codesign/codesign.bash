@@ -151,7 +151,7 @@ codesign --force -o runtime --verbose --sign "$IDENTITY" --deep \
 codesign -vvv --deep --strict "${BUNDLE}"
 
 # move Zen_Browser.provisionprofile to the Contents directory
-# cp Zen_Browser.provisionprofile "${BUNDLE}"/Contents/embedded.provisionprofile
+cp Zen_Browser.provisionprofile "${BUNDLE}"/Contents/embedded.provisionprofile
 
 # Staple the ticket
 xcrun stapler staple --verbose "${BUNDLE}" || exit 0

@@ -138,10 +138,6 @@ codesign --force -o runtime --verbose --sign "$IDENTITY" --deep \
 find "${BUNDLE}"/Contents/Resources/gmp-clearkey -type f -exec \
 codesign --force -o runtime --verbose --sign "$IDENTITY" {} \;
 
-
-# move Zen_Browser.provisionprofile to the Contents directory
-cp Zen_Browser.provisionprofile "${BUNDLE}"/Contents/embedded.provisionprofile
-
 # Sign the main bundle
 codesign --force -o runtime --verbose --sign "$IDENTITY" \
 --entitlements ${BROWSER_ENTITLEMENTS_FILE} "${BUNDLE}"
@@ -153,6 +149,9 @@ codesign --force -o runtime --verbose --sign "$IDENTITY" --deep \
 
 # Validate
 codesign -vvv --deep --strict "${BUNDLE}"
+
+# move Zen_Browser.provisionprofile to the Contents directory
+cp Zen_Browser.provisionprofile "${BUNDLE}"/Contents/embedded.provisionprofile
 
 # Create a DMG
 if [ ! -z "${OUTPUT_DMG_FILE}" ]; then

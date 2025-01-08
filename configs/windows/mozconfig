@@ -42,6 +42,10 @@ elif test "$SURFER_COMPAT" = "aarch64"; then
 
   ac_add_options --enable-optimize="-O2 -mtune=cortex-a55 -march=armv8.2-a+simd"
 
+  # override LTO settings
+  export MOZ_LTO=cross,thin
+  ac_add_options --enable-lto=cross,thin
+
   export CFLAGS="-O2 -march=armv8.2-a+simd -mtune=cortex-a55"
   export CPPFLAGS="-O2 -march=armv8.2-a+simd -mtune=cortex-a55"
   export CXXFLAGS="-O2 -march=armv8.2-a+simd -mtune=cortex-a55"

@@ -25,6 +25,10 @@ elif test "$SURFER_COMPAT" = "aarch64"; then
 
     ac_add_options --enable-optimize="-O3"
 
+    # override LTO settings
+    export MOZ_LTO=cross,thin
+    ac_add_options --enable-lto=cross,thin
+
     export CFLAGS="$CFLAGS -O3"
     export CPPFLAGS="$CPPFLAGS -O3"
     export CXXFLAGS="$CXXFLAGS -O3"

@@ -16,7 +16,7 @@ jobs:
   build-linux:
     permissions:
       contents: write
-    runs-on: ${{ inputs.release-branch == 'release' && 'warp-ubuntu-latest-x64-16x' || 'ubuntu-latest' }}
+    runs-on: ${{ inputs.release-branch == 'release' && 'warp-ubuntu-latest-x64-16x' || 'self-hosted' }}
     strategy:
       fail-fast: false
       matrix:

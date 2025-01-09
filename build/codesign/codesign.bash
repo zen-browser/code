@@ -112,7 +112,7 @@ echo "-------------------------------------------------------------------------"
 set -x
 
 # move Zen_Browser.provisionprofile to the Contents directory
-#cp Zen_Browser.provisionprofile "${BUNDLE}"/Contents/embedded.provisionprofile
+cp Zen_Browser.provisionprofile "${BUNDLE}"/Contents/embedded.provisionprofile
 
 # Clear extended attributes which cause codesign to fail
 xattr -cr "${BUNDLE}"

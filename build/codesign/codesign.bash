@@ -111,6 +111,9 @@ echo "-------------------------------------------------------------------------"
 
 set -x
 
+# move Zen_Browser.provisionprofile to the Contents directory
+cp Zen_Browser.provisionprofile "${BUNDLE}"/Contents/embedded.provisionprofile
+
 # Clear extended attributes which cause codesign to fail
 xattr -cr "${BUNDLE}"
 
@@ -119,6 +122,7 @@ xattr -cr "${BUNDLE}"
 codesign --force -o runtime --verbose --sign "$IDENTITY" \
 "${BUNDLE}/Contents/Library/LaunchServices/org.mozilla.updater" \
 "${BUNDLE}/Contents/MacOS/XUL" \
+"${BUNDLE}"/Contents/embedded.provisionprofile \
 "${BUNDLE}/Contents/MacOS/pingsender" \
 "${BUNDLE}/Contents/MacOS/*.dylib" \
 
@@ -149,9 +153,6 @@ codesign --force -o runtime --verbose --sign "$IDENTITY" --deep \
 
 # Validate
 codesign -vvv --deep --strict "${BUNDLE}"
-
-# move Zen_Browser.provisionprofile to the Contents directory
-cp Zen_Browser.provisionprofile "${BUNDLE}"/Contents/embedded.provisionprofile
 
 # Staple the ticket
 xcrun stapler staple --verbose "${BUNDLE}" || exit 0

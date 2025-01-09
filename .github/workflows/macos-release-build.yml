@@ -159,7 +159,8 @@ jobs:
             --apple-id "${{ secrets.macOS_AppleAccountId }}" \
             --team-id "${{ secrets.macOS_AppleDeveloperIdTeamId }}" \
             --password "${{ secrets.macOS_AppleDeveloperIdPassword }}" \
-             --verbose \
+            --no-s3-acceleration \
+            --verbose \
             --wait
           xcrun stapler staple "zen.macos-${{ matrix.arch }}.dmg"
 

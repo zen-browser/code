@@ -6,6 +6,7 @@ ac_add_options --enable-eme=widevine
 export MOZ_MACBUNDLE_ID=${appId}
 export MOZ_MACBUNDLE_NAME="Zen Browser.app"
 
+
 if test "$SURFER_COMPAT" = "x86_64"; then
     ac_add_options --target=x86_64-apple-darwin
 

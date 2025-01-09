@@ -31,6 +31,8 @@
 #   $ open ~/Nightly.app
 #
 
+shopt -s globstar
+
 usage ()
 {
   echo  "Usage: $0 "

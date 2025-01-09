@@ -125,8 +125,11 @@ codesign --force -o runtime --verbose --sign "$IDENTITY" \
 "${BUNDLE}/Contents/Library/LaunchServices/org.mozilla.updater" \
 "${BUNDLE}/Contents/MacOS/XUL" \
 "${BUNDLE}"/Contents/embedded.provisionprofile \
-"${BUNDLE}/Contents/MacOS/pingsender" \
-"${BUNDLE}/Contents/MacOS/*.dylib" \
+"${BUNDLE}/Contents/MacOS/pingsender"
+
+# Sign every ${BUNDLE}/Contents/MacOS/*.dylib
+find "${BUNDLE}"/Contents/MacOS -type f -name "*.dylib" -exec \
+codesign --force -o runtime --verbose --sign "$IDENTITY" {} \;
 
 codesign --force -o runtime --verbose --sign "$IDENTITY" --deep \
 "${BUNDLE}"/Contents/MacOS/updater.app

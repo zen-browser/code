@@ -155,6 +155,14 @@ codesign --force -o runtime --verbose --sign "$IDENTITY" --deep \
 codesign -vvv --deep --strict "${BUNDLE}"
 
 # Staple the ticket
+xcrun notarytool submit "${BUNDLE}" \
+  --apple-id "${MACOS_APPLE_ACCOUNT_ID}" \
+  --team-id "${MACOS_APPLE_DEVELOPER_ID_TEAM_ID}" \
+  --password "${MACOS_APPLE_DEVELOPER_ID_PASSWORD}" \
+  --no-s3-acceleration \
+  --verbose \
+  --wait
+
 xcrun stapler staple --verbose "${BUNDLE}" || exit 0
 
 # Create a DMG

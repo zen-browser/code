@@ -135,6 +135,9 @@ jobs:
         env:
           SURFER_COMPAT: ${{ matrix.arch }}
           ZEN_GA_DISABLE_PGO: true
+          MACOS_APPLE_ACCOUNT_ID: ${{ secrets.macOS_AppleAccountId }}
+          MACOS_APPLE_DEVELOPER_ID_TEAM_ID: ${{ secrets.macOS_AppleDeveloperIdTeamId }}
+          MACOS_APPLE_DEVELOPER_ID_PASSWORD: ${{ secrets.macOS_AppleDeveloperIdPassword }}
         run: |
           export SURFER_PLATFORM="darwin"
           export MACOS_APPLE_DEVELOPER_ID="${{ secrets.macOS_AppleDeveloperId }}"

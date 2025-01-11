@@ -1292,6 +1292,19 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     // Refresh tab cache
     this.tabContainer._invalidateCachedTabs();
 
+    let animationDirection;
+    if (previousWorkspace && !onInit && !this._animatingChange) {
+      animationDirection = (
+        workspaces.workspaces.findIndex((w) => w.uuid === previousWorkspace.uuid) <
+        workspaces.workspaces.findIndex((w) => w.uuid === window.uuid)
+      ) ? 'right' : 'left';
+    }
+    if (animationDirection) {
+      // Animate tabs out of view before changing workspace, therefor we
+      // need to animate in the opposite direction
+      await this._animateTabs(animationDirection === 'left' ? 'right' : 'left', true);
+    }
+
     // First pass: Handle tab visibility and workspace ID assignment
     const visibleTabs = this._processTabVisibility(window.uuid, containerId, workspaces);
 
@@ -1301,21 +1314,46 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     // Update UI and state
     await this._updateWorkspaceState(window, onInit);
 
-    // Animate acordingly
-    if (previousWorkspace && !this._animatingChange) {
-      // we want to know if we are moving forward or backward in sense of animation
-      let isNextWorkspace =
-        onInit ||
-        workspaces.workspaces.findIndex((w) => w.uuid === previousWorkspace.uuid) <
-          workspaces.workspaces.findIndex((w) => w.uuid === window.uuid);
-      gBrowser.tabContainer.setAttribute('zen-workspace-animation', isNextWorkspace ? 'next' : 'previous');
-      this.tabContainer.removeAttribute('dont-animate-tabs');
-      this._animatingChange = true;
-      setTimeout(() => {
-        this._animatingChange = false;
-        gBrowser.tabContainer.removeAttribute('zen-workspace-animation');
-      }, 600);
+    if (animationDirection) {
+      await this._animateTabs(animationDirection);
     }
+  }
+
+  async _animateTabs(direction, out = false) {
+    const tabs = gBrowser.visibleTabs.filter((tab) => !tab.hasAttribute('zen-essential'));
+    return new Promise((resolve) => {
+      let count = 0;
+      const onAnimationEnd = () => {
+        count++;
+        if (count >= tabs.length) {
+          resolve();
+        }
+      };
+      this.tabContainer.removeAttribute('dont-animate-tabs');
+      if (out) {
+        for (let tab of tabs) {
+          tab.animate([
+            { transform: 'translateX(0)' },
+            { transform: `translateX(${direction === 'left' ? '-' : ''}100%)` },
+          ], {
+            duration: 150,
+            easing: 'ease',
+            fill: 'both',
+          }).onfinish = onAnimationEnd;
+        }
+        return;
+      }
+      for (let tab of tabs) {
+        tab.animate([
+          { transform: `translateX(${direction === 'left' ? '-' : ''}100%)` },
+          { transform: 'translateX(0)' },
+        ], {
+          duration: 150,
+          easing: 'ease',
+          fill: 'both',
+        }).onfinish = onAnimationEnd;
+      }
+    });
   }
 
   _processTabVisibility(workspaceUuid, containerId, workspaces) {

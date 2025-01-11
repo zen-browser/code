@@ -100,28 +100,6 @@
   }
 }
 
-@keyframes zen-slide-in {
-  from {
-    transform: translateX(-150%);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-
-@keyframes zen-slide-in-reverse {
-  from {
-    transform: translateX(150%);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-
 @keyframes zen-deck-fadeIn {
   0% {
     transform: scale(0.9);

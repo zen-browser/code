@@ -425,6 +425,7 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
       return null;
     }
 
+    // TODO: handle different actions depending on the user preference
     const shouldOpenNewTabIfLastUnpinnedTabIsClosed = this.shouldOpenNewTabIfLastUnpinnedTabIsClosed;
 
     let tabs = gBrowser.tabs.filter(

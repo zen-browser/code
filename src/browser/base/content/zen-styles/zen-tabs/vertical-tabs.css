@@ -242,23 +242,6 @@
   & .tabbrowser-tab {
     transition: scale 0.07s ease;
     #tabbrowser-tabs &:not([zen-essential='true']) {
-      #tabbrowser-tabs[zen-workspace-animation='previous'] & {
-        animation: zen-slide-in;
-      }
-
-      #tabbrowser-tabs[zen-workspace-animation='next'] & {
-        animation: zen-slide-in-reverse;
-      }
-
-      #tabbrowser-tabs[zen-workspace-animation] & {
-        opacity: 0;
-        transform: translateX(-100%);
-        animation-delay: 0.2s;
-        animation-fill-mode: forwards;
-        animation-duration: 0.2s;
-        animation-timing-function: ease;
-      }
-
       #tabbrowser-tabs[dont-animate-tabs] & {
         opacity: 0;
       }

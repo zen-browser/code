@@ -1,5 +1,5 @@
 diff --git a/browser/components/tabbrowser/content/tabbrowser.js b/browser/components/tabbrowser/content/tabbrowser.js
-index ce68c339f35416574b7bc7ebf8c93378f653242b..46d25e4381eaae71f3aec1025788684c593a60c7 100644
+index ce68c339f35416574b7bc7ebf8c93378f653242b..07e3f7fcdb3e219c523201929cf07b6878d4d394 100644
 --- a/browser/components/tabbrowser/content/tabbrowser.js
 +++ b/browser/components/tabbrowser/content/tabbrowser.js
 @@ -409,11 +409,39 @@
@@ -237,7 +237,7 @@ index ce68c339f35416574b7bc7ebf8c93378f653242b..46d25e4381eaae71f3aec1025788684c
        if (
          !this._beginRemoveTab(aTab, {
            closeWindowFastpath: true,
-@@ -4556,7 +4657,7 @@
+@@ -4556,14 +4657,14 @@
          !!this.tabsInCollapsedTabGroups.length;
        if (
          aTab.visible &&
@@ -246,6 +246,14 @@ index ce68c339f35416574b7bc7ebf8c93378f653242b..46d25e4381eaae71f3aec1025788684c
          !anyRemainingTabsInCollapsedTabGroups
        ) {
          closeWindow =
+           closeWindowWithLastTab != null
+             ? closeWindowWithLastTab
+             : !window.toolbar.visible ||
+-              Services.prefs.getBoolPref("browser.tabs.closeWindowWithLastTab");
++              Services.prefs.getBoolPref("browser.tabs.closeWindowWithLastTab") && !ZenWorkspaces._isClosingWindow;
+ 
+         if (closeWindow) {
+           // We've already called beforeunload on all the relevant tabs if we get here,
 @@ -5411,10 +5512,10 @@
        SessionStore.deleteCustomTabValue(aTab, "hiddenBy");
      }

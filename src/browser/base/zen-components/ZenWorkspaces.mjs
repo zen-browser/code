@@ -430,7 +430,7 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
 
     let tabs = gBrowser.tabs.filter(
       (t) =>
-        t.getAttribute('zen-workspace-id') === workspaceID &&
+        (t.getAttribute('zen-workspace-id') === workspaceID || t.hasAttribute("zen-essential")) &&
         (!shouldOpenNewTabIfLastUnpinnedTabIsClosed || !t.pinned || t.getAttribute('pending') !== 'true')
     );
 

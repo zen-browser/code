@@ -141,7 +141,7 @@
     margin-right: 0;
   }
 
-  &:not([zen-no-padding='true']) #zen-tabbox-wrapper {
+  &:not([zen-no-padding='true'], [zen-right-side='true']) #zen-tabbox-wrapper {
     margin-left: 1px;
   }
 }

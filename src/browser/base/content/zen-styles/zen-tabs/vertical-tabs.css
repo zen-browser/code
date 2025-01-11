@@ -947,6 +947,37 @@
   & .tab-icon-overlay {
     margin-inline-end: 0 !important;
   }
+
+  &[selected] .tab-background {
+    &::after {
+      content: "";
+      inset: -50%;
+      filter: blur(15px);
+      position: absolute;
+      background-size: 100% 100%;
+      background-clip: padding-box;
+      background-image: var(--zen-tab-icon);
+      z-index: -1;
+    }
+
+    background: transparent;
+    overflow: hidden;
+
+    &::before {
+      background: light-dark(rgba(255, 255, 255, 0.8), rgba(68, 64, 64, 0.80));
+      margin: 2px;
+      border-radius: calc(var(--tab-border-radius) - 2px);
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      content: "";
+      transition: background 0.2s ease-in-out;
+    }
+  }
+
+  &[selected]:hover .tab-background::before {
+    background: light-dark(rgba(255, 255, 255, 0.8), rgba(68, 64, 64, 0.85));
+  }
 }
 
 

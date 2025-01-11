@@ -391,7 +391,7 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
           activeWorkspace = workspaces.workspaces[0];
           this.activeWorkspace = activeWorkspace?.uuid;
         }
-        await this.changeWorkspace(activeWorkspace, true);
+        await this.changeWorkspace(activeWorkspace, { onInit: true });
       }
       try {
         if (activeWorkspace) {
@@ -1267,7 +1267,7 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     this._changeListeners.push(func);
   }
 
-  async changeWorkspace(window, onInit = false) {
+  async changeWorkspace(window, ...args) {
     if (!this.workspaceEnabled || this._inChangingWorkspace) {
       return;
     }
@@ -1275,14 +1275,14 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     await SessionStore.promiseInitialized;
     this._inChangingWorkspace = true;
     try {
-      await this._performWorkspaceChange(window, onInit);
+      await this._performWorkspaceChange(window, ...args);
     } finally {
       this._inChangingWorkspace = false;
       this.tabContainer.removeAttribute('dont-animate-tabs');
     }
   }
 
-  async _performWorkspaceChange(window, onInit) {
+  async _performWorkspaceChange(window, { onInit = false, explicitAnimationDirection = undefined } = {}) {
     const previousWorkspace = await this.getActiveWorkspace();
 
     this.activeWorkspace = window.uuid;
@@ -1294,10 +1294,12 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
 
     let animationDirection;
     if (previousWorkspace && !onInit && !this._animatingChange) {
-      animationDirection = (
-        workspaces.workspaces.findIndex((w) => w.uuid === previousWorkspace.uuid) <
+      animationDirection =
+        explicitAnimationDirection ??
+        (workspaces.workspaces.findIndex((w) => w.uuid === previousWorkspace.uuid) <
         workspaces.workspaces.findIndex((w) => w.uuid === window.uuid)
-      ) ? 'right' : 'left';
+          ? 'right'
+          : 'left');
     }
     if (animationDirection) {
       // Animate tabs out of view before changing workspace, therefor we
@@ -1332,10 +1334,7 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
       this.tabContainer.removeAttribute('dont-animate-tabs');
       if (out) {
         for (let tab of tabs) {
-          tab.animate([
-            { transform: 'translateX(0)' },
-            { transform: `translateX(${direction === 'left' ? '-' : ''}100%)` },
-          ], {
+          tab.animate([{ transform: 'translateX(0)' }, { transform: `translateX(${direction === 'left' ? '-' : ''}100%)` }], {
             duration: 150,
             easing: 'ease',
             fill: 'both',
@@ -1344,10 +1343,7 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
         return;
       }
       for (let tab of tabs) {
-        tab.animate([
-          { transform: `translateX(${direction === 'left' ? '-' : ''}100%)` },
-          { transform: 'translateX(0)' },
-        ], {
+        tab.animate([{ transform: `translateX(${direction === 'left' ? '-' : ''}100%)` }, { transform: 'translateX(0)' }], {
           duration: 150,
           easing: 'ease',
           fill: 'both',
@@ -1721,7 +1717,7 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     }
 
     let nextWorkspace = workspaces.workspaces[targetIndex];
-    await this.changeWorkspace(nextWorkspace);
+    await this.changeWorkspace(nextWorkspace, { explicitAnimationDirection: offset > 0 ? 'right' : 'left' });
   }
 
   _initializeWorkspaceTabContextMenus() {

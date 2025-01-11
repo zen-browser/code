@@ -1321,33 +1321,38 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     }
   }
 
+  _animateElement(element, direction, out = false, callback) {
+    if (out) {
+      element.animate([{ transform: 'translateX(0)' }, { transform: `translateX(${direction === 'left' ? '-' : ''}100%)` }], {
+        duration: 100,
+        easing: 'ease',
+        fill: 'both',
+      }).onfinish = callback;
+      return;
+    }
+    element.animate([{ transform: `translateX(${direction === 'left' ? '-' : ''}100%)` }, { transform: 'translateX(0)' }], {
+      duration: 100,
+      easing: 'ease',
+      fill: 'both',
+    }).onfinish = callback;
+  }
+
   async _animateTabs(direction, out = false) {
     const tabs = gBrowser.visibleTabs.filter((tab) => !tab.hasAttribute('zen-essential'));
     return new Promise((resolve) => {
       let count = 0;
       const onAnimationEnd = () => {
         count++;
-        if (count >= tabs.length) {
+        // +1 for the workspace indicator tab
+        if (count >= tabs.length + 1) {
           resolve();
         }
       };
       this.tabContainer.removeAttribute('dont-animate-tabs');
-      if (out) {
-        for (let tab of tabs) {
-          tab.animate([{ transform: 'translateX(0)' }, { transform: `translateX(${direction === 'left' ? '-' : ''}100%)` }], {
-            duration: 100,
-            easing: 'ease',
-            fill: 'both',
-          }).onfinish = onAnimationEnd;
-        }
-        return;
-      }
-      for (let tab of tabs) {
-        tab.animate([{ transform: `translateX(${direction === 'left' ? '-' : ''}100%)` }, { transform: 'translateX(0)' }], {
-          duration: 100,
-          easing: 'ease',
-          fill: 'both',
-        }).onfinish = onAnimationEnd;
+      // Also animate the workspace indicator label
+      this._animateElement(document.getElementById('zen-current-workspace-indicator'), direction, out, () => onAnimationEnd());
+      for (const tab of tabs) {
+        this._animateElement(tab, direction, out, () => onAnimationEnd());
       }
     });
   }

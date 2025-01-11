@@ -131,9 +131,10 @@
           *:is([panelopen='true'], [open='true'], #nav-bar:focus-within):not(tab):not(.zen-compact-mode-ignore)
         ) {
         &:not([animate='true']) {
+          --zen-compact-mode-func: cubic-bezier(.53,1.28,.43,1.03);
           transition:
-            left 0.25s ease,
-            right 0.25s ease;
+            left 0.35s var(--zen-compact-mode-func),
+            right 0.35s var(--zen-compact-mode-func);
           opacity: 1;
 
           left: -1px;

@@ -108,24 +108,30 @@
         this.browserWrapper.style.left = `${initialX}px`;
         this.browserWrapper.style.width = `${initialWidth}px`;
         this.browserWrapper.style.height = `${initialHeight}px`;
-        gZenUIManager.motion.animate(this.browserWrapper, {
-          top: [`${initialY}px`, '50%'],
-          left: [`${initialX}px`, '50%'],
-          width: [`${initialWidth}px`, '85%'],
-          height: [`${initialHeight}px`, '100%'],
-          opacity: [.8, 1],
-        }, {
-          duration: .5,
-          ease: "easeIn",
-          type: "spring",
-          bounce: 0.25
-        }).then(() => {
-          this.browserWrapper.removeAttribute('animate');
-          this.browserWrapper.setAttribute('animate-end', true);
-          this.browserWrapper.setAttribute('has-finished-animation', true);
-          this._animating = false;
-          this.animatingOpen = false;
-        });
+        gZenUIManager.motion
+          .animate(
+            this.browserWrapper,
+            {
+              top: [`${initialY}px`, '50%'],
+              left: [`${initialX}px`, '50%'],
+              width: [`${initialWidth}px`, '85%'],
+              height: [`${initialHeight}px`, '100%'],
+              opacity: [0.8, 1],
+            },
+            {
+              duration: 0.5,
+              ease: 'easeIn',
+              type: 'spring',
+              bounce: 0.25,
+            }
+          )
+          .then(() => {
+            this.browserWrapper.removeAttribute('animate');
+            this.browserWrapper.setAttribute('animate-end', true);
+            this.browserWrapper.setAttribute('has-finished-animation', true);
+            this._animating = false;
+            this.animatingOpen = false;
+          });
       });
     }
 

@@ -4,6 +4,8 @@ engine/
 **/*.xhtml
 **/*.inc.xhtml
 **/*.bundle.min.js
+**/*.min.js
+**/*.min.mjs
 
 **/*.svg
 

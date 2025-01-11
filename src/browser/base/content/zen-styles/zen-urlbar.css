@@ -360,6 +360,7 @@ button.popup-notification-dropmarker {
 }
 
 #urlbar[open] {
+  z-index: 2;
   --urlbar-margin-inline: 5px !important;
 
   & #identity-box {

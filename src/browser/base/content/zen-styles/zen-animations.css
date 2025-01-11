@@ -252,38 +252,6 @@
   }
 }
 
-@keyframes zen-glance-content-animation {
-  /* make the box appear from initial width/height and x/y coordinates */
-  0% {
-    opacity: 0;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) translateZ(0);
-    width: 0%;
-    height: 0%;
-  }
-
-  80% {
-    /* make the box grow to full width/height */
-    opacity: 1;
-    transform: translate(-50%, -50%) translateZ(0);
-    top: 50%;
-    left: 50%;
-    width: 87%;
-    height: 102%;
-  }
-
-  100% {
-    /* make the box shrink to final width/height and x/y coordinates */
-    transform: translate(-50%, -50%) translateZ(0);
-    opacity: 1;
-    width: 85%;
-    height: 100%;
-    top: 50%;
-    left: 50%;
-  }
-}
-
 @keyframes zen-glance-content-animation-out {
   0% {
     /* make the box shrink to final width/height and x/y coordinates */

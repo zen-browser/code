@@ -8,6 +8,10 @@ var gZenUIManager = {
     XPCOMUtils.defineLazyPreferenceGetter(this, 'sidebarHeightThrottle', 'zen.view.sidebar-height-throttle', 500);
     XPCOMUtils.defineLazyPreferenceGetter(this, 'contentElementSeparation', 'zen.theme.content-element-separation', 0);
 
+    ChromeUtils.defineLazyGetter(this, 'motion', () => {
+      return ChromeUtils.importESModule('chrome://browser/content/zen-vendor/motion.min.mjs', { global: "current" });
+    });
+
     new ResizeObserver(gZenCommonActions.throttle(this.updateTabsToolbar.bind(this), this.sidebarHeightThrottle)).observe(
       document.getElementById('tabbrowser-tabs')
     );

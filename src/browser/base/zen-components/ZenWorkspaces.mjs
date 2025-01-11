@@ -1335,7 +1335,7 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
       if (out) {
         for (let tab of tabs) {
           tab.animate([{ transform: 'translateX(0)' }, { transform: `translateX(${direction === 'left' ? '-' : ''}100%)` }], {
-            duration: 150,
+            duration: 100,
             easing: 'ease',
             fill: 'both',
           }).onfinish = onAnimationEnd;
@@ -1344,7 +1344,7 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
       }
       for (let tab of tabs) {
         tab.animate([{ transform: `translateX(${direction === 'left' ? '-' : ''}100%)` }, { transform: 'translateX(0)' }], {
-          duration: 150,
+          duration: 100,
           easing: 'ease',
           fill: 'both',
         }).onfinish = onAnimationEnd;

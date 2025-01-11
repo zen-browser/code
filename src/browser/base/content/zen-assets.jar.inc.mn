@@ -75,3 +75,4 @@
 
         # JS Vendor
         content/browser/zen-vendor/tsparticles.confetti.bundle.min.js (content/zen-vendor/tsparticles.confetti.bundle.min.js)
+        content/browser/zen-vendor/motion.min.mjs                      (content/zen-vendor/motion.min.mjs)

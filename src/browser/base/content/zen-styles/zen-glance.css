@@ -105,7 +105,6 @@
       height: 100%;
       opacity: 1;
       transition: opacity 0.2s ease-in-out;
-      transition-delay: 0.1s;
     }
 
     &[animate-full='true'] {
@@ -118,7 +117,8 @@
     }
 
     &[animate='true'] {
-      animation: zen-glance-content-animation 0.4s ease-in-out forwards;
+      position: absolute;
+      transform: translate(-50%, -50%);
 
       &:not([animate-end='true']) {
         pointer-events: none;

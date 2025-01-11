@@ -415,6 +415,10 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     indicator.addEventListener('click', th);
   }
 
+  shouldCloseWindow() {
+    return !window.toolbar.visible || Services.prefs.getBoolPref('browser.tabs.closeWindowWithLastTab');
+  }
+
   handleTabBeforeClose(tab) {
     if (!this.workspaceEnabled || this.__contextIsDelete) {
       return null;
@@ -425,16 +429,30 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
       return null;
     }
 
-    // TODO: handle different actions depending on the user preference
-    const shouldOpenNewTabIfLastUnpinnedTabIsClosed = this.shouldOpenNewTabIfLastUnpinnedTabIsClosed;
-
     let tabs = gBrowser.tabs.filter(
       (t) =>
-        (t.getAttribute('zen-workspace-id') === workspaceID || t.hasAttribute("zen-essential")) &&
-        (!shouldOpenNewTabIfLastUnpinnedTabIsClosed || !t.pinned || t.getAttribute('pending') !== 'true')
+        (t.getAttribute('zen-workspace-id') === workspaceID || t.hasAttribute('zen-essential')) &&
+        (!this.shouldOpenNewTabIfLastUnpinnedTabIsClosed || !t.pinned || t.getAttribute('pending') !== 'true')
     );
 
+    const shouldCloseWindow = this.shouldCloseWindow();
     if (tabs.length === 1 && tabs[0] === tab) {
+      if (shouldCloseWindow) {
+        // We've already called beforeunload on all the relevant tabs if we get here,
+        // so avoid calling it again:
+        window.skipNextCanClose = true;
+
+        // Closing the tab and replacing it with a blank one is notably slower
+        // than closing the window right away. If the caller opts in, take
+        // the fast path.
+        if (!gBrowser._removingTabs.size) {
+          // This call actually closes the window, unless the user
+          // cancels the operation.  We are finished here in both cases.
+          gBrowser._windowIsClosing = window.closeWindow(true, window.warnAboutClosingWindow, 'close-last-tab');
+          return null;
+        }
+        return null;
+      }
       let newTab = this._createNewTabForWorkspace({ uuid: workspaceID });
       return newTab;
     }

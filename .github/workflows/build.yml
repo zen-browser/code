@@ -65,6 +65,7 @@ jobs:
           token: ${{ secrets.DEPLOY_KEY }}
 
       - name: Check if correct branch
+        if: ${{ inputs.create_release }}
         run: |
           echo "Checking if we are on the correct branch"
           git branch

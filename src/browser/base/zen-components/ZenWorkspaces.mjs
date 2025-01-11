@@ -429,11 +429,8 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
       return null;
     }
 
-    let tabs = gBrowser.tabs.filter(
-      (t) =>
-        (t.getAttribute('zen-workspace-id') === workspaceID || t.hasAttribute('zen-essential')) &&
-        (!this.shouldOpenNewTabIfLastUnpinnedTabIsClosed || !t.pinned || t.getAttribute('pending') !== 'true')
-    );
+    let tabs = gBrowser.visibleTabs;
+    let tabsPinned = tabs.filter((t) => !this.shouldOpenNewTabIfLastUnpinnedTabIsClosed || !t.pinned);
 
     const shouldCloseWindow = this.shouldCloseWindow();
     if (tabs.length === 1 && tabs[0] === tab) {
@@ -448,13 +445,17 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
         if (!gBrowser._removingTabs.size) {
           // This call actually closes the window, unless the user
           // cancels the operation.  We are finished here in both cases.
-          gBrowser._windowIsClosing = window.closeWindow(true, window.warnAboutClosingWindow, 'close-last-tab');
-          return null;
+          this._isClosingWindow = true;
+          // Inside a setTimeout to avoid reentrancy issues.
+          setTimeout(() => {
+            document.getElementById('cmd_closeWindow').doCommand();
+          }, 100);
+          return this._createNewTabForWorkspace({ uuid: workspaceID });
         }
         return null;
       }
-      let newTab = this._createNewTabForWorkspace({ uuid: workspaceID });
-      return newTab;
+    } else if (tabsPinned.length === 1 && tabsPinned[0] === tab) {
+      return this._createNewTabForWorkspace({ uuid: workspaceID });
     }
 
     return null;
@@ -1543,7 +1544,7 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
   }
 
   async onLocationChange(browser) {
-    if (!this.workspaceEnabled || this._inChangingWorkspace) {
+    if (!this.workspaceEnabled || this._inChangingWorkspace || this._isClosingWindow) {
       return;
     }
 

@@ -17,8 +17,8 @@
     "update-ff": "python3 scripts/update_ff.py",
     "update-ff:raw": "surfer update",
     "update-newtab": "python3 scripts/update_newtab.py",
-    "pretty": "prettier . --write",
-    "lint": "npx prettier . --check",
+    "pretty": "prettier . --write && autopep8 -r scripts/ --in-place",
+    "lint": "npx prettier . --check && autopep8 --diff -r scripts/",
     "prepare": "husky"
   },
   "repository": {

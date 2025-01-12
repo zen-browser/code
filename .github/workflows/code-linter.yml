@@ -23,6 +23,9 @@ jobs:
         with:
           node-version-file: '.nvmrc'
 
+      - name: Setup autopep8
+        run: sudo apt install python3-autopep8
+
       - name: Setup pnpm
         run: npm install -g pnpm
 

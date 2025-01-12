@@ -1,11 +1,13 @@
 import os
 import json
 
+
 def update_ff():
   """Runs the npm command to update the 'ff' component."""
   result = os.system("npm run update-ff:raw")
   if result != 0:
     raise RuntimeError("Failed to update 'ff' component.")
+
 
 def get_version_from_file(filename):
   """Retrieves the version from the specified JSON file."""
@@ -15,6 +17,7 @@ def get_version_from_file(filename):
       return data["version"]["version"]
   except (FileNotFoundError, json.JSONDecodeError) as e:
     raise RuntimeError(f"Error reading version from {filename}: {e}")
+
 
 def update_readme(last_version, new_version):
   """Updates the README.md file to reflect the new version."""
@@ -28,6 +31,7 @@ def update_readme(last_version, new_version):
   except FileNotFoundError as e:
     raise RuntimeError(f"README.md file not found: {e}")
 
+
 def main():
   """Main function to update versions and README."""
   try:
@@ -35,9 +39,11 @@ def main():
     update_ff()
     new_version = get_version_from_file("surfer.json")
     update_readme(last_version, new_version)
-    print(f"Updated version from {last_version} to {new_version} in README.md.")
+    print(
+        f"Updated version from {last_version} to {new_version} in README.md.")
   except Exception as e:
     print(f"An error occurred: {e}")
+
 
 if __name__ == "__main__":
   main()

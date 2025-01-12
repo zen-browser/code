@@ -111,6 +111,11 @@
   z-index: 2;
 }
 
+#nav-bar {
+  /* For some reason, firefox adds a really small border to the top of the nav-bar */
+  border-top: none !important;
+}
+
 #zen-main-app-wrapper {
   background: transparent;
   overflow: hidden;

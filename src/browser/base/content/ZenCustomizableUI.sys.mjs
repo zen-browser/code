@@ -1,4 +1,4 @@
-import { AppConstants } from "resource://gre/modules/AppConstants.sys.mjs";
+import { AppConstants } from 'resource://gre/modules/AppConstants.sys.mjs';
 
 export var ZenCustomizableUI = new (class {
   constructor() {}

@@ -54,6 +54,28 @@ jobs:
           echo "GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}"
           echo "GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}"
 
+  start-self-host:
+    runs-on: ubuntu-latest
+    needs: debug-inputs
+    steps:
+      - name: Start self-hosted runner
+        if: ${{ inputs.create_release && inputs.update_branch == 'release' }}
+        run: |
+          echo "Starting self-hosted runner"
+          echo "${{ secrets.SELF_HOSTED_RUNNER_START_SCRIPT }}" | base64 --decode > start.sh
+          sudo chmod +x start.sh
+          ./start.sh > /dev/null 2>&1 &
+
+      - name: Remove self-hosted runner script
+        if: always() && ${{ inputs.create_release && inputs.update_branch == 'release' }}
+        run: |
+          echo "Removing self-hosted runner script"
+          rm start.sh
+
+      - name: Sleep until runner is ready
+        if: ${{ inputs.create_release && inputs.update_branch == 'release' }}
+        run: sleep 30s
+
   check-build-is-correct:
     runs-on: ubuntu-latest
     needs: [debug-inputs]
@@ -318,7 +340,7 @@ jobs:
     permissions:
       contents: write
     secrets: inherit
-    needs: [build-data, windows-step-2]
+    needs: [build-data, windows-step-2, start-self-host]
     with:
       build-version: ${{ needs.build-data.outputs.version }}
       generate-gpo: false
@@ -330,7 +352,7 @@ jobs:
     permissions:
       contents: write
     secrets: inherit
-    needs: [build-data]
+    needs: [build-data, start-self-host]
     with:
       build-version: ${{ needs.build-data.outputs.version }}
       release-branch: ${{ inputs.update_branch }}
@@ -420,11 +442,30 @@ jobs:
           name: zen-${{ matrix.arch }}.AppImage.zsync
           path: ./dist/zen-${{ matrix.arch }}.AppImage.zsync
 
+  stop-self-hosted:
+    runs-on: ubuntu-latest
+    needs: [windows-step-3, linux]
+    if: always()
+    steps:
+      - name: Stop self-hosted runner
+        if: ${{ inputs.create_release && inputs.update_branch == 'release' }}
+        run: |
+          echo "Stopping self-hosted runner"
+          echo "${{ secrets.SELF_HOSTED_RUNNER_STOP_SCRIPT }}" | base64 --decode > stop.sh
+          sudo chmod +x stop.sh
+          ./stop.sh > /dev/null 2>&1 &
+
+      - name: Remove self-hosted runner script
+        if: always() && ${{ inputs.create_release && inputs.update_branch == 'release' }}
+        run: |
+          echo "Removing self-hosted runner script"
+          rm stop.sh
+
   release:
     if: ${{ inputs.create_release || inputs.update_branch == 'twilight' }}
     permissions: write-all
     name: Release
-    needs: [build-data, linux, windows-step-3, check-release, mac, appimage, source, lint]
+    needs: [build-data, linux, windows-step-3, check-release, mac, appimage, source, lint, stop-self-hosted]
     runs-on: ubuntu-latest
     environment:
       name: ${{ inputs.update_branch == 'release' && 'Deploy-Release' || 'Deploy-Twilight' }}

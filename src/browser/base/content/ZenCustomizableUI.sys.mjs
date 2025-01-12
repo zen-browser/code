@@ -9,7 +9,7 @@ export var ZenCustomizableUI = new (class {
       'zen-sidebar-top-buttons',
       {
         type: this.TYPE_TOOLBAR,
-        defaultPlacements: ['zen-sidepanel-button'],
+        defaultPlacements: AppConstants.platform === 'macosx' ? [] : ['zen-sidepanel-button'],
         defaultCollapsed: null,
       },
       true

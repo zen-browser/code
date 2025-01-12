@@ -315,12 +315,7 @@ class KeyShortcut {
   static parseFromSaved(json) {
     let rv = [];
     for (let key of json) {
-      if (this.#shortcutIsValid(key)) {
-        rv.push(this.#parseFromJSON(key));
-      } else {
-        console.warn('[zen CKS]: Invalid shortcut', key['id']);
-        throw new Error('Invalid shortcut found');
-      }
+      rv.push(this.#parseFromJSON(key));
     }
 
     return rv;
@@ -336,12 +331,6 @@ class KeyShortcut {
       }
     }
     return 'other';
-  }
-
-  static #shortcutIsValid(shortcut) {
-    // See https://github.com/zen-browser/desktop/issues/4071, some *old* shortcuts dont have
-    //  any of `key`, `keycode`, `l10nId`. This fix also allows us to avoid any future issues
-    return !(shortcut['key'] == '' && shortcut['keycode'] == '' && shortcut['l10nId'] == null);
   }
 
   static #parseFromJSON(json) {
@@ -1071,7 +1060,7 @@ var gZenKeyboardShortcutsManager = {
       //}
 
       for (let key of this._currentShortcutList) {
-        if (key.isEmpty() || key.isInternal() || key.isInvalid()) {
+        if (key.isInternal()) {
           continue;
         }
         let child = key.toXHTMLElement(browser);

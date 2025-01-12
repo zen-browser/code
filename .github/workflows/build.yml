@@ -184,29 +184,9 @@ jobs:
           commit_user_email: zen-browser-auto@users.noreply.github.com
 
   lint:
-    runs-on: ubuntu-latest
+    uses: ./.github/workflows/code-linter.yml
     needs: [build-data]
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          submodules: recursive
-          token: ${{ secrets.DEPLOY_KEY }}
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: '.nvmrc'
-
-      - name: Setup pnpm
-        run: npm install -g pnpm
-
-      - name: Install dependencies
-        run: |
-          pnpm install
-
-      - name: Lint
-        run: pnpm lint
+    name: Lint
 
   check-release:
     runs-on: ubuntu-latest

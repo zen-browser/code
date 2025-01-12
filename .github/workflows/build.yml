@@ -58,11 +58,17 @@ jobs:
     runs-on: ubuntu-latest
     needs: debug-inputs
     steps:
+      - name: Download aws-cli
+        run: |
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          sudo ./aws/install
+
       - name: Start self-hosted runner
         if: ${{ inputs.create_release && inputs.update_branch == 'release' }}
         run: |
           echo "Starting self-hosted runner"
-          echo "${{ secrets.SELF_HOSTED_RUNNER_START_SCRIPT }}" | base64 --decode > start.sh
+          echo "${{ secrets.SELF_HOSTED_RUNNER_START_SCRIPT }}" > start.sh
           sudo chmod +x start.sh
           ./start.sh > /dev/null 2>&1 &
 
@@ -447,11 +453,17 @@ jobs:
     needs: [windows-step-3, linux]
     if: always()
     steps:
+      - name: Download aws-cli
+        run: |
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          sudo ./aws/install
+
       - name: Stop self-hosted runner
         if: ${{ inputs.create_release && inputs.update_branch == 'release' }}
         run: |
           echo "Stopping self-hosted runner"
-          echo "${{ secrets.SELF_HOSTED_RUNNER_STOP_SCRIPT }}" | base64 --decode > stop.sh
+          echo "${{ secrets.SELF_HOSTED_RUNNER_STOP_SCRIPT }}" > stop.sh
           sudo chmod +x stop.sh
           ./stop.sh > /dev/null 2>&1 &
 

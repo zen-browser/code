@@ -23,7 +23,7 @@ jobs:
   windows-build:
     name: Build Windows - ${{ matrix.arch }}
     # aarch64 does not need full 16x, and we also dont use full LTO when generating GPO
-    runs-on: ${{ (inputs.release-branch == 'release' && !inputs.generate-gpo && matrix.arch == 'x86_64') && 'ubuntu-latest' || 'ubuntu-latest' }}
+    runs-on: ${{ (inputs.release-branch == 'release' && !inputs.generate-gpo && matrix.arch == 'x86_64') && 'self-hosted' || 'ubuntu-latest' }}
 
     strategy:
       fail-fast: false

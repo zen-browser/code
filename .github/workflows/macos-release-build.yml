@@ -15,7 +15,7 @@ on:
 jobs:
   mac-build:
     name: Build macOS - ${{ matrix.arch }}
-    runs-on: macos-14
+    runs-on: ${{ inputs.release-branch == 'release' && 'macos-14' || 'macos-14' }}
 
     strategy:
       fail-fast: false
@@ -115,18 +115,10 @@ jobs:
       - name: Build Zen
         env:
           SURFER_COMPAT: ${{ matrix.arch }}
+          ZEN_RELEASE_BRANCH: ${{ inputs.release-branch }}
         run: |
           export SURFER_PLATFORM="darwin"
-          if test "${{ matrix.arch }}" = "x86_64"; then
-            export ZEN_DISABLE_LTO=1
-          fi
-          sh .github/workflows/src/release-build.sh
-
-      - name: Rebuild Zen if failed
-        if: failure()
-        run: |
-          export SURFER_PLATFORM="darwin"
-          sh .github/workflows/src/release-build.sh
+          bash .github/workflows/src/release-build.sh
 
       - name: Import APPLE DEVELOPER ID CERTIFICATE for .app
         uses: Apple-Actions/import-codesign-certs@v3
@@ -134,9 +126,18 @@ jobs:
           p12-file-base64: ${{ secrets.macOS_CERTIFICATES_P12_For_App_BASE64 }}
           p12-password: ${{ secrets.macOS_CERTIFICATES_P12_PASSWORD }}
 
+      - name: Import provisioning profile for .app
+        run: |
+          echo "${{ secrets.macOS_PROVISIONING_PROFILE }}" | base64 --decode > ./engine/Zen_Browser.provisionprofile
+          ls -la
+
       - name: Package
         env:
           SURFER_COMPAT: ${{ matrix.arch }}
+          ZEN_GA_DISABLE_PGO: true
+          MACOS_APPLE_ACCOUNT_ID: ${{ secrets.macOS_AppleAccountId }}
+          MACOS_APPLE_DEVELOPER_ID_TEAM_ID: ${{ secrets.macOS_AppleDeveloperIdTeamId }}
+          MACOS_APPLE_DEVELOPER_ID_PASSWORD: ${{ secrets.macOS_AppleDeveloperIdPassword }}
         run: |
           export SURFER_PLATFORM="darwin"
           export MACOS_APPLE_DEVELOPER_ID="${{ secrets.macOS_AppleDeveloperId }}"
@@ -146,6 +147,10 @@ jobs:
       - name: Rename artifacts
         run: |
           mv ./dist/output.mar macos-${{ matrix.arch }}.mar
+
+      - name: Remove sensitive information
+        run: |
+          rm -f ./engine/Zen_Browser.provisionprofile
 
       - name: Sign .dmg
         run: |
@@ -157,6 +162,8 @@ jobs:
             --apple-id "${{ secrets.macOS_AppleAccountId }}" \
             --team-id "${{ secrets.macOS_AppleDeveloperIdTeamId }}" \
             --password "${{ secrets.macOS_AppleDeveloperIdPassword }}" \
+            --no-s3-acceleration \
+            --verbose \
             --wait
           xcrun stapler staple "zen.macos-${{ matrix.arch }}.dmg"
 

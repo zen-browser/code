@@ -63,9 +63,9 @@ jobs:
         with:
           submodules: recursive
           token: ${{ secrets.DEPLOY_KEY }}
-          fetch-depth: 0
 
       - name: Check if correct branch
+        if: ${{ inputs.create_release }}
         run: |
           echo "Checking if we are on the correct branch"
           git branch
@@ -74,6 +74,8 @@ jobs:
           branch="${{ inputs.update_branch }}"
           if [[ $branch == "twilight" ]]; then
             branch="dev"
+          elif [[ $branch == "release" ]]; then
+            branch="stable"
           fi
           if [[ $(git branch --show-current) != $branch ]]; then
             echo ">>> Branch mismatch"
@@ -275,15 +277,15 @@ jobs:
       - name: Compress
         run: |
           cd engine
-          tar --use-compress-program=zstd -hcf ../zen.source.tar.gz *
+          tar --use-compress-program=zstd -hcf ../zen.source.tar.zst *
           cd ..
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           retention-days: 5
-          name: zen.source.tar.gz
-          path: ./zen.source.tar.gz
+          name: zen.source.tar.zst
+          path: ./zen.source.tar.zst
 
   windows-step-1:
     name: Windows build step 1 (PGO build)
@@ -385,7 +387,7 @@ jobs:
 
           if [ "${{ inputs.update_branch }}" = "twilight" ]; then
             sed -i -e 's/Name=Zen Browser/Name=Zen Twilight/g' AppDir/zen.desktop
-            sed -i -e 's/StartupWMClass=zen-release/StartupWMClass=zen-twilight/g' AppDir/zen.desktop
+            sed -i -e 's/StartupWMClass=zen/StartupWMClass=zen-twilight/g' AppDir/zen.desktop
           fi
 
           APPDIR=AppDir
@@ -489,7 +491,7 @@ jobs:
         uses: marvinpinto/action-automatic-releases@master
         with:
           files: |
-            zen.source.tar.gz
+            zen.source.tar.zst
             zen.linux-x86_64.tar.bz2
             zen.linux-aarch64.tar.bz2
             zen-x86_64.AppImage
@@ -512,7 +514,7 @@ jobs:
           title: 'Twilight build - ${{ needs.build-data.outputs.version }} (${{ needs.build-data.outputs.build_date }} at ${{ needs.build-data.outputs.build_time }})'
           draft: false
           prerelease: true
-          repo_token: ${{ github.token }}
+          repo_token: ${{ secrets.DEPLOY_KEY }}
         env:
           GITHUB_REPOSITORY: ${{ github.repository }}
 
@@ -525,7 +527,7 @@ jobs:
           prerelease: false
           title: 'Release build - ${{ needs.build-data.outputs.version }} (${{ needs.build-data.outputs.build_date }})'
           files: |
-            zen.source.tar.gz
+            zen.source.tar.zst
             zen.linux-x86_64.tar.bz2
             zen.linux-aarch64.tar.bz2
             zen-x86_64.AppImage

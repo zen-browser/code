@@ -9,7 +9,18 @@
   }
 
   60% {
-    transform: scale3d(1.01, 1.01, 1.01);
+    transform: scale3d(1.02, 1.02, 1.02);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale3d(1, 1, 1);
+  }
+}
+
+@keyframes zen-jello-animation-alt {
+  0% {
+    transform: scale3d(0.8, 0.8, 0.8);
   }
 
   to {
@@ -86,28 +97,6 @@
   100% {
     -moz-window-transform: none;
     transform: none;
-  }
-}
-
-@keyframes zen-slide-in {
-  from {
-    transform: translateX(-150%);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-
-@keyframes zen-slide-in-reverse {
-  from {
-    transform: translateX(150%);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
   }
 }
 
@@ -260,38 +249,6 @@
 
   to {
     opacity: 0;
-  }
-}
-
-@keyframes zen-glance-content-animation {
-  /* make the box appear from initial width/height and x/y coordinates */
-  0% {
-    opacity: 0;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) translateZ(0);
-    width: 0%;
-    height: 0%;
-  }
-
-  80% {
-    /* make the box grow to full width/height */
-    opacity: 1;
-    transform: translate(-50%, -50%) translateZ(0);
-    top: 50%;
-    left: 50%;
-    width: 87%;
-    height: 102%;
-  }
-
-  100% {
-    /* make the box shrink to final width/height and x/y coordinates */
-    transform: translate(-50%, -50%) translateZ(0);
-    opacity: 1;
-    width: 85%;
-    height: 100%;
-    top: 50%;
-    left: 50%;
   }
 }
 

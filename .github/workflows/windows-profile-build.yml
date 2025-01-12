@@ -25,7 +25,7 @@ jobs:
       matrix:
         arch: [x86_64, aarch64]
 
-    runs-on: windows-latest
+    runs-on: ${{ inputs.release-branch == 'release' && 'windows-latest' || 'windows-latest' }}
 
     steps:
       - name: Checkout repository
@@ -38,14 +38,17 @@ jobs:
 
       - name: Setup Git
         run: |
-          git config --global user.email "mr-cheff@users.noreply.github.com"
-          git config --global user.name "mr-cheff"
+          git config --global user.email "mauro-balades@users.noreply.github.com"
+          git config --global user.name "mauro-balades"
 
       - name: Setup pnpm
         run: npm install -g pnpm
 
       - name: Install Surfer
         run: npm i -g @zen-browser/surfer
+
+      - name: Load Surfer CI setup
+        run: pnpm surfer ci --brand ${{ inputs.release-branch }} --display-version ${{ inputs.build-version }}
 
       - name: Download artifact
         if: ${{ matrix.arch == 'x86_64' }}

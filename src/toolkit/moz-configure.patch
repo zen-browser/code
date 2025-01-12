@@ -1,5 +1,5 @@
 diff --git a/toolkit/moz.configure b/toolkit/moz.configure
-index 9c3bb513537f1efc44788fc3efb9f7561eca9c0e..dcada8742c5ea147d2378357c86c9a8b7dc639db 100644
+index 9c3bb513537f1efc44788fc3efb9f7561eca9c0e..b1dd5bd9c28c95c69486b9803c76279af01459bd 100644
 --- a/toolkit/moz.configure
 +++ b/toolkit/moz.configure
 @@ -81,10 +81,13 @@ option(
@@ -39,3 +39,14 @@ index 9c3bb513537f1efc44788fc3efb9f7561eca9c0e..dcada8742c5ea147d2378357c86c9a8b
  
  
  option(
+@@ -3535,8 +3538,8 @@ with only_when(compile_environment):
+     @depends(target)
+     def default_user_appdir(target):
+         if target.kernel in ("WINNT", "Darwin"):
+-            return "Mozilla"
+-        return ".mozilla"
++            return "Zen"
++        return ".zen"
+ 
+     option(
+         "--with-user-appdir",

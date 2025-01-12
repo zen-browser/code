@@ -1,5 +1,5 @@
 diff --git a/toolkit/themes/shared/in-content/common-shared.css b/toolkit/themes/shared/in-content/common-shared.css
-index 646a11b699a0b34204cd766836678bfc17e8548e..3fc584bc42d7c3acbd7cb2d86d7fa013c1f2406d 100644
+index 38e13e0436ee3a2d722f2fc6e11ecafd122fb4eb..c0f985f7e0e74f7050ef91fb9d460d4880d389e4 100644
 --- a/toolkit/themes/shared/in-content/common-shared.css
 +++ b/toolkit/themes/shared/in-content/common-shared.css
 @@ -5,6 +5,8 @@
@@ -11,7 +11,7 @@ index 646a11b699a0b34204cd766836678bfc17e8548e..3fc584bc42d7c3acbd7cb2d86d7fa013
  @namespace html "http://www.w3.org/1999/xhtml";
  @namespace xul "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
  
-@@ -54,7 +56,7 @@
+@@ -53,7 +55,7 @@
    --in-content-table-border-color: var(--in-content-box-border-color);
    --in-content-table-header-background: var(--in-content-primary-button-background);
    --in-content-table-header-color: var(--in-content-primary-button-text-color);
@@ -20,7 +20,7 @@ index 646a11b699a0b34204cd766836678bfc17e8548e..3fc584bc42d7c3acbd7cb2d86d7fa013
  
    --dialog-warning-text-color: var(--red-60);
  
-@@ -740,7 +742,6 @@ html|*#categories {
+@@ -737,7 +739,6 @@ html|*#categories {
    color: inherit;
    margin-inline-start: 34px;
    padding-inline: 10px;
@@ -28,7 +28,15 @@ index 646a11b699a0b34204cd766836678bfc17e8548e..3fc584bc42d7c3acbd7cb2d86d7fa013
  }
  
  html|*#categories > html|*.category {
-@@ -777,7 +778,8 @@ html|*#categories > html|*.category:dir(rtl) {
+@@ -767,14 +768,15 @@ html|*#categories > html|*.category:dir(rtl) {
+ 
+ #categories > .category:hover:active {
+   background-color: var(--in-content-button-background-active);
+-  color: var(--in-content-button-text-color-active);
++  color: var(--in-content-button-text-color-active) !important;
+   border-color: var(--in-content-button-border-color-active);
+ }
+ 
  @media not (forced-colors) {
    #categories > .category[selected],
    #categories > .category.selected {
@@ -38,7 +46,7 @@ index 646a11b699a0b34204cd766836678bfc17e8548e..3fc584bc42d7c3acbd7cb2d86d7fa013
    }
  
    #categories > .category[selected]:not(:hover) {
-@@ -839,7 +841,7 @@ html|*#categories[last-input-type="mouse"] > html|button.category:focus-visible
+@@ -836,7 +838,7 @@ html|*#categories[last-input-type="mouse"] > html|button.category:focus-visible
    fill-opacity: 1;
  }
  
@@ -47,7 +55,7 @@ index 646a11b699a0b34204cd766836678bfc17e8548e..3fc584bc42d7c3acbd7cb2d86d7fa013
    :root {
      --in-content-sidebar-width: 118px;
    }
-@@ -1219,7 +1221,7 @@ xul|*.sidebar-footer-link {
+@@ -1216,7 +1218,7 @@ xul|*.sidebar-footer-link {
    user-select: none;
  }
  

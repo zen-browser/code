@@ -37,10 +37,10 @@
           false
         );
 
-        ZenWorkspaces.init();
-        gZenUIManager.init();
-        gZenVerticalTabsManager.init();
         gZenCompactModeManager.init();
+        ZenWorkspaces.init();
+        gZenVerticalTabsManager.init();
+        gZenUIManager.init();
 
         document.l10n.setAttributes(document.getElementById('tabs-newtab-button'), 'tabs-toolbar-new-tab');
       } catch (e) {

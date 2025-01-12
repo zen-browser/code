@@ -1117,6 +1117,15 @@ menuitem[id='placesContext_new:separator'] {
 menupopup > menuitem:is([type='checkbox']) .menu-iconic-left {
   --menu-image: none !important;
   margin-inline-start: 4px;
-  margin-inline-end: 0;
-  padding-inline-end: 0;
+
+  @media not (-moz-platform: windows) {
+    margin-inline-end: 0;
+    padding-inline-end: 0;
+  }
+}
+
+@media (-moz-platform: windows) {
+  menupopup > menuitem[checked='true'] {
+    padding-inline-start: 6px;
+  }
 }

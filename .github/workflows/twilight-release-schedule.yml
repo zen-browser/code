@@ -4,6 +4,12 @@ on:
   schedule:
     - cron: '0 23 * * *'
   workflow_dispatch:
+    inputs:
+      create_release:
+        description: 'Whether to do a release'
+        required: false
+        type: boolean
+        default: true
 
 jobs:
   twilight-release-schedule:
@@ -12,7 +18,7 @@ jobs:
     secrets: inherit
     uses: ./.github/workflows/build.yml
     with:
-      create_release: true
+      create_release: ${{ github.event_name != 'workflow_dispatch' && true || inputs.create_release }}
       update_branch: twilight
       update_version: false
 

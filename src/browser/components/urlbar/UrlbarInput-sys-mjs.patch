@@ -1,5 +1,5 @@
 diff --git a/browser/components/urlbar/UrlbarInput.sys.mjs b/browser/components/urlbar/UrlbarInput.sys.mjs
-index 3ab07e5864b3bb200608e7f619645f92ade129fe..12fe08c48d5ca9f00253e0aa6ebbc867ff471c83 100644
+index 3ab07e5864b3bb200608e7f619645f92ade129fe..31085d82271b0259cd69ec9691ea5f33fe29e19e 100644
 --- a/browser/components/urlbar/UrlbarInput.sys.mjs
 +++ b/browser/components/urlbar/UrlbarInput.sys.mjs
 @@ -67,6 +67,13 @@ XPCOMUtils.defineLazyPreferenceGetter(
@@ -16,21 +16,19 @@ index 3ab07e5864b3bb200608e7f619645f92ade129fe..12fe08c48d5ca9f00253e0aa6ebbc867
  const DEFAULT_FORM_HISTORY_NAME = "searchbar-history";
  const SEARCH_BUTTON_CLASS = "urlbar-search-button";
  
-@@ -2152,6 +2159,13 @@ export class UrlbarInput {
+@@ -2152,6 +2159,11 @@ export class UrlbarInput {
  
      this.setAttribute("breakout-extend", "true");
  
 +    if (lazy.ZEN_URLBAR_BEHAVIOR == 'float' || (lazy.ZEN_URLBAR_BEHAVIOR == 'floating-on-type' && !this.focusedViaMousedown)) {
 +      this.setAttribute("zen-floating-urlbar", "true");
-+      this.classList.add("zen-floating-urlbar");
 +    } else {
 +      this.removeAttribute("zen-floating-urlbar");
-+      this.classList.remove("zen-floating-urlbar");
 +    }
      // Enable the animation only after the first extend call to ensure it
      // doesn't run when opening a new window.
      if (!this.hasAttribute("breakout-extend-animate")) {
-@@ -3875,6 +3889,11 @@ export class UrlbarInput {
+@@ -3875,6 +3887,11 @@ export class UrlbarInput {
    }
  
    _on_click(event) {
@@ -42,7 +40,7 @@ index 3ab07e5864b3bb200608e7f619645f92ade129fe..12fe08c48d5ca9f00253e0aa6ebbc867
      if (
        event.target == this.inputField ||
        event.target == this._inputContainer ||
-@@ -3986,9 +4005,12 @@ export class UrlbarInput {
+@@ -3986,9 +4003,12 @@ export class UrlbarInput {
    }
  
    _on_mousedown(event) {
@@ -56,7 +54,7 @@ index 3ab07e5864b3bb200608e7f619645f92ade129fe..12fe08c48d5ca9f00253e0aa6ebbc867
  
          if (
            event.target != this.inputField &&
-@@ -3998,8 +4020,8 @@ export class UrlbarInput {
+@@ -3998,8 +4018,8 @@ export class UrlbarInput {
            break;
          }
  

@@ -167,7 +167,7 @@ var gZenMarketplaceManager = {
     const browser = ZenMultiWindowFeature.currentBrowser;
     const themeList = document.createElement('div');
 
-    for (const theme of Object.values(themes)) {
+    for (const theme of Object.values(themes).sort((a, b) => a.name.localeCompare(b.name))) {
       const sanitizedName = `theme-${theme.name?.replaceAll(/\s/g, '-')?.replaceAll(/[^A-z_-]+/g, '')}`;
       const isThemeEnabled = theme.enabled === undefined || theme.enabled;
 
@@ -672,28 +672,14 @@ var gZenWorkspacesSettings = {
         }
       },
     };
-    Services.prefs.addObserver('zen.workspaces.enabled', this);
     Services.prefs.addObserver('zen.tab-unloader.enabled', tabsUnloaderPrefListener);
     Services.prefs.addObserver('zen.glance.enabled', tabsUnloaderPrefListener); // We can use the same listener for both prefs
     Services.prefs.addObserver('zen.glance.activation-method', tabsUnloaderPrefListener);
     window.addEventListener('unload', () => {
-      Services.prefs.removeObserver('zen.workspaces.enabled', this);
       Services.prefs.removeObserver('zen.tab-unloader.enabled', tabsUnloaderPrefListener);
       Services.prefs.removeObserver('zen.glance.enabled', tabsUnloaderPrefListener);
       Services.prefs.removeObserver('zen.glance.activation-method', tabsUnloaderPrefListener);
     });
-  },
-
-  async observe(subject, topic, data) {
-    await this.onWorkspaceChange(Services.prefs.getBoolPref('zen.workspaces.enabled'));
-  },
-
-  async onWorkspaceChange(checked) {
-    let buttonIndex = await confirmRestartPrompt(true, 1, true, false);
-    if (buttonIndex == CONFIRM_RESTART_PROMPT_RESTART_NOW) {
-      Services.startup.quit(Ci.nsIAppStartup.eAttemptQuit | Ci.nsIAppStartup.eRestart);
-      return;
-    }
   },
 };
 
@@ -860,7 +846,7 @@ var gZenCKSSettings = {
           if (!target.nextElementSibling) {
             target.after(
               window.MozXULElement.parseXULToFragment(`
-              <label class="${ZEN_CKS_CLASS_BASE}-unsafed" data-l10n-id="zen-key-unsafed"></label>
+              <label class="${ZEN_CKS_CLASS_BASE}-unsafed" data-l10n-id="zen-key-unsaved"></label>
             `)
             );
             target.value = 'Not set';
@@ -1004,11 +990,6 @@ Preferences.addAll([
   },
   {
     id: 'zen.view.compact.toolbar-flash-popup',
-    type: 'bool',
-    default: true,
-  },
-  {
-    id: 'zen.workspaces.enabled',
     type: 'bool',
     default: true,
   },

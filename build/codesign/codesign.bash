@@ -111,6 +111,9 @@ echo "-------------------------------------------------------------------------"
 
 set -x
 
+# move Zen_Browser.provisionprofile to the Contents directory
+#cp Zen_Browser.provisionprofile "${BUNDLE}"/Contents/embedded.provisionprofile
+
 # Clear extended attributes which cause codesign to fail
 xattr -cr "${BUNDLE}"
 
@@ -119,8 +122,15 @@ xattr -cr "${BUNDLE}"
 codesign --force -o runtime --verbose --sign "$IDENTITY" \
 "${BUNDLE}/Contents/Library/LaunchServices/org.mozilla.updater" \
 "${BUNDLE}/Contents/MacOS/XUL" \
-"${BUNDLE}/Contents/MacOS/pingsender" \
-"${BUNDLE}/Contents/MacOS/*.dylib" \
+"${BUNDLE}"/Contents/embedded.provisionprofile \
+"${BUNDLE}/Contents/MacOS/pingsender"
+
+# Sign every ${BUNDLE}/Contents/MacOS/*.dylib
+find "${BUNDLE}"/Contents/MacOS -type f -name "*.dylib" -exec \
+codesign --force --verbose --sign "$IDENTITY" {} \;
+
+find "${BUNDLE}"/Contents/MacOS -type f -name "*.dylib" -exec \
+codesign -vvv --strict --deep --verbose {} \;
 
 codesign --force -o runtime --verbose --sign "$IDENTITY" --deep \
 "${BUNDLE}"/Contents/MacOS/updater.app

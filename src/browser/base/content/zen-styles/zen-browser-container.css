@@ -14,16 +14,15 @@
       transform 0.1s ease-in-out,
       opacity 0.1s ease-in-out;
 
-    box-shadow: 0 0 1px 1px light-dark(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.5));
     overflow: hidden;
-    margin: 1px;
 
     :root[zen-right-side='true'] & {
       margin-left: var(--zen-element-separation);
     }
 
-    :root[zen-no-padding='true'] &:not([zen-split='true']) {
-      border-radius: 0 !important;
+    :root:not([zen-no-padding='true']) & {
+      margin: 1px;
+      box-shadow: 0 0 1px 1px light-dark(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.5));
     }
   }
 

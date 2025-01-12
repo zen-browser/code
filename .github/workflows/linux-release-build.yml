@@ -16,7 +16,8 @@ jobs:
   build-linux:
     permissions:
       contents: write
-    runs-on: ubuntu-latest
+    # aarch64 does not need full 16x
+    runs-on: ${{ (inputs.release-branch == 'release' && matrix.arch == 'x86_64') && 'ubuntu-latest' || 'ubuntu-latest' }}
     strategy:
       fail-fast: false
       matrix:
@@ -125,22 +126,16 @@ jobs:
       - name: Build
         env:
           SURFER_COMPAT: ${{ matrix.arch }}
+          ZEN_RELEASE_BRANCH: ${{ inputs.release-branch }}
         continue-on-error: true
         run: |
           export SURFER_PLATFORM="linux"
-          sh .github/workflows/src/release-build.sh
-
-      - name: Build again if it failed
-        if: failure()
-        env:
-          SURFER_COMPAT: ${{ matrix.arch }}
-        run: |
-          export SURFER_PLATFORM="linux"
-          sh .github/workflows/src/release-build.sh
+          bash .github/workflows/src/release-build.sh
 
       - name: Package
         env:
           SURFER_COMPAT: ${{ matrix.arch }}
+          ZEN_GA_DISABLE_PGO: true
         run: |
           export SURFER_PLATFORM="linux"
           export ZEN_RELEASE=1

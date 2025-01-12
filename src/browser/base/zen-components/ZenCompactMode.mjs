@@ -7,6 +7,13 @@ XPCOMUtils.defineLazyPreferenceGetter(
   800
 );
 
+XPCOMUtils.defineLazyPreferenceGetter(
+  lazyCompactMode,
+  'COMPACT_MODE_FLASH_ENABLED',
+  'zen.view.compact.toolbar-flash-popup',
+  true
+);
+
 var gZenCompactModeManager = {
   _flashTimeouts: {},
   _evenListeners: [],
@@ -48,6 +55,12 @@ var gZenCompactModeManager = {
       this._sidebar = document.getElementById('navigator-toolbox');
     }
     return this._sidebar;
+  },
+
+  flashSidebarIfNecessary(aInstant = false) {
+    if (!aInstant && this.prefefence && lazyCompactMode.COMPACT_MODE_FLASH_ENABLED && !gZenGlanceManager._animating) {
+      this.flashSidebar();
+    }
   },
 
   addContextMenu() {

@@ -3,7 +3,7 @@
     #currentBrowser = null;
     #currentTab = null;
 
-    #animating = false;
+    _animating = false;
 
     init() {
       document.documentElement.setAttribute('zen-glance-uuid', gZenUIManager.generateUuidv4());
@@ -86,6 +86,8 @@
       const currentTab = gBrowser.selectedTab;
 
       this.animatingOpen = true;
+      this._animating = true;
+
       const browserElement = this.createBrowserElement(url, currentTab);
 
       this.overlay = browserElement.closest('.browserSidebarContainer');
@@ -100,25 +102,41 @@
       window.requestAnimationFrame(() => {
         this.quickOpenGlance();
 
-        this.browserWrapper.style.setProperty('--initial-x', `${initialX}px`);
-        this.browserWrapper.style.setProperty('--initial-y', `${initialY}px`);
-        this.browserWrapper.style.setProperty('--initial-width', initialWidth + 'px');
-        this.browserWrapper.style.setProperty('--initial-height', initialHeight + 'px');
-
         this.overlay.removeAttribute('fade-out');
         this.browserWrapper.setAttribute('animate', true);
-        this.#animating = true;
-        setTimeout(() => {
-          this.browserWrapper.setAttribute('animate-end', true);
-          this.browserWrapper.setAttribute('has-finished-animation', true);
-          this.#animating = false;
-          this.animatingOpen = false;
-        }, 500);
+        this.browserWrapper.style.top = `${initialY}px`;
+        this.browserWrapper.style.left = `${initialX}px`;
+        this.browserWrapper.style.width = `${initialWidth}px`;
+        this.browserWrapper.style.height = `${initialHeight}px`;
+        gZenUIManager.motion
+          .animate(
+            this.browserWrapper,
+            {
+              top: [`${initialY}px`, '50%'],
+              left: [`${initialX}px`, '50%'],
+              width: [`${initialWidth}px`, '85%'],
+              height: [`${initialHeight}px`, '100%'],
+              opacity: [0.8, 1],
+            },
+            {
+              duration: 0.5,
+              ease: 'easeIn',
+              type: 'spring',
+              bounce: 0.25,
+            }
+          )
+          .then(() => {
+            this.browserWrapper.removeAttribute('animate');
+            this.browserWrapper.setAttribute('animate-end', true);
+            this.browserWrapper.setAttribute('has-finished-animation', true);
+            this._animating = false;
+            this.animatingOpen = false;
+          });
       });
     }
 
     closeGlance({ noAnimation = false, onTabClose = false } = {}) {
-      if (this.#animating || !this.#currentBrowser || this.animatingOpen || this._duringOpening) {
+      if (this._animating || !this.#currentBrowser || this.animatingOpen || this._duringOpening) {
         return;
       }
 
@@ -129,6 +147,8 @@
         this.#currentTab = null;
         return;
       }
+
+      this._animating = true;
 
       gBrowser._insertTabAtIndex(this.#currentTab, {
         index: this.currentParentTab._tPos + 1,
@@ -195,6 +215,8 @@
 
             this.lastCurrentTab = null;
             this._duringOpening = false;
+
+            this._animating = false;
           }, 400);
         });
       });
@@ -281,6 +303,7 @@
       this.animatingFullOpen = true;
       this.currentParentTab._visuallySelected = false;
 
+      this.browserWrapper.removeAttribute('style');
       this.browserWrapper.removeAttribute('has-finished-animation');
       this.browserWrapper.setAttribute('animate-full', true);
       this.#currentTab.removeAttribute('zen-glance-tab');

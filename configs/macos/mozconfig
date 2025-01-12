@@ -7,8 +7,12 @@ export MOZ_MACBUNDLE_ID=${appId}
 export MOZ_MACBUNDLE_NAME="Zen Browser.app"
 
 if test "$ZEN_RELEASE"; then
-  export MOZ_PGO=1
-  ac_add_options MOZ_PGO=1
+  if test "$ZEN_GA_DISABLE_PGO"; then
+    export ZEN_DUMMY=1
+  else
+    export MOZ_PGO=1
+    ac_add_options MOZ_PGO=1
+  fi
 fi
 
 if test "$SURFER_COMPAT" = "x86_64"; then
@@ -21,7 +25,7 @@ if test "$SURFER_COMPAT" = "x86_64"; then
     export CPPFLAGS="-O3 -march=nehalem"
     export CXXFLAGS="-O3 -march=nehalem"
     export LDFLAGS="-Wl,-O3 -march=nehalem"
-    export RUSTFLAGS="-Ctarget-cpu=nehalem -C codegen-units=1"
+    export RUSTFLAGS="-Ctarget-cpu=nehalem"
 else
     ac_add_options --target=aarch64-apple-darwin
 
@@ -34,7 +38,7 @@ else
     export CPPFLAGS="-O3 -march=armv8.3-a+simd -mcpu=apple-m1"
     export CXXFLAGS="-O3 -march=armv8.3-a+simd -mcpu=apple-m1"
     export LDFLAGS="-Wl,-O3 -march=armv8.3-a+simd -mcpu=apple-m1"
-    export RUSTFLAGS="-C target-feature=+v8.3a -C codegen-units=1 -Ctarget-cpu=apple-m1"
+    export RUSTFLAGS="-C target-feature=+v8.3a -Ctarget-cpu=apple-m1"
 fi
 
 export VERBOSE=1

@@ -76,7 +76,7 @@ jobs:
         if: always() && ${{ inputs.create_release && inputs.update_branch == 'release' }}
         run: |
           echo "Removing self-hosted runner script"
-          rm start.sh
+          rm start.sh || true
 
       - name: Sleep until runner is ready
         if: ${{ inputs.create_release && inputs.update_branch == 'release' }}
@@ -451,7 +451,7 @@ jobs:
         if: always() && ${{ inputs.create_release && inputs.update_branch == 'release' }}
         run: |
           echo "Removing self-hosted runner script"
-          rm stop.sh
+          rm stop.sh || true
 
   release:
     if: ${{ inputs.create_release || inputs.update_branch == 'twilight' }}

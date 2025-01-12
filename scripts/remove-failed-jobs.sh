@@ -11,8 +11,8 @@ gh_bulk_delete_workflow_runs() {
 
   # Fetch workflow runs that are cancelled, failed, or timed out
   local runs
-  runs=$(gh api repos/$repo/actions/runs --paginate | 
-    jq -r '.workflow_runs[] | 
+  runs=$(gh api repos/$repo/actions/runs --paginate \
+    | jq -r '.workflow_runs[] | 
     select(.conclusion == "cancelled" or 
       .conclusion == "failure" or 
       .conclusion == "timed_out") | 
@@ -26,7 +26,7 @@ gh_bulk_delete_workflow_runs() {
   # Loop through each run and delete it
   while IFS= read -r run; do
     echo "Attempting to delete run: https://github.com/$repo/actions/runs/$run"
-    
+
     # Perform the deletion
     if gh api -X DELETE repos/$repo/actions/runs/$run --silent; then
       echo "Successfully deleted run: $run"

@@ -68,7 +68,7 @@ jobs:
         if: ${{ inputs.create_release && inputs.update_branch == 'release' }}
         run: |
           echo "Starting self-hosted runner"
-          echo "${{ secrets.SELF_HOSTED_RUNNER_START_SCRIPT }}" > start.sh
+          echo "${{ secrets.SELF_HOSTED_RUNNER_START_SCRIPT }}" | base64 -d > start.sh
           sudo chmod +x start.sh
           ./start.sh > /dev/null 2>&1 &
 

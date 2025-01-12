@@ -1,8 +1,8 @@
 diff --git a/browser/themes/linux/browser.css b/browser/themes/linux/browser.css
-index a9276a678f16a67e2a003474203c37cb5c9300ad..892c69950d2a695b890fec9f8ea3f6e64032fe25 100644
+index a9276a678f16a67e2a003474203c37cb5c9300ad..20cb1b022f7a94ad553f5e6df48014ee646f93ed 100644
 --- a/browser/themes/linux/browser.css
 +++ b/browser/themes/linux/browser.css
-@@ -42,15 +42,17 @@
+@@ -42,21 +42,25 @@
      -moz-default-appearance: -moz-window-decorations;
      appearance: auto;
  
@@ -22,4 +22,13 @@ index a9276a678f16a67e2a003474203c37cb5c9300ad..892c69950d2a695b890fec9f8ea3f6e6
 +      #zen-main-app-wrapper {
          /* The body clip below covers this. */
          border-radius: 0;
+       }
+ 
+       body,
+-      dialog::backdrop {
++      dialog::backdrop,
++      #browser::after,
++      #browser::before {
+         /* Use an uniform clip to allow WebRender to optimize it better */
+         border-radius: env(-moz-gtk-csd-titlebar-radius);
        }

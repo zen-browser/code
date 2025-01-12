@@ -15,51 +15,51 @@ COLORS = {
 
 
 def random_string(length):
-    return "".join(random.choices("abcdefghijklmnopqrstuvwxyz", k=length))
+  return "".join(random.choices("abcdefghijklmnopqrstuvwxyz", k=length))
 
 
 def generate_list_names():
-    names = []
-    for i in range(1, 101):
-        names.append(random_string(random.randint(5, 10)))
-    return names
+  names = []
+  for i in range(1, 101):
+    names.append(random_string(random.randint(5, 10)))
+  return names
 
 
 def write_jar_file(jar_file):
-    with open("jar.inc.mn", "w") as f:
-        f.write(jar_file)
+  with open("jar.inc.mn", "w") as f:
+    f.write(jar_file)
 
 
 def fetch_all_avatars():
-    names = generate_list_names()
-    jar_file = ""
-    for theme in COLORS:
-        for [i, name] in enumerate(names):
-            url = URL.format(name, ",".join(COLORS[theme]))
-            response = requests.get(url)
-            with open(f"avatar-{i}-{theme}.svg", "w") as f:
-                f.write(response.text)
-            jar_file += JAR_ENTRY_TEMPLATE.format(f"avatar-{i}-{theme}.svg") + "\n"
-            print(
-                f"SUCCESS: Fetched 'avatar-{i}-{theme}.svg' for name '{name}' with theme '{theme}'"
-            )
-    write_jar_file(jar_file)
+  names = generate_list_names()
+  jar_file = ""
+  for theme in COLORS:
+    for [i, name] in enumerate(names):
+      url = URL.format(name, ",".join(COLORS[theme]))
+      response = requests.get(url)
+      with open(f"avatar-{i}-{theme}.svg", "w") as f:
+        f.write(response.text)
+      jar_file += JAR_ENTRY_TEMPLATE.format(f"avatar-{i}-{theme}.svg") + "\n"
+      print(
+          f"SUCCESS: Fetched 'avatar-{i}-{theme}.svg' for name '{name}' with theme '{theme}'"
+      )
+  write_jar_file(jar_file)
 
 
 def clear_all_avatars():
-    for file in os.listdir():
-        if file.startswith("avatar-") and file.endswith(".svg"):
-            os.remove(file)
-            print(f"SUCCESS: Removed '{file}'")
+  for file in os.listdir():
+    if file.startswith("avatar-") and file.endswith(".svg"):
+      os.remove(file)
+      print(f"SUCCESS: Removed '{file}'")
 
 
 def main():
-    if not os.getcwd().endswith("zen-avatars"):
-        print("ERROR: Please run this script from the 'zen-avatars' directory")
-        return
-    clear_all_avatars()
-    fetch_all_avatars()
+  if not os.getcwd().endswith("zen-avatars"):
+    print("ERROR: Please run this script from the 'zen-avatars' directory")
+    return
+  clear_all_avatars()
+  fetch_all_avatars()
 
 
 if __name__ == "__main__":
-    main()
+  main()

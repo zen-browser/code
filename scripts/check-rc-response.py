@@ -72,5 +72,6 @@ def main() -> int:
   print(f"Current version: {current_version}, RC version: {rc_response}")
   return 1
 
+
 if __name__ == "__main__":
   sys.exit(main())

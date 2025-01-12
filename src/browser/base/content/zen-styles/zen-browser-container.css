@@ -22,7 +22,7 @@
 
     :root:not([zen-no-padding='true']) & {
       margin: 1px;
-      box-shadow: 0 0 1px 1px light-dark(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.5));
+      box-shadow: 0 0 1px 1px light-dark(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.3));
     }
   }
 

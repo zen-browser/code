@@ -1,64 +1,81 @@
-# Browser branding
-ac_add_options --with-app-name=${binName}
+# ------------------------------
+# Browser Branding Configuration
+# ------------------------------
+ac_add_options --with-app-name="${binName}"
 ac_add_options --with-app-basename=Zen
 ac_add_options --enable-official-branding
 
-# Localization
+# ------------------------------
+# Localization Settings
+# ------------------------------
 ac_add_options --with-l10n-base="$PWD/browser/locales"
 
+# Environment Variables for Branding
 export MOZ_USER_DIR="${name}"
-export MOZ_APP_BASENAME=Zen
-export MOZ_APP_PROFILE=${binName}
+export MOZ_APP_BASENAME="Zen"
+export MOZ_APP_PROFILE="${binName}"
 export MOZ_APP_DISPLAYNAME="${name}"
-export MOZ_BRANDING_DIRECTORY=${brandingDir}
-export MOZ_OFFICIAL_BRANDING_DIRECTORY=${brandingDir}
+export MOZ_BRANDING_DIRECTORY="${brandingDir}"
+export MOZ_OFFICIAL_BRANDING_DIRECTORY="${brandingDir}"
 
+# Distribution ID
 ac_add_options --with-distribution-id=app.zen-browser
 
+# ------------------------------
+# Performance Optimization Options
 # Uncomment if builds are too resource hungry
-# mk_add_options MOZ_MAKE_FLAGS="-j4"
-# ac_add_options --enable-linker=gold
+# mk_add_options MOZ_MAKE_FLAGS="-j4"  # Limit the number of parallel jobs
+# ac_add_options --enable-linker=gold    # Use Gold linker for faster linking
 
-# Misc
-export MOZ_SOURCE_REPO=https://github.com/zen-browser/desktop
-export MOZ_SOURCE_CHANGESET=${changeset}
+# ------------------------------
+# Miscellaneous Configuration
+# ------------------------------
+export MOZ_SOURCE_REPO="https://github.com/zen-browser/desktop"
+export MOZ_SOURCE_CHANGESET="${changeset}"
 export MOZ_INCLUDE_SOURCE_INFO=1
 
 ac_add_options --enable-application=browser
 
+# ------------------------------
+# Release Configuration
+# ------------------------------
 if test "$ZEN_RELEASE"; then
 
+  # Enable Clang plugin and bootstrap
   ac_add_options --enable-clang-plugin
   ac_add_options --enable-bootstrap
 
+  # Release Build Settings
   ac_add_options --enable-release
   ac_add_options --disable-debug
   ac_add_options --disable-debug-symbols
   ac_add_options --disable-debug-js-modules
   ac_add_options --disable-tests
   ac_add_options --disable-js-shell
-
   ac_add_options --disable-vtune
 
+  # Enable Rust and WebAssembly SIMD
   ac_add_options --enable-rust-simd
   ac_add_options --enable-wasm-simd
 
+  # Parallel Compilation
   mk_add_options MOZ_PARALLEL_COMPILE=1
 
+  # Security and Performance Hardening
   ac_add_options --enable-proxy-bypass-protection
   ac_add_options --enable-hardening
   ac_add_options --disable-profiling
 
+  # Disable unnecessary components
   ac_add_options --disable-crashreporter
   ac_add_options --disable-geckodriver
   ac_add_options --disable-rust-tests
-
   ac_add_options --disable-default-browser-agent
 
+  # Link Time Optimization (LTO)
   if ! test "$ZEN_DISABLE_LTO"; then
-    # only enable full LTO when ZEN_RELEASE_BRANCH is 'release'
+    # Enable full LTO only on the release branch
     if test "$ZEN_RELEASE_BRANCH" = "release"; then
-      # TODO: make it "full" once we have the resources to build it
       export MOZ_LTO=cross,thin
       ac_add_options --enable-lto=cross,thin
     else
@@ -67,35 +84,44 @@ if test "$ZEN_RELEASE"; then
     fi
   fi
 
+  # Memory Management
   ac_add_options --enable-jemalloc
 
+  # Official Build Flag
   mk_add_options MOZILLA_OFFICIAL=1
-  MOZILLA_OFFICIAL=1
   export MOZILLA_OFFICIAL=1
 
+  # Optimization Levels
   export OPT_LEVEL="3"
   ac_add_options OPT_LEVEL="3"
 
   export RUSTC_OPT_LEVEL="3"
   ac_add_options RUSTC_OPT_LEVEL="3"
 
+  # Enable Auto-Cleaning
   mk_add_options AUTOCLOBBER=1
   export AUTOCLOBBER=1
 
+  # Enable Updater
   ac_add_options --enable-updater
 
+  # Package JSShell
   export MOZ_PACKAGE_JSSHELL=1
 fi
 
+# ------------------------------
+# Update and Extension Settings
+# ------------------------------
 ac_add_options --enable-unverified-updates
-
 ac_add_options --enable-raw
 ac_add_options --enable-webrtc
 ac_add_options --enable-jxl
 ac_add_options --enable-av1
 
+# Allow unsigned add-ons for specific scopes
 ac_add_options --with-unsigned-addon-scopes=app,system
 
+# Data Reporting Options
 mk_add_options MOZ_DATA_REPORTING=
 mk_add_options MOZ_SERVICES_HEALTHREPORT=
 mk_add_options MOZ_TELEMETRY_REPORTING=

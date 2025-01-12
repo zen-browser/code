@@ -80,7 +80,7 @@ jobs:
 
       - name: Sleep until runner is ready
         if: ${{ inputs.create_release && inputs.update_branch == 'release' }}
-        run: sleep 30s
+        run: sleep 90s
 
   check-build-is-correct:
     runs-on: ubuntu-latest

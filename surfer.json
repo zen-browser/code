@@ -6,7 +6,7 @@
   "version": {
     "product": "firefox",
     "version": "134.0",
-    "candidate": "134.0.1"
+    "candidate": "134.0"
   },
   "buildOptions": {
     "generateBranding": true

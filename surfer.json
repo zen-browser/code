@@ -6,7 +6,7 @@
   "version": {
     "product": "firefox",
     "version": "134.0",
-    "candidate": "134.0"
+    "candidate": "134.0.1"
   },
   "buildOptions": {
     "generateBranding": true
@@ -47,7 +47,9 @@
     }
   },
   "license": {
-    "ignoredFiles": [".*\\.json"],
+    "ignoredFiles": [
+      ".*\\.json"
+    ],
     "licenseType": "MPL-2.0"
   },
   "updateHostname": "updates.zen-browser.app"

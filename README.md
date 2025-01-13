@@ -131,7 +131,7 @@ Zen couldn't be in its current state without the help of these amazing projects!
 
 ### 🖥️ Comparison with other browsers
 
-Thanks everyone for making zen stand out amongs these giants!
+Thanks everyone for making zen stand out among these giants!
 
 [![Star History Chart](https://api.star-history.com/svg?repos=zen-browser/desktop,chromium/chromium,brave/brave-browser&type=Date)](https://star-history.com/#zen-browser/desktop&chromium/chromium&brave/brave-browser&Date)
 

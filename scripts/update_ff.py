@@ -17,6 +17,8 @@ def update_rc(last_version: str):
     with open("surfer.json", "w") as f:
       data["version"]["candidate"] = rc_version
       json.dump(data, f, indent=2)
+    print("Download the new engine by running 'pnpm download'.")
+    os.system("pnpm download")
   else:
     print("No new Firefox RC version available.")
 

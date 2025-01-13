@@ -18,4 +18,4 @@ jobs:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           DISCORD_PING_IDS: ${{ secrets.DISCORD_PING_IDS }}
         run: |
-          python3 scripts/check_rc_response.py || true
+          python3 scripts/check_rc_response.py

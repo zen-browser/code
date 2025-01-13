@@ -80,7 +80,7 @@ def main() -> int:
     return 0
 
   print(f"Current version: {current_version}, RC version: {rc_response}")
-  return 1
+  return 0
 
 
 if __name__ == "__main__":

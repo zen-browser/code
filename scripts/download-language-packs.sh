@@ -31,9 +31,9 @@ cd $CURRENT_DIR
 
 # Move all the files to the correct location
 
-sh scripts/copy-language-pack.sh en-US
+python3 scripts/copy-language-pack.sh en-US
 for lang in $(cat ./l10n/supported-languages); do
-  sh scripts/copy-language-pack.sh $lang
+  python3 scripts/copy-language-pack.sh $lang
 done
 
 wait

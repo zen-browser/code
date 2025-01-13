@@ -5,6 +5,7 @@ import shutil
 
 from check_rc_response import get_rc_response, rc_should_be_updated
 
+
 def update_rc(last_version: str):
   rc_version = get_rc_response()
   if rc_should_be_updated(rc_version, last_version):
@@ -42,7 +43,7 @@ def get_version_from_file(filename, is_rc):
     raise RuntimeError(f"Error reading version from {filename}: {e}")
 
 
-def update_readme(last_version, new_version, is_rc = False):
+def update_readme(last_version, new_version, is_rc=False):
   """Updates the README.md file to reflect the new version."""
   prefix = "RC " if is_rc else ""
   try:

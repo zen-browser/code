@@ -7,6 +7,7 @@ from typing import Optional
 METADATA_FILENAME = "surfer.json"
 TAGS_API_URL = "https://hg.mozilla.org/releases/mozilla-release/json-tags"
 
+
 def get_current_version() -> Optional[str]:
   """Retrieve the current version from the metadata file."""
   try:
@@ -16,6 +17,7 @@ def get_current_version() -> Optional[str]:
   except (FileNotFoundError, json.JSONDecodeError) as e:
     print(f"Error reading current version: {e}")
     return None
+
 
 def get_repo_data() -> Optional[str]:
   """Retrieve the repository data from the API."""
@@ -27,6 +29,7 @@ def get_repo_data() -> Optional[str]:
   except requests.RequestException as e:
     print(f"Error retrieving repository data: {e}")
     return None
+
 
 def get_rc_response() -> Optional[str]:
   """Get the release candidate response from the response file."""
@@ -68,8 +71,10 @@ def send_webhook(rc: str) -> None:
   else:
     print("Webhook URL not set.")
 
+
 def rc_should_be_updated(rc_response: str, current_version: str) -> bool:
   return rc_response and rc_response != current_version
+
 
 def main() -> int:
   current_version = get_current_version()

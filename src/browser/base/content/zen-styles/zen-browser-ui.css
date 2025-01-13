@@ -57,13 +57,6 @@
   }
 
   @media (-moz-windows-accent-color-in-titlebar) {
-    background-color: ActiveCaption;
-    color: CaptionText;
-    transition: background-color var(--inactive-window-transition);
-    &:-moz-window-inactive {
-      background-color: InactiveCaption;
-      color: InactiveCaptionText;
-    }
     &::after {
       display: none;
     }
@@ -122,6 +115,16 @@
 
   & > * {
     z-index: 1;
+  }
+
+  @media (-moz-windows-accent-color-in-titlebar) {
+    background-color: ActiveCaption;
+    color: CaptionText;
+    transition: background-color var(--inactive-window-transition);
+    &:-moz-window-inactive {
+      background-color: InactiveCaption;
+      color: InactiveCaptionText;
+    }
   }
 }
 

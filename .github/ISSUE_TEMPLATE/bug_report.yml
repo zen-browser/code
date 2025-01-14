@@ -64,17 +64,3 @@ body:
       label: Relevant log output if applicable
       description: Please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks.
       render: shell
-  - type: textarea
-    id: support
-    attributes:
-      label: Data from about:support if applicable (click on the "Copy text to clipboard" button)
-      description: Please copy and paste about:support data if you think it might be relevant. This will help us understand your environment.
-      value: |
-        <details>
-          <summary>about:support</summary>
-          <!-- Please leave one blank line below for enabling the code block rendering. -->
-
-          ```
-          Select this line and paste your about:support clipboard
-          ```
-        </details>

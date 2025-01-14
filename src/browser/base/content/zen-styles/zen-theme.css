@@ -156,7 +156,7 @@
   --zen-themed-toolbar-bg: light-dark(var(--zen-branding-bg), var(--zen-colors-tertiary));
   --zen-themed-toolbar-bg-transparent: light-dark(var(--zen-branding-bg), var(--zen-colors-tertiary));
 
-  @media (-moz-windows-mica) or (-moz-platform: macos) or (-moz-windows-accent-color-in-titlebar) {
+  @media (-moz-windows-mica) or (-moz-platform: macos) {
     background: transparent;
     --zen-themed-toolbar-bg-transparency: 0;
     --zen-themed-toolbar-bg-transparent: light-dark(

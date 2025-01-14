@@ -620,7 +620,7 @@ jobs:
           pwd
           ls .
           ls ..
-          mv releases.xml ./flatpak/io.github.zen_browser.zen.metainfo.xml
+          mv releases.xml ./flatpak/app.zen_browser.zen.metainfo.xml
           # output the version to the file
           echo -n ${{ needs.build-data.outputs.version }} > ./flatpak/version
 
@@ -646,13 +646,18 @@ jobs:
       - name: Checkout Flatpak repository
         uses: actions/checkout@v4
         with:
-          repository: flathub/io.github.zen_browser.zen
+          repository: flathub/app.zen_browser.zen
           token: ${{ secrets.DEPLOY_KEY }}
 
       - name: Download Linux x86_64 build
         uses: actions/download-artifact@v4
         with:
           name: zen.linux-x86_64.tar.bz2
+
+      - name: Download Linux aarch64 build
+        uses: actions/download-artifact@v4
+        with:
+          name: zen.linux-aarch64.tar.bz2
 
       - name: Update repository
         uses: actions/checkout@v4
@@ -675,12 +680,13 @@ jobs:
             --flatpak-archive archive.tar \
             --version ${{ needs.build-data.outputs.version }} \
             --linux-archive zen.linux-x86_64.tar.bz2 \
-            --output io.github.zen_browser.zen.yml \
+            --linux-aarch64-archive zen.linux-aarch64.tar.bz2 \
+            --output app.zen_browser.zen.yml \
             --template-root ./zen-browser/flatpak
 
       - name: Commit changes
         run: |
-          git add io.github.zen_browser.zen.yml
+          git add app.zen_browser.zen.yml
           git commit -m "Update to version ${{ needs.build-data.outputs.version }}"
 
       - name: Clean up
@@ -693,8 +699,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           retention-days: 5
-          name: io.github.zen_browser.zen.yml
-          path: ./io.github.zen_browser.zen.yml
+          name: app.zen_browser.zen.yml
+          path: ./app.zen_browser.zen.yml
 
       - name: Create pull request
         uses: peter-evans/create-pull-request@v7

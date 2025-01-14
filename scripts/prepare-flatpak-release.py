@@ -3,7 +3,7 @@ import argparse
 import sys
 import os
 
-FLATID = "io.github.zen_browser.zen"
+FLATID = "app.zen_browser.zen"
 
 
 def get_sha256sum(filename):
@@ -19,14 +19,16 @@ def get_sha256sum(filename):
   return sha256.hexdigest()
 
 
-def build_template(template, linux_sha256, flatpak_sha256, version):
+def build_template(template, linux_sha256, flatpak_sha256, version, linux_aarch64_sha256):
   """Build the template with the provided hashes and version."""
   print(f"Building template with version {version}")
   print(f"\tLinux archive sha256: {linux_sha256}")
+  print(f"\tLinux aarch64 archive sha256: {linux_aarch64_sha256}")
   print(f"\tFlatpak archive sha256: {flatpak_sha256}")
   return template.format(linux_sha256=linux_sha256,
                          flatpak_sha256=flatpak_sha256,
-                         version=version)
+                         version=version,
+                         linux_aarch64_sha256=linux_aarch64_sha256)
 
 
 def get_template(template_root):
@@ -48,6 +50,7 @@ def main():
                       help="Version of the release",
                       required=True)
   parser.add_argument("--linux-archive", help="Linux archive", required=True)
+  parser.add_argument("--linux-aarch64-archive", help="Linux aarch64 archive", required=True)
   parser.add_argument("--flatpak-archive",
                       help="Flatpak archive",
                       required=True)
@@ -58,9 +61,10 @@ def main():
   args = parser.parse_args()
 
   linux_sha256 = get_sha256sum(args.linux_archive)
+  linux_aarch64_sha256 = get_sha256sum(args.linux_aarch64_archive)
   flatpak_sha256 = get_sha256sum(args.flatpak_archive)
   template = build_template(get_template(args.template_root), linux_sha256,
-                            flatpak_sha256, args.version)
+                            flatpak_sha256, args.version, linux_aarch64_sha256)
 
   print(f"Writing output to {args.output}")
   with open(args.output, "w") as f:

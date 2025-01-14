@@ -56,13 +56,7 @@
     }
   }
 
-  @media (-moz-windows-accent-color-in-titlebar) {
-    &::after {
-      display: none;
-    }
-  }
-
-  @media (not (-moz-windows-accent-color-in-titlebar)) and (not (-moz-windows-mica)) and (-moz-bool-pref: 'zen.view.grey-out-inactive-windows') {
+  @media (not (-moz-windows-mica)) and (-moz-bool-pref: 'zen.view.grey-out-inactive-windows') {
     transition: color var(--inactive-window-transition);
     &:-moz-window-inactive {
       color: var(--toolbox-textcolor-inactive);
@@ -117,7 +111,7 @@
     z-index: 1;
   }
 
-  @media (-moz-windows-accent-color-in-titlebar) {
+  @media (-moz-windows-accent-color-in-titlebar) and (-moz-windows-mica) {
     background-color: ActiveCaption;
     color: CaptionText;
     transition: background-color var(--inactive-window-transition);

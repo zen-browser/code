@@ -70,17 +70,13 @@ jobs:
           echo "Starting self-hosted runner"
           echo "${{ secrets.SELF_HOSTED_RUNNER_START_SCRIPT }}" | base64 -d > start.sh
           sudo chmod +x start.sh
-          ./start.sh > /dev/null 2>&1 &
+          bash ./start.sh
 
       - name: Remove self-hosted runner script
         if: always() && ${{ inputs.create_release && inputs.update_branch == 'release' }}
         run: |
           echo "Removing self-hosted runner script"
           rm start.sh || true
-
-      - name: Sleep until runner is ready
-        if: ${{ inputs.create_release && inputs.update_branch == 'release' }}
-        run: sleep 90s
 
   check-build-is-correct:
     runs-on: ubuntu-latest

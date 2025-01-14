@@ -474,8 +474,8 @@
     max-width: calc(100% - var(--zen-toolbox-padding) * 4);
   }
 
-  & #zen-current-workspace-indicator-icon:not([hidden]) + #zen-current-workspace-indicator-name {
-    padding-left: 24px;
+  & #zen-current-workspace-indicator-icon {
+    min-height: 16px;
   }
 }
 

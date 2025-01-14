@@ -318,10 +318,12 @@ var gZenCompactModeManager = {
       target.addEventListener('mouseenter', (event) => {
         this.clearFlashTimeout('has-hover' + target.id);
         window.requestAnimationFrame(() => target.setAttribute('zen-has-hover', 'true'));
-        this._animatingElements[target.id] = true;
-        setTimeout(() => {
-          delete this._animatingElements[target.id];
-        }, 312.5); // 0.3125s is the duration of the sidebar animation (the longest one)
+        if (target.id === 'navigator-toolbox' && gZenCompactModeManager.prefefence) {
+          this._animatingElements[target.id] = true;
+          setTimeout(() => {
+            delete this._animatingElements[target.id];
+          }, 312.5); // 0.3125s is the duration of the sidebar animation (the longest one)
+        }
       });
 
       target.addEventListener('mouseleave', (event) => {

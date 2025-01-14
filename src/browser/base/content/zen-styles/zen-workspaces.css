@@ -477,6 +477,10 @@
   & #zen-current-workspace-indicator-icon {
     min-height: 16px;
   }
+
+  & #zen-current-workspace-indicator-icon:not([hidden]) + #zen-current-workspace-indicator-name {
+    padding-left: 24px;
+  }
 }
 
 @media not (-moz-bool-pref: 'zen.workspaces.show-workspace-indicator') {

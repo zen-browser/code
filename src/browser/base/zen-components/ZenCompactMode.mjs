@@ -18,6 +18,7 @@ var gZenCompactModeManager = {
   _flashTimeouts: {},
   _evenListeners: [],
   _removeHoverFrames: {},
+  _animatingElements: {},
 
   init() {
     Services.prefs.addObserver('zen.view.compact', this._updateEvent.bind(this));
@@ -317,9 +318,17 @@ var gZenCompactModeManager = {
       target.addEventListener('mouseenter', (event) => {
         this.clearFlashTimeout('has-hover' + target.id);
         window.requestAnimationFrame(() => target.setAttribute('zen-has-hover', 'true'));
+        this._animatingElements[target.id] = true;
+        setTimeout(() => {
+          delete this._animatingElements[target.id];
+        }, 312.5);
       });
 
       target.addEventListener('mouseleave', (event) => {
+        if (this._animatingElements[target.id]) {
+          return;
+        }
+
         // If on Mac, ignore mouseleave in the area of window buttons
         if (AppConstants.platform == 'macosx') {
           const MAC_WINDOW_BUTTONS_X_BORDER = 75;

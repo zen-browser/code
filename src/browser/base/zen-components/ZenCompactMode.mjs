@@ -321,7 +321,7 @@ var gZenCompactModeManager = {
         this._animatingElements[target.id] = true;
         setTimeout(() => {
           delete this._animatingElements[target.id];
-        }, 312.5);
+        }, 312.5); // 0.3125s is the duration of the sidebar animation (the longest one)
       });
 
       target.addEventListener('mouseleave', (event) => {

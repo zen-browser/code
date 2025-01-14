@@ -6,6 +6,11 @@ ac_add_options --enable-eme=widevine
 export MOZ_MACBUNDLE_ID=${appId}
 export MOZ_MACBUNDLE_NAME="Zen Browser.app"
 
+# override LTO settings
+# TODO: Dont
+export MOZ_LTO=cross,thin
+ac_add_options --enable-lto=cross,thin
+
 if test "$ZEN_RELEASE"; then
   if test "$ZEN_GA_DISABLE_PGO"; then
     export ZEN_DUMMY=1

@@ -9,6 +9,8 @@ engine/
 
 **/*.svg
 
+surfer.json
+
 src/browser/app/profile/*.js
 pnpm-lock.yaml
 

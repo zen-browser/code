@@ -45,7 +45,7 @@ def get_version_from_file(filename, is_rc):
 
 def update_readme(last_version, new_version, is_rc=False):
   """Updates the README.md file to reflect the new version."""
-  prefix = "RC " if is_rc else ""
+  prefix = "RC " if is_rc else "`"
   try:
     with open("README.md", "r") as f:
       data = f.read()

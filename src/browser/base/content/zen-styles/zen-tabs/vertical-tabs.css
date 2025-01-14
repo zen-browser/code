@@ -444,7 +444,7 @@
     padding-left: 0;
   }
 
-  &:not([zen-right-side='true']):not([zen-user-hover='true']) {
+  &:not([zen-right-side='true']) {
     padding-right: 0;
     & #titlebar {
       padding-left: var(--zen-toolbox-padding);

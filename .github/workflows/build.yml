@@ -439,9 +439,9 @@ jobs:
         if: ${{ inputs.create_release && inputs.update_branch == 'release' }}
         run: |
           echo "Stopping self-hosted runner"
-          echo "${{ secrets.SELF_HOSTED_RUNNER_STOP_SCRIPT }}" > stop.sh
+          echo "${{ secrets.SELF_HOSTED_RUNNER_STOP_SCRIPT }}" | base64 -d > stop.sh
           sudo chmod +x stop.sh
-          ./stop.sh > /dev/null 2>&1 &
+          bash ./stop.sh > /dev/null 2>&1 &
 
       - name: Remove self-hosted runner script
         if: always() && ${{ inputs.create_release && inputs.update_branch == 'release' }}

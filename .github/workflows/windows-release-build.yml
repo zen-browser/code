@@ -90,6 +90,7 @@ jobs:
           set -x
           mkdir -p ~/win-cross
           cd engine/
+          sudo add-apt-repository ppa:savoury1/backports
           sudo apt-get update
           sudo apt-get install -y python3-pip autoconf \
             autoconf2.13 \
@@ -131,7 +132,7 @@ jobs:
             wget \
             zip \
             zlib1g-dev \
-            aria2c
+            aria2
           echo Setup wine
           aria2c "https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/gecko.cache.level-1.toolchains.v3.linux64-wine.latest/artifacts/public%2Fbuild%2Fwine.tar.zst" -o wine.tar.zst
           tar --zstd -xvf wine.tar.zst -C ~/win-cross

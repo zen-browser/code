@@ -18,7 +18,6 @@ var gZenCompactModeManager = {
   _flashTimeouts: {},
   _evenListeners: [],
   _removeHoverFrames: {},
-  _animatingElements: {},
 
   init() {
     Services.prefs.addObserver('zen.view.compact', this._updateEvent.bind(this));
@@ -275,6 +274,7 @@ var gZenCompactModeManager = {
       {
         element: this.sidebar,
         screenEdge: this.sidebarIsOnRight ? 'right' : 'left',
+        keepHoverDuration: 300,
       },
       {
         element: document.getElementById('zen-appcontent-navbar-container'),
@@ -318,19 +318,9 @@ var gZenCompactModeManager = {
       target.addEventListener('mouseenter', (event) => {
         this.clearFlashTimeout('has-hover' + target.id);
         window.requestAnimationFrame(() => target.setAttribute('zen-has-hover', 'true'));
-        if (target.id === 'navigator-toolbox' && gZenCompactModeManager.prefefence) {
-          this._animatingElements[target.id] = true;
-          setTimeout(() => {
-            delete this._animatingElements[target.id];
-          }, 312.5); // 0.3125s is the duration of the sidebar animation (the longest one)
-        }
       });
 
       target.addEventListener('mouseleave', (event) => {
-        if (this._animatingElements[target.id]) {
-          return;
-        }
-
         // If on Mac, ignore mouseleave in the area of window buttons
         if (AppConstants.platform == 'macosx') {
           const MAC_WINDOW_BUTTONS_X_BORDER = 75;
@@ -346,7 +336,7 @@ var gZenCompactModeManager = {
         }
 
         if (this.hoverableElements[i].keepHoverDuration) {
-          this.flashElement(target, keepHoverDuration, 'has-hover' + target.id, 'zen-has-hover');
+          this.flashElement(target, this.hoverableElements[i].keepHoverDuration, 'has-hover' + target.id, 'zen-has-hover');
         } else {
           this._removeHoverFrames[target.id] = window.requestAnimationFrame(() => target.removeAttribute('zen-has-hover'));
         }

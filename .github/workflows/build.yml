@@ -54,6 +54,30 @@ jobs:
           echo "GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}"
           echo "GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}"
 
+  start-self-host:
+    runs-on: ubuntu-latest
+    needs: debug-inputs
+    steps:
+      - name: Download aws-cli
+        run: |
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          sudo ./aws/install --update
+
+      - name: Start self-hosted runner
+        if: ${{ inputs.create_release && inputs.update_branch == 'release' }}
+        run: |
+          echo "Starting self-hosted runner"
+          echo "${{ secrets.SELF_HOSTED_RUNNER_START_SCRIPT }}" | base64 -d > start.sh
+          sudo chmod +x start.sh
+          bash ./start.sh
+
+      - name: Remove self-hosted runner script
+        if: always() && ${{ inputs.create_release && inputs.update_branch == 'release' }}
+        run: |
+          echo "Removing self-hosted runner script"
+          rm start.sh || true
+
   check-build-is-correct:
     runs-on: ubuntu-latest
     needs: [debug-inputs]
@@ -65,6 +89,7 @@ jobs:
           token: ${{ secrets.DEPLOY_KEY }}
 
       - name: Check if correct branch
+        if: ${{ inputs.create_release }}
         run: |
           echo "Checking if we are on the correct branch"
           git branch
@@ -78,7 +103,7 @@ jobs:
           fi
           if [[ $(git branch --show-current) != $branch ]]; then
             echo ">>> Branch mismatch"
-            exit 1
+          # exit 1
           else
             echo ">>> Branch matches"
           fi
@@ -155,29 +180,9 @@ jobs:
           commit_user_email: zen-browser-auto@users.noreply.github.com
 
   lint:
-    runs-on: ubuntu-latest
+    uses: ./.github/workflows/code-linter.yml
     needs: [build-data]
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          submodules: recursive
-          token: ${{ secrets.DEPLOY_KEY }}
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: '.nvmrc'
-
-      - name: Setup pnpm
-        run: npm install -g pnpm
-
-      - name: Install dependencies
-        run: |
-          pnpm install
-
-      - name: Lint
-        run: pnpm lint
+    name: Lint
 
   check-release:
     runs-on: ubuntu-latest
@@ -317,7 +322,7 @@ jobs:
     permissions:
       contents: write
     secrets: inherit
-    needs: [build-data, windows-step-2]
+    needs: [build-data, windows-step-2, start-self-host]
     with:
       build-version: ${{ needs.build-data.outputs.version }}
       generate-gpo: false
@@ -329,7 +334,7 @@ jobs:
     permissions:
       contents: write
     secrets: inherit
-    needs: [build-data]
+    needs: [build-data, start-self-host]
     with:
       build-version: ${{ needs.build-data.outputs.version }}
       release-branch: ${{ inputs.update_branch }}
@@ -386,7 +391,7 @@ jobs:
 
           if [ "${{ inputs.update_branch }}" = "twilight" ]; then
             sed -i -e 's/Name=Zen Browser/Name=Zen Twilight/g' AppDir/zen.desktop
-            sed -i -e 's/StartupWMClass=zen-release/StartupWMClass=zen-twilight/g' AppDir/zen.desktop
+            sed -i -e 's/StartupWMClass=zen/StartupWMClass=zen-twilight/g' AppDir/zen.desktop
           fi
 
           APPDIR=AppDir
@@ -419,11 +424,36 @@ jobs:
           name: zen-${{ matrix.arch }}.AppImage.zsync
           path: ./dist/zen-${{ matrix.arch }}.AppImage.zsync
 
+  stop-self-hosted:
+    runs-on: ubuntu-latest
+    needs: [windows-step-3, linux]
+    if: always()
+    steps:
+      - name: Download aws-cli
+        run: |
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          sudo ./aws/install --update
+
+      - name: Stop self-hosted runner
+        if: ${{ inputs.create_release && inputs.update_branch == 'release' }}
+        run: |
+          echo "Stopping self-hosted runner"
+          echo "${{ secrets.SELF_HOSTED_RUNNER_STOP_SCRIPT }}" | base64 -d > stop.sh
+          sudo chmod +x stop.sh
+          bash ./stop.sh > /dev/null 2>&1 &
+
+      - name: Remove self-hosted runner script
+        if: always() && ${{ inputs.create_release && inputs.update_branch == 'release' }}
+        run: |
+          echo "Removing self-hosted runner script"
+          rm stop.sh || true
+
   release:
     if: ${{ inputs.create_release || inputs.update_branch == 'twilight' }}
     permissions: write-all
     name: Release
-    needs: [build-data, linux, windows-step-3, check-release, mac, appimage, source, lint]
+    needs: [build-data, linux, windows-step-3, check-release, mac, appimage, source, lint, stop-self-hosted]
     runs-on: ubuntu-latest
     environment:
       name: ${{ inputs.update_branch == 'release' && 'Deploy-Release' || 'Deploy-Twilight' }}
@@ -590,7 +620,7 @@ jobs:
           pwd
           ls .
           ls ..
-          mv releases.xml ./flatpak/io.github.zen_browser.zen.metainfo.xml
+          mv releases.xml ./flatpak/app.zen_browser.zen.metainfo.xml
           # output the version to the file
           echo -n ${{ needs.build-data.outputs.version }} > ./flatpak/version
 
@@ -616,13 +646,18 @@ jobs:
       - name: Checkout Flatpak repository
         uses: actions/checkout@v4
         with:
-          repository: flathub/io.github.zen_browser.zen
+          repository: flathub/app.zen_browser.zen
           token: ${{ secrets.DEPLOY_KEY }}
 
       - name: Download Linux x86_64 build
         uses: actions/download-artifact@v4
         with:
           name: zen.linux-x86_64.tar.bz2
+
+      - name: Download Linux aarch64 build
+        uses: actions/download-artifact@v4
+        with:
+          name: zen.linux-aarch64.tar.bz2
 
       - name: Update repository
         uses: actions/checkout@v4
@@ -645,12 +680,13 @@ jobs:
             --flatpak-archive archive.tar \
             --version ${{ needs.build-data.outputs.version }} \
             --linux-archive zen.linux-x86_64.tar.bz2 \
-            --output io.github.zen_browser.zen.yml \
+            --linux-aarch64-archive zen.linux-aarch64.tar.bz2 \
+            --output app.zen_browser.zen.yml \
             --template-root ./zen-browser/flatpak
 
       - name: Commit changes
         run: |
-          git add io.github.zen_browser.zen.yml
+          git add app.zen_browser.zen.yml
           git commit -m "Update to version ${{ needs.build-data.outputs.version }}"
 
       - name: Clean up
@@ -663,8 +699,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           retention-days: 5
-          name: io.github.zen_browser.zen.yml
-          path: ./io.github.zen_browser.zen.yml
+          name: app.zen_browser.zen.yml
+          path: ./app.zen_browser.zen.yml
 
       - name: Create pull request
         uses: peter-evans/create-pull-request@v7

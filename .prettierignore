@@ -4,8 +4,12 @@ engine/
 **/*.xhtml
 **/*.inc.xhtml
 **/*.bundle.min.js
+**/*.min.js
+**/*.min.mjs
 
 **/*.svg
+
+surfer.json
 
 src/browser/app/profile/*.js
 pnpm-lock.yaml

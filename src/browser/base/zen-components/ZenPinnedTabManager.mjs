@@ -68,6 +68,13 @@
       await this._refreshPinnedTabs(newWorkspace, { init: onInit });
     }
 
+    onTabIconChanged(tab, url = null) {
+      const iconUrl = url ?? tab.iconImage.src;
+      if (tab.hasAttribute('zen-essential')) {
+        tab.querySelector('.tab-background').style.setProperty('--zen-tab-icon', `url(${iconUrl})`);
+      }
+    }
+
     get enabled() {
       if (typeof this._enabled === 'undefined') {
         this._enabled = !(
@@ -544,6 +551,7 @@
           gBrowser.unpinTab(tab);
         }
         gBrowser.pinTab(tab);
+        this.onTabIconChanged(tab);
       }
     }
 

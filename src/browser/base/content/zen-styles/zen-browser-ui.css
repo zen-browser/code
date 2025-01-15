@@ -56,20 +56,7 @@
     }
   }
 
-  @media (-moz-windows-accent-color-in-titlebar) {
-    background-color: ActiveCaption;
-    color: CaptionText;
-    transition: background-color var(--inactive-window-transition);
-    &:-moz-window-inactive {
-      background-color: InactiveCaption;
-      color: InactiveCaptionText;
-    }
-    &::after {
-      display: none;
-    }
-  }
-
-  @media (not (-moz-windows-accent-color-in-titlebar)) and (not (-moz-windows-mica)) and (-moz-bool-pref: 'zen.view.grey-out-inactive-windows') {
+  @media (not (-moz-windows-mica)) and (-moz-bool-pref: 'zen.view.grey-out-inactive-windows') {
     transition: color var(--inactive-window-transition);
     &:-moz-window-inactive {
       color: var(--toolbox-textcolor-inactive);
@@ -111,12 +98,27 @@
   z-index: 2;
 }
 
+#nav-bar {
+  /* For some reason, firefox adds a really small border to the top of the nav-bar */
+  border-top: none !important;
+}
+
 #zen-main-app-wrapper {
   background: transparent;
   overflow: hidden;
 
   & > * {
     z-index: 1;
+  }
+
+  @media (-moz-windows-accent-color-in-titlebar) and (-moz-windows-mica) {
+    background-color: ActiveCaption;
+    color: CaptionText;
+    transition: background-color var(--inactive-window-transition);
+    &:-moz-window-inactive {
+      background-color: InactiveCaption;
+      color: InactiveCaptionText;
+    }
   }
 }
 
@@ -141,7 +143,7 @@
     margin-right: 0;
   }
 
-  &:not([zen-no-padding='true']) #zen-tabbox-wrapper {
+  &:not([zen-no-padding='true'], [zen-right-side='true']) #zen-tabbox-wrapper {
     margin-left: 1px;
   }
 }

@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@zen-browser/surfer':
-        specifier: ^1.9.6
-        version: 1.9.6(glob@7.2.3)
+        specifier: ^1.9.8
+        version: 1.9.8(glob@7.2.3)
     devDependencies:
       husky:
         specifier: ^9.1.7
@@ -122,8 +122,8 @@ packages:
   '@types/node@17.0.45':
     resolution: {integrity: sha512-w+tIMs3rq2afQdsPJlODhoUEKzFP1ayaoyl1CcnwtIlsVe7K7bA1NGm4s3PraqTLlXnbIN84zuBlxBWo1u9BLw==}
 
-  '@zen-browser/surfer@1.9.6':
-    resolution: {integrity: sha512-UdtxmgQ+ft03cD8YMqRMwrXf3Lj1OUN1vWPcZxJYLnI41N2UXGlpiOg7U/q4pEC/YNRkJnywiqAaCRJ1n1J8ZQ==}
+  '@zen-browser/surfer@1.9.8':
+    resolution: {integrity: sha512-dx4ouPDB7bg+eWR+NNuhdroR0JyZ+bWlxpAFskl9TiR3cvr1qtmZG9bYSF27nLNOUSWgKNamjevP785B08Cxjg==}
     hasBin: true
 
   ansi-escapes@7.0.0:
@@ -877,8 +877,8 @@ packages:
     resolution: {integrity: sha512-qpCAvRl9stuOHveKsn7HncJRvv501qIacKzQlO/+Lwxc9+0q2wLyv4Dfvt80/DPn2pqOBsJdDiogXGR9+OvwRw==}
     engines: {node: '>=8'}
 
-  tar-fs@2.1.1:
-    resolution: {integrity: sha512-V0r2Y9scmbDRLCNex/+hYzvp/zyYjvFbHPNgVTKfQvVrb6guiE/fxP+XblDNR011utopbkex2nM4dHNV6GDsng==}
+  tar-fs@2.1.2:
+    resolution: {integrity: sha512-EsaAXwxmx8UB7FRKqeozqEPop69DXcmYwTQwXvyAPF352HJsPdkVhvTaDPYqfNgruveJIJy3TA2l+2zj8LJIJA==}
 
   tar-iterator@1.2.9:
     resolution: {integrity: sha512-sHgC+mJjn5n4v1YDQsFyGUg8Up6byOWV8QjQh/ZOYSOVkmg5q9ivpTgIKJrQOUihivsh+4pQlY5gMmXyH4AyOg==}
@@ -1036,7 +1036,7 @@ snapshots:
 
   '@types/node@17.0.45': {}
 
-  '@zen-browser/surfer@1.9.6(glob@7.2.3)':
+  '@zen-browser/surfer@1.9.8(glob@7.2.3)':
     dependencies:
       '@resvg/resvg-js': 1.4.0
       async-icns: 1.0.2
@@ -1606,7 +1606,7 @@ snapshots:
       pump: 3.0.2
       rc: 1.2.8
       simple-get: 4.0.1
-      tar-fs: 2.1.1
+      tar-fs: 2.1.2
       tunnel-agent: 0.6.0
 
   prettier-plugin-sh@0.14.0(prettier@3.4.2):
@@ -1705,7 +1705,7 @@ snapshots:
       prebuild-install: 7.1.2
       semver: 7.6.3
       simple-get: 4.0.1
-      tar-fs: 2.1.1
+      tar-fs: 2.1.2
       tunnel-agent: 0.6.0
 
   shebang-command@2.0.0:
@@ -1801,7 +1801,7 @@ snapshots:
     dependencies:
       has-flag: 4.0.0
 
-  tar-fs@2.1.1:
+  tar-fs@2.1.2:
     dependencies:
       chownr: 1.1.4
       mkdirp-classic: 0.5.3

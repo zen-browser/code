@@ -1,5 +1,5 @@
 diff --git a/browser/components/places/content/browserPlacesViews.js b/browser/components/places/content/browserPlacesViews.js
-index 1bfa0af16178c9b42172bc1b1e0249d28ff8e9e6..417a9dc4e55208bdc9c1422a3bae14361a4964c5 100644
+index 1bfa0af16178c9b42172bc1b1e0249d28ff8e9e6..cefe17335cb7cc1a22182f2e79c564237b9ae5e8 100644
 --- a/browser/components/places/content/browserPlacesViews.js
 +++ b/browser/components/places/content/browserPlacesViews.js
 @@ -330,12 +330,23 @@ class PlacesViewBase {
@@ -13,7 +13,7 @@ index 1bfa0af16178c9b42172bc1b1e0249d28ff8e9e6..417a9dc4e55208bdc9c1422a3bae1436
 +      let child = resultNode.getChild(i);
 +      // Skip nodes that don't belong in current workspace
 +      if (PlacesUtils.nodeIsURI(child) || PlacesUtils.containerTypes.includes(child.type)) {
-+        if (ZenWorkspaces.isBookmarkInAnotherWorkspace(child)) {
++        if (typeof ZenWorkspaces !== 'undefined' && ZenWorkspaces.isBookmarkInAnotherWorkspace(child)) {
 +          continue;
 +        }
 +      }
@@ -52,7 +52,7 @@ index 1bfa0af16178c9b42172bc1b1e0249d28ff8e9e6..417a9dc4e55208bdc9c1422a3bae1436
 +    for (let i = 0; i < cc; i++) {
 +      let child = this._resultNode.getChild(i);
 +      if (PlacesUtils.nodeIsURI(child) || PlacesUtils.containerTypes.includes(child.type)) {
-+        if (!ZenWorkspaces.isBookmarkInAnotherWorkspace(child)) {
++        if (!(typeof ZenWorkspaces !== 'undefined' && ZenWorkspaces.isBookmarkInAnotherWorkspace(child))) {
 +          visibleNodes.push(child);
 +        }
 +      } else {

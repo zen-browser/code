@@ -274,6 +274,7 @@ var gZenCompactModeManager = {
       {
         element: this.sidebar,
         screenEdge: this.sidebarIsOnRight ? 'right' : 'left',
+        keepHoverDuration: 300,
       },
       {
         element: document.getElementById('zen-appcontent-navbar-container'),
@@ -335,7 +336,7 @@ var gZenCompactModeManager = {
         }
 
         if (this.hoverableElements[i].keepHoverDuration) {
-          this.flashElement(target, keepHoverDuration, 'has-hover' + target.id, 'zen-has-hover');
+          this.flashElement(target, this.hoverableElements[i].keepHoverDuration, 'has-hover' + target.id, 'zen-has-hover');
         } else {
           this._removeHoverFrames[target.id] = window.requestAnimationFrame(() => target.removeAttribute('zen-has-hover'));
         }

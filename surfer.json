@@ -5,8 +5,8 @@
   "binaryName": "zen",
   "version": {
     "product": "firefox",
-    "version": "134.0",
-    "candidate": "134.0"
+    "version": "134.0.1",
+    "candidate": "134.0.1"
   },
   "buildOptions": {
     "generateBranding": true
@@ -19,7 +19,7 @@
       "brandShortName": "Zen",
       "brandFullName": "Zen Browser",
       "release": {
-        "displayVersion": "1.6b",
+        "displayVersion": "1.7b",
         "github": {
           "repo": "zen-browser/desktop"
         },
@@ -47,7 +47,9 @@
     }
   },
   "license": {
-    "ignoredFiles": [".*\\.json"],
+    "ignoredFiles": [
+      ".*\\.json"
+    ],
     "licenseType": "MPL-2.0"
   },
   "updateHostname": "updates.zen-browser.app"

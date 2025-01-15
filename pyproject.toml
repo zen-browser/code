@@ -1,0 +1,5 @@
+[tool.autopep8]
+max_line_length = 120
+recursive = true
+aggressive = 3
+indent_size = 2

@@ -17,7 +17,7 @@ jobs:
     permissions:
       contents: write
     # aarch64 does not need full 16x
-    runs-on: ${{ (inputs.release-branch == 'release' && matrix.arch == 'x86_64') && 'ubuntu-latest' || 'ubuntu-latest' }}
+    runs-on: ${{ (inputs.release-branch == 'release' && matrix.arch == 'x86_64') && 'self-hosted' || 'ubuntu-latest' }}
     strategy:
       fail-fast: false
       matrix:
@@ -51,7 +51,7 @@ jobs:
           set -x
           sudo apt-get update --fix-missing
           sudo apt-get update
-          sudo apt-get install -y dos2unix yasm nasm build-essential libgtk2.0-dev libpython3-dev m4 uuid libasound2-dev libcurl4-openssl-dev libdbus-1-dev libdrm-dev libdbus-glib-1-dev libgtk-3-dev libpulse-dev libx11-xcb-dev libxt-dev xvfb lld llvm
+          sudo apt-get install -y python3 python3-pip dos2unix yasm nasm build-essential libgtk2.0-dev libpython3-dev m4 uuid libasound2-dev libcurl4-openssl-dev libdbus-1-dev libdrm-dev libdbus-glib-1-dev libgtk-3-dev libpulse-dev libx11-xcb-dev libxt-dev xvfb lld llvm
 
       - name: Configure sccache
         uses: actions/github-script@v7

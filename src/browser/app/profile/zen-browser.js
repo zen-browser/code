@@ -85,6 +85,7 @@ pref('zen.theme.accent-color', "#ffb787");
 pref('zen.theme.content-element-separation', 6); // In pixels
 pref('zen.theme.pill-button', false);
 pref('zen.theme.gradient', true);
+pref('zen.theme.essentials-favicon-bg', true);
 
 pref('zen.tabs.show-newtab-vertical', true);
 pref('zen.view.show-newtab-button-border-top', true);
@@ -187,7 +188,7 @@ pref('zen.splitView.change-on-hover', false);
 pref('zen.splitView.rearrange-hover-size', 24);
 
 // Startup flags
-pref('zen.startup.smooth-scroll-in-tabs', true);
+pref('zen.startup.smooth-scroll-in-tabs', false);
 
 // Zen Workspaces
 pref('zen.workspaces.disabled_for_testing', false);

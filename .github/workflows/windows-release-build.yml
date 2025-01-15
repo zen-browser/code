@@ -23,7 +23,7 @@ jobs:
   windows-build:
     name: Build Windows - ${{ matrix.arch }}
     # aarch64 does not need full 16x, and we also dont use full LTO when generating GPO
-    runs-on: ${{ (inputs.release-branch == 'release' && !inputs.generate-gpo && matrix.arch == 'x86_64') && 'ubuntu-latest' || 'ubuntu-latest' }}
+    runs-on: ${{ (inputs.release-branch == 'release' && !inputs.generate-gpo && matrix.arch == 'x86_64') && 'self-hosted' || 'ubuntu-latest' }}
 
     strategy:
       fail-fast: false
@@ -59,6 +59,7 @@ jobs:
       - name: Install dependencies
         run: |
           pnpm install
+          sudo apt-get install -y python3 python3-pip dos2unix yasm nasm build-essential libgtk2.0-dev libpython3-dev m4 uuid libasound2-dev libcurl4-openssl-dev libdbus-1-dev libdrm-dev libdbus-glib-1-dev libgtk-3-dev libpulse-dev libx11-xcb-dev libxt-dev xvfb lld llvm
 
       - name: Load Surfer CI setup
         run: pnpm surfer ci --brand ${{ inputs.release-branch }} --display-version ${{ inputs.build-version }}
@@ -89,11 +90,7 @@ jobs:
           set -x
           mkdir -p ~/win-cross
           cd engine/
-          echo Setup wine
-          aria2c "https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/gecko.cache.level-1.toolchains.v3.linux64-wine.latest/artifacts/public%2Fbuild%2Fwine.tar.zst" -o wine.tar.zst
-          tar --zstd -xvf wine.tar.zst -C ~/win-cross
-          rm wine.tar.zst
-          echo Setup Visual Studio
+          sudo add-apt-repository ppa:savoury1/backports
           sudo apt-get update
           sudo apt-get install -y python3-pip autoconf \
             autoconf2.13 \
@@ -134,7 +131,13 @@ jobs:
             uuid-dev \
             wget \
             zip \
-            zlib1g-dev
+            zlib1g-dev \
+            aria2
+          echo Setup wine
+          aria2c "https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/gecko.cache.level-1.toolchains.v3.linux64-wine.latest/artifacts/public%2Fbuild%2Fwine.tar.zst" -o wine.tar.zst
+          tar --zstd -xvf wine.tar.zst -C ~/win-cross
+          rm wine.tar.zst
+          echo Setup Visual Studio
           ./mach python --virtualenv build taskcluster/scripts/misc/get_vs.py build/vs/vs2022.yaml ~/win-cross/vs2022
 
       - name: Bootstrap

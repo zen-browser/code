@@ -65,10 +65,7 @@
 }
 
 #browser {
-  --zen-toolbox-padding: calc(var(--zen-element-separation) / 1.5);
-  :root[zen-no-padding='true'] & {
-    --zen-toolbox-padding: 4px;
-  }
+  --zen-toolbox-padding: max(4px, calc(var(--zen-element-separation) / 1.5));
 }
 
 :root[zen-single-toolbar='true'] {
@@ -223,6 +220,7 @@
 #tabbrowser-tabs {
   margin-inline-start: 0 !important;
   padding-inline-start: 0 !important;
+  overflow-x: hidden;
 
   --tab-inner-inline-margin: 0;
 
@@ -242,23 +240,6 @@
   & .tabbrowser-tab {
     transition: scale 0.07s ease;
     #tabbrowser-tabs &:not([zen-essential='true']) {
-      #tabbrowser-tabs[zen-workspace-animation='previous'] & {
-        animation: zen-slide-in;
-      }
-
-      #tabbrowser-tabs[zen-workspace-animation='next'] & {
-        animation: zen-slide-in-reverse;
-      }
-
-      #tabbrowser-tabs[zen-workspace-animation] & {
-        opacity: 0;
-        transform: translateX(-100%);
-        animation-delay: 0.2s;
-        animation-fill-mode: forwards;
-        animation-duration: 0.2s;
-        animation-timing-function: ease;
-      }
-
       #tabbrowser-tabs[dont-animate-tabs] & {
         opacity: 0;
       }
@@ -460,7 +441,7 @@
     padding-left: 0;
   }
 
-  &:not([zen-right-side='true']):not([zen-user-hover='true']) {
+  &:not([zen-right-side='true']) {
     padding-right: 0;
     & #titlebar {
       padding-left: var(--zen-toolbox-padding);
@@ -962,6 +943,39 @@
   & .tab-icon-image,
   & .tab-icon-overlay {
     margin-inline-end: 0 !important;
+  }
+
+  @media (-moz-bool-pref: 'zen.theme.essentials-favicon-bg') {
+    &[selected] .tab-background {
+      &::after {
+        content: "";
+        inset: -50%;
+        filter: blur(15px);
+        position: absolute;
+        background-size: 100% 100%;
+        background-clip: padding-box;
+        background-image: var(--zen-tab-icon);
+        z-index: -1;
+      }
+
+      background: transparent;
+      overflow: hidden;
+
+      &::before {
+        background: light-dark(rgba(255, 255, 255, 0.8), rgba(68, 64, 64, 0.80));
+        margin: 2px;
+        border-radius: calc(var(--tab-border-radius) - 2px);
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        content: "";
+        transition: background 0.2s ease-in-out;
+      }
+    }
+
+    &[selected]:hover .tab-background::before {
+      background: light-dark(rgba(255, 255, 255, 0.8), rgba(68, 64, 64, 0.85));
+    }
   }
 }
 

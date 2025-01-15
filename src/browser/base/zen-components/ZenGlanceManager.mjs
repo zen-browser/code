@@ -102,19 +102,36 @@
       window.requestAnimationFrame(() => {
         this.quickOpenGlance();
 
-        this.browserWrapper.style.setProperty('--initial-x', `${initialX}px`);
-        this.browserWrapper.style.setProperty('--initial-y', `${initialY}px`);
-        this.browserWrapper.style.setProperty('--initial-width', initialWidth + 'px');
-        this.browserWrapper.style.setProperty('--initial-height', initialHeight + 'px');
-
         this.overlay.removeAttribute('fade-out');
         this.browserWrapper.setAttribute('animate', true);
-        setTimeout(() => {
-          this.browserWrapper.setAttribute('animate-end', true);
-          this.browserWrapper.setAttribute('has-finished-animation', true);
-          this._animating = false;
-          this.animatingOpen = false;
-        }, 500);
+        this.browserWrapper.style.top = `${initialY}px`;
+        this.browserWrapper.style.left = `${initialX}px`;
+        this.browserWrapper.style.width = `${initialWidth}px`;
+        this.browserWrapper.style.height = `${initialHeight}px`;
+        gZenUIManager.motion
+          .animate(
+            this.browserWrapper,
+            {
+              top: [`${initialY}px`, '50%'],
+              left: [`${initialX}px`, '50%'],
+              width: [`${initialWidth}px`, '85%'],
+              height: [`${initialHeight}px`, '100%'],
+              opacity: [0.8, 1],
+            },
+            {
+              duration: 0.5,
+              ease: 'easeIn',
+              type: 'spring',
+              bounce: 0.25,
+            }
+          )
+          .then(() => {
+            this.browserWrapper.removeAttribute('animate');
+            this.browserWrapper.setAttribute('animate-end', true);
+            this.browserWrapper.setAttribute('has-finished-animation', true);
+            this._animating = false;
+            this.animatingOpen = false;
+          });
       });
     }
 
@@ -286,6 +303,7 @@
       this.animatingFullOpen = true;
       this.currentParentTab._visuallySelected = false;
 
+      this.browserWrapper.removeAttribute('style');
       this.browserWrapper.removeAttribute('has-finished-animation');
       this.browserWrapper.setAttribute('animate-full', true);
       this.#currentTab.removeAttribute('zen-glance-tab');

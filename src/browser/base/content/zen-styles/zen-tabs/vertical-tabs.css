@@ -65,10 +65,7 @@
 }
 
 #browser {
-  --zen-toolbox-padding: calc(var(--zen-element-separation) / 1.5);
-  :root[zen-no-padding='true'] & {
-    --zen-toolbox-padding: 4px;
-  }
+  --zen-toolbox-padding: max(4px, calc(var(--zen-element-separation) / 1.5));
 }
 
 :root[zen-single-toolbar='true'] {

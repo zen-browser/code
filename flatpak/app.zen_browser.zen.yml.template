@@ -36,11 +36,11 @@ modules:
       - mv zen /app/
       - mkdir -p /app/lib/ffmpeg
 
-      - install -Dm0755 metadata/launch-script.sh ${FLATPAK_DEST}/bin/launch-script.sh
-      - install -Dm0644 metadata/policies.json ${FLATPAK_DEST}/bin/distribution/policies.json
-      - install -Dm0644 metadata/icons/${FLATPAK_ID}.svg ${FLATPAK_DEST}/share/icons/hicolor/scalable/apps/${FLATPAK_ID}.svg
-      - install -Dm0644 metadata/${FLATPAK_ID}.metainfo.xml ${FLATPAK_DEST}/share/metainfo/${FLATPAK_ID}.metainfo.xml
-      - install -Dm0644 metadata/${FLATPAK_ID}.desktop ${FLATPAK_DEST}/share/applications/${FLATPAK_ID}.desktop
+      - install -Dm0755 metadata/launch-script.sh ${{FLATPAK_DEST}}/bin/launch-script.sh
+      - install -Dm0644 metadata/policies.json ${{FLATPAK_DEST}}/bin/distribution/policies.json
+      - install -Dm0644 metadata/icons/${{FLATPAK_ID}}.svg ${{FLATPAK_DEST}}/share/icons/hicolor/scalable/apps/${{FLATPAK_ID}}.svg
+      - install -Dm0644 metadata/${{FLATPAK_ID}}.metainfo.xml ${{FLATPAK_DEST}}/share/metainfo/${{FLATPAK_ID}}.metainfo.xml
+      - install -Dm0644 metadata/${{FLATPAK_ID}}.desktop ${{FLATPAK_DEST}}/share/applications/${{FLATPAK_ID}}.desktop
 
     sources:
       - type: archive

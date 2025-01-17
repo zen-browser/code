@@ -124,8 +124,6 @@
 
 #zen-appcontent-wrapper {
   max-width: 100%;
-  min-width: 1px;
-  overflow-x: hidden;
   z-index: 1;
 }
 
@@ -141,10 +139,6 @@
 
   &[zen-right-side='true'] #zen-tabbox-wrapper {
     margin-right: 0;
-  }
-
-  &:not([zen-no-padding='true'], [zen-right-side='true']) #zen-tabbox-wrapper {
-    margin-left: 1px;
   }
 }
 

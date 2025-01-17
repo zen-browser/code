@@ -47,7 +47,7 @@
   }
 
   class ZenPinnedTabManager extends ZenDOMOperatedFeature {
-    init() {
+    async init() {
       if (!this.enabled) {
         return;
       }
@@ -58,6 +58,9 @@
 
       this._zenClickEventListener = this._onTabClick.bind(this);
       ZenWorkspaces.addChangeListeners(this.onWorkspaceChange.bind(this));
+
+      await ZenPinnedTabsStorage.promiseInitialized;
+      ZenWorkspaces._resolvePinnedInitialized();
     }
 
     async onWorkspaceChange(newWorkspace, onInit) {

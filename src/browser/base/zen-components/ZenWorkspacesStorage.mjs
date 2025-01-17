@@ -70,6 +70,8 @@ var ZenWorkspacesStorage = {
         this.lazy.Weave.Service.engineManager.register(ZenWorkspacesEngine);
         await ZenWorkspacesStorage.migrateWorkspacesFromJSON();
       }
+
+      ZenWorkspaces._resolveDBInitialized();
     });
   },
 

@@ -1,5 +1,6 @@
 var ZenPinnedTabsStorage = {
   async init() {
+    await SessionStore.promiseInitialized;
     await this._ensureTable();
   },
 
@@ -45,6 +46,8 @@ var ZenPinnedTabsStorage = {
       await db.execute(`
         CREATE INDEX IF NOT EXISTS idx_zen_pins_changes_uuid ON zen_pins_changes(uuid)
       `);
+
+      this._resolveInitialized();
     });
   },
 
@@ -357,4 +360,7 @@ var ZenPinnedTabsStorage = {
   },
 };
 
-ZenPinnedTabsStorage.init();
+ZenPinnedTabsStorage.promiseInitialized = new Promise((resolve) => {
+  ZenPinnedTabsStorage._resolveInitialized = resolve;
+  ZenPinnedTabsStorage.init();
+})

@@ -21,6 +21,20 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     'BMB_mobileBookmarks',
   ];
 
+  promiseDBInitialized = new Promise((resolve) => {
+    this._resolveDBInitialized = resolve;
+  });
+
+  promisePinnedInitialized = new Promise((resolve) => {
+    this._resolvePinnedInitialized = resolve;
+  });
+
+  async waitForPromises() {
+    await SessionStore.promiseInitialized;
+    await this.promiseDBInitialized;
+    await this.promisePinnedInitialized;
+  }
+
   async init() {
     if (!this.shouldHaveWorkspaces) {
       document.getElementById('zen-current-workspace-indicator').setAttribute('hidden', 'true');
@@ -376,7 +390,7 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
       this._initializeWorkspaceTabContextMenus();
       await this.workspaceBookmarks();
       window.addEventListener('TabBrowserInserted', this.onTabBrowserInserted.bind(this));
-      await SessionStore.promiseInitialized;
+      await this.waitForPromises();
       let workspaces = await this._workspaces();
       let activeWorkspace = null;
       if (workspaces.workspaces.length === 0) {

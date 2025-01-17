@@ -409,6 +409,10 @@
         return;
       }
 
+      if (Services.startup.shuttingDown || window.skipNextCanClose) {
+        return;
+      }
+
       await ZenPinnedTabsStorage.removePin(tab.getAttribute('zen-pin-id'));
 
       if (!isClosing) {

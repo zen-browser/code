@@ -20,7 +20,7 @@
   --zen-primary-color: #ffb787;
 
   /* Branding */
-  --zen-branding-dark: #202020;
+  --zen-branding-dark: #1d1d1d;
   --zen-branding-coral: #f76f53;
   --zen-branding-paper: #ebebeb;
 
@@ -103,7 +103,7 @@
   --zen-button-border-radius: 5px;
   --zen-button-padding: 0.6rem 1.2rem;
 
-  --zen-toolbar-element-bg: light-dark(rgba(255, 255, 255, 0.65), rgba(170, 170, 170, 0.2));
+  --zen-toolbar-element-bg: light-dark(rgba(255, 255, 255, 0.65), rgba(255, 255, 255, 0.11));
 
   /* Toolbar */
   --zen-toolbar-height: 38px;
@@ -169,6 +169,9 @@
   --arrowpanel-background: var(--zen-dialog-background) !important;
 
   --tab-selected-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.1) !important;
+
+  /** Other theme-related styles */
+  font-family: SF Pro,ui-sans-serif,system-ui,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;
 }
 
 @media (prefers-color-scheme: dark) {

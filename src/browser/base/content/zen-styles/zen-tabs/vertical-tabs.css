@@ -228,7 +228,7 @@
   border-bottom: 0px solid transparent !important;
 
   --tab-block-margin: 2px;
-  --tab-selected-bgcolor: light-dark(rgba(255,255,255,.8), rgba(255,255,255,.25));
+  --tab-selected-bgcolor: var(--zen-toolbar-element-bg);
   grid-gap: 0 !important;
 
   &[overflow]::after,
@@ -924,7 +924,7 @@
   &:not([selected], [multiselected="true"]) .tab-background {
     background: var(--zen-toolbar-element-bg);
     backdrop-filter: none !important;
-    border: 1px solid light-dark(transparent, rgba(255, 255, 255, 0.05));
+    border: none;
   }
 
   & .tab-content {
@@ -960,9 +960,10 @@
 
       background: transparent;
       overflow: hidden;
+      position: relative;
 
       &::before {
-        background: light-dark(rgba(255, 255, 255, 0.8), rgba(68, 64, 64, 0.80));
+        background: light-dark(rgba(255, 255, 255, 0.75), rgba(68, 64, 64, 0.75));
         margin: 2px;
         border-radius: calc(var(--tab-border-radius) - 2px);
         position: absolute;
@@ -974,7 +975,7 @@
     }
 
     &[selected]:hover .tab-background::before {
-      background: light-dark(rgba(255, 255, 255, 0.8), rgba(68, 64, 64, 0.85));
+      background: light-dark(rgba(255, 255, 255, 0.70), rgba(68, 64, 64, 0.70));
     }
   }
 }

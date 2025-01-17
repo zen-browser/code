@@ -30,7 +30,7 @@
 
     :root:not([zen-no-padding='true']) & {
       margin: 1px;
-      box-shadow: 0 0 1px 1px light-dark(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.3));
+      box-shadow: 0 0 9.73px 0px rgba(0, 0, 0, 0.25);
     }
   }
 

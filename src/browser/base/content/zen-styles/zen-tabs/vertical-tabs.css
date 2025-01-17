@@ -341,6 +341,7 @@
   padding-inline-end: 0 !important;
   display: flex !important;
   flex-direction: column;
+  max-height: calc(100vh - 12 * (var(--tab-min-height) + 2 * var(--tab-block-margin))) !important;
 
   & .tabbrowser-tab:not(:hover) .tab-background:not([selected]):not([multiselected]) {
     background: transparent !important;

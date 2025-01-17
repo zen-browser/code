@@ -1332,14 +1332,14 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     if (out) {
       element.animate([{ transform: 'translateX(0)' }, { transform: `translateX(${direction === 'left' ? '-' : ''}100%)` }], {
         duration: 100,
-        easing: 'ease',
+        easing: 'ease-in',
         fill: 'both',
       }).onfinish = callback;
       return;
     }
     element.animate([{ transform: `translateX(${direction === 'left' ? '-' : ''}100%)` }, { transform: 'translateX(0)' }], {
       duration: 100,
-      easing: 'ease',
+      easing: 'ease-out',
       fill: 'both',
     }).onfinish = callback;
   }

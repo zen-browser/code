@@ -274,7 +274,7 @@ var gZenCompactModeManager = {
       {
         element: this.sidebar,
         screenEdge: this.sidebarIsOnRight ? 'right' : 'left',
-        keepHoverDuration: 50,
+        keepHoverDuration: 100,
       },
       {
         element: document.getElementById('zen-appcontent-navbar-container'),

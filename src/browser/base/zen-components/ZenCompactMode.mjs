@@ -147,7 +147,7 @@ var gZenCompactModeManager = {
       if (canHideSidebar && isCompactMode) {
         window.requestAnimationFrame(() => {
           this.sidebar.style.position = 'unset';
-          this.sidebar.style.transition = 'margin .4s ease';
+          this.sidebar.style.transition = 'margin .3s ease-in-out';
           this.sidebar.style.left = '0';
           if (!this.sidebarIsOnRight) {
             this.sidebar.style.marginLeft = `${-1 * sidebarWidth}px`;
@@ -188,7 +188,7 @@ var gZenCompactModeManager = {
         }
 
         window.requestAnimationFrame(() => {
-          this.sidebar.style.transition = 'margin .3s ease, transform .275s ease, opacity .3s ease';
+          this.sidebar.style.transition = 'margin .3s ease-in-out, transform .275s ease-in-out, opacity .3s ease';
           // we are in compact mode and we are exiting it
           if (!this.sidebarIsOnRight) {
             this.sidebar.style.marginLeft = '0';
@@ -274,7 +274,7 @@ var gZenCompactModeManager = {
       {
         element: this.sidebar,
         screenEdge: this.sidebarIsOnRight ? 'right' : 'left',
-        keepHoverDuration: 100,
+        keepHoverDuration: 50,
       },
       {
         element: document.getElementById('zen-appcontent-navbar-container'),

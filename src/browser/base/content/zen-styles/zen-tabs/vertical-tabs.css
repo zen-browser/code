@@ -696,10 +696,6 @@
   transition: opacity 0.2s ease-in-out;
   background: var(--zen-colors-border);
   appearance: none;
-
-  &:hover {
-    opacity: 1;
-  }
 }
 
 /* Mark: Move sidebar to the right */

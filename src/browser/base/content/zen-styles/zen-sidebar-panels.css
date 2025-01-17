@@ -101,7 +101,8 @@
 }
 
 .zen-sidebar-web-panel-splitter,
-.zen-split-view-splitter[orient='vertical'] {
+.zen-split-view-splitter[orient='vertical'],
+#zen-sidebar-splitter {
   position: absolute;
   top: 0;
   left: 0;
@@ -119,9 +120,9 @@
   }
 
   &::before {
-    height: 30px;
-    width: 3px;
-    background: var(--zen-colors-border);
+    height: 50px;
+    width: 4px;
+    background: var(--zen-colors-primary);
     border-radius: 2px;
     content: '';
     position: absolute;

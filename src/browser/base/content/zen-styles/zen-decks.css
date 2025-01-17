@@ -9,7 +9,7 @@
 #tabbrowser-tabpanels[zen-split-view='true'] {
   display: flex;
   flex-direction: row;
-  margin-top: calc(var(--zen-split-column-gap) / -2);
+  margin-top: calc(var(--zen-split-column-gap) * -1);
 }
 
 #tabbrowser-tabpanels[zen-split-view='true'] > *:not([zen-split='true']) {
@@ -67,15 +67,9 @@
 #zen-splitview-overlay {
   @media (-moz-bool-pref: 'zen.view.compact') {
     :root:not([customizing]) & {
-      @media (-moz-bool-pref: 'zen.view.compact.hide-tabbar') {
-        & {
-          margin-left: 1px;
-        }
-      }
-
       @media (-moz-bool-pref: 'zen.view.compact.hide-toolbar') {
         & {
-          margin-top: calc(var(--zen-split-column-gap) / -2);
+          margin-top: calc(var(--zen-split-column-gap) * -1);
         }
       }
     }

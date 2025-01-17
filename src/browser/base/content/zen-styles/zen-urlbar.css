@@ -125,7 +125,7 @@
 }
 
 :root[zen-single-toolbar='true'] {
-  .urlbar-page-action:not(#star-button-box):not([open]),
+  .urlbar-page-action:not([open]),
   #tracking-protection-icon-container {
     margin-inline-end: calc(-16px - 2 * var(--urlbar-icon-padding)) !important;
     opacity: 0;

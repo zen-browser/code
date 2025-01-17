@@ -1056,13 +1056,6 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     }
     let button = browser.document.getElementById('zen-workspaces-button');
 
-    if (!button) {
-      button = browser.document.createXULElement('toolbarbutton');
-      button.id = 'zen-workspaces-button';
-      let navbar = browser.document.getElementById('nav-bar');
-      navbar.appendChild(button);
-    }
-
     while (button.firstChild) {
       button.firstChild.remove();
     }

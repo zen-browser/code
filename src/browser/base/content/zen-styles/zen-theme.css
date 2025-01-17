@@ -171,7 +171,15 @@
   --tab-selected-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.1) !important;
 
   /** Other theme-related styles */
-  font-family: SF Pro,ui-sans-serif,system-ui,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;
+  font-family:
+    SF Pro,
+    ui-sans-serif,
+    system-ui,
+    sans-serif,
+    Apple Color Emoji,
+    Segoe UI Emoji,
+    Segoe UI Symbol,
+    Noto Color Emoji;
 }
 
 @media (prefers-color-scheme: dark) {

@@ -363,4 +363,4 @@ var ZenPinnedTabsStorage = {
 ZenPinnedTabsStorage.promiseInitialized = new Promise((resolve) => {
   ZenPinnedTabsStorage._resolveInitialized = resolve;
   ZenPinnedTabsStorage.init();
-})
+});

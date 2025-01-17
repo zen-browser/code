@@ -914,6 +914,8 @@
   width: 100% !important;
   border-radius: var(--border-radius-medium);
 
+  --tab-selected-bgcolor: light-dark(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.2));
+
   &[selected] .tab-background {
     box-shadow: 0 0 1px 1px light-dark(rgba(0, 0, 0, 0.07), rgba(0, 0, 0, 0.1));
   }

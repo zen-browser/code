@@ -147,7 +147,7 @@ var gZenCompactModeManager = {
       if (canHideSidebar && isCompactMode) {
         window.requestAnimationFrame(() => {
           this.sidebar.style.position = 'unset';
-          this.sidebar.style.transition = 'margin .3s ease-in-out';
+          this.sidebar.style.transition = 'margin .25s ease-in-out';
           this.sidebar.style.left = '0';
           if (!this.sidebarIsOnRight) {
             this.sidebar.style.marginLeft = `${-1 * sidebarWidth}px`;
@@ -188,7 +188,7 @@ var gZenCompactModeManager = {
         }
 
         window.requestAnimationFrame(() => {
-          this.sidebar.style.transition = 'margin .3s ease-in-out, transform .275s ease-in-out, opacity .3s ease';
+          this.sidebar.style.transition = 'margin .25s ease, transform .275s ease, opacity .1s ease';
           // we are in compact mode and we are exiting it
           if (!this.sidebarIsOnRight) {
             this.sidebar.style.marginLeft = '0';
@@ -316,6 +316,7 @@ var gZenCompactModeManager = {
     for (let i = 0; i < this.hoverableElements.length; i++) {
       let target = this.hoverableElements[i].element;
       target.addEventListener('mouseenter', (event) => {
+        if (!event.target.matches(':hover')) return;
         this.clearFlashTimeout('has-hover' + target.id);
         window.requestAnimationFrame(() => target.setAttribute('zen-has-hover', 'true'));
       });

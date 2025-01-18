@@ -61,6 +61,7 @@ pref('pdfjs.enableHighlightFloatingButton', true);
 pref("alerts.showFavicons", true);
 
 // Toolbars
+pref("browser.tabs.closeWindowWithLastTab", false);
 pref("browser.tabs.loadBookmarksInTabs", false);
 pref('browser.toolbars.bookmarks.visibility', 'never');
 pref("browser.bookmarks.openInTabClosesMenu", false);

@@ -219,7 +219,7 @@
     }
 
     unload(tab) {
-      gBrowser.discardBrowser(tab);
+      gBrowser.explicitUnloadTabs([tab]);
       tab.removeAttribute('linkedpanel');
     }
 

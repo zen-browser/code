@@ -168,7 +168,7 @@
   --toolbar-field-background-color: var(--zen-colors-input-bg) !important;
   --arrowpanel-background: var(--zen-dialog-background) !important;
 
-  --tab-selected-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.1) !important;
+  --tab-selected-shadow: 0 0 1px 0px rgba(0, 0, 0, 0.1) !important;
 
   /** Other theme-related styles */
   font-family:

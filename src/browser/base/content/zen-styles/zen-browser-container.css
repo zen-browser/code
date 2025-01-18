@@ -29,7 +29,7 @@
     }
 
     :root:not([zen-no-padding='true']) & {
-      box-shadow: 0 0 9.73px 0px rgba(0, 0, 0, 0.25);
+      box-shadow: 0 0 9.73px 0px light-dark(rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.25));
     }
   }
 

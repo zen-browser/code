@@ -30,7 +30,7 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
   });
 
   async waitForPromises() {
-    await Promise.all([this.promiseDBInitialized, this.promisePinnedInitialized, SessionStore.promiseInitialized]);
+    await Promise.all([this.promiseDBInitialized, this.promisePinnedInitialized, SessionStore.promiseAllWindowsRestored]);
   }
 
   async init() {
@@ -71,6 +71,7 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     );
     ChromeUtils.defineLazyGetter(this, 'tabContainer', () => document.getElementById('tabbrowser-tabs'));
     this._activeWorkspace = Services.prefs.getStringPref('zen.workspaces.active', '');
+    await this.waitForPromises();
     this._delayedStartup();
   }
 
@@ -382,7 +383,6 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
   }
 
   async initializeWorkspaces() {
-    await this.waitForPromises();
     await this.initializeWorkspacesButton();
     if (this.workspaceEnabled) {
       this._initializeWorkspaceCreationIcons();
@@ -403,11 +403,11 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
           activeWorkspace = workspaces.workspaces[0];
           this.activeWorkspace = activeWorkspace?.uuid;
         }
-        await this.changeWorkspace(activeWorkspace, { onInit: true });
       }
       try {
         if (activeWorkspace) {
           window.gZenThemePicker = new ZenThemePicker();
+          await this.changeWorkspace(activeWorkspace, { onInit: true });
         }
       } catch (e) {
         console.error('ZenWorkspaces: Error initializing theme picker', e);

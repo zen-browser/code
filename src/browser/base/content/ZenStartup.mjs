@@ -84,19 +84,6 @@
           sidebarPanelWrapper.prepend(elem);
         }
       }
-
-      // remove all styles except for the width, since we are xulstoring the complet style list
-      const width = toolbox.style.width || '180px';
-      toolbox.removeAttribute('style');
-      toolbox.style.width = width;
-
-      // Set a splitter to navigator-toolbox
-      const splitter = document.createXULElement('splitter');
-      splitter.setAttribute('id', 'zen-sidebar-splitter');
-      splitter.setAttribute('orient', 'horizontal');
-      splitter.setAttribute('resizebefore', 'sibling');
-      splitter.setAttribute('resizeafter', 'none');
-      toolbox.insertAdjacentElement('afterend', splitter);
     },
 
     _initSearchBar() {

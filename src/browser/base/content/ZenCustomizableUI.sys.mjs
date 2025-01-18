@@ -13,6 +13,7 @@ export var ZenCustomizableUI = new (class {
         type: this.TYPE_TOOLBAR,
         defaultPlacements: [''],
         defaultCollapsed: null,
+        overflowable: true,
       },
       true
     );
@@ -34,6 +35,16 @@ export var ZenCustomizableUI = new (class {
   }
 
   _addSidebarButtons(window) {
+    const toolbox = window.document.getElementById('navigator-toolbox');
+
+    // Set a splitter to navigator-toolbox
+    const splitter = window.document.createXULElement('splitter');
+    splitter.setAttribute('id', 'zen-sidebar-splitter');
+    splitter.setAttribute('orient', 'horizontal');
+    splitter.setAttribute('resizebefore', 'sibling');
+    splitter.setAttribute('resizeafter', 'none');
+    toolbox.insertAdjacentElement('afterend', splitter);
+
     const sidebarBox = window.MozXULElement.parseXULToFragment(`
       <toolbar id="zen-sidebar-top-buttons"
         fullscreentoolbar="true"
@@ -45,12 +56,29 @@ export var ZenCustomizableUI = new (class {
         flex="1"
         skipintoolbarset="true"
         customizationtarget="zen-sidebar-top-buttons-customization-target"
+        overflowable="true"
+        default-overflowbutton="nav-bar-overflow-button"
+        default-overflowtarget="widget-overflow-list"
+        default-overflowpanel="widget-overflow"
+        addon-webext-overflowbutton="unified-extensions-button"
+        addon-webext-overflowtarget="overflowed-extensions-list"
         mode="icons">
         <hbox id="zen-sidebar-top-buttons-customization-target" class="customization-target" flex="1">
         </hbox>
       </toolbar>
     `);
-    window.document.getElementById('navigator-toolbox').prepend(sidebarBox);
+    toolbox.prepend(sidebarBox);
+    new window.MutationObserver((e) => {
+      if (e[0].type !== 'attributes' || e[0].attributeName !== 'width') return;
+      this._dispatchResizeEvent(window);
+    }).observe(toolbox, {
+      attributes: true, //configure it to listen to attribute changes
+    });
+
+    // remove all styles except for the width, since we are xulstoring the complet style list
+    const width = toolbox.style.width || '180px';
+    toolbox.removeAttribute('style');
+    toolbox.style.width = width;
 
     const newTab = window.document.getElementById('vertical-tabs-newtab-button');
     newTab.classList.add('zen-sidebar-action-button');
@@ -91,6 +119,10 @@ export var ZenCustomizableUI = new (class {
         wrapper.prepend(elem);
       }
     }
+  }
+
+  _dispatchResizeEvent(window) {
+    window.dispatchEvent(new window.Event('resize'));
   }
 
   registerToolbarNodes(window) {

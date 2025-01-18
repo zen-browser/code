@@ -361,6 +361,7 @@
 /* Mark: toolbox as expanded */
 #navigator-toolbox[zen-sidebar-expanded='true'] {
   --zen-toolbox-min-width: fit-content;
+
   --tab-icon-end-margin: 8.5px;
   padding: var(--zen-toolbox-padding);
   padding-left: 0;
@@ -809,6 +810,14 @@
 
   :root[zen-single-toolbar='true'] & {
     --toolbarbutton-inner-padding: calc(var(--zen-toolbar-button-inner-padding) - 2px) !important;
+
+    & #PanelUI-button {
+      order: -2;
+    }
+
+    & #unified-extensions-button {
+      order: -1;
+    }
   }
 
   & #zen-sidebar-top-buttons-customization-target {

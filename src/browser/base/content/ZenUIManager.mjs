@@ -201,6 +201,7 @@ var gZenVerticalTabsManager = {
     this.__topButtonsSeparatorElement = document.createElement('div');
     this.__topButtonsSeparatorElement.id = 'zen-sidebar-top-buttons-separator';
     this.__topButtonsSeparatorElement.setAttribute('skipintoolbarset', 'true');
+    this.__topButtonsSeparatorElement.setAttribute('overflows', 'false');
     return this.__topButtonsSeparatorElement;
   },
 
@@ -332,7 +333,10 @@ var gZenVerticalTabsManager = {
           this._topButtonsSeparatorElement.after(button);
         }
         buttonsTarget.prepend(document.getElementById('unified-extensions-button'));
-        buttonsTarget.prepend(document.getElementById('PanelUI-button'));
+        const panelUIButton = document.getElementById('PanelUI-button');
+        buttonsTarget.prepend(panelUIButton);
+        panelUIButton.setAttribute('overflows', 'false');
+        buttonsTarget.parentElement.append(document.getElementById('nav-bar-overflow-button'));
         if (this.isWindowsStyledButtons && !doNotChangeWindowButtons) {
           appContentNavbarContaienr.append(windowButtons);
         }
@@ -357,7 +361,10 @@ var gZenVerticalTabsManager = {
         }
         this._topButtonsSeparatorElement.remove();
         document.documentElement.removeAttribute('zen-single-toolbar');
-        navBar.appendChild(document.getElementById('PanelUI-button'));
+        const panelUIButton = document.getElementById('PanelUI-button');
+        navBar.appendChild(panelUIButton);
+        panelUIButton.removeAttribute('overflows');
+        navBar.appendChild(document.getElementById('nav-bar-overflow-button'));
         this._toolbarOriginalParent.prepend(navBar);
         if (!dontRebuildAreas) {
           this.rebuildAreas();
@@ -420,6 +427,7 @@ var gZenVerticalTabsManager = {
 
       // Always move the splitter next to the sidebar
       this.navigatorToolbox.after(document.getElementById('zen-sidebar-splitter'));
+      window.dispatchEvent(new Event('resize'));
     } catch (e) {
       console.error(e);
     }
@@ -451,5 +459,16 @@ var gZenVerticalTabsManager = {
   toggleTabsOnRight() {
     const newVal = !Services.prefs.getBoolPref('zen.tabs.vertical.right-side');
     Services.prefs.setBoolPref('zen.tabs.vertical.right-side', newVal);
+  },
+
+  appendCustomizableItem(target, child, placements) {
+    if (
+      target.id === 'zen-sidebar-top-buttons-customization-target' &&
+      this._hasSetSingleToolbar &&
+      placements.includes(child.id)
+    ) {
+      return this._topButtonsSeparatorElement.before(child);
+    }
+    target.appendChild(child);
   },
 };

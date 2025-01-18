@@ -1350,14 +1350,15 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
       let count = 0;
       const onAnimationEnd = () => {
         count++;
-        // +1 for the workspace indicator tab
-        if (count >= tabs.length + 1) {
+        // +1 for the workspace indicator tab and vertical tabs periferals
+        if (count >= tabs.length + 2) {
           resolve();
         }
       };
       this.tabContainer.removeAttribute('dont-animate-tabs');
       // Also animate the workspace indicator label
       this._animateElement(document.getElementById('zen-current-workspace-indicator'), direction, out, () => onAnimationEnd());
+      this._animateElement(document.getElementById('tabbrowser-arrowscrollbox-periphery'), direction, out, () => onAnimationEnd());
       for (const tab of tabs) {
         this._animateElement(tab, direction, out, () => onAnimationEnd());
       }

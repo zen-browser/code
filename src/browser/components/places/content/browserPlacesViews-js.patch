@@ -1,5 +1,5 @@
 diff --git a/browser/components/places/content/browserPlacesViews.js b/browser/components/places/content/browserPlacesViews.js
-index 1bfa0af16178c9b42172bc1b1e0249d28ff8e9e6..cefe17335cb7cc1a22182f2e79c564237b9ae5e8 100644
+index 1bfa0af16178c9b42172bc1b1e0249d28ff8e9e6..6744a37b7183ab9e3ac5bced7ded715879063eb5 100644
 --- a/browser/components/places/content/browserPlacesViews.js
 +++ b/browser/components/places/content/browserPlacesViews.js
 @@ -330,12 +330,23 @@ class PlacesViewBase {
@@ -33,7 +33,7 @@ index 1bfa0af16178c9b42172bc1b1e0249d28ff8e9e6..cefe17335cb7cc1a22182f2e79c56423
            "scheme",
            PlacesUIUtils.guessUrlSchemeForUI(aPlacesNode.uri)
          );
-+        element.addEventListener("command", gZenGlanceManager.openGlanceForBookmark.bind(gZenGlanceManager));
++        element.addEventListener("command", (e) => window.gZenGlanceManager.openGlanceForBookmark(e));
        } else if (PlacesUtils.containerTypes.includes(type)) {
          element = document.createXULElement("menu");
          element.setAttribute("container", "true");

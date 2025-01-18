@@ -605,4 +605,8 @@ var ZenWorkspaceBookmarksStorage = {
   },
 };
 
-ZenWorkspacesStorage.init();
+
+ZenWorkspacesStorage.promiseDBInitialized = new Promise((resolve) => {
+  ZenWorkspacesStorage._resolveDBInitialized = resolve;
+  ZenWorkspacesStorage.init();
+});

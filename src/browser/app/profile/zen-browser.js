@@ -170,6 +170,7 @@ pref('zen.tab-unloader.enabled', true);
 pref('zen.tab-unloader.timeout-minutes', 20);
 pref('zen.tab-unloader.excluded-urls', "example.com,example.org");
 
+pref('zen.pinned-tab-manager.debug', false);
 pref('zen.pinned-tab-manager.restore-pinned-tabs-to-pinned-url', false);
 pref('zen.pinned-tab-manager.close-shortcut-behavior', 'switch');
 

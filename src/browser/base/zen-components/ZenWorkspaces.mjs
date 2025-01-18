@@ -30,9 +30,7 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
   });
 
   async waitForPromises() {
-    await SessionStore.promiseInitialized;
-    await this.promiseDBInitialized;
-    await this.promisePinnedInitialized;
+    await Promise.all([this.promiseDBInitialized, this.promisePinnedInitialized, SessionStore.promiseInitialized]);
   }
 
   async init() {
@@ -384,13 +382,13 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
   }
 
   async initializeWorkspaces() {
+    await this.waitForPromises();
     await this.initializeWorkspacesButton();
     if (this.workspaceEnabled) {
       this._initializeWorkspaceCreationIcons();
       this._initializeWorkspaceTabContextMenus();
       await this.workspaceBookmarks();
       window.addEventListener('TabBrowserInserted', this.onTabBrowserInserted.bind(this));
-      await this.waitForPromises();
       let workspaces = await this._workspaces();
       let activeWorkspace = null;
       if (workspaces.workspaces.length === 0) {
@@ -1358,7 +1356,9 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
       this.tabContainer.removeAttribute('dont-animate-tabs');
       // Also animate the workspace indicator label
       this._animateElement(document.getElementById('zen-current-workspace-indicator'), direction, out, () => onAnimationEnd());
-      this._animateElement(document.getElementById('tabbrowser-arrowscrollbox-periphery'), direction, out, () => onAnimationEnd());
+      this._animateElement(document.getElementById('tabbrowser-arrowscrollbox-periphery'), direction, out, () =>
+        onAnimationEnd()
+      );
       for (const tab of tabs) {
         this._animateElement(tab, direction, out, () => onAnimationEnd());
       }

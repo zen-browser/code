@@ -51,6 +51,7 @@
       if (!this.enabled) {
         return;
       }
+      this._canLog = Services.prefs.getBoolPref('zen.pinned-tab-manager.debug', false);
       this.observer = new ZenPinnedTabsObserver();
       this._initClosePinnedTabShortcut();
       this._insertItemsIntoTabContextMenu();
@@ -69,6 +70,12 @@
       }
 
       await this._refreshPinnedTabs(newWorkspace, { init: onInit });
+    }
+
+    log(message) {
+      if (this._canLog) {
+        console.log(`[ZenPinnedTabManager] ${message}`);
+      }
     }
 
     onTabIconChanged(tab, url = null) {
@@ -128,6 +135,7 @@
         this._pinsCache = [];
       }
 
+      this.log(`Initialized pins cache with ${this._pinsCache.length} pins`);
       return this._pinsCache;
     }
 
@@ -224,6 +232,7 @@
           SessionStore.setTabState(newTab, state);
         }
 
+        this.log(`Created new pinned tab for pin ${pin.uuid} (isEssential: ${pin.isEssential})`);
         gBrowser.pinTab(newTab);
 
         newTab.initialize();
@@ -372,6 +381,7 @@
         return;
       }
 
+      this.log(`Setting pinned attributes for tab ${tab.linkedBrowser.currentURI.spec}`);
       const browser = tab.linkedBrowser;
 
       const uuid = gZenUIManager.generateUuidv4();
@@ -413,6 +423,7 @@
         return;
       }
 
+      this.log(`Removing pinned attributes for tab ${tab.getAttribute('zen-pin-id')}`);
       await ZenPinnedTabsStorage.removePin(tab.getAttribute('zen-pin-id'));
 
       if (!isClosing) {

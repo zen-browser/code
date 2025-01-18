@@ -123,8 +123,11 @@
 }
 
 #zen-appcontent-wrapper {
-  max-width: 100%;
   z-index: 1;
+  /* Use this trick to prevent bookmarks from overflowing the window,
+   * without using overflow: hidden.
+   */
+  min-width: 1px;
 }
 
 :root:not([inDOMFullscreen='true']):not([chromehidden~='location']):not([chromehidden~='toolbar']) {

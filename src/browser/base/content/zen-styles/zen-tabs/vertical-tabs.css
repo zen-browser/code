@@ -857,6 +857,7 @@
 
 #tabs-newtab-button {
   display: none;
+  opacity: 0.5;
 }
 
 @media (-moz-bool-pref: 'zen.tabs.show-newtab-vertical') {

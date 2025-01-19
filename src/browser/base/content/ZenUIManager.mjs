@@ -233,14 +233,6 @@ var gZenVerticalTabsManager = {
   },
 
   initializePreferences(updateEvent) {
-    XPCOMUtils.defineLazyPreferenceGetter(
-      this,
-      '_prefsCompactMode',
-      'zen.view.compact',
-      false
-      // no need to update the event, it's handled by the compact mode manager
-    );
-
     XPCOMUtils.defineLazyPreferenceGetter(this, '_prefsVerticalTabs', 'zen.tabs.vertical', true, updateEvent);
     XPCOMUtils.defineLazyPreferenceGetter(this, '_prefsRightSide', 'zen.tabs.vertical.right-side', false, updateEvent);
     XPCOMUtils.defineLazyPreferenceGetter(this, '_prefsUseSingleToolbar', 'zen.view.use-single-toolbar', false, updateEvent);
@@ -267,7 +259,7 @@ var gZenVerticalTabsManager = {
       }
 
       const topButtons = document.getElementById('zen-sidebar-top-buttons');
-      const isCompactMode = this._prefsCompactMode && !forCustomizableMode;
+      const isCompactMode = gZenCompactModeManager.preference && !forCustomizableMode;
       const isVerticalTabs = this._prefsVerticalTabs || forCustomizableMode;
       const isSidebarExpanded = this._prefsSidebarExpanded || !isVerticalTabs;
       const isRightSide = this._prefsRightSide && isVerticalTabs;

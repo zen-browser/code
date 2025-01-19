@@ -978,11 +978,6 @@ Preferences.addAll([
     default: true,
   },
   {
-    id: 'zen.view.compact',
-    type: 'bool',
-    default: false,
-  },
-  {
     id: 'zen.view.compact.hide-toolbar',
     type: 'bool',
     default: false,

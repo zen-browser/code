@@ -20,9 +20,9 @@ var gZenCompactModeManager = {
   _removeHoverFrames: {},
 
   init() {
-    Services.prefs.addObserver('zen.view.compact', this._updateEvent.bind(this));
-    Services.prefs.addObserver('zen.view.sidebar-expanded.on-hover', this._disableTabsOnHoverIfConflict.bind(this));
     Services.prefs.addObserver('zen.tabs.vertical.right-side', this._updateSidebarIsOnRight.bind(this));
+
+    ChromeUtils.defineLazyGetter(this, 'mainAppWrapper', () => document.getElementById('zen-main-app-wrapper'));
 
     this._canAnimateSidebar = Services.prefs.getBoolPref('zen.view.compact.animate-sidebar', true);
 
@@ -33,12 +33,22 @@ var gZenCompactModeManager = {
     this.addContextMenu();
   },
 
-  get prefefence() {
-    return Services.prefs.getBoolPref('zen.view.compact');
+  get preference() {
+    if (!document.documentElement.hasAttribute('zen-compact-mode')) {
+      document.documentElement.setAttribute('zen-compact-mode', this.mainAppWrapper.getAttribute('zen-compact-mode'));
+    }
+    return this.mainAppWrapper.getAttribute('zen-compact-mode') === 'true';
   },
 
   set preference(value) {
-    Services.prefs.setBoolPref('zen.view.compact', value);
+    if (this.preference === value) {
+      return value;
+    }
+    // We use this element in order to make it persis across restarts, by using the XULStore.
+    // main-window can't store attributes other than window sizes, so we use this instead
+    this.mainAppWrapper.setAttribute('zen-compact-mode', value);
+    document.documentElement.setAttribute('zen-compact-mode', value);
+    this._updateEvent();
     return value;
   },
 
@@ -58,7 +68,7 @@ var gZenCompactModeManager = {
   },
 
   flashSidebarIfNecessary(aInstant = false) {
-    if (!aInstant && this.prefefence && lazyCompactMode.COMPACT_MODE_FLASH_ENABLED && !gZenGlanceManager._animating) {
+    if (!aInstant && this.preference && lazyCompactMode.COMPACT_MODE_FLASH_ENABLED && !gZenGlanceManager._animating) {
       this.flashSidebar();
     }
   },
@@ -113,7 +123,6 @@ var gZenCompactModeManager = {
 
   _updateEvent() {
     this._evenListeners.forEach((callback) => callback());
-    this._disableTabsOnHoverIfConflict();
     this.updateContextMenu();
     this.animateCompactMode();
   },
@@ -127,7 +136,7 @@ var gZenCompactModeManager = {
   },
 
   animateCompactMode() {
-    const isCompactMode = this.prefefence;
+    const isCompactMode = this.preference;
     const canHideSidebar = Services.prefs.getBoolPref('zen.view.compact.hide-tabbar');
     // Do this so we can get the correct width ONCE compact mode styled have been applied
     if (this._canAnimateSidebar) {
@@ -208,9 +217,7 @@ var gZenCompactModeManager = {
   },
 
   updateContextMenu() {
-    document
-      .getElementById('zen-context-menu-compact-mode-toggle')
-      .setAttribute('checked', Services.prefs.getBoolPref('zen.view.compact'));
+    document.getElementById('zen-context-menu-compact-mode-toggle').setAttribute('checked', this.preference);
 
     const hideTabBar = Services.prefs.getBoolPref('zen.view.compact.hide-tabbar');
     const hideToolbar = Services.prefs.getBoolPref('zen.view.compact.hide-toolbar');
@@ -230,14 +237,8 @@ var gZenCompactModeManager = {
     }
   },
 
-  _disableTabsOnHoverIfConflict() {
-    if (Services.prefs.getBoolPref('zen.view.compact') && Services.prefs.getBoolPref('zen.view.compact.hide-tabbar')) {
-      Services.prefs.setBoolPref('zen.view.sidebar-expanded.on-hover', false);
-    }
-  },
-
   toggle() {
-    return (this.preference = !this.prefefence);
+    return (this.preference = !this.preference);
   },
 
   _updateSidebarIsOnRight() {

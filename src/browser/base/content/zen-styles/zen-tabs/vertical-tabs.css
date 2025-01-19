@@ -981,8 +981,8 @@
 /* Very special occasions */
 
 /* Mark: Right side windows controls with collapsed sidebar */
-@media not (-moz-bool-pref: 'zen.view.compact') {
-  :root[zen-right-side='true']:not([zen-sidebar-expanded='true']):not([zen-window-buttons-reversed='true']) {
+:root:not([zen-compact-mode='true']) {
+  &[zen-right-side='true']:not([zen-sidebar-expanded='true']):not([zen-window-buttons-reversed='true']) {
     & #navigator-toolbox {
       margin-top: var(--zen-toolbar-height) !important;
     }
@@ -1006,7 +1006,7 @@
 %include vertical-tabs-topbuttons-fix.css
   }
 
-  :root:not([zen-right-side='true']):not([zen-sidebar-expanded='true'])[zen-window-buttons-reversed='true'] {
+  &:not([zen-right-side='true']):not([zen-sidebar-expanded='true'])[zen-window-buttons-reversed='true'] {
     & #navigator-toolbox {
       margin-top: var(--zen-toolbar-height) !important;
     }

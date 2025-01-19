@@ -4,8 +4,10 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 /* Zen Welcome idalog override */
-.dialogBox:not(.spotlightBox) {
-  border: 1px solid var(--zen-colors-border);
+@media (prefers-color-scheme: dark) {
+  .dialogBox:not(.spotlightBox) {
+    border: 1px solid var(--zen-colors-border);
+  }
 }
 
 #window-modal-dialog[zen-dialog-welcome-element='true'] .dialogBox:not(.spotlightBox) {

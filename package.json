@@ -11,7 +11,7 @@
     "start": "cd engine && ./mach run --noprofile",
     "import": "surfer import",
     "export": "surfer export",
-    "init": "npm run bootstrap && npm run import",
+    "init": "npm run download && npm run bootstrap && npm run import",
     "download": "surfer download",
     "bootstrap": "surfer bootstrap && surfer bootstrap",
     "package": "surfer package",

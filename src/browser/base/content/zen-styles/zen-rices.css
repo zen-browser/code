@@ -15,7 +15,7 @@
 #zen-rice-share-dialog-notice {
   color: var(--panel-color);
   background: var(--arrowpanel-background);
-  border-radius: var(--zen-panel-radius);
+  border-radius: var(--zen-native-inner-radius);
   box-shadow: 0 0 1px 1px hsla(0, 0%, 0%, 0.2);
   border: var(--zen-appcontent-border);
   overflow: hidden;
@@ -130,7 +130,7 @@
     background: rgba(255, 0, 0, 0.1);
     padding: 5px;
     transition: opacity 0.3s ease;
-    border-radius: var(--zen-panel-radius);
+    border-radius: var(--zen-native-inner-radius);
 
     @starting-style {
       opacity: 0;

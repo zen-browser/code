@@ -53,7 +53,7 @@
 menupopup,
 panel {
   --panel-background: var(--arrowpanel-background);
-  --panel-border-radius: var(--zen-panel-radius);
+  --panel-border-radius: var(--zen-native-inner-radius);
 }
 
 /* app menu */

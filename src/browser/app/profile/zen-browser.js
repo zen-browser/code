@@ -102,13 +102,9 @@ pref('zen.injections.match-urls', 'http://localhost/*', locked);
 pref('zen.rice.share.notice.accepted', false);
 
 #ifdef XP_MACOSX
-pref('zen.theme.border-radius', 10); // In pixels
-#else
-#ifdef XP_WIN
-pref('zen.theme.border-radius', 6); // In pixels
+pref('zen.theme.border-radius', 11); // In pixels
 #else
 pref('zen.theme.border-radius', 8); // In pixels
-#endif
 #endif
 
 pref('zen.theme.color-prefs.use-workspace-colors', true);

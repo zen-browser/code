@@ -126,7 +126,6 @@
   --browser-area-z-index-toolbox: 2 !important;
 
   --zen-appcontent-border: 1px solid var(--zen-colors-border);
-  --zen-panel-radius: var(--zen-border-radius);
 
   --toolbarbutton-border-radius: 6px;
   --urlbar-margin-inline: 1px !important;
@@ -169,6 +168,18 @@
   --arrowpanel-background: var(--zen-dialog-background) !important;
 
   --tab-selected-shadow: 0 0 1px 0px rgba(0, 0, 0, 0.1) !important;
+  --zen-big-shadow: 0 0 9.73px 0px light-dark(rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.25));
+
+  /* Nativity */
+  --zen-native-content-radius: env(-moz-gtk-csd-titlebar-radius, var(--zen-border-radius));
+  --zen-native-inner-radius: var(
+    --zen-webview-border-radius,
+    /* Inner radius calculation:
+      * 1. If the native radius - the separation is less than 4px, use 4px.
+      * 2. Otherwise, use the the calculated value (inner radius = outer radius - separation).
+    */
+      max(4px, calc(var(--zen-native-content-radius) - var(--zen-element-separation)))
+  );
 
   /** Other theme-related styles */
   font-family:

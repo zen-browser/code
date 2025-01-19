@@ -211,6 +211,7 @@ var gZenVerticalTabsManager = {
       this.__actualWindowButtons = !this.isWindowsStyledButtons
         ? document.querySelector('.titlebar-buttonbox-container') // TODO: test if it works 100% of the time
         : document.querySelector('#nav-bar .titlebar-buttonbox-container');
+      this.__actualWindowButtons.setAttribute('overflows', 'false');
     }
     return this.__actualWindowButtons;
   },

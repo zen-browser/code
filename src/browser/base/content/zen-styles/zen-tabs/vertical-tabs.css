@@ -383,14 +383,9 @@
     padding-right: 0;
 
     :root[zen-single-toolbar='true'] & {
-      margin-left: var(--zen-toolbox-padding);
       & #urlbar:not([breakout-extend='true']) .urlbar-input-container {
         padding-left: 4px;
         padding-right: 4px;
-      }
-
-      :root[zen-right-side='true'] & {
-        margin-left: 0;
       }
     }
   }
@@ -445,9 +440,7 @@
 
   &:not([zen-right-side='true']) {
     padding-right: 0;
-    & #titlebar {
-      padding-left: var(--zen-toolbox-padding);
-    }
+    padding-left: var(--zen-toolbox-padding);
   }
 
   & #TabsToolbar-customization-target {

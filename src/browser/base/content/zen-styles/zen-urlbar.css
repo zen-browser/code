@@ -35,7 +35,7 @@
   border: none !important;
   margin: 1px;
 
-  box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.1) !important;
+  box-shadow: var(--zen-big-shadow) !important;
   :root[zen-single-toolbar='true'] & {
     box-shadow: none !important;
   }

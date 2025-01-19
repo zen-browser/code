@@ -129,10 +129,6 @@ var gZenCompactModeManager = {
   animateCompactMode() {
     const isCompactMode = this.prefefence;
     const canHideSidebar = Services.prefs.getBoolPref('zen.view.compact.hide-tabbar');
-    if (this._isAnimating) {
-      return;
-    }
-    this._isAnimating = true;
     // Do this so we can get the correct width ONCE compact mode styled have been applied
     if (this._canAnimateSidebar) {
       this.sidebar.setAttribute('animate', 'true');
@@ -141,80 +137,49 @@ var gZenCompactModeManager = {
       let sidebarWidth = this.getAndApplySidebarWidth();
       if (!this._canAnimateSidebar) {
         this.sidebar.removeAttribute('animate');
-        this._isAnimating = false;
         return;
       }
       if (canHideSidebar && isCompactMode) {
-        window.requestAnimationFrame(() => {
-          this.sidebar.style.position = 'unset';
-          this.sidebar.style.transition = 'margin .17s ease';
-          this.sidebar.style.left = '0';
-          if (!this.sidebarIsOnRight) {
-            this.sidebar.style.marginLeft = `${-1 * sidebarWidth}px`;
-          } else {
-            this.sidebar.style.marginRight = `${-1 * sidebarWidth}px`;
-          }
-          this.sidebar.style.pointerEvents = 'none';
-
-          window.requestAnimationFrame(() => {
+        gZenUIManager.motion
+          .animate(
+            this.sidebar,
+            { marginLeft: `-${sidebarWidth}px` },
+            {
+              ease: 'easeIn',
+              type: 'spring',
+              stiffness: 3000,
+              damping: 150,
+              mass: 1,
+            }
+          )
+          .then(() => {
+            console.log('done');
+            this.sidebar.removeAttribute('animate');
+            this.sidebar.style.transition = 'none';
+            this.sidebar.style.removeProperty('margin-left');
             setTimeout(() => {
-              window.requestAnimationFrame(() => {
-                this.sidebar.style.removeProperty('pointer-events');
-                this.sidebar.style.removeProperty('position');
-                this.sidebar.style.removeProperty('margin-left');
-                this.sidebar.style.removeProperty('margin-right');
-                this.sidebar.style.removeProperty('transform');
-                this.sidebar.style.removeProperty('left');
-                document.getElementById('browser').style.removeProperty('overflow');
-                this.sidebar.removeAttribute('animate');
-                window.requestAnimationFrame(() => {
-                  this.sidebar.style.removeProperty('transition');
-                  this._isAnimating = false;
-                });
-              });
-            }, 170);
+              this.sidebar.style.removeProperty('transition');
+            });
           });
-        });
       } else if (canHideSidebar && !isCompactMode) {
         document.getElementById('browser').style.overflow = 'hidden';
-        this.sidebar.style.position = 'relative';
-        this.sidebar.style.left = '0';
-
-        if (!this.sidebarIsOnRight) {
-          this.sidebar.style.marginLeft = `${-1 * sidebarWidth}px`;
-        } else {
-          this.sidebar.style.marginRight = `${-1 * sidebarWidth}px`;
-          this.sidebar.style.transform = `translateX(${sidebarWidth}px)`;
-        }
-
-        window.requestAnimationFrame(() => {
-          this.sidebar.style.transition = 'margin .17s ease, transform .275s ease, opacity .1s ease';
-          // we are in compact mode and we are exiting it
-          if (!this.sidebarIsOnRight) {
-            this.sidebar.style.marginLeft = '0';
-          } else {
-            this.sidebar.style.marginRight = '0';
-            this.sidebar.style.transform = 'translateX(0)';
-          }
-          this.sidebar.style.pointerEvents = 'none';
-
-          setTimeout(() => {
-            window.requestAnimationFrame(() => {
-              this._isAnimating = false;
-              this.sidebar.style.removeProperty('position');
-              this.sidebar.style.removeProperty('pointer-events');
-              this.sidebar.style.removeProperty('opacity');
-              this.sidebar.style.removeProperty('margin-left');
-              this.sidebar.style.removeProperty('margin-right');
-              this.sidebar.style.removeProperty('transform');
-              this.sidebar.style.removeProperty('transition');
-              this.sidebar.style.removeProperty('left');
-
-              document.getElementById('browser').style.removeProperty('overflow');
-              this.sidebar.removeAttribute('animate');
-            });
-          }, 400);
-        });
+        this.sidebar.style.marginLeft = `-${sidebarWidth}px`;
+        gZenUIManager.motion
+          .animate(
+            this.sidebar,
+            { marginLeft: '0px' },
+            {
+              ease: 'easeOut',
+              type: 'spring',
+              stiffness: 3000,
+              damping: 150,
+              mass: 1,
+            }
+          )
+          .then(() => {
+            this.sidebar.removeAttribute('animate');
+            document.getElementById('browser').style.removeProperty('overflow');
+          });
       } else {
         this.sidebar.removeAttribute('animate'); // remove the attribute if we are not animating
       }

@@ -35,7 +35,7 @@
   --zen-colors-hover-bg: color-mix(in srgb, var(--zen-primary-color) 90%, white 10%);
   --zen-colors-primary-foreground: var(--zen-branding-bg-reverse);
   --zen-colors-border: color-mix(in srgb, var(--zen-colors-secondary) 97%, black 3%);
-  --zen-colors-border-contrast: color-mix(in srgb, var(--zen-colors-secondary) 10%, rgb(39, 39, 39) 90%);
+  --zen-colors-border-contrast: color-mix(in srgb, var(--zen-colors-secondary) 10%, rgba(181, 181, 181, .11) 90%);
 
   --zen-colors-input-bg: color-mix(in srgb, var(--zen-primary-color) 1%, var(--zen-colors-tertiary) 99%);
 
@@ -104,7 +104,7 @@
   --zen-button-border-radius: 5px;
   --zen-button-padding: 0.6rem 1.2rem;
 
-  --zen-toolbar-element-bg: light-dark(rgba(255, 255, 255, 0.65), rgba(255, 255, 255, 0.11));
+  --zen-toolbar-element-bg: light-dark(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.11));
 
   /* Toolbar */
   --zen-toolbar-height: 38px;
@@ -208,7 +208,7 @@
 
     --zen-colors-input-bg: color-mix(in srgb, var(--zen-primary-color) 1%, var(--zen-dark-color-mix-base) 99%);
     --zen-colors-border: color-mix(in srgb, var(--zen-colors-secondary) 20%, rgb(53, 53, 53) 80%);
-    --zen-colors-border-contrast: color-mix(in srgb, var(--zen-colors-secondary) 10%, rgba(255, 255, 255, .11) 90%);
+    --zen-colors-border-contrast: color-mix(in srgb, var(--zen-colors-secondary) 10%, rgba(255, 255, 255, 0.11) 90%);
 
     --zen-dialog-background: var(--zen-dark-color-mix-base);
     --zen-urlbar-background: color-mix(in srgb, var(--zen-primary-color) 4%, rgb(24, 24, 24) 96%);

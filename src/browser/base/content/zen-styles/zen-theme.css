@@ -153,8 +153,8 @@
 
   --input-bgcolor: var(--zen-colors-tertiary) !important;
   --input-border-color: var(--zen-input-border-color) !important;
-  --zen-themed-toolbar-bg: light-dark(var(--zen-branding-bg), var(--zen-colors-tertiary));
-  --zen-themed-toolbar-bg-transparent: light-dark(var(--zen-branding-bg), var(--zen-colors-tertiary));
+  --zen-themed-toolbar-bg: light-dark(var(--zen-branding-bg), #161616);
+  --zen-themed-toolbar-bg-transparent: light-dark(var(--zen-branding-bg), #161616);
 
   @media (-moz-windows-mica) or (-moz-platform: macos) {
     background: transparent;

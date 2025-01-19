@@ -35,7 +35,7 @@
   --zen-colors-hover-bg: color-mix(in srgb, var(--zen-primary-color) 90%, white 10%);
   --zen-colors-primary-foreground: var(--zen-branding-bg-reverse);
   --zen-colors-border: color-mix(in srgb, var(--zen-colors-secondary) 97%, black 3%);
-  --zen-colors-border-contrast: color-mix(in srgb, var(--zen-colors-secondary) 97%, rgb(117, 117, 117) 3%);
+  --zen-colors-border-contrast: color-mix(in srgb, var(--zen-colors-secondary) 10%, rgb(39, 39, 39) 90%);
 
   --zen-colors-input-bg: color-mix(in srgb, var(--zen-primary-color) 1%, var(--zen-colors-tertiary) 99%);
 

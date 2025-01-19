@@ -1290,6 +1290,10 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
   async _performWorkspaceChange(window, { onInit = false, explicitAnimationDirection = undefined } = {}) {
     const previousWorkspace = await this.getActiveWorkspace();
 
+    if (previousWorkspace && previousWorkspace.uuid === window.uuid && !onInit) {
+      return;
+    }
+
     this.activeWorkspace = window.uuid;
     const containerId = window.containerTabId?.toString();
     const workspaces = await this._workspaces();

@@ -147,7 +147,7 @@ var gZenCompactModeManager = {
       if (canHideSidebar && isCompactMode) {
         window.requestAnimationFrame(() => {
           this.sidebar.style.position = 'unset';
-          this.sidebar.style.transition = 'margin .25s ease-in-out';
+          this.sidebar.style.transition = 'margin .17s ease';
           this.sidebar.style.left = '0';
           if (!this.sidebarIsOnRight) {
             this.sidebar.style.marginLeft = `${-1 * sidebarWidth}px`;
@@ -172,7 +172,7 @@ var gZenCompactModeManager = {
                   this._isAnimating = false;
                 });
               });
-            }, 450);
+            }, 170);
           });
         });
       } else if (canHideSidebar && !isCompactMode) {
@@ -188,7 +188,7 @@ var gZenCompactModeManager = {
         }
 
         window.requestAnimationFrame(() => {
-          this.sidebar.style.transition = 'margin .25s ease, transform .275s ease, opacity .1s ease';
+          this.sidebar.style.transition = 'margin .17s ease, transform .275s ease, opacity .1s ease';
           // we are in compact mode and we are exiting it
           if (!this.sidebarIsOnRight) {
             this.sidebar.style.marginLeft = '0';

@@ -100,11 +100,12 @@
       }
 
       #navigator-toolbox:not([animate='true']) #titlebar {
-        box-shadow: 0 0 9.73px 0px rgba(0, 0, 0, 0.25);
-        border-radius: calc(var(--zen-border-radius) - 2px);
+        box-shadow: var(--zen-big-shadow);
+        border-radius: calc(var(--zen-native-inner-radius) + var(--zen-element-separation) / 2);
         padding: var(--zen-toolbox-padding) !important;
         position: relative;
         background: var(--zen-dialog-background);
+        border: 1px solid var(--zen-colors-border-contrast);
 
         :root[zen-single-toolbar='true'] {
           padding-top: 0 !important;

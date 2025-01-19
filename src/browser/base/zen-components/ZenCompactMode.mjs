@@ -143,9 +143,11 @@ var gZenCompactModeManager = {
         gZenUIManager.motion
           .animate(
             this.sidebar,
-            this.sidebarIsOnRight ? {
-              marginRight: `-${sidebarWidth}px`,
-            } : { marginLeft: `-${sidebarWidth}px` },
+            this.sidebarIsOnRight
+              ? {
+                  marginRight: `-${sidebarWidth}px`,
+                }
+              : { marginLeft: `-${sidebarWidth}px` },
             {
               ease: 'easeIn',
               type: 'spring',
@@ -174,10 +176,12 @@ var gZenCompactModeManager = {
         gZenUIManager.motion
           .animate(
             this.sidebar,
-            this.sidebarIsOnRight ? {
-              marginRight: 0,
-              transform: ['translateX(100%)', 'translateX(0)'],
-            } : { marginLeft: 0 },
+            this.sidebarIsOnRight
+              ? {
+                  marginRight: 0,
+                  transform: ['translateX(100%)', 'translateX(0)'],
+                }
+              : { marginLeft: 0 },
             {
               ease: 'easeOut',
               type: 'spring',

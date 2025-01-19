@@ -497,11 +497,6 @@
       }
 
       & .tab-background {
-        @media not (prefers-color-scheme: dark) {
-          &:is([selected], [multiselected]) {
-            box-shadow: 0 .5px 1px rgba(0, 0, 0, 0.1);
-          }
-        }
         margin-inline: var(--tab-block-margin);
         width: -moz-available;
       }

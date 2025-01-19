@@ -50,7 +50,7 @@
 
 #identity-box.chromeUI:not([pageproxystate='invalid']) {
   & #identity-icon-box {
-    background: light-dark(rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.1)) !important;
+    background: light-dark(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.1)) !important;
   }
 
   & #identity-icon-label {

@@ -1330,43 +1330,37 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     }
   }
 
-  _animateElement(element, direction, out = false, callback) {
-    if (out) {
-      element.animate([{ transform: 'translateX(0)' }, { transform: `translateX(${direction === 'left' ? '-' : ''}100%)` }], {
-        duration: 100,
-        easing: 'ease-in',
-        fill: 'both',
-      }).onfinish = callback;
-      return;
-    }
-    element.animate([{ transform: `translateX(${direction === 'left' ? '-' : ''}100%)` }, { transform: 'translateX(0)' }], {
-      duration: 100,
-      easing: 'ease-out',
-      fill: 'both',
-    }).onfinish = callback;
-  }
-
   async _animateTabs(direction, out = false) {
-    const tabs = gBrowser.visibleTabs.filter((tab) => !tab.hasAttribute('zen-essential'));
-    return new Promise((resolve) => {
-      let count = 0;
-      const onAnimationEnd = () => {
-        count++;
-        // +1 for the workspace indicator tab and vertical tabs periferals
-        if (count >= tabs.length + 2) {
-          resolve();
+    const selector = `#tabbrowser-tabs *:is(.tabbrowser-tab:not([zen-essential], [hidden]), #tabbrowser-arrowscrollbox-periphery, #zen-current-workspace-indicator)`;
+    this.tabContainer.removeAttribute('dont-animate-tabs');
+    if (out) {
+      return gZenUIManager.motion.animate(
+        selector,
+        {
+          transform: `translateX(${direction === 'left' ? '-' : ''}100%)`,
+          opacity: 0,
+        },
+        {
+          type: 'spring',
+          duration: 0.3,
+          bounce: 0.2,
+       // delay: gZenUIManager.motion.stagger(0.01),
         }
-      };
-      this.tabContainer.removeAttribute('dont-animate-tabs');
-      // Also animate the workspace indicator label
-      this._animateElement(document.getElementById('zen-current-workspace-indicator'), direction, out, () => onAnimationEnd());
-      this._animateElement(document.getElementById('tabbrowser-arrowscrollbox-periphery'), direction, out, () =>
-        onAnimationEnd()
       );
-      for (const tab of tabs) {
-        this._animateElement(tab, direction, out, () => onAnimationEnd());
+    }
+    return gZenUIManager.motion.animate(
+      selector,
+      {
+        transform: [`translateX(${direction === 'left' ? '-' : ''}100%)`, 'translateX(0%)'],
+        opacity: 1,
+      },
+      {
+        duration: 0.3,
+        type: 'spring',
+        bounce: 0.2,
+    // delay: gZenUIManager.motion.stagger(0.01),
       }
-    });
+    );
   }
 
   _processTabVisibility(workspaceUuid, containerId, workspaces) {

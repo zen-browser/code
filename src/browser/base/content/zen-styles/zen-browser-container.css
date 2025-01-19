@@ -17,10 +17,6 @@
 
     overflow: hidden;
 
-    :root[zen-right-side='true'] & {
-      margin-left: var(--zen-element-separation);
-    }
-
     :root:not([zen-no-padding='true']) & {
       box-shadow: var(--zen-big-shadow);
     }

@@ -494,7 +494,6 @@ var gZenLooksAndFeel = {
     this.__hasInitialized = true;
     this._initializeColorPicker(this._getInitialAccentColor());
     window.zenPageAccentColorChanged = this._handleAccentColorChange.bind(this);
-    gZenThemeBuilder.init();
     gZenMarketplaceManager.init();
     var onPreferColorSchemeChange = this.onPreferColorSchemeChange.bind(this);
     window.matchMedia('(prefers-color-scheme: dark)').addListener(onPreferColorSchemeChange);

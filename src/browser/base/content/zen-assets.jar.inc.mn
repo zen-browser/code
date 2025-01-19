@@ -13,7 +13,6 @@
         content/browser/zen-components/ZenSidebarManager.mjs    (zen-components/ZenSidebarManager.mjs)
         content/browser/zen-components/ZenProfileDialogUI.mjs   (zen-components/ZenProfileDialogUI.mjs)
         content/browser/zen-components/ZenKeyboardShortcuts.mjs (zen-components/ZenKeyboardShortcuts.mjs)
-        content/browser/zen-components/ZenThemeBuilder.mjs      (zen-components/ZenThemeBuilder.mjs)
         content/browser/zen-components/ZenThemesImporter.mjs    (zen-components/ZenThemesImporter.mjs)
         content/browser/zen-components/ZenTabUnloader.mjs       (zen-components/ZenTabUnloader.mjs)
         content/browser/zen-components/ZenPinnedTabsStorage.mjs (zen-components/ZenPinnedTabsStorage.mjs)

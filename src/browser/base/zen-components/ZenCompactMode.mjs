@@ -143,7 +143,9 @@ var gZenCompactModeManager = {
         gZenUIManager.motion
           .animate(
             this.sidebar,
-            { marginLeft: `-${sidebarWidth}px` },
+            this.sidebarIsOnRight ? {
+              marginRight: `-${sidebarWidth}px`,
+            } : { marginLeft: `-${sidebarWidth}px` },
             {
               ease: 'easeIn',
               type: 'spring',
@@ -153,21 +155,29 @@ var gZenCompactModeManager = {
             }
           )
           .then(() => {
-            console.log('done');
             this.sidebar.removeAttribute('animate');
             this.sidebar.style.transition = 'none';
+            this.sidebar.style.removeProperty('margin-right');
             this.sidebar.style.removeProperty('margin-left');
+            this.sidebar.style.removeProperty('transform');
             setTimeout(() => {
               this.sidebar.style.removeProperty('transition');
             });
           });
       } else if (canHideSidebar && !isCompactMode) {
         document.getElementById('browser').style.overflow = 'hidden';
-        this.sidebar.style.marginLeft = `-${sidebarWidth}px`;
+        if (this.sidebarIsOnRight) {
+          this.sidebar.style.marginRight = `-${sidebarWidth}px`;
+        } else {
+          this.sidebar.style.marginLeft = `-${sidebarWidth}px`;
+        }
         gZenUIManager.motion
           .animate(
             this.sidebar,
-            { marginLeft: '0px' },
+            this.sidebarIsOnRight ? {
+              marginRight: 0,
+              transform: ['translateX(100%)', 'translateX(0)'],
+            } : { marginLeft: 0 },
             {
               ease: 'easeOut',
               type: 'spring',
@@ -179,6 +189,13 @@ var gZenCompactModeManager = {
           .then(() => {
             this.sidebar.removeAttribute('animate');
             document.getElementById('browser').style.removeProperty('overflow');
+            this.sidebar.style.transition = 'none';
+            this.sidebar.style.removeProperty('margin-right');
+            this.sidebar.style.removeProperty('margin-left');
+            this.sidebar.style.removeProperty('transform');
+            setTimeout(() => {
+              this.sidebar.style.removeProperty('transition');
+            });
           });
       } else {
         this.sidebar.removeAttribute('animate'); // remove the attribute if we are not animating

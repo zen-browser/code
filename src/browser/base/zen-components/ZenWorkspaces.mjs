@@ -1342,9 +1342,9 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
         },
         {
           type: 'spring',
-          duration: 0.3,
+          duration: 0.2,
           bounce: 0.2,
-       // delay: gZenUIManager.motion.stagger(0.01),
+          // delay: gZenUIManager.motion.stagger(0.01),
         }
       );
     }
@@ -1355,10 +1355,10 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
         opacity: 1,
       },
       {
-        duration: 0.3,
+        duration: 0.2,
         type: 'spring',
         bounce: 0.2,
-    // delay: gZenUIManager.motion.stagger(0.01),
+        // delay: gZenUIManager.motion.stagger(0.01),
       }
     );
   }

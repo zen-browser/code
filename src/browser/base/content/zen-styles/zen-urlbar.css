@@ -370,9 +370,6 @@ button.popup-notification-dropmarker {
       the backdrop woudn't work, we would need to apply a clip-path to the site and that's not recommended
       due to performance issues */
     background-color: light-dark(rgb(247, 247, 247), var(--zen-branding-bg)) !important;
-    box-shadow: 0 0 1px 1px light-dark(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.1)) !important;
-    outline: 1px solid light-dark(rgba(20, 20, 20, 0.2), rgba(235, 235, 235, 0.2)) !important;
-    outline-offset: -1px !important;
   }
 }
 

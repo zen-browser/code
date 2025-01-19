@@ -604,13 +604,6 @@
       margin: 0 auto;
       & .tab-background {
         margin-inline: auto !important;
-        &:is([selected], [multiselected]) {
-          box-shadow: 0 0 1px 1px rgba(0,0,0,.1);
-
-          @media not (prefers-color-scheme: dark) {
-            box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.12) !important;
-          }
-        }
       }
       & .tab-reset-button {
         display: none !important;

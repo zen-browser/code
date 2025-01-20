@@ -228,7 +228,7 @@
   border-bottom: 0px solid transparent !important;
 
   --tab-block-margin: 2px;
-  --tab-selected-bgcolor: light-dark(rgba(255, 255, 255, 0.75), var(--zen-toolbar-element-bg));
+  --tab-selected-bgcolor: light-dark(rgba(255, 255, 255, 0.75), rgba(0, 0, 0, 0.11));
   grid-gap: 0 !important;
 
   &[overflow]::after,
@@ -916,8 +916,8 @@
   }
 
   &:not([selected], [multiselected="true"]) .tab-background {
-    background: var(--zen-toolbar-element-bg);
-    backdrop-filter: none !important;
+    background: transparent;
+    backdrop-filter: var(--zen-toolbar-element-filter) !important;
     border: none;
   }
 

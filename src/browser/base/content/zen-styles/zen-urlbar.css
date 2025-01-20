@@ -27,7 +27,8 @@
 }
 
 #urlbar-background {
-  background: var(--zen-toolbar-element-bg) !important;
+  background: transparent !important;
+  backdrop-filter: var(--zen-toolbar-element-filter);
   outline: none !important;
 }
 
@@ -120,6 +121,7 @@
 #urlbar[breakout-extend='true'] #urlbar-background {
   border: 1px solid var(--zen-colors-border) !important;
   box-shadow: var(--zen-big-shadow) !important;
+  backdrop-filter: none !important;
 }
 
 :root[zen-single-toolbar='true'] {

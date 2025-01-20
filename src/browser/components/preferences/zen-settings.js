@@ -601,8 +601,8 @@ var gZenLooksAndFeel = {
 
     let value = '';
     if (
-      Services.prefs.getBoolPref('zen.view.compact.hide-tabbar') &&
-      Services.prefs.getBoolPref('zen.view.compact.hide-toolbar')
+      Services.prefs.getBoolPref('zen.view.compact.hide-tabbar', false) &&
+      Services.prefs.getBoolPref('zen.view.compact.hide-toolbar', false)
     ) {
       value = 'both';
     } else {

@@ -227,8 +227,8 @@ var gZenCompactModeManager = {
   updateContextMenu() {
     document.getElementById('zen-context-menu-compact-mode-toggle').setAttribute('checked', this.preference);
 
-    const hideTabBar = Services.prefs.getBoolPref('zen.view.compact.hide-tabbar');
-    const hideToolbar = Services.prefs.getBoolPref('zen.view.compact.hide-toolbar');
+    const hideTabBar = Services.prefs.getBoolPref('zen.view.compact.hide-tabbar', false);
+    const hideToolbar = Services.prefs.getBoolPref('zen.view.compact.hide-toolbar', false);
     const hideBoth = hideTabBar && hideToolbar;
 
     const idName = 'zen-context-menu-compact-mode-hide-';

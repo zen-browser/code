@@ -100,7 +100,7 @@
 
     #navigator-toolbox:not([animate='true']) #titlebar {
       box-shadow: var(--zen-big-shadow);
-      border-radius: calc(var(--zen-native-inner-radius) + 2px);
+      border-radius: var(--zen-native-inner-radius);
       padding: var(--zen-toolbox-padding) !important;
       position: relative;
       background: var(--zen-dialog-background);

@@ -5,7 +5,7 @@
  */
 @namespace html 'http://www.w3.org/1999/xhtml';
 
-#zen-workspace-select-button {
+#zen-workspaces-button {
   justify-content: center;
   align-items: center;
   display: flex;
@@ -107,7 +107,7 @@
   }
 }
 
-#zen-workspace-select-button .zen-workspace-sidebar-wrapper {
+#zen-workspaces-button .zen-workspace-sidebar-wrapper {
   position: absolute;
   width: 100%;
   display: flex;
@@ -116,7 +116,7 @@
   pointer-events: none;
 }
 
-#zen-workspace-select-button .zen-workspace-sidebar-name {
+#zen-workspaces-button .zen-workspace-sidebar-name {
   margin-left: 0.2rem;
   display: none;
   overflow: hidden;
@@ -127,18 +127,18 @@
 
 /** Keep these selectors in sync with the ones in vertical-tabs.css */
 #navigator-toolbox {
-  & #zen-workspace-select-button[as-button='true'] {
+  & #zen-workspaces-button[as-button='true'] {
     width: calc(100% - var(--toolbarbutton-outer-padding));
     margin: 2px;
     min-width: calc(2 * var(--toolbarbutton-inner-padding) + 16px);
     height: calc(2 * var(--toolbarbutton-inner-padding) + 16px);
   }
 
-  & #zen-workspace-select-button .zen-workspace-sidebar-name {
+  & #zen-workspaces-button .zen-workspace-sidebar-name {
     display: block;
   }
 
-  & #zen-workspace-select-button .zen-workspace-sidebar-icon {
+  & #zen-workspaces-button .zen-workspace-sidebar-icon {
     margin-inline-end: 5px;
 
     & [no-icon='true'] {
@@ -146,11 +146,11 @@
     }
   }
 
-  & #zen-workspace-select-button .zen-workspace-sidebar-icon[no-icon='true'] + .zen-workspace-sidebar-name {
+  & #zen-workspaces-button .zen-workspace-sidebar-icon[no-icon='true'] + .zen-workspace-sidebar-name {
     margin-left: 0;
   }
 
-  & #zen-workspace-select-button {
+  & #zen-workspaces-button {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;

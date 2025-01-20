@@ -109,6 +109,7 @@ pref('zen.theme.border-radius', 12); // In pixels
 #else
 pref('zen.theme.border-radius', 8); // In pixels
 #endif
+#endif
 
 pref('zen.theme.color-prefs.use-workspace-colors', true);
 pref('zen.theme.color-prefs.amoled', false);

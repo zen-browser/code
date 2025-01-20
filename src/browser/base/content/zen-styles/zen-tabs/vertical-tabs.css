@@ -228,7 +228,7 @@
   border-bottom: 0px solid transparent !important;
 
   --tab-block-margin: 2px;
-  --tab-selected-bgcolor: var(--zen-toolbar-element-bg);
+  --tab-selected-bgcolor: light-dark(rgba(255, 255, 255, 0.75), var(--zen-toolbar-element-bg));
   grid-gap: 0 !important;
 
   &[overflow]::after,

@@ -14,15 +14,16 @@ XPCOMUtils.defineLazyPreferenceGetter(
   true
 );
 
+ChromeUtils.defineLazyGetter(lazyCompactMode, 'mainAppWrapper', () => document.getElementById('zen-main-app-wrapper'));
+
 var gZenCompactModeManager = {
   _flashTimeouts: {},
   _evenListeners: [],
   _removeHoverFrames: {},
+  _animating: false,
 
   init() {
     Services.prefs.addObserver('zen.tabs.vertical.right-side', this._updateSidebarIsOnRight.bind(this));
-
-    ChromeUtils.defineLazyGetter(this, 'mainAppWrapper', () => document.getElementById('zen-main-app-wrapper'));
 
     this._canAnimateSidebar = Services.prefs.getBoolPref('zen.view.compact.animate-sidebar', true);
 
@@ -35,18 +36,19 @@ var gZenCompactModeManager = {
 
   get preference() {
     if (!document.documentElement.hasAttribute('zen-compact-mode')) {
-      document.documentElement.setAttribute('zen-compact-mode', this.mainAppWrapper.getAttribute('zen-compact-mode'));
+      document.documentElement.setAttribute('zen-compact-mode', lazyCompactMode.mainAppWrapper.getAttribute('zen-compact-mode'));
     }
-    return this.mainAppWrapper.getAttribute('zen-compact-mode') === 'true';
+    return lazyCompactMode.mainAppWrapper.getAttribute('zen-compact-mode') === 'true';
   },
 
   set preference(value) {
-    if (this.preference === value) {
+    if (this.preference === value || this._animating) {
+      // We dont want the user to be able to spam the button
       return value;
     }
     // We use this element in order to make it persis across restarts, by using the XULStore.
     // main-window can't store attributes other than window sizes, so we use this instead
-    this.mainAppWrapper.setAttribute('zen-compact-mode', value);
+    lazyCompactMode.mainAppWrapper.setAttribute('zen-compact-mode', value);
     document.documentElement.setAttribute('zen-compact-mode', value);
     this._updateEvent();
     return value;
@@ -69,11 +71,7 @@ var gZenCompactModeManager = {
 
   flashSidebarIfNecessary(aInstant = false) {
     if (!aInstant && this.preference && lazyCompactMode.COMPACT_MODE_FLASH_ENABLED && !gZenGlanceManager._animating) {
-      try {
-        this.flashSidebar();
-      } catch (e) {
-        // Ignore errors
-      }
+      this.flashSidebar();
     }
   },
 
@@ -140,6 +138,7 @@ var gZenCompactModeManager = {
   },
 
   animateCompactMode() {
+    this._animating = true;
     const isCompactMode = this.preference;
     const canHideSidebar = Services.prefs.getBoolPref('zen.view.compact.hide-tabbar');
     // Do this so we can get the correct width ONCE compact mode styled have been applied
@@ -175,6 +174,7 @@ var gZenCompactModeManager = {
             this.sidebar.style.removeProperty('margin-right');
             this.sidebar.style.removeProperty('margin-left');
             this.sidebar.style.removeProperty('transform');
+            this._animating = false;
             setTimeout(() => {
               this.sidebar.style.removeProperty('transition');
             });
@@ -210,6 +210,7 @@ var gZenCompactModeManager = {
             this.sidebar.style.removeProperty('margin-right');
             this.sidebar.style.removeProperty('margin-left');
             this.sidebar.style.removeProperty('transform');
+            this._animating = false;
             setTimeout(() => {
               this.sidebar.style.removeProperty('transition');
             });

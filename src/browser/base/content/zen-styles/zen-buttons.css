@@ -20,7 +20,7 @@ xul|button {
   border: 1px solid var(--zen-colors-border);
 }
 
-button:not(#zen-workspaces-button):active {
+button:not(#zen-workspace-select-button):active {
   transform: scale(0.98);
 }
 

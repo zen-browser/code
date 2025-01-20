@@ -4,7 +4,7 @@ export var ZenCustomizableUI = new (class {
   constructor() {}
 
   TYPE_TOOLBAR = 'toolbar';
-  defaultSidebarIcons = ['zen-profile-button', 'zen-workspaces-button', 'downloads-button'];
+  defaultSidebarIcons = ['zen-profile-button', 'zen-workspace-select-button', 'downloads-button'];
 
   startup(CustomizableUIInternal) {
     CustomizableUIInternal.registerArea(
@@ -82,10 +82,6 @@ export var ZenCustomizableUI = new (class {
 
     const newTab = window.document.getElementById('vertical-tabs-newtab-button');
     newTab.classList.add('zen-sidebar-action-button');
-
-    const wrapper = window.document.createXULElement('toolbarbutton');
-    wrapper.id = 'zen-workspaces-button';
-    window.document.getElementById('zen-sidebar-icons-wrapper').prepend(wrapper);
 
     for (let id of this.defaultSidebarIcons) {
       const elem = window.document.getElementById(id);

@@ -228,7 +228,7 @@
   border-bottom: 0px solid transparent !important;
 
   --tab-block-margin: 2px;
-  --tab-selected-bgcolor: light-dark(rgba(255, 255, 255, 0.75), rgba(0, 0, 0, 0.11));
+  --tab-selected-bgcolor: light-dark(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.11));
   grid-gap: 0 !important;
 
   &[overflow]::after,
@@ -321,7 +321,7 @@
 
   padding-top: var(--zen-element-separation);
 
-  & > toolbarbutton:not(#zen-workspaces-button) {
+  & > toolbarbutton:not(#zen-workspace-select-button) {
     padding: 0 !important;
   }
 }
@@ -398,7 +398,7 @@
     margin-top: 0;
   }
 
-  & #zen-workspaces-button[as-button='true'] {
+  & #zen-workspace-select-button[as-button='true'] {
     width: calc(100% - 10px) !important;
   }
 
@@ -406,7 +406,7 @@
     display: none;
   }
 
-  & #zen-workspaces-button {
+  & #zen-workspace-select-button {
     margin-left: 2px;
     margin-right: 2px;
 
@@ -453,7 +453,7 @@
       bottom: calc(-0.5 * var(--zen-toolbox-padding));
     }
 
-    & > *:not(tabs):not(#search-container):not(#zen-workspaces-button),
+    & > *:not(tabs):not(#search-container):not(#zen-workspace-select-button),
     & #tabbrowser-arrowscrollbox-periphery > toolbarbutton {
       width: 100% !important;
       border-radius: var(--tab-border-radius) !important;
@@ -656,7 +656,7 @@
       margin-inline-end: 0 !important;
     }
   }
-  & #zen-workspaces-button {
+  & #zen-workspace-select-button {
     flex-direction: column;
     &:not([as-button='true']) {
       & toolbarbutton {

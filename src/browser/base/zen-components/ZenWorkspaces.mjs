@@ -879,7 +879,7 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
           await this.changeWorkspace(workspace);
           let panel = this.ownerWindow.document.getElementById('PanelUI-zen-workspaces');
           PanelMultiView.hidePopup(panel);
-          this.ownerWindow.document.getElementById('zen-workspaces-button').removeAttribute('open');
+          this.ownerWindow.document.getElementById('zen-workspace-select-button').removeAttribute('open');
         }).bind(browser.ZenWorkspaces);
         return element;
       };
@@ -1025,7 +1025,7 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     if (!this.workspaceEnabled) {
       return;
     }
-    let target = event.target.closest('#zen-current-workspace-indicator') || document.getElementById('zen-workspaces-button');
+    let target = event.target.closest('#zen-current-workspace-indicator') || document.getElementById('zen-workspace-select-button');
     let panel = document.getElementById('PanelUI-zen-workspaces');
     await this._propagateWorkspaceData({
       ignoreStrip: true,
@@ -1040,8 +1040,8 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
   async initializeWorkspacesButton() {
     if (!this.workspaceEnabled) {
       return;
-    } else if (document.getElementById('zen-workspaces-button')) {
-      let button = document.getElementById('zen-workspaces-button');
+    } else if (document.getElementById('zen-workspace-select-button')) {
+      let button = document.getElementById('zen-workspace-select-button');
       button.removeAttribute('hidden');
       return;
     }
@@ -1052,7 +1052,7 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     if (typeof browser.ZenWorkspaces === 'undefined') {
       browser = window;
     }
-    let button = browser.document.getElementById('zen-workspaces-button');
+    let button = browser.document.getElementById('zen-workspace-select-button');
 
     while (button.firstChild) {
       button.firstChild.remove();

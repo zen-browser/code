@@ -106,7 +106,7 @@
 
   --zen-toolbar-element-filter: brightness(0.95);
   @media (prefers-color-scheme: dark) {
-    --zen-toolbar-element-filter: brightness(1.2);
+    --zen-toolbar-element-filter: brightness(1.25);
   }
 
   /* Toolbar */

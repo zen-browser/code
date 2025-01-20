@@ -40,7 +40,7 @@
   pointer-events: none;
 }
 
-#zen-workspaces-button .zen-workspace-sidebar-name {
+#zen-workspace-select-button .zen-workspace-sidebar-name {
   margin-left: 10px;
   display: none;
   overflow: hidden;

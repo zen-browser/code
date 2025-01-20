@@ -228,7 +228,7 @@
   border-bottom: 0px solid transparent !important;
 
   --tab-block-margin: 2px;
-  --tab-selected-bgcolor: var(--zen-toolbar-element-bg);
+  --tab-selected-bgcolor: light-dark(rgba(255, 255, 255, 0.75), var(--zen-toolbar-element-bg));
   grid-gap: 0 !important;
 
   &[overflow]::after,
@@ -242,6 +242,10 @@
     #tabbrowser-tabs &:not([zen-essential='true']) {
       #tabbrowser-tabs[dont-animate-tabs] & {
         opacity: 0;
+      }
+
+      &:is([selected], [multiselected], [visuallyselected]) .tab-background {
+        box-shadow: 0 1px 1px 1px light-dark(rgba(0, 0, 0, 0.09), rgba(0, 0, 0, 0.1));
       }
     }
 
@@ -908,7 +912,7 @@
   --tab-selected-bgcolor: light-dark(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.2));
 
   &[selected] .tab-background {
-    box-shadow: 0 0 1px 1px light-dark(rgba(0, 0, 0, 0.07), rgba(0, 0, 0, 0.1));
+    box-shadow: 0 1px 1px 1px light-dark(rgba(0, 0, 0, 0.09), rgba(0, 0, 0, 0.1));
   }
 
   &:not([selected], [multiselected="true"]) .tab-background {

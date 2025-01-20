@@ -190,7 +190,7 @@
 
   /** Other theme-related styles */
   @media (-moz-platform: macos) {
-    font-family: "SF Pro";
+    font-family: 'SF Pro';
   }
 }
 

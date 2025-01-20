@@ -113,10 +113,10 @@
           .animate(
             this.browserWrapper,
             {
-              top: "50%",
-              left: "50%",
-              width: "85%",
-              height: "100%",
+              top: '50%',
+              left: '50%',
+              width: '85%',
+              height: '100%',
               opacity: 1,
             },
             {

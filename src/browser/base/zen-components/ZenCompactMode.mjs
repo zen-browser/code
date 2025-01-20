@@ -36,7 +36,10 @@ var gZenCompactModeManager = {
 
   get preference() {
     if (!document.documentElement.hasAttribute('zen-compact-mode')) {
-      document.documentElement.setAttribute('zen-compact-mode', lazyCompactMode.mainAppWrapper.getAttribute('zen-compact-mode'));
+      document.documentElement.setAttribute(
+        'zen-compact-mode',
+        lazyCompactMode.mainAppWrapper.getAttribute('zen-compact-mode')
+      );
     }
     return lazyCompactMode.mainAppWrapper.getAttribute('zen-compact-mode') === 'true';
   },

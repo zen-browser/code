@@ -127,8 +127,8 @@
 }
 
 #navigator-toolbox {
-  --border-radius-medium: 10px;
-  --tab-border-radius: 10px;
+  --border-radius-medium: 12px;
+  --tab-border-radius: 8px;
   --zen-toolbox-min-width: 1px;
 
   --tab-hover-background-color: color-mix(in srgb, var(--toolbarbutton-hover-background) 50%, transparent 50%);

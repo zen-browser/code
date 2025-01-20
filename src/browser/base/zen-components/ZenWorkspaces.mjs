@@ -1025,7 +1025,8 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     if (!this.workspaceEnabled) {
       return;
     }
-    let target = event.target.closest('#zen-current-workspace-indicator') || document.getElementById('zen-workspace-select-button');
+    let target =
+      event.target.closest('#zen-current-workspace-indicator') || document.getElementById('zen-workspace-select-button');
     let panel = document.getElementById('PanelUI-zen-workspaces');
     await this._propagateWorkspaceData({
       ignoreStrip: true,

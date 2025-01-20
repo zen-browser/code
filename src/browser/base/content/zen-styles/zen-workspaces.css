@@ -63,7 +63,9 @@
         & {
           opacity: 0.4;
           filter: grayscale(1);
-          transition: opacity 0.2s, filter 0.2s;
+          transition:
+            opacity 0.2s,
+            filter 0.2s;
         }
 
         &[active='true'] {

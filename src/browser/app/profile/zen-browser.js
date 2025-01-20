@@ -105,7 +105,7 @@ pref('zen.rice.share.notice.accepted', false);
 pref('zen.theme.border-radius', 12); // In pixels
 #else
 #ifdef XP_WIN
-pref('zen.theme.border-radius', 10); // In pixels
+pref('zen.theme.border-radius', 12); // In pixels
 #else
 pref('zen.theme.border-radius', 8); // In pixels
 #endif

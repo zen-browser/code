@@ -69,7 +69,11 @@ var gZenCompactModeManager = {
 
   flashSidebarIfNecessary(aInstant = false) {
     if (!aInstant && this.preference && lazyCompactMode.COMPACT_MODE_FLASH_ENABLED && !gZenGlanceManager._animating) {
-      this.flashSidebar();
+      try {
+        this.flashSidebar();
+      } catch (e) {
+        // Ignore errors
+      }
     }
   },
 

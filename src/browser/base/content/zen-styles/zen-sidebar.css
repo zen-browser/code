@@ -38,19 +38,6 @@
   }
 }
 
-/*#zen-profile-button::before {
-  background: transparent;
-  border-radius: 50%;
-  border: 3px solid var(--zen-colors-border);
-  position: absolute;
-  content: "";
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: calc(2 * var(--toolbarbutton-inner-padding) + 16px - 8px - var(--toolbarbutton-inner-padding));
-  height: calc(2 * var(--toolbarbutton-inner-padding) + 16px - 8px - var(--toolbarbutton-inner-padding));
-}*/
-
 /* Bookmarks sidebar */
 #zen-tabbox-wrapper {
   & #sidebar-splitter {
@@ -59,9 +46,8 @@
   }
 
   & #sidebar-box {
-    border-radius: var(--zen-border-radius);
-    box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.1);
-    margin-bottom: var(--zen-element-separation);
+    border-radius: var(--zen-native-inner-radius);
+    box-shadow: var(--zen-big-shadow);
     overflow: hidden;
     border: 1px solid var(--zen-colors-border);
 

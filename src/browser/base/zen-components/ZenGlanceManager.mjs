@@ -108,15 +108,16 @@
         this.browserWrapper.style.left = `${initialX}px`;
         this.browserWrapper.style.width = `${initialWidth}px`;
         this.browserWrapper.style.height = `${initialHeight}px`;
+        this.browserWrapper.style.opacity = 0.8;
         gZenUIManager.motion
           .animate(
             this.browserWrapper,
             {
-              top: [`${initialY}px`, '50%'],
-              left: [`${initialX}px`, '50%'],
-              width: [`${initialWidth}px`, '85%'],
-              height: [`${initialHeight}px`, '100%'],
-              opacity: [0.8, 1],
+              top: "50%",
+              left: "50%",
+              width: "85%",
+              height: "100%",
+              opacity: 1,
             },
             {
               duration: 0.5,

@@ -30,7 +30,7 @@
 
 Zen is currently built using firefox version `134.0.1`! 🚀
 
-- [`Zen Twilight`](https://zen-browser.app/download?twilight) - Is currently built using firefox version `RC 134.0.1`!
+- [`Zen Twilight`](https://zen-browser.app/download?twilight) - Is currently built using firefox version `RC 134.0.2`!
 - Check out the latest [release notes](https://zen-browser.app/release-notes)!
 - Part of our mission is to keep Zen up-to-date with the latest version of Firefox, so you can enjoy the latest features and security updates!
 

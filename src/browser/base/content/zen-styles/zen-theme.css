@@ -189,15 +189,9 @@
   );
 
   /** Other theme-related styles */
-  font-family:
-    SF Pro,
-    ui-sans-serif,
-    system-ui,
-    sans-serif,
-    Apple Color Emoji,
-    Segoe UI Emoji,
-    Segoe UI Symbol,
-    Noto Color Emoji;
+  @media (-moz-platform: macos) {
+    font-family: "SF Pro";
+  }
 }
 
 @media (prefers-color-scheme: dark) {

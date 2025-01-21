@@ -280,10 +280,10 @@
 
     /* We have a tab inside a tab, this means, it's a glance tab */
     & .tabbrowser-tab {
-      border-radius: 5px;
       pointer-events: none;
       margin: 0;
       --toolbarbutton-inner-padding: 0;
+      --border-radius-medium: 8px;
 
       & .tab-background {
         background: transparent;
@@ -303,10 +303,10 @@
     /* On essentials, glance tabs are floating */
     &[zen-essential='true'] .tabbrowser-tab {
       position: absolute;
-      top: 3px;
-      right: 5px;
-      --tab-collapsed-width: 15px;
-      --tab-min-height: 15px;
+      top: 4px;
+      right: 4px;
+      --tab-collapsed-width: 35px;
+      --tab-min-height: 16px;
       width: var(--tab-collapsed-width) !important;
       z-index: 1;
       pointer-events: none;

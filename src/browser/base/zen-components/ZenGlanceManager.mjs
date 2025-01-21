@@ -4,11 +4,19 @@
     #currentTab = null;
 
     _animating = false;
+    _lazyPref = {};
 
     init() {
-      document.documentElement.setAttribute('zen-glance-uuid', gZenUIManager.generateUuidv4());
       window.addEventListener('keydown', this.onKeyDown.bind(this));
       window.addEventListener('TabClose', this.onTabClose.bind(this));
+      window.addEventListener('TabOpen', this.onTabOpen.bind(this));
+
+      XPCOMUtils.defineLazyPreferenceGetter(
+        this._lazyPref,
+        "SHOULD_OPEN_EXTERNAL_TABS_IN_GLANCE",
+        "zen.glance.open-essential-external-links",
+        false
+      );
 
       ChromeUtils.defineLazyGetter(this, 'sidebarButtons', () => document.getElementById('zen-glance-sidebar-container'));
 
@@ -46,16 +54,20 @@
       }
     }
 
-    createBrowserElement(url, currentTab) {
+    getTabPosition(tab) {
+      return Math.max(gBrowser._numVisiblePinTabs, tab._tPos) + 1;
+    }
+
+    createBrowserElement(url, currentTab, existingTab = null) {
       const newTabOptions = {
         userContextId: currentTab.getAttribute('usercontextid') || '',
         skipBackgroundNotify: true,
         insertTab: true,
         skipLoad: false,
-        index: currentTab._tPos + 1,
+        index: this.getTabPosition(currentTab),
       };
       this.currentParentTab = currentTab;
-      const newTab = gBrowser.addTrustedTab(Services.io.newURI(url).spec, newTabOptions);
+      const newTab = existingTab ?? gBrowser.addTrustedTab(Services.io.newURI(url).spec, newTabOptions);
 
       gBrowser.selectedTab = newTab;
       currentTab.querySelector('.tab-content').appendChild(newTab);
@@ -65,7 +77,7 @@
       return this.#currentBrowser;
     }
 
-    openGlance(data) {
+    openGlance(data, existingTab = null) {
       if (this.#currentBrowser) {
         return;
       }
@@ -82,13 +94,12 @@
       this.browserWrapper?.removeAttribute('has-finished-animation');
       this.overlay?.removeAttribute('post-fade-out');
 
-      const url = data.url;
       const currentTab = gBrowser.selectedTab;
 
       this.animatingOpen = true;
       this._animating = true;
 
-      const browserElement = this.createBrowserElement(url, currentTab);
+      const browserElement = this.createBrowserElement(data.url, currentTab, existingTab);
 
       this.overlay = browserElement.closest('.browserSidebarContainer');
       this.browserWrapper = browserElement.closest('.browserContainer');
@@ -152,7 +163,7 @@
       this._animating = true;
 
       gBrowser._insertTabAtIndex(this.#currentTab, {
-        index: this.currentParentTab._tPos + 1,
+        index: this.getTabPosition(this.currentParentTab),
       });
 
       let quikcCloseZen = false;
@@ -296,9 +307,22 @@
       }
     }
 
+    shouldOpenTabInGlance(tab) {
+      let owner = tab.owner;
+      return owner && owner.getAttribute('zen-essential') === 'true' && this._lazyPref.SHOULD_OPEN_EXTERNAL_TABS_IN_GLANCE
+        && owner.linkedBrowser?.docShellIsActive && owner.linkedBrowser?.browsingContext?.isAppTab;
+    }
+
+    onTabOpen(event) {
+      let tab = event.target;
+      if (this.shouldOpenTabInGlance(tab)) {
+        this.openGlance({ url: undefined, x: 0, y: 0, width: 0, height: 0 }, tab);
+      }
+    }
+
     fullyOpenGlance() {
       gBrowser._insertTabAtIndex(this.#currentTab, {
-        index: this.#currentTab._tPos + 1,
+        index: this.getTabPosition(this.#currentTab),
       });
 
       this.animatingFullOpen = true;

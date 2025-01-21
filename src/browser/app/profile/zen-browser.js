@@ -133,9 +133,10 @@ pref('zen.view.experimental-rounded-view', false);
 pref('zen.view.experimental-rounded-view', true);
 #endif
 
+// Glance
 pref('zen.glance.enabled', true);
 pref('zen.glance.hold-duration', 300); // in ms
-
+pref('zen.glance.open-essential-external-links', true);
 pref('zen.glance.activation-method', 'alt'); // ctrl, alt, shift, none, hold
 
 pref('zen.view.sidebar-height-throttle', 200); // in ms
@@ -205,8 +206,10 @@ pref('zen.workspaces.wrap-around-navigation', true);
 pref('zen.workspaces.natural-scroll', false);
 pref('zen.workspaces.scroll-modifier-key','ctrl'); // can be ctrl, alt, shift, or a meta key
 pref('services.sync.engine.workspaces', false);
-pref('zen.essentials.enabled', true);
 pref('zen.workspaces.container-specific-essentials-enabled', false);
+
+// Essentials
+pref('zen.essentials.enabled', true);
 
 // Zen Watermark
 #ifdef MOZILLA_OFFICIAL

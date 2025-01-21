@@ -104,7 +104,7 @@
   --zen-button-border-radius: 5px;
   --zen-button-padding: 0.6rem 1.2rem;
 
-  --zen-toolbar-element-bg: light-dark(rgba(0,0,0,.11), rgba(255,255,255,.11));
+  --zen-toolbar-element-bg: light-dark(rgba(0, 0, 0, 0.11), rgba(255, 255, 255, 0.11));
 
   /* Toolbar */
   --zen-toolbar-height: 38px;

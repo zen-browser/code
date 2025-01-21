@@ -115,11 +115,12 @@
 
         this.overlay.removeAttribute('fade-out');
         this.browserWrapper.setAttribute('animate', true);
-        this.browserWrapper.style.top = `${initialY}px`;
-        this.browserWrapper.style.left = `${initialX}px`;
+        this.browserWrapper.style.top = `${initialY + initialHeight/2}px`;
+        this.browserWrapper.style.left = `${initialX + initialWidth/2}px`;
         this.browserWrapper.style.width = `${initialWidth}px`;
         this.browserWrapper.style.height = `${initialHeight}px`;
         this.browserWrapper.style.opacity = 0.8;
+        this.overlay.style.overflow = 'visible';
         gZenUIManager.motion
           .animate(
             this.browserWrapper,
@@ -131,13 +132,13 @@
               opacity: 1,
             },
             {
-              duration: 0.5,
-              ease: 'easeIn',
+              duration: .4,
               type: 'spring',
-              bounce: 0.25,
+              bounce: 0.2,
             }
           )
           .then(() => {
+            this.overlay.style.removeProperty('overflow');
             this.browserWrapper.removeAttribute('animate');
             this.browserWrapper.setAttribute('animate-end', true);
             this.browserWrapper.setAttribute('has-finished-animation', true);

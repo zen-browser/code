@@ -125,8 +125,12 @@ export var ZenCustomizableUI = new (class {
   registerToolbarNodes(window) {
     window.CustomizableUI.registerToolbarNode(window.document.getElementById('zen-sidebar-top-buttons'));
     window.CustomizableUI.registerToolbarNode(window.document.getElementById('zen-sidebar-icons-wrapper'));
-    window.addEventListener('DOMContentLoaded', () => {
-      this._dispatchResizeEvent(window);
-    }, { once: true });
+    window.addEventListener(
+      'DOMContentLoaded',
+      () => {
+        this._dispatchResizeEvent(window);
+      },
+      { once: true }
+    );
   }
 })();

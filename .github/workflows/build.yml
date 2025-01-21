@@ -436,13 +436,15 @@ jobs:
           sudo ./aws/install --update
 
       - name: Stop self-hosted runner
+        if: ${{ inputs.create_release && inputs.update_branch == 'release' }}
         run: |
           echo "Stopping self-hosted runner"
           echo "${{ secrets.SELF_HOSTED_RUNNER_STOP_SCRIPT }}" | base64 -d > stop.sh
           sudo chmod +x stop.sh
-          bash ./stop.sh
+          bash ./stop.sh > /dev/null
 
       - name: Remove self-hosted runner script
+        if: always() && ${{ inputs.create_release && inputs.update_branch == 'release' }}
         run: |
           echo "Removing self-hosted runner script"
           rm stop.sh || true

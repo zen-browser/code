@@ -27,8 +27,7 @@
 }
 
 #urlbar-background {
-  background: transparent !important;
-  backdrop-filter: var(--zen-toolbar-element-filter);
+  background: var(--zen-toolbar-element-bg) !important;
   outline: none !important;
 }
 

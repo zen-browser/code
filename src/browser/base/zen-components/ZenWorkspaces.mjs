@@ -1058,14 +1058,6 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
       button.firstChild.remove();
     }
 
-    for (let attr of [...button.attributes]) {
-      if (attr.name !== 'id') {
-        button.removeAttribute(attr.name);
-      }
-    }
-
-    button.className = '';
-
     if (this._workspacesButtonClickListener) {
       button.removeEventListener('click', this._workspacesButtonClickListener);
       this._workspacesButtonClickListener = null;
@@ -1075,7 +1067,6 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
       this._workspaceButtonContextMenuListener = null;
     }
 
-    button.setAttribute('removable', 'true');
     button.setAttribute('showInPrivateBrowsing', 'false');
     button.setAttribute('tooltiptext', 'Workspaces');
     if (this.shouldShowIconStrip) {

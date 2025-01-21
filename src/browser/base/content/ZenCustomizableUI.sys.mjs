@@ -64,6 +64,7 @@ export var ZenCustomizableUI = new (class {
         addon-webext-overflowtarget="overflowed-extensions-list"
         mode="icons">
         <hbox id="zen-sidebar-top-buttons-customization-target" class="customization-target" flex="1">
+          <html:div id="zen-sidebar-top-buttons-separator" skipintoolbarset="true" overflows="false"></html:div>
         </hbox>
       </toolbar>
     `);
@@ -85,7 +86,7 @@ export var ZenCustomizableUI = new (class {
 
     for (let id of this.defaultSidebarIcons) {
       const elem = window.document.getElementById(id);
-      if (!elem) continue;
+      if (!elem || elem.id === 'zen-workspaces-button') continue;
       elem.setAttribute('removable', 'true');
     }
 

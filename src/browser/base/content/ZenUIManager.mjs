@@ -198,10 +198,7 @@ var gZenVerticalTabsManager = {
     if (this.__topButtonsSeparatorElement) {
       return this.__topButtonsSeparatorElement;
     }
-    this.__topButtonsSeparatorElement = document.createElement('div');
-    this.__topButtonsSeparatorElement.id = 'zen-sidebar-top-buttons-separator';
-    this.__topButtonsSeparatorElement.setAttribute('skipintoolbarset', 'true');
-    this.__topButtonsSeparatorElement.setAttribute('overflows', 'false');
+    this.__topButtonsSeparatorElement = document.getElementById('zen-sidebar-top-buttons-separator');
     return this.__topButtonsSeparatorElement;
   },
 

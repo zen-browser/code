@@ -1,5 +1,5 @@
 diff --git a/browser/components/customizableui/CustomizableUI.sys.mjs b/browser/components/customizableui/CustomizableUI.sys.mjs
-index b953d7d2c8fa7fe2d320bd7cb7af9aeeef0abc86..bb822f3f8639aa23c447c1cd528ddf2ceb102e72 100644
+index b953d7d2c8fa7fe2d320bd7cb7af9aeeef0abc86..f2245f7d4e0b49d209b8ccca457e8500a3b024a1 100644
 --- a/browser/components/customizableui/CustomizableUI.sys.mjs
 +++ b/browser/components/customizableui/CustomizableUI.sys.mjs
 @@ -13,6 +13,7 @@ ChromeUtils.defineESModuleGetters(lazy, {
@@ -124,15 +124,33 @@ index b953d7d2c8fa7fe2d320bd7cb7af9aeeef0abc86..bb822f3f8639aa23c447c1cd528ddf2c
    /**
     * Add a widget to an area.
     * If the area to which you try to add is not known to CustomizableUI,
-@@ -6407,7 +6406,7 @@ class OverflowableToolbar {
-         getInlineSize(this.#toolbar) -
-         parseFloat(style.paddingLeft) -
-         parseFloat(style.paddingRight) -
--        toolbarChildrenWidth;
-+        toolbarChildrenWidth - (win.gZenVerticalTabsManager._hasSetSingleToolbar ? 1 : 0); // -1px so we can calculate the overflow correctly
-       targetWidth = getInlineSize(this.#target);
+@@ -6370,7 +6369,7 @@ class OverflowableToolbar {
+    */
+   async #getOverflowInfo() {
+     function getInlineSize(aElement) {
+-      return aElement.getBoundingClientRect().width;
++      return aElement.getBoundingClientRect().width - ((win.gZenVerticalTabsManager._hasSetSingleToolbar && aElement.id == 'zen-sidebar-top-buttons-customization-target') ? win.gZenVerticalTabsManager._topButtonsSeparatorElement.getBoundingClientRect().width : 0);
+     }
+ 
+     function sumChildrenInlineSize(aParent, aExceptChild = null) {
+@@ -6412,7 +6411,7 @@ class OverflowableToolbar {
        targetChildrenWidth =
          this.#target == this.#toolbar
+           ? toolbarChildrenWidth
+-          : sumChildrenInlineSize(this.#target);
++          : sumChildrenInlineSize(this.#target, win.gZenVerticalTabsManager._topButtonsSeparatorElement);
+     });
+ 
+     lazy.log.debug(
+@@ -6422,7 +6421,7 @@ class OverflowableToolbar {
+     // If the target has min-width: 0, their children might actually overflow
+     // it, so check for both cases explicitly.
+     let targetContentWidth = Math.max(targetWidth, targetChildrenWidth);
+-    let isOverflowing = Math.floor(targetContentWidth) > totalAvailWidth;
++    let isOverflowing = Math.floor(targetContentWidth) + (win.gZenVerticalTabsManager._hasSetSingleToolbar ? 0.1 : 0) > totalAvailWidth;
+     return { isOverflowing, targetContentWidth, totalAvailWidth };
+   }
+ 
 @@ -6516,7 +6515,7 @@ class OverflowableToolbar {
          }
        }

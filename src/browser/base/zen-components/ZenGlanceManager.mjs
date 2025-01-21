@@ -13,8 +13,8 @@
 
       XPCOMUtils.defineLazyPreferenceGetter(
         this._lazyPref,
-        "SHOULD_OPEN_EXTERNAL_TABS_IN_GLANCE",
-        "zen.glance.open-essential-external-links",
+        'SHOULD_OPEN_EXTERNAL_TABS_IN_GLANCE',
+        'zen.glance.open-essential-external-links',
         false
       );
 
@@ -309,8 +309,13 @@
 
     shouldOpenTabInGlance(tab) {
       let owner = tab.owner;
-      return owner && owner.getAttribute('zen-essential') === 'true' && this._lazyPref.SHOULD_OPEN_EXTERNAL_TABS_IN_GLANCE
-        && owner.linkedBrowser?.docShellIsActive && owner.linkedBrowser?.browsingContext?.isAppTab;
+      return (
+        owner &&
+        owner.getAttribute('zen-essential') === 'true' &&
+        this._lazyPref.SHOULD_OPEN_EXTERNAL_TABS_IN_GLANCE &&
+        owner.linkedBrowser?.docShellIsActive &&
+        owner.linkedBrowser?.browsingContext?.isAppTab
+      );
     }
 
     onTabOpen(event) {

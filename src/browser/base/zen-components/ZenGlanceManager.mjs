@@ -115,8 +115,8 @@
 
         this.overlay.removeAttribute('fade-out');
         this.browserWrapper.setAttribute('animate', true);
-        this.browserWrapper.style.top = `${initialY + initialHeight/2}px`;
-        this.browserWrapper.style.left = `${initialX + initialWidth/2}px`;
+        this.browserWrapper.style.top = `${initialY + initialHeight / 2}px`;
+        this.browserWrapper.style.left = `${initialX + initialWidth / 2}px`;
         this.browserWrapper.style.width = `${initialWidth}px`;
         this.browserWrapper.style.height = `${initialHeight}px`;
         this.browserWrapper.style.opacity = 0.8;
@@ -132,7 +132,7 @@
               opacity: 1,
             },
             {
-              duration: .4,
+              duration: 0.4,
               type: 'spring',
               bounce: 0.2,
             }

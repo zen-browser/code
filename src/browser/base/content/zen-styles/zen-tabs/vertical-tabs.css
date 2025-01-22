@@ -456,7 +456,7 @@
     & > *:not(tabs):not(#search-container):not(#zen-workspaces-button),
     & #tabbrowser-arrowscrollbox-periphery > toolbarbutton {
       width: 100% !important;
-      border-radius: var(--tab-border-radius) !important;
+      border-radius: var(--border-radius-medium) !important;
 
       padding-left: var(--toolbarbutton-inner-padding) !important;
       padding-right: var(--toolbarbutton-inner-padding) !important;
@@ -958,7 +958,7 @@
       &::before {
         background: light-dark(rgba(255, 255, 255, 0.75), rgba(68, 64, 64, 0.75));
         margin: 2px;
-        border-radius: calc(var(--tab-border-radius) - 2px);
+        border-radius: calc(var(--border-radius-medium) - 2px);
         position: absolute;
         inset: 0;
         z-index: 0;

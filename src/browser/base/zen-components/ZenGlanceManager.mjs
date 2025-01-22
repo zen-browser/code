@@ -9,7 +9,6 @@
     init() {
       window.addEventListener('keydown', this.onKeyDown.bind(this));
       window.addEventListener('TabClose', this.onTabClose.bind(this));
-      window.addEventListener('TabOpen', this.onTabOpen.bind(this));
 
       XPCOMUtils.defineLazyPreferenceGetter(
         this._lazyPref,
@@ -77,7 +76,7 @@
       return this.#currentBrowser;
     }
 
-    openGlance(data, existingTab = null) {
+    openGlance(data, existingTab = null, ownerTab = null) {
       if (this.#currentBrowser) {
         return;
       }
@@ -94,7 +93,7 @@
       this.browserWrapper?.removeAttribute('has-finished-animation');
       this.overlay?.removeAttribute('post-fade-out');
 
-      const currentTab = gBrowser.selectedTab;
+      const currentTab = ownerTab ?? gBrowser.selectedTab;
 
       this.animatingOpen = true;
       this._animating = true;
@@ -308,21 +307,37 @@
       }
     }
 
-    shouldOpenTabInGlance(tab) {
+    tabDomainsDiffer(tab1, url2) {
+      try {
+        if (!tab1) {
+          return true;
+        }
+        let url1 = tab1.linkedBrowser.currentURI.spec;
+        if (url1.startsWith('about:')) {
+          return true;
+        }
+        return Services.io.newURI(url1).host !== url2.host;
+      } catch (e) {
+        return true;
+      }
+    }
+
+    shouldOpenTabInGlance(tab, uri) {
       let owner = tab.owner;
       return (
         owner &&
         owner.getAttribute('zen-essential') === 'true' &&
         this._lazyPref.SHOULD_OPEN_EXTERNAL_TABS_IN_GLANCE &&
         owner.linkedBrowser?.docShellIsActive &&
-        owner.linkedBrowser?.browsingContext?.isAppTab
+        owner.linkedBrowser?.browsingContext?.isAppTab &&
+        this.tabDomainsDiffer(owner, uri)
       );
     }
 
-    onTabOpen(event) {
-      let tab = event.target;
-      if (this.shouldOpenTabInGlance(tab)) {
-        this.openGlance({ url: undefined, x: 0, y: 0, width: 0, height: 0 }, tab);
+    onTabOpen(browser, uri) {
+      let tab = gBrowser.getTabForBrowser(browser);
+      if (this.shouldOpenTabInGlance(tab, uri)) {
+        this.openGlance({ url: undefined, x: 0, y: 0, width: 0, height: 0 }, tab, tab.owner);
       }
     }
 

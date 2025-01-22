@@ -14,6 +14,13 @@ XPCOMUtils.defineLazyPreferenceGetter(
   true
 );
 
+XPCOMUtils.defineLazyPreferenceGetter(
+  lazyCompactMode,
+  'COMPACT_MODE_CAN_ANIMATE_SIDEBAR',
+  'zen.view.compact.animate-sidebar',
+  true
+);
+
 ChromeUtils.defineLazyGetter(lazyCompactMode, 'mainAppWrapper', () => document.getElementById('zen-main-app-wrapper'));
 
 var gZenCompactModeManager = {
@@ -24,8 +31,6 @@ var gZenCompactModeManager = {
 
   init() {
     Services.prefs.addObserver('zen.tabs.vertical.right-side', this._updateSidebarIsOnRight.bind(this));
-
-    this._canAnimateSidebar = Services.prefs.getBoolPref('zen.view.compact.animate-sidebar', true);
 
     gZenUIManager.addPopupTrackingAttribute(this.sidebar);
     gZenUIManager.addPopupTrackingAttribute(document.getElementById('zen-appcontent-navbar-container'));
@@ -145,13 +150,14 @@ var gZenCompactModeManager = {
     const isCompactMode = this.preference;
     const canHideSidebar = Services.prefs.getBoolPref('zen.view.compact.hide-tabbar');
     // Do this so we can get the correct width ONCE compact mode styled have been applied
-    if (this._canAnimateSidebar) {
+    if (lazyCompactMode.COMPACT_MODE_CAN_ANIMATE_SIDEBAR) {
       this.sidebar.setAttribute('animate', 'true');
     }
     window.requestAnimationFrame(() => {
       let sidebarWidth = this.getAndApplySidebarWidth();
-      if (!this._canAnimateSidebar) {
+      if (!lazyCompactMode.COMPACT_MODE_CAN_ANIMATE_SIDEBAR) {
         this.sidebar.removeAttribute('animate');
+        this._animating = false;
         return;
       }
       if (canHideSidebar && isCompactMode) {

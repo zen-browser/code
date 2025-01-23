@@ -128,9 +128,9 @@ jobs:
       - name: create .p12 for codesign 🖊️
         run: |
           cd engine
-          echo ${{ secrets.macOS_CERTIFICATES_P12_For_App_BASE64 }} > cert.txt
+          echo "${{ secrets.macOS_CERTIFICATES_P12_For_App_BASE64 }}" > cert.txt
           base64 --decode -i cert.txt -o zenCert.p12
-          echo ${{ secrets.macOS_CERTIFICATES_P12_PASSWORD }} > zenpCertPassword.passwd
+          echo "${{ secrets.macOS_CERTIFICATES_P12_PASSWORD }}" > zenpCertPassword.passwd
 
       - name: Remove certificate sensitive information
         run: |

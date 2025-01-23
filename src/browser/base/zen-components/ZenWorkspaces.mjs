@@ -1326,9 +1326,12 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     const extraSelector = `#tabbrowser-arrowscrollbox-periphery > toolbarbutton`;
     this.tabContainer.removeAttribute('dont-animate-tabs');
     // order by actual position in the children list to animate
-    const elements = Array.from([...this.tabContainer.querySelectorAll(selector), ...this.tabContainer.querySelectorAll(extraSelector)]).sort(
-      (a, b) => a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING
-    ).reverse();
+    const elements = Array.from([
+      ...this.tabContainer.querySelectorAll(selector),
+      ...this.tabContainer.querySelectorAll(extraSelector),
+    ])
+      .sort((a, b) => a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING)
+      .reverse();
     if (out) {
       return gZenUIManager.motion.animate(
         elements,
@@ -1354,7 +1357,7 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
         duration: 0.15,
         type: 'spring',
         bounce: 0,
-     // delay: gZenUIManager.motion.stagger(0.02),
+        // delay: gZenUIManager.motion.stagger(0.02),
       }
     );
   }

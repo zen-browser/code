@@ -1,0 +1,201 @@
+name: macOS Release Build
+
+on:
+  workflow_call:
+    inputs:
+      build-version:
+        description: 'The version to build'
+        required: true
+        type: string
+      release-branch:
+        description: 'The branch to build'
+        required: true
+        type: string
+
+jobs:
+  mac-build:
+    name: Unify macOS (Universal)
+    runs-on: 'macos-14'
+
+    strategy:
+      fail-fast: false
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          token: ${{ secrets.DEPLOY_KEY }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        # note: This will use the version defined in '.python-version' by default
+
+      - name: Setup Git
+        run: |
+          git config --global user.email "mauro-balades@users.noreply.github.com"
+          git config --global user.name "mauro-balades"
+
+      - name: Install system dependencies
+        run: |
+          brew update
+          brew install cairo sccache gnu-tar mercurial
+          sudo pip install setuptools
+
+          brew uninstall --ignore-dependencies python3.12 -f
+
+          export PATH="$(python3 -m site --user-base)/bin":$PATH
+          python3 -m pip install --user mercurial
+
+          rm '/usr/local/bin/2to3-3.11' '/usr/local/bin/2to3-3.12' '/usr/local/bin/2to3'
+          rm '/usr/local/bin/idle3.11' '/usr/local/bin/idle3.12' '/usr/local/bin/idle3'
+          rm '/usr/local/bin/pydoc3.11' '/usr/local/bin/pydoc3.12' '/usr/local/bin/pydoc3'
+          rm '/usr/local/bin/python3.11' '/usr/local/bin/python3.12' '/usr/local/bin/python3'
+          rm '/usr/local/bin/python3.11-config' '/usr/local/bin/python3.12-config' '/usr/local/bin/python3-config'
+
+          brew install watchman
+
+          cargo install apple-codesign
+
+      - name: Force usage of gnu-tar
+        run: |
+          echo 'export PATH="/usr/local/opt/gnu-tar/libexec/gnubin:$PATH"' >> ~/.bash_profile
+          echo 'export PATH="/usr/local/opt/gnu-tar/libexec/gnubin:$PATH"' >> ~/.zsh
+          source ~/.bash_profile
+
+      - name: Setup pnpm
+        run: npm install -g pnpm
+
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - name: Install dependencies
+        run: |
+          pnpm install
+
+      - name: Load surfer CI setup
+        run: pnpm surfer ci --brand ${{ inputs.release-branch }} --display-version ${{ inputs.build-version }}
+
+      - name: Download Firefox source and dependencies
+        run: pnpm surfer download
+
+      - name: Download x86_64 app folder from artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: obj-x86_64-apple-darwin
+          path: engine
+
+      - name: Download aarch64 app folder from artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: obj-aarch64-apple-darwin
+          path: engine
+
+      - name: Find first .app folder name
+        run: |
+          cd engine/obj-x86_64-apple-darwin/dist
+          export APP_NAME=$(basename $(find . -name "*.app" -type d | head -n 1))
+          echo "APP_NAME=$APP_NAME" >> $GITHUB_ENV
+          echo "APP_NAME=$APP_NAME"
+
+      - name: Bootstrap
+        run: |
+          cd engine
+          export SURFER_PLATFORM="darwin"
+          export PATH="$(python3 -m site --user-base)/bin":$PATH
+          ./mach --no-interactive bootstrap --application-choice browser --no-system-changes
+          cd ..
+
+      - name: Import
+        run: pnpm surfer import
+
+      - name: create .p12 for codesign 🖊️
+        run: |
+          cd engine
+          echo ${{ secrets.macOS_CERTIFICATES_P12_For_App_BASE64 }} > cert.txt
+          base64 --decode -i cert.txt -o zenCert.p12
+          echo ${{ secrets.macOS_CERTIFICATES_P12_PASSWORD }} > zenpCertPassword.passwd
+
+      - name: Remove certificate sensitive information
+        run: |
+          rm engine/cert.txt || true
+
+      - name: Import provisioning profile for .app
+        run: |
+          echo "${{ secrets.macOS_PROVISIONING_PROFILE }}" | base64 --decode > ./engine/Zen_Browser.provisionprofile
+          ls -la
+
+      - name: Copy provisioning profile for .app on both architectures (embedded in .app)
+        run: |
+          cd engine
+          echo "Copying provisioning profile for .app on both architectures (${{ env.APP_NAME }})"
+          cp ./Zen_Browser.provisionprofile ./obj-x86_64-apple-darwin/dist/${{ env.APP_NAME }}/Contents/embedded.provisionprofile
+          cp ./Zen_Browser.provisionprofile ./obj-aarch64-apple-darwin/dist/${{ env.APP_NAME }}/Contents/embedded.provisionprofile
+
+      - name: Unify architectures
+        run: |
+          cd engine
+          ./mach python "./toolkit/mozapps/installer/unify.py" "./obj-x86_64-apple-darwin/dist/${{ env.APP_NAME }}" "./obj-aarch64-apple-darwin/dist/${{ env.APP_NAME }}"
+          echo "Merged aaarch64 into x86_64!"
+
+      - name: Import APPLE DEVELOPER ID CERTIFICATE for .app
+        uses: Apple-Actions/import-codesign-certs@v3
+        with:
+          p12-file-base64: ${{ secrets.macOS_CERTIFICATES_P12_For_App_BASE64 }}
+          p12-password: ${{ secrets.macOS_CERTIFICATES_P12_PASSWORD }}
+
+      - name: Sign .app
+        run: |
+          cd engine
+          ./mach macos-sign -v -r -c "release" -e "production" -a "./obj-x86_64-apple-darwin/dist/zen/${{ env.APP_NAME }}" --rcodesign-p12-file zenCert.p12 --rcodesign-p12-password-file zenpCertPassword.passwd
+
+      - name: Remove sensitive information
+        run: |
+          rm -f ./engine/Zen_Browser.provisionprofile
+
+      - name: Create DMG
+        run: |
+          cd engine
+          ./mach python -m mozbuild.action.make_dmg ./obj-x86_64-apple-darwin/dist/zen zen-macOS-universal-temp.dmg
+
+      - name: Sign .dmg
+        run: |
+          set -ex
+          hdiutil convert zen-macOS-universal-temp.dmg -format UDZO -imagekey zlib-level=9 -o zen.macos-universal.dmg
+          codesign -s "${{ secrets.macOS_AppleDeveloperId }}" zen.macos-universal.dmg
+          xcrun notarytool submit "zen.macos-universal.dmg" \
+            --apple-id "${{ secrets.macOS_AppleAccountId }}" \
+            --team-id "${{ secrets.macOS_AppleDeveloperIdTeamId }}" \
+            --password "${{ secrets.macOS_AppleDeveloperIdPassword }}" \
+            --no-s3-acceleration \
+            --wait
+          xcrun stapler staple "zen.macos-universal.dmg"
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          retention-days: 5
+          name: zen.macos-${{ matrix.arch }}.dmg
+          path: ./zen.macos-${{ matrix.arch }}.dmg
+
+      - name: Upload build artifact (.mar)
+        uses: actions/upload-artifact@v4
+        with:
+          retention-days: 5
+          name: macos-${{ matrix.arch }}.mar
+          path: ./macos-${{ matrix.arch }}.mar
+
+      - name: Upload build artifact (update manifests)
+        uses: actions/upload-artifact@v4
+        with:
+          retention-days: 5
+          name: macos_update_manifest_${{ matrix.arch }}
+          path: ./dist/update

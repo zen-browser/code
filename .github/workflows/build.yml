@@ -350,6 +350,17 @@ jobs:
       build-version: ${{ needs.build-data.outputs.version }}
       release-branch: ${{ inputs.update_branch }}
 
+  mac-uni:
+    name: macOS build (Universal)
+    uses: ./.github/workflows/macos-universal-release-build.yml
+    permissions:
+      contents: write
+    secrets: inherit
+    needs: [build-data]
+    with:
+      build-version: ${{ needs.build-data.outputs.version }}
+      release-branch: ${{ inputs.update_branch }}
+
   appimage:
     name: AppImage build - Linux ${{ matrix.arch }}
     permissions:
@@ -453,7 +464,7 @@ jobs:
     if: ${{ inputs.create_release || inputs.update_branch == 'twilight' }}
     permissions: write-all
     name: Release
-    needs: [build-data, linux, windows-step-3, check-release, mac, appimage, source, lint, stop-self-hosted]
+    needs: [build-data, linux, windows-step-3, check-release, mac-uni, appimage, source, lint, stop-self-hosted]
     runs-on: ubuntu-latest
     environment:
       name: ${{ inputs.update_branch == 'release' && 'Deploy-Release' || 'Deploy-Twilight' }}

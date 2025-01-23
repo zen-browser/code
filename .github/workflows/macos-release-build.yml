@@ -120,27 +120,12 @@ jobs:
           export SURFER_PLATFORM="darwin"
           bash .github/workflows/src/release-build.sh
 
-      - name: Import APPLE DEVELOPER ID CERTIFICATE for .app
-        uses: Apple-Actions/import-codesign-certs@v3
-        with:
-          p12-file-base64: ${{ secrets.macOS_CERTIFICATES_P12_For_App_BASE64 }}
-          p12-password: ${{ secrets.macOS_CERTIFICATES_P12_PASSWORD }}
-
-      - name: Import provisioning profile for .app
-        run: |
-          echo "${{ secrets.macOS_PROVISIONING_PROFILE }}" | base64 --decode > ./engine/Zen_Browser.provisionprofile
-          ls -la
-
       - name: Package
         env:
           SURFER_COMPAT: ${{ matrix.arch }}
           ZEN_GA_DISABLE_PGO: true
-          MACOS_APPLE_ACCOUNT_ID: ${{ secrets.macOS_AppleAccountId }}
-          MACOS_APPLE_DEVELOPER_ID_TEAM_ID: ${{ secrets.macOS_AppleDeveloperIdTeamId }}
-          MACOS_APPLE_DEVELOPER_ID_PASSWORD: ${{ secrets.macOS_AppleDeveloperIdPassword }}
         run: |
           export SURFER_PLATFORM="darwin"
-          export MACOS_APPLE_DEVELOPER_ID="${{ secrets.macOS_AppleDeveloperId }}"
           export ZEN_RELEASE=1
           pnpm package
 
@@ -148,31 +133,12 @@ jobs:
         run: |
           mv ./dist/output.mar macos-${{ matrix.arch }}.mar
 
-      - name: Remove sensitive information
-        run: |
-          rm -f ./engine/Zen_Browser.provisionprofile
-
-      - name: Sign .dmg
-        run: |
-          set -ex
-          hdiutil convert ./dist/*.dmg -format UDZO -imagekey zlib-level=9 -o zen.macos-${{ matrix.arch }}.dmg
-          xattr -cr zen.macos-${{ matrix.arch }}.dmg
-          codesign -s "${{ secrets.macOS_AppleDeveloperId }}" zen.macos-${{ matrix.arch }}.dmg
-          xcrun notarytool submit "zen.macos-${{ matrix.arch }}.dmg" \
-            --apple-id "${{ secrets.macOS_AppleAccountId }}" \
-            --team-id "${{ secrets.macOS_AppleDeveloperIdTeamId }}" \
-            --password "${{ secrets.macOS_AppleDeveloperIdPassword }}" \
-            --no-s3-acceleration \
-            --verbose \
-            --wait
-          xcrun stapler staple "zen.macos-${{ matrix.arch }}.dmg"
-
-      - name: Upload build artifact
+      - name: Upload dist app folder
         uses: actions/upload-artifact@v4
         with:
-          retention-days: 5
-          name: zen.macos-${{ matrix.arch }}.dmg
-          path: ./zen.macos-${{ matrix.arch }}.dmg
+          retention-days: 1
+          name: obj-${{ matrix.arch }}-apple-darwin
+          path: ./engine/obj-${{ matrix.arch }}-apple-darwin
 
       - name: Upload build artifact (.mar)
         uses: actions/upload-artifact@v4

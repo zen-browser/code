@@ -48,12 +48,12 @@
   & .browserContainer {
     background: var(--zen-dialog-background);
     position: fixed;
-    border-radius: var(--zen-border-radius);
+    border-radius: var(--zen-native-inner-radius);
     opacity: 0;
     top: 0;
     left: 0;
     flex: unset !important;
-    border: 1px solid var(--zen-colors-border);
+    box-shadow: var(--zen-big-shadow);
 
     &[has-finished-animation='true'] {
       position: relative !important;
@@ -65,7 +65,7 @@
     }
 
     & .browserStack {
-      border-radius: var(--zen-border-radius);
+      border-radius: var(--zen-native-inner-radius);
       overflow: hidden;
     }
 
@@ -81,8 +81,8 @@
       border: 1px solid var(--zen-colors-border);
       border-right: none;
 
-      border-top-left-radius: var(--zen-border-radius);
-      border-bottom-left-radius: var(--zen-border-radius);
+      border-top-left-radius: var(--zen-native-inner-radius);
+      border-bottom-left-radius: var(--zen-native-inner-radius);
 
       padding: 5px;
       gap: 6px;

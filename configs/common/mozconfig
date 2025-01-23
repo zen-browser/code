@@ -3,8 +3,8 @@ ac_add_options --with-app-name=${binName}
 ac_add_options --with-app-basename=Zen
 ac_add_options --enable-official-branding
 
-# Localization
-ac_add_options --with-l10n-base="../../engine/browser/locales"
+# Localization (Must be an absolute path)
+ac_add_options --with-l10n-base="${topsrcdir}/browser/locales"
 
 export MOZ_USER_DIR="${name}"
 export MOZ_APP_BASENAME=Zen

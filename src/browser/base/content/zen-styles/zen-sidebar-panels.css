@@ -83,7 +83,6 @@
   border-radius: var(--zen-native-inner-radius);
   z-index: 2;
   box-shadow: var(--zen-big-shadow);
-  border: 1px solid var(--zen-colors-border);
   background: var(--zen-colors-tertiary);
   opacity: 0;
   animation-delay: 0.1s;
@@ -108,7 +107,7 @@
   top: 0;
   left: 0;
   height: 100%;
-  width: calc(var(--zen-element-separation) * 2 - 3px);
+  width: var(--zen-element-separation);
   background: transparent;
   border: none;
   cursor: ew-resize;

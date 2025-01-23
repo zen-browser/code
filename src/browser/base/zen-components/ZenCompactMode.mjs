@@ -226,6 +226,7 @@ var gZenCompactModeManager = {
           });
       } else {
         this.sidebar.removeAttribute('animate'); // remove the attribute if we are not animating
+        this._animating = false;
       }
     });
   },

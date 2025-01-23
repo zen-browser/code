@@ -1,5 +1,5 @@
 diff --git a/browser/components/tabbrowser/content/tabs.js b/browser/components/tabbrowser/content/tabs.js
-index f7c39fe804182e2bdf53045ba3b6a5ba17079fc3..f578fe9da3c502289c6a3e3a0ba17de6e747e80f 100644
+index f7c39fe804182e2bdf53045ba3b6a5ba17079fc3..c98043855e7528fc9458ffd736101f15183b717d 100644
 --- a/browser/components/tabbrowser/content/tabs.js
 +++ b/browser/components/tabbrowser/content/tabs.js
 @@ -649,7 +649,7 @@
@@ -118,7 +118,8 @@ index f7c39fe804182e2bdf53045ba3b6a5ba17079fc3..f578fe9da3c502289c6a3e3a0ba17de6
 -      let numPinned = gBrowser.pinnedTabCount;
 +      let numPinned = gBrowser._numVisiblePinTabs;
  
-       if (gBrowser.pinnedTabCount !== verticalTabsContainer.children.length) {
+-      if (gBrowser.pinnedTabCount !== verticalTabsContainer.children.length) {
++      if (gBrowser.pinnedTabCount !== (verticalTabsContainer.children.length + document.getElementById("zen-essentials-container").children.length)) {
          let tabs = this.visibleTabs;
          for (let i = 0; i < numPinned; i++) {
            tabs[i].style.marginInlineStart = "";

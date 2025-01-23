@@ -56,11 +56,6 @@
   --zen-split-row-gap: calc(var(--zen-element-separation) + 1px);
   --zen-split-column-gap: calc(var(--zen-element-separation) + 1px);
   margin-right: calc(-1 * var(--zen-split-column-gap));
-
-  :root[zen-right-side='true'] & {
-    margin-right: 0;
-    margin-left: var(--zen-element-separation);
-  }
 }
 
 #tabbrowser-tabpanels:has(> [zen-split='true']),

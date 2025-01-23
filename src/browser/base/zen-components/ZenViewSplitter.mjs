@@ -75,8 +75,10 @@ class ZenViewSplitter extends ZenDOMOperatedFeature {
     XPCOMUtils.defineLazyPreferenceGetter(this, '_edgeHoverSize', 'zen.splitView.rearrange-edge-hover-size', 24);
 
     ChromeUtils.defineLazyGetter(this, 'overlay', () => document.getElementById('zen-splitview-overlay'));
-
     ChromeUtils.defineLazyGetter(this, 'dropZone', () => document.getElementById('zen-splitview-dropzone'));
+
+    // Add an event to listen of a tab has been draged over the the browser panel
+    this.tabBrowserPanel.addEventListener('dragover', this.onTabPanelDragOver.bind(this));
 
     window.addEventListener('TabClose', this.handleTabClose.bind(this));
     this.initializeContextMenu();
@@ -92,6 +94,90 @@ class ZenViewSplitter extends ZenDOMOperatedFeature {
     menuitem.setAttribute('oncommand', 'gZenViewSplitter.splitLinkInNewTab();');
     menuitem.setAttribute('data-l10n-id', 'zen-split-link');
     sibling.insertAdjacentElement('beforebegin', menuitem);
+  }
+
+  /*
+   * @param {Event} event
+   * @description Handles the event when a tab is dragged over the tab panel.
+   */
+  onTabPanelDragOver(event) {
+    var dt = event.dataTransfer;
+    var draggedTab;
+    if (dt.mozTypesAt(0)[0] == TAB_DROP_TYPE && !this._dragData && !event.defaultPrevented) {
+      // tab copy or move
+      draggedTab = dt.mozGetDataAt(TAB_DROP_TYPE, 0);
+      // not our drop then
+      if (!draggedTab) {
+        return;
+      }
+      let movingTabs = draggedTab._dragData.movingTabs;
+      draggedTab.container._finishMoveTogetherSelectedTabs(draggedTab);
+
+      this._dragData = {
+        screenX: event.screenX,
+        screenY: event.screenY,
+        movingTabs: movingTabs,
+        targetTab: draggedTab,
+      };
+
+      const createTimer = (() => {
+        this._dragData.timer = setTimeout(() => {
+          console.log('start');
+
+          const dragSide = this.calculateHoverSide(event.clientX, event.clientY, draggedTab.getBoundingClientRect());
+          const posToRoot = { ...this._dragData.targetTab.positionToRoot };
+          if (dragSide !== 'center') {
+            const isVertical = dragSide === 'top' || dragSide === 'bottom';
+            const tabSize = 100 - (isVertical ? posToRoot.top + posToRoot.bottom : posToRoot.right + posToRoot.left);
+            const reduce = tabSize * 0.5;
+            posToRoot[this._oppositeSide(dragSide)] += reduce;
+          }
+          const newInset = `${posToRoot.top}% ${posToRoot.right}% ${posToRoot.bottom}% ${posToRoot.left}%`;
+          this.dropZone.style.inset = newInset;
+
+          this.fakeBrowser = document.createElement('div');
+          this.fakeBrowser.style.width = '50%';
+          this.fakeBrowser.style.height = '50%';
+          this.fakeBrowser.style.backgroundColor = 'red';
+          this.fakeBrowser.style.position = 'absolute';
+
+          // create a fake browser to show the drop zone
+          this.tabBrowserPanel.appendChild(this.fakeBrowser);
+          this.fakeBrowser.style.left = event.clientX - this.fakeBrowser.offsetWidth / 2 + 'px';
+          this.fakeBrowser.style.top = event.clientY - this.fakeBrowser.offsetHeight / 2 + 'px';
+          this.fakeBrowser.style.zIndex = 1000;
+          this.fakeBrowser.style.pointerEvents = 'none';
+          this.fakeBrowser.style.opacity = '.5';
+          this.fakeBrowser.style.transition = 'left 0.1s, top 0.1s';
+
+          window.removeEventListener('dragover', onDragOver);
+        }, 1000);
+      });
+
+      const cancelDrag = () => {
+        console.log('remove');
+        window.removeEventListener('dragover', onDragOver);
+        clearTimeout(this._dragData.timer);
+        this._dragData = null;
+        if (this.fakeBrowser) {
+          this.fakeBrowser.remove();
+          this.fakeBrowser = null;
+        }
+      };
+
+      const onDragOver = (event) => {
+        if (Math.abs(event.screenX - this._dragData.screenX) > 5 || Math.abs(event.screenY - this._dragData.screenY) > 5) {
+          console.log('cancel');
+          // Start the timer again
+          clearTimeout(this._dragData.timer);
+          createTimer();
+        }
+      };
+
+      createTimer();
+      window.addEventListener('dragover', onDragOver);
+      window.addEventListener('dragend', cancelDrag);
+    }
   }
 
   /**

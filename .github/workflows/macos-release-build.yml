@@ -132,13 +132,14 @@ jobs:
       - name: Rename artifacts
         run: |
           mv ./dist/output.mar macos-${{ matrix.arch }}.mar
+          mv ./engine/obj-${{ matrix.arch }}-apple-darwin ./obj-${{ matrix.arch }}-apple-darwin
 
       - name: Upload dist app folder
         uses: actions/upload-artifact@v4
         with:
           retention-days: 1
           name: obj-${{ matrix.arch }}-apple-darwin
-          path: ./engine/obj-${{ matrix.arch }}-apple-darwin
+          path: ./obj-${{ matrix.arch }}-apple-darwin
 
       - name: Upload build artifact (.mar)
         uses: actions/upload-artifact@v4

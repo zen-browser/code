@@ -99,6 +99,14 @@ jobs:
           name: obj-aarch64-apple-darwin
           path: engine
 
+      - name: List .app folders
+        run: |
+          ls engine/
+          echo "--------------------"
+          cd engine/obj-x86_64-apple-darwin/dist
+          find . -name "*.app" -type d
+          cd ../..
+
       - name: Find first .app folder name
         run: |
           cd engine/obj-x86_64-apple-darwin/dist

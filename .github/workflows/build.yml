@@ -356,7 +356,7 @@ jobs:
     permissions:
       contents: write
     secrets: inherit
-    needs: [build-data]
+    needs: [build-data, mac]
     with:
       build-version: ${{ needs.build-data.outputs.version }}
       release-branch: ${{ inputs.update_branch }}

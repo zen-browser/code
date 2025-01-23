@@ -41,9 +41,9 @@
 }
 
 #tabbrowser-tabpanels[zen-split-view='true']:not([zen-split-resizing]) > [zen-split-anim='true'] {
-  transition: inset 0.08s ease-out;
+  transition: inset 0.09s ease-out !important;
   & browser {
-    transition: opacity 0.2s ease-out;
+    transition: opacity 0.2s ease-out !important;
   }
 }
 

@@ -91,13 +91,13 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: obj-x86_64-apple-darwin
-          path: engine
+          path: engine/obj-x86_64-apple-darwin
 
       - name: Download aarch64 app folder from artifacts
         uses: actions/download-artifact@v4
         with:
           name: obj-aarch64-apple-darwin
-          path: engine
+          path: engine/obj-aarch64-apple-darwin
 
       - name: List .app folders
         run: |

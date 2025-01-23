@@ -104,13 +104,13 @@ jobs:
           ls engine/
           echo "--------------------"
           cd engine/obj-x86_64-apple-darwin/dist
-          find . -name "*.app" -type d
+          find . -maxdepth 1 -name "*.app" -type d
           cd ../..
 
       - name: Find first .app folder name
         run: |
           cd engine/obj-x86_64-apple-darwin/dist
-          export APP_NAME=$(basename $(find . -name "*.app" -type d | head -n 1))
+          export APP_NAME=$(basename $(find . -maxdepth 1 -name "Zen *.app" -type d | head -n 1))
           echo "APP_NAME=$APP_NAME" >> $GITHUB_ENV
           echo "APP_NAME=$APP_NAME"
 

@@ -54,6 +54,18 @@ jobs:
           echo "GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}"
           echo "GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}"
 
+  buildid:
+    name: Generate build ID
+    runs-on: ubuntu-latest
+    outputs:
+      buildids: ${{ steps.get.outputs.bid }}
+    steps:
+      - id: get
+        shell: bash -xe {0}
+        run: |
+          bdat=`date +"%Y%m%d%I%M%S"`
+          echo "bid=${bdat}" >> $GITHUB_OUTPUT
+
   start-self-host:
     runs-on: ubuntu-latest
     needs: debug-inputs
@@ -294,7 +306,7 @@ jobs:
   windows-step-1:
     name: Windows build step 1 (PGO build)
     uses: ./.github/workflows/windows-release-build.yml
-    needs: [build-data]
+    needs: [build-data, buildid]
     permissions:
       contents: write
     secrets: inherit
@@ -303,6 +315,7 @@ jobs:
       generate-gpo: true
       profile-data-path-archive: zen-windows-profile-data-and-jarlog.zip
       release-branch: ${{ inputs.update_branch }}
+      MOZ_BUILD_DATE: ${{needs.buildid.outputs.buildids}}
 
   windows-step-2:
     name: Windows build step 2 (Generate profile data)
@@ -322,11 +335,12 @@ jobs:
     permissions:
       contents: write
     secrets: inherit
-    needs: [build-data, windows-step-2, start-self-host]
+    needs: [build-data, windows-step-2, start-self-host, buildid]
     with:
       build-version: ${{ needs.build-data.outputs.version }}
       generate-gpo: false
       release-branch: ${{ inputs.update_branch }}
+      MOZ_BUILD_DATE: ${{needs.buildid.outputs.buildids}}
 
   linux:
     name: Linux build
@@ -334,10 +348,11 @@ jobs:
     permissions:
       contents: write
     secrets: inherit
-    needs: [build-data, start-self-host]
+    needs: [build-data, start-self-host, buildid]
     with:
       build-version: ${{ needs.build-data.outputs.version }}
       release-branch: ${{ inputs.update_branch }}
+      MOZ_BUILD_DATE: ${{needs.buildid.outputs.buildids}}
 
   mac:
     name: macOS build
@@ -345,10 +360,11 @@ jobs:
     permissions:
       contents: write
     secrets: inherit
-    needs: [build-data]
+    needs: [build-data, buildid]
     with:
       build-version: ${{ needs.build-data.outputs.version }}
       release-branch: ${{ inputs.update_branch }}
+      MOZ_BUILD_DATE: ${{needs.buildid.outputs.buildids}}
 
   mac-uni:
     name: macOS build (Universal)

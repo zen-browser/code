@@ -1,0 +1,19 @@
+diff --git a/browser/base/content/browser-fullScreenAndPointerLock.js b/browser/base/content/browser-fullScreenAndPointerLock.js
+index c61a424d3871d94e7086418c72ce22d5aef0a047..b6e3939b1ce67185acc3b9a66385869bd5490a39 100644
+--- a/browser/base/content/browser-fullScreenAndPointerLock.js
++++ b/browser/base/content/browser-fullScreenAndPointerLock.js
+@@ -431,10 +431,10 @@ var FullScreen = {
+     gNavToolbox.classList.toggle("fullscreen-with-menubar", shiftSize > 0);
+ 
+     let transform = shiftSize > 0 ? `translateY(${shiftSize}px)` : "";
+-    gNavToolbox.style.transform = transform;
+-    gURLBar.textbox.style.transform = gURLBar.textbox.hasAttribute("breakout")
+-      ? transform
+-      : "";
++    //gNavToolbox.style.transform = transform;
++    //gURLBar.textbox.style.transform = gURLBar.textbox.hasAttribute("breakout")
++    //  ? transform
++    //  : "";
+     if (shiftSize > 0) {
+       // If the mouse tracking missed our fullScreenToggler, then the toolbox
+       // might not have been shown before the menubar is animated down. Make

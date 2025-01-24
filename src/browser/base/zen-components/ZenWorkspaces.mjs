@@ -11,7 +11,6 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     cumulativeDelta: 0,
     direction: null,
   };
-  _hoveringSidebar = false;
   _lastScrollTime = 0;
   bookmarkMenus = [
     'PlacesToolbar',
@@ -114,6 +113,10 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     window.addEventListener('AppCommand', HandleAppCommandEvent, true);
   }
 
+  get _hoveringSidebar() {
+    return document.getElementById('navigator-toolbox').hasAttribute('zen-has-hover');
+  }
+
   _handleAppCommand(event) {
     if (!this.workspaceEnabled || !this._hoveringSidebar) {
       return;
@@ -137,14 +140,6 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
 
   _setupSidebarHandlers() {
     const toolbox = document.getElementById('navigator-toolbox');
-
-    toolbox.addEventListener('mouseenter', () => {
-      this._hoveringSidebar = true;
-    });
-
-    toolbox.addEventListener('mouseleave', () => {
-      this._hoveringSidebar = false;
-    });
 
     const scrollCooldown = 200; // Milliseconds to wait before allowing another scroll
     const scrollThreshold = 2; // Minimum scroll delta to trigger workspace change

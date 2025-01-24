@@ -470,7 +470,8 @@
             this._resetTabToStoredState(selectedTab);
           }
           if (behavior.includes('unload')) {
-            gBrowser.discardBrowser(selectedTab);
+            gBrowser.explicitUnloadTabs([selectedTab]);
+            selectedTab.removeAttribute('linkedpanel');
           }
           break;
         case 'reset':

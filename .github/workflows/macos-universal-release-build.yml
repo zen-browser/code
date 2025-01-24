@@ -114,9 +114,6 @@ jobs:
           echo "APP_NAME=\"$APP_NAME\"" >> $GITHUB_ENV
           echo "APP_NAME=$APP_NAME"
 
-      - name: Make sure APP_NAME works
-        run: ls "engine/obj-x86_64-apple-darwin/dist/${{ env.APP_NAME }}"
-
       - name: Bootstrap
         run: |
           cd engine

@@ -110,8 +110,8 @@ jobs:
       - name: Find first .app folder name
         run: |
           cd engine/obj-x86_64-apple-darwin/dist
-          export APP_NAME=$(basename $(find . -maxdepth 1 -name "Zen *.app" -type d | head -n 1))
-          echo "APP_NAME=$APP_NAME" >> $GITHUB_ENV
+          export APP_NAME="$(basename $(find . -maxdepth 1 -name "Zen *.app" -type d | head -n 1))"
+          echo "APP_NAME=\"$APP_NAME\"" >> $GITHUB_ENV
           echo "APP_NAME=$APP_NAME"
 
       - name: Bootstrap
@@ -145,8 +145,8 @@ jobs:
         run: |
           cd engine
           echo "Copying provisioning profile for .app on both architectures (${{ env.APP_NAME }})"
-          cp ./Zen_Browser.provisionprofile ./obj-x86_64-apple-darwin/dist/${{ env.APP_NAME }}/Contents/embedded.provisionprofile
-          cp ./Zen_Browser.provisionprofile ./obj-aarch64-apple-darwin/dist/${{ env.APP_NAME }}/Contents/embedded.provisionprofile
+          cp ./Zen_Browser.provisionprofile "./obj-x86_64-apple-darwin/dist/${{ env.APP_NAME }}/Contents/embedded.provisionprofile"
+          cp ./Zen_Browser.provisionprofile "./obj-aarch64-apple-darwin/dist/${{ env.APP_NAME }}/Contents/embedded.provisionprofile"
 
       - name: Unify architectures
         run: |

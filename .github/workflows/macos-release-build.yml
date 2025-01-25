@@ -139,7 +139,7 @@ jobs:
       - name: Rename artifacts
         run: |
           mv ./dist/output.mar macos-${{ matrix.arch }}.mar
-          tar -czf zen-${{ matrix.arch }}-apple-darwin-dist.tar.gz ./engine/obj-${arch}-apple-darwin/dist/
+          tar -czf zen-${{ matrix.arch }}-apple-darwin-dist.tar.gz ./engine/obj-${{ matrix.arch }}-apple-darwin/dist/
 
       - name: Upload dist dmg
         uses: actions/upload-artifact@v4

@@ -126,28 +126,22 @@ jobs:
 
       - name: Remove any existing .app folders
         run: |
-          rm -rf "./obj-x86_64-apple-darwin/dist/zen/*.app" || true
-          rm -rf "./obj-aarch64-apple-darwin/dist/zen/*.app" || true
+          set -x
+          rm -rf "./obj-x86_64-apple-darwin/dist/zen/*.app"
+          rm -rf "./obj-aarch64-apple-darwin/dist/zen/*.app"
 
       - name: Extract .app from dmg
         run: |
           set -ex
           cd engine
-          hdiutil attach ./obj-x86_64-apple-darwin/dist/zen*.dmg
-          ls -la /Volumes
-          ls -la "/Volumes/${{ env.APP_NAME }}"
-          echo "---"
-          cp -R "/Volumes/${{ env.APP_NAME }}/${{ env.APP_NAME }}.app" "./obj-x86_64-apple-darwin/dist/zen/"
-          hdiutil detach "/Volumes/${{ env.APP_NAME }}"
-          echo "Done extracting x86_64 .app"
-          echo "--------------------"
-          hdiutil attach ./obj-aarch64-apple-darwin/dist/zen*.dmg
-          ls -la /Volumes
-          ls -la "/Volumes/${{ env.APP_NAME }}"
-          cp -R "/Volumes/${{ env.APP_NAME }}/${{ env.APP_NAME }}.app" "./obj-aarch64-apple-darwin/dist/zen/"
-          hdiutil detach "/Volumes/${{ env.APP_NAME }}"
-          echo "Done extracting aarch64 .app"
-          echo "--------------------"
+          echo "Extracting x86_64 .app from dmg"
+          ./mach python -m mozbuild.action.extract_dmg \
+            ./obj-x86_64-apple-darwin/dist/zen*.dmg \
+            ./obj-x86_64-apple-darwin/dist
+          echo "Extracting aarch64 .app from dmg"
+          ./mach python -m mozbuild.action.extract_dmg \
+            ./obj-aarch64-apple-darwin/dist/zen*.dmg \
+            ./obj-aarch64-apple-darwin/dist
 
       - name: List .app folders
         run: |
@@ -186,6 +180,8 @@ jobs:
       - name: Unify architectures
         run: |
           cd engine
+          ls -la "./obj-x86_64-apple-darwin/dist/${{ env.APP_NAME }}.app/Contents"
+          ls -la "./obj-x86_64-apple-darwin/dist/${{ env.APP_NAME }}.app/Contents/MacOS"
           ./mach python "./toolkit/mozapps/installer/unify.py" "./obj-x86_64-apple-darwin/dist/${{ env.APP_NAME }}.app" "./obj-aarch64-apple-darwin/dist/${{ env.APP_NAME }}.app"
           echo "Merged aaarch64 into x86_64!"
 

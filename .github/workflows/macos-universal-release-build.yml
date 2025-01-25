@@ -133,7 +133,7 @@ jobs:
         run: |
           set -ex
           cd engine
-          hdiutil attach ./obj-x86_64-apple-darwin/dist/zen.macos-x86_64.dmg
+          hdiutil attach ./obj-x86_64-apple-darwin/dist/zen*.dmg
           ls -la /Volumes
           ls -la "/Volumes/${{ env.APP_NAME }}"
           echo "---"
@@ -141,7 +141,7 @@ jobs:
           hdiutil detach "/Volumes/${{ env.APP_NAME }}"
           echo "Done extracting x86_64 .app"
           echo "--------------------"
-          hdiutil attach ./obj-aarch64-apple-darwin/dist/zen.macos-aarch64.dmg
+          hdiutil attach ./obj-aarch64-apple-darwin/dist/zen*.dmg
           ls -la /Volumes
           ls -la "/Volumes/${{ env.APP_NAME }}"
           cp -R "/Volumes/${{ env.APP_NAME }}/${{ env.APP_NAME }}.app" "./obj-aarch64-apple-darwin/dist/zen/"

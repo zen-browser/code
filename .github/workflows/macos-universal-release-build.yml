@@ -135,11 +135,11 @@ jobs:
           set -ex
           cd engine
           echo "Extracting x86_64 .app from dmg"
-          ./mach python -m mozbuild.action.extract_dmg \
+          ./mach python -m mozbuild.action.unpack_dmg \
             ./obj-x86_64-apple-darwin/dist/zen*.dmg \
             ./obj-x86_64-apple-darwin/dist
           echo "Extracting aarch64 .app from dmg"
-          ./mach python -m mozbuild.action.extract_dmg \
+          ./mach python -m mozbuild.action.unpack_dmg \
             ./obj-aarch64-apple-darwin/dist/zen*.dmg \
             ./obj-aarch64-apple-darwin/dist
 

@@ -105,7 +105,7 @@ jobs:
         with:
           name: zen-aarch64-apple-darwin-dist.tar.gz
 
-      - name: Extract 📦
+      - name: Extract
         run: |
           brew install gnu-tar
           export PATH=/usr/local/opt/gnu-tar/libexec/gnubin:$PATH
@@ -113,6 +113,7 @@ jobs:
           mv ./zen-x86_64-apple-darwin-dist.tar.gz ./engine/
           mv ./zen-aarch64-apple-darwin-dist.tar.gz ./engine/
 
+          cd engine
           tar -xf ./zen-x86_64-apple-darwin-dist.tar.gz
           tar -xf ./zen-aarch64-apple-darwin-dist.tar.gz
 

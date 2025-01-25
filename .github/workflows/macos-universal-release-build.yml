@@ -87,17 +87,64 @@ jobs:
       - name: Download Firefox source and dependencies
         run: pnpm surfer download
 
-      - name: Download x86_64 app folder from artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: obj-x86_64-apple-darwin
-          path: engine/obj-x86_64-apple-darwin
+      - name: Bootstrap
+        run: |
+          cd engine
+          export SURFER_PLATFORM="darwin"
+          export PATH="$(python3 -m site --user-base)/bin":$PATH
+          ./mach --no-interactive bootstrap --application-choice browser --no-system-changes
+          cd ..
 
-      - name: Download aarch64 app folder from artifacts
+      - name: Download x86_64 dist from artifacts
         uses: actions/download-artifact@v4
         with:
-          name: obj-aarch64-apple-darwin
-          path: engine/obj-aarch64-apple-darwin
+          name: zen-x86_64-apple-darwin-dist.tar.gz
+
+      - name: Download aarch64 dist from artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: zen-aarch64-apple-darwin-dist.tar.gz
+
+      - name: Extract 📦
+        run: |
+          brew install gnu-tar
+          export PATH=/usr/local/opt/gnu-tar/libexec/gnubin:$PATH
+
+          mv ./zen-x86_64-apple-darwin-dist.tar.gz ./engine/
+          mv ./zen-aarch64-apple-darwin-dist.tar.gz ./engine/
+
+          tar -xf ./zen-x86_64-apple-darwin-dist.tar.gz
+          tar -xf ./zen-aarch64-apple-darwin-dist.tar.gz
+
+      - name: Find first .app folder name
+        run: |
+          cd engine/obj-x86_64-apple-darwin/dist
+          export APP_NAME=$(basename "$(find . -maxdepth 1 -name "Zen *.app" -type d | head -n 1)" .app)
+          echo "APP_NAME=$APP_NAME" >> $GITHUB_ENV
+          echo "APP_NAME=$APP_NAME"
+
+      - name: Remove any existing .app folders
+        run: |
+          rm -rf "./obj-x86_64-apple-darwin/dist/zen/*.app" || true
+          rm -rf "./obj-aarch64-apple-darwin/dist/zen/*.app" || true
+
+      - name: Extract .app from dmg
+        run: |
+          hdiutil attach ./obj-x86_64-apple-darwin/dist/zen.macos-x86_64.dmg
+          ls -la /Volumes
+          ls -la "/Volumes/${{ env.APP_NAME }}"
+          echo "---"
+          cp -R "/Volumes/${{ env.APP_NAME }}/${{ env.APP_NAME }}.app" "./obj-x86_64-apple-darwin/dist/zen/"
+          hdiutil detach "/Volumes/${{ env.APP_NAME }}"
+          echo "Done extracting x86_64 .app"
+          echo "--------------------"
+          hdiutil attach ./obj-aarch64-apple-darwin/dist/zen.macos-aarch64.dmg
+          ls -la /Volumes
+          ls -la "/Volumes/${{ env.APP_NAME }}"
+          cp -R "/Volumes/${{ env.APP_NAME }}/${{ env.APP_NAME }}.app" "./obj-aarch64-apple-darwin/dist/zen/"
+          hdiutil detach "/Volumes/${{ env.APP_NAME }}"
+          echo "Done extracting aarch64 .app"
+          echo "--------------------"
 
       - name: List .app folders
         run: |
@@ -106,21 +153,6 @@ jobs:
           cd engine/obj-x86_64-apple-darwin/dist
           find . -maxdepth 1 -name "*.app" -type d
           cd ../..
-
-      - name: Find first .app folder name
-        run: |
-          cd engine/obj-x86_64-apple-darwin/dist
-          export APP_NAME=$(basename "$(find . -maxdepth 1 -name "Zen *.app" -type d | head -n 1)")
-          echo "APP_NAME=$APP_NAME" >> $GITHUB_ENV
-          echo "APP_NAME=$APP_NAME"
-
-      - name: Bootstrap
-        run: |
-          cd engine
-          export SURFER_PLATFORM="darwin"
-          export PATH="$(python3 -m site --user-base)/bin":$PATH
-          ./mach --no-interactive bootstrap --application-choice browser --no-system-changes
-          cd ..
 
       - name: Import
         run: pnpm surfer import
@@ -145,13 +177,13 @@ jobs:
         run: |
           cd engine
           echo "Copying provisioning profile for .app on both architectures (${{ env.APP_NAME }})"
-          cp ./Zen_Browser.provisionprofile "./obj-x86_64-apple-darwin/dist/${{ env.APP_NAME }}/Contents/embedded.provisionprofile"
-          cp ./Zen_Browser.provisionprofile "./obj-aarch64-apple-darwin/dist/${{ env.APP_NAME }}/Contents/embedded.provisionprofile"
+          cp ./Zen_Browser.provisionprofile "./obj-x86_64-apple-darwin/dist/${{ env.APP_NAME }}.app/Contents/embedded.provisionprofile"
+          cp ./Zen_Browser.provisionprofile "./obj-aarch64-apple-darwin/dist/${{ env.APP_NAME }}.app/Contents/embedded.provisionprofile"
 
       - name: Unify architectures
         run: |
           cd engine
-          ./mach python "./toolkit/mozapps/installer/unify.py" "./obj-x86_64-apple-darwin/dist/${{ env.APP_NAME }}" "./obj-aarch64-apple-darwin/dist/${{ env.APP_NAME }}"
+          ./mach python "./toolkit/mozapps/installer/unify.py" "./obj-x86_64-apple-darwin/dist/${{ env.APP_NAME }}.app" "./obj-aarch64-apple-darwin/dist/${{ env.APP_NAME }}.app"
           echo "Merged aaarch64 into x86_64!"
 
       - name: Import APPLE DEVELOPER ID CERTIFICATE for .app
@@ -163,7 +195,7 @@ jobs:
       - name: Sign .app
         run: |
           cd engine
-          ./mach macos-sign -v -r -c "release" -e "production" -a "./obj-x86_64-apple-darwin/dist/zen/${{ env.APP_NAME }}" --rcodesign-p12-file zenCert.p12 --rcodesign-p12-password-file zenpCertPassword.passwd
+          ./mach macos-sign -v -r -c "release" -e "production" -a "./obj-x86_64-apple-darwin/dist/zen/${{ env.APP_NAME }}.app" --rcodesign-p12-file zenCert.p12 --rcodesign-p12-password-file zenpCertPassword.passwd
 
       - name: Remove sensitive information
         run: |
@@ -172,7 +204,12 @@ jobs:
       - name: Create DMG
         run: |
           cd engine
-          ./mach python -m mozbuild.action.make_dmg ./obj-x86_64-apple-darwin/dist/zen zen-macOS-universal-temp.dmg
+          ./mach python -m mozbuild.action.make_dmg \
+            --volume-name "${{ env.APP_NAME }}" \
+            --background ./browser/branding/${{ inputs.release-branch }}/background.png \
+            --icon ./browser/branding/${{ inputs.release-branch }}/firefox.icns \
+            --dsstore ./browser/branding/${{ inputs.release-branch }}/dsstore \
+            ./obj-x86_64-apple-darwin/dist/zen zen-macOS-universal-temp.dmg
 
       - name: Sign .dmg
         run: |

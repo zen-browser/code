@@ -120,36 +120,43 @@ class ZenViewSplitter extends ZenDOMOperatedFeature {
         targetTab: draggedTab,
       };
 
+      const onTabDrop = (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+
+        // split the tabs
+        this.splitTabs(this._dragData.movingTabs);
+        cancelDrag();
+      };
+
       const createTimer = (() => {
         this._dragData.timer = setTimeout(() => {
-          console.log('start');
+          console.log('create');
+          this.fakeBrowser = document.createElement('div');
+          this.fakeBrowser.style.width = '100%';
+          this.fakeBrowser.style.height = '100%';
+          this.fakeBrowser.style.position = 'fixed';
+          this.fakeBrowser.style.zIndex = '1000';
+          this.fakeBrowser.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
 
-          const dragSide = this.calculateHoverSide(event.clientX, event.clientY, draggedTab.getBoundingClientRect());
-          const posToRoot = { ...this._dragData.targetTab.positionToRoot };
-          if (dragSide !== 'center') {
-            const isVertical = dragSide === 'top' || dragSide === 'bottom';
-            const tabSize = 100 - (isVertical ? posToRoot.top + posToRoot.bottom : posToRoot.right + posToRoot.left);
-            const reduce = tabSize * 0.5;
-            posToRoot[this._oppositeSide(dragSide)] += reduce;
+          this.tabBrowserPanel.appendChild(this.fakeBrowser);
+
+          const browser = gBrowser.selectedTab.linkedBrowser;
+          const posToRoot = { top: 0, right: 0, bottom: 0, left: 0 };
+          const browserRect = browser.getBoundingClientRect();
+          const hoverSide = this.calculateHoverSide(event.clientX, event.clientY, browserRect);
+
+          if (hoverSide !== 'center') {
+            const isVertical = hoverSide === 'top' || hoverSide === 'bottom';
+            const browserSize = 100 - (isVertical ? posToRoot.top + posToRoot.bottom : posToRoot.right + posToRoot.left);
+            const reduce = browserSize * 0.5;
+
+            posToRoot[this._oppositeSide(hoverSide)] += reduce;
           }
           const newInset = `${posToRoot.top}% ${posToRoot.right}% ${posToRoot.bottom}% ${posToRoot.left}%`;
-          this.dropZone.style.inset = newInset;
+          window.requestAnimationFrame(() => (this.fakeBrowser.style.inset = newInset));
 
-          this.fakeBrowser = document.createElement('div');
-          this.fakeBrowser.style.width = '50%';
-          this.fakeBrowser.style.height = '50%';
-          this.fakeBrowser.style.backgroundColor = 'red';
-          this.fakeBrowser.style.position = 'absolute';
-
-          // create a fake browser to show the drop zone
-          this.tabBrowserPanel.appendChild(this.fakeBrowser);
-          this.fakeBrowser.style.left = event.clientX - this.fakeBrowser.offsetWidth / 2 + 'px';
-          this.fakeBrowser.style.top = event.clientY - this.fakeBrowser.offsetHeight / 2 + 'px';
-          this.fakeBrowser.style.zIndex = 1000;
-          this.fakeBrowser.style.pointerEvents = 'none';
-          this.fakeBrowser.style.opacity = '.5';
-          this.fakeBrowser.style.transition = 'left 0.1s, top 0.1s';
-
+          this.tabBrowserPanel.addEventListener('drop', onTabDrop);
           window.removeEventListener('dragover', onDragOver);
         }, 1000);
       });
@@ -157,6 +164,7 @@ class ZenViewSplitter extends ZenDOMOperatedFeature {
       const cancelDrag = () => {
         console.log('remove');
         window.removeEventListener('dragover', onDragOver);
+        this.tabBrowserPanel.removeEventListener('drop', cancelDrag);
         clearTimeout(this._dragData.timer);
         this._dragData = null;
         if (this.fakeBrowser) {

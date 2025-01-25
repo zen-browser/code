@@ -118,6 +118,7 @@ var gZenUIManager = {
 var gZenVerticalTabsManager = {
   init() {
     this._multiWindowFeature = new ZenMultiWindowFeature();
+    this._initWaitPromise();
 
     ChromeUtils.defineLazyGetter(this, 'isWindowsStyledButtons', () => {
       return !(
@@ -135,8 +136,9 @@ var gZenVerticalTabsManager = {
     });
 
     var updateEvent = this._updateEvent.bind(this);
+    var onPrefChange = this._onPrefChange.bind(this);
 
-    this.initializePreferences(updateEvent);
+    this.initializePreferences(onPrefChange);
     this._toolbarOriginalParent = document.getElementById('nav-bar').parentElement;
 
     gZenCompactModeManager.addEventListener(updateEvent);
@@ -241,6 +243,31 @@ var gZenVerticalTabsManager = {
       300,
       updateEvent
     );
+  },
+
+  _initWaitPromise() {
+    this._waitPromise = new Promise((resolve) => {
+      this._resolveWaitPromise = resolve;
+    });
+  },
+
+  async _onPrefChange() {
+    this._resolveWaitPromise();
+
+    // only run if we are in the active window
+    await this._multiWindowFeature.foreachWindowAsActive(async (browser) => {
+      if (browser.gZenVerticalTabsManager._multiWindowFeature.windowIsActive(browser)) {
+        return;
+      }
+      await browser.gZenVerticalTabsManager._waitPromise;
+      browser.gZenVerticalTabsManager._updateEvent({ dontRebuildAreas: true });
+      browser.gZenVerticalTabsManager._initWaitPromise();
+    });
+
+    if (ZenMultiWindowFeature.isActiveWindow) {
+      this._updateEvent();
+      this._initWaitPromise();
+    }
   },
 
   _updateEvent({ forCustomizableMode = false, dontRebuildAreas = false } = {}) {

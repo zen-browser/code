@@ -330,8 +330,7 @@
         this._lazyPref.SHOULD_OPEN_EXTERNAL_TABS_IN_GLANCE &&
         owner.linkedBrowser?.docShellIsActive &&
         owner.linkedBrowser?.browsingContext?.isAppTab &&
-        this.tabDomainsDiffer(owner, uri) &&
-        Services.prefs.getBoolPref('zen.glance.enabled', true)
+        this.tabDomainsDiffer(owner, uri)
       );
     }
 

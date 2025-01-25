@@ -132,6 +132,7 @@ jobs:
       - name: Extract .app from dmg
         run: |
           set -ex
+          cd engine
           hdiutil attach ./obj-x86_64-apple-darwin/dist/zen.macos-x86_64.dmg
           ls -la /Volumes
           ls -la "/Volumes/${{ env.APP_NAME }}"

@@ -18,6 +18,10 @@
   padding: 1px;
 }
 
+.urlbar-input::placeholder {
+  text-overflow: ellipsis;
+}
+
 #searchbar:focus-within {
   border-color: transparent !important;
 }

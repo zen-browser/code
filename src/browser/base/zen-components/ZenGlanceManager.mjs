@@ -337,8 +337,15 @@
 
     onTabOpen(browser, uri) {
       let tab = gBrowser.getTabForBrowser(browser);
-      if (this.shouldOpenTabInGlance(tab, uri)) {
-        this.openGlance({ url: undefined, x: 0, y: 0, width: 0, height: 0 }, tab, tab.owner);
+      if (!tab) {
+        return;
+      }
+      try {
+        if (this.shouldOpenTabInGlance(tab, uri)) {
+          this.openGlance({ url: undefined, x: 0, y: 0, width: 0, height: 0 }, tab, tab.owner);
+        }
+      } catch (e) {
+        console.error(e);
       }
     }
 

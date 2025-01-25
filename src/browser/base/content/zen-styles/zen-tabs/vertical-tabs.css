@@ -37,10 +37,11 @@
       width: fit-content;
     }
 
-    &:root[zen-right-side='true'] #zen-sidebar-top-buttons-customization-target .titlebar-buttonbox-container {
-      /* Must have the zen-sidebar-top-buttons-customization-target so we target it only when it's on the sidebar */
-      margin-right: calc(-2 * var(--zen-toolbox-padding));
+    &:root[zen-right-side='true'] #zen-sidebar-top-buttons .titlebar-buttonbox-container {
+      /* Must have the #zen-sidebar-top-buttons so we target it only when it's on the sidebar */
+      margin-right: calc(-1 * var(--zen-toolbox-padding));
       margin-top: -10px /*Make sure this stays synced with the top buttons' margin!*/;
+      height: calc(4px + var(--zen-toolbar-height)) !important;
 
       & .titlebar-button {
         align-items: end;

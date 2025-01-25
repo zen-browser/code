@@ -411,7 +411,7 @@ var gZenVerticalTabsManager = {
         if (isRightSide && !isSidebarExpanded) {
           navBar.appendChild(windowButtons);
         } else {
-          document.getElementById('zen-sidebar-top-buttons-customization-target').appendChild(windowButtons);
+          topButtons.appendChild(windowButtons);
         }
       } else if (!isSingleToolbar && !isCompactMode) {
         if (this.isWindowsStyledButtons) {

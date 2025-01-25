@@ -52,7 +52,7 @@
         content/browser/zen-styles/zen-panels/print.css         (content/zen-styles/zen-panels/print.css)
         content/browser/zen-styles/zen-panels/welcome.css       (content/zen-styles/zen-panels/welcome.css)
 
-        content/browser/zen-styles/zen-compact-mode.css         (content/zen-styles/zen-compact-mode.css)
+*       content/browser/zen-styles/zen-compact-mode.css         (content/zen-styles/zen-compact-mode.css)
 
         # Images
         content/browser/zen-images/gradient.png                 (content/zen-images/gradient.png)

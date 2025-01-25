@@ -559,7 +559,6 @@
     justify-content: center;
     max-height: unset !important;
     height: fit-content !important;
-    margin-bottom: var(--zen-element-separation);
   }
   & #titlebar {
     display: grid;

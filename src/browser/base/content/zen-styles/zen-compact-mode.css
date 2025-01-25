@@ -6,13 +6,7 @@
 /* All overrides for compact mode go here */
 
 :root[zen-compact-mode='true']:not([customizing]):not([inDOMFullscreen='true']) {
-  #zen-sidebar-top-buttons:has(#zen-sidebar-top-buttons-customization-target:empty) {
-    max-height: 0 !important;
-    min-height: 0 !important;
-    opacity: 0;
-    overflow: hidden;
-    pointer-events: none;
-  }
+%include zen-tabs/vertical-tabs-topbuttons-fix.css
 
   @media (-moz-bool-pref: 'zen.view.compact.hide-tabbar') or (-moz-bool-pref: 'zen.view.use-single-toolbar') {
     #zen-sidebar-web-panel-wrapper:has(#zen-sidebar-web-panel[pinned='true']) {

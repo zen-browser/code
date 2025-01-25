@@ -4,7 +4,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-& #zen-sidebar-top-buttons:has(#zen-sidebar-top-buttons-customization-target:empty) {
+& #zen-sidebar-top-buttons:not(:has(toolbarbutton, toolbaritem)) {
   max-height: 0 !important;
   min-height: 0 !important;
   opacity: 0;

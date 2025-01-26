@@ -359,6 +359,7 @@
   flex-direction: column;
   min-height: fit-content !important;
   overflow: visible;
+  max-height: unset !important;
 
   & .tabbrowser-tab:not(:hover) .tab-background:not([selected]):not([multiselected]) {
     background: transparent !important;

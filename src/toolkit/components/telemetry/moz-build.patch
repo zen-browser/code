@@ -1,8 +1,26 @@
 diff --git a/toolkit/components/telemetry/moz.build b/toolkit/components/telemetry/moz.build
-index baaddec36152f073ff76b3c5f8e0b6459a9f66b8..32c9d040ed95fcb68f27cbb38cb655da17708b05 100644
+index baaddec36152f073ff76b3c5f8e0b6459a9f66b8..d374d3688d829989d3e255e755320635dafacaa0 100644
 --- a/toolkit/components/telemetry/moz.build
 +++ b/toolkit/components/telemetry/moz.build
-@@ -221,17 +221,7 @@ GeneratedFile(
+@@ -192,17 +192,7 @@ GeneratedFile(
+     inputs=scalar_files,
+ )
+ 
+-# Generate the JSON scalar definitions. They will only be
+-# used in artifact or "build faster" builds.
+-GeneratedFile(
+-    "ScalarArtifactDefinitions.json",
+-    script="build_scripts/gen_scalar_data.py",
+-    entry_point="generate_JSON_definitions",
+-    inputs=scalar_files,
+-)
+ 
+-# Move the scalars JSON file to the directory where the Firefox binary is.
+-FINAL_TARGET_FILES += ["!ScalarArtifactDefinitions.json"]
+ 
+ # Generate event files.
+ event_files = [
+@@ -221,17 +211,7 @@ GeneratedFile(
      inputs=event_files,
  )
  

@@ -240,53 +240,17 @@
         dot.style.top = `${y * 100}%`;
         dot.addEventListener('mousedown', this.onDotMouseDown.bind(this));
       }
+      if (color.isPrimary) {
+        dot.classList.add('primary');
+      }
+      const lastDot = this.panel.querySelector('.zen-theme-picker-dot:last-child');
+      let newIndex = 0;
+      if (lastDot) {
+        newIndex = parseInt(lastDot.getAttribute('data-index')) + 1;
+      }
+      dot.setAttribute('data-index', newIndex);
       this.panel.querySelector('.zen-theme-picker-gradient').appendChild(dot);
       if (!fromWorkspace) {
-        this.updateCurrentWorkspace(true);
-      }
-    }
-
-    onThemePickerClick(event) {
-      event.preventDefault();
-      if (event.button !== 0 || this.dragging) return;
-      const gradient = this.panel.querySelector('.zen-theme-picker-gradient');
-      const rect = gradient.getBoundingClientRect();
-      const padding = 90; // each side
-
-      const centerX = rect.left + rect.width / 2;
-      const centerY = rect.top + rect.height / 2;
-      const radius = (rect.width - padding) / 2;
-      let pixelX = event.clientX;
-      let pixelY = event.clientY;
-
-      // Check if the click is within the circle
-      const distance = Math.sqrt((pixelX - centerX) ** 2 + (pixelY - centerY) ** 2);
-      if (distance > radius) {
-        return; // Don't create a dot if clicking outside the circle
-      }
-
-      // Check if we clicked on an existing dot
-      const clickedElement = event.target;
-      const isExistingDot = clickedElement.classList.contains('zen-theme-picker-dot');
-
-      // Only proceed if not clicking on an existing dot
-      if (!isExistingDot) {
-        const relativeX = event.clientX - rect.left;
-        const relativeY = event.clientY - rect.top;
-
-        const color = this.getColorFromPosition(relativeX, relativeY);
-
-        // Create new dot
-        const dot = document.createElement('div');
-        dot.classList.add('zen-theme-picker-dot');
-        dot.addEventListener('mousedown', this.onDotMouseDown.bind(this));
-
-        dot.style.left = `${relativeX}px`;
-        dot.style.top = `${relativeY}px`;
-        dot.style.setProperty('--zen-theme-picker-dot-color', `rgb(${color[0]}, ${color[1]}, ${color[2]})`);
-
-        gradient.appendChild(dot);
-
         this.updateCurrentWorkspace(true);
       }
     }
@@ -336,8 +300,67 @@
         this.draggedDot.style.top = `${relativeY}px`;
         const color = this.getColorFromPosition(relativeX, relativeY);
         this.draggedDot.style.setProperty('--zen-theme-picker-dot-color', `rgb(${color[0]}, ${color[1]}, ${color[2]})`);
-        this.updateCurrentWorkspace();
+        this.updateOtherColorsAndUpdateTheme(color);
       }
+    }
+
+    updateOtherColorsAndUpdateTheme(primaryColor) {
+      // Convert the other colors into the correct color by using color theory
+      const dots = this.panel.querySelectorAll('.zen-theme-picker-dot');
+      const primaryColorRGB = primaryColor;
+      const primaryColorDot = this.draggedDot;
+      const primaryColorIndex = parseInt(primaryColorDot.getAttribute('data-index'));
+
+      for (const dot of dots) {
+        if (dot.classList.contains('primary') || dot.classList.contains('custom')) {
+          continue;
+        }
+
+        const index = parseInt(dot.getAttribute('data-index'));
+        if (index === primaryColorIndex) {
+          continue;
+        }
+
+        const [r, g, b] = this.getColorFromPosition(parseInt(dot.style.left), parseInt(dot.style.top));
+        const color = [r, g, b];
+
+        // modify the color based on the index and color theory
+        const modifiedColor = this.modifyColor(primaryColorRGB, color, index - primaryColorIndex);
+        dot.style.setProperty('--zen-theme-picker-dot-color', `rgb(${modifiedColor[0]}, ${modifiedColor[1]}, ${modifiedColor[2]})`);
+
+        // update y and x
+        const rect = this.panel.querySelector('.zen-theme-picker-gradient').getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        const radius = (rect.width - 90) / 2;
+        const angle = Math.atan2(modifiedColor[1] - primaryColorRGB[1], modifiedColor[0] - primaryColorRGB[0]);
+        const distance = Math.sqrt((modifiedColor[0] - primaryColorRGB[0]) ** 2 + (modifiedColor[1] - primaryColorRGB[1]) ** 2);
+        let x = centerX + Math.cos(angle) * radius;
+        let y = centerY + Math.sin(angle) * radius;
+        if (distance > radius) {
+          x = primaryColorDot.style.left;
+          y = primaryColorDot.style.top;
+        }
+        dot.style.left = x + 'px';
+        dot.style.top = y + 'px';
+      }
+      this.updateCurrentWorkspace();
+    }
+
+    modifyColor(primaryColor, color, index) {
+      // index may be negative
+      if (index < 0) {
+        index = -(1 / index);
+      }
+      const [r, g, b] = primaryColor;
+      const [r2, g2, b2] = color;
+      const factor = 0.5;
+      const modifiedColor = [
+        Math.floor(Math.min(255, r + (r2 - r) * factor * index)),
+        Math.floor(Math.min(255, g + (g2 - g) * factor * index)),
+        Math.floor(Math.min(255, b + (b2 - b) * factor * index)),
+      ];
+      return modifiedColor;
     }
 
     addColorToCustomList(color) {
@@ -415,6 +438,13 @@
         dot.style.top = `${relativeY}px`;
         dot.style.setProperty('--zen-theme-picker-dot-color', `rgb(${color[0]}, ${color[1]}, ${color[2]})`);
 
+        const lastDot = this.panel.querySelector('.zen-theme-picker-dot:last-child');
+        let newIndex = 0;
+        if (lastDot) {
+          newIndex = parseInt(lastDot.getAttribute('data-index')) + 1;
+        }
+        dot.setAttribute('data-index', newIndex);
+
         gradient.appendChild(dot);
 
         this.updateCurrentWorkspace(true);
@@ -424,6 +454,9 @@
     onDotMouseDown(event) {
       event.preventDefault();
       if (event.button === 2) {
+        return;
+      }
+      if (!event.target.classList.contains('primary')) {
         return;
       }
       this.dragging = true;
@@ -592,23 +625,7 @@
     };
 
     getMostDominantColor(allColors) {
-      const colors = this.themedColors(allColors);
-      const themedColors = colors.filter((color) => !color.isCustom);
-      if (themedColors.length === 0 || !this.allowWorkspaceColors) {
-        return null;
-      }
-      // get the most dominant color in the gradient
-      let dominantColor = themedColors[0].c;
-      let dominantColorCount = 0;
-      for (const color of themedColors) {
-        const count = themedColors.filter(
-          (c) => c.c[0] === color.c[0] && c.c[1] === color.c[1] && c.c[2] === color.c[2]
-        ).length;
-        if (count > dominantColorCount) {
-          dominantColorCount = count;
-          dominantColor = color.c;
-        }
-      }
+      const dominantColor = this.getPrimaryColor(allColors);
       const result = this.pSBC(
         this.isDarkMode ? 0.2 : -0.5,
         `rgb(${dominantColor[0]}, ${dominantColor[1]}, ${dominantColor[2]})`
@@ -632,7 +649,7 @@
         }
 
         // get the theme from the window
-        workspaceTheme = theme || windowWorkspace.theme;
+        workspaceTheme = this.fixTheme(theme || windowWorkspace.theme);
 
         if (!skipUpdate) {
           for (const dot of browser.gZenThemePicker.panel.querySelectorAll('.zen-theme-picker-dot')) {
@@ -713,6 +730,14 @@
       });
     }
 
+    fixTheme(theme) {
+      // add a primary color if there isn't one
+      if (!theme.gradientColors.find((color) => color.isPrimary)) {
+        theme.gradientColors[(theme.gradientColors.length / 2) | 0].isPrimary = true;
+      }
+      return theme;
+    }
+
     get riceManager() {
       if (!this._riceManager) {
         this._riceManager = new window.ZenRiceManager();
@@ -747,6 +772,15 @@
       this.updateCurrentWorkspace();
     }
 
+    getPrimaryColor(colors) {
+      const primaryColor = colors.find((color) => color.isPrimary);
+      if (primaryColor) {
+        return primaryColor.c;
+      }
+      // Get the middle color
+      return colors[Math.floor(colors.length / 2)].c;
+    }
+
     recalculateDots(colors) {
       //THIS IS PART OF THE ISSUE
       for (const color of colors) {
@@ -757,7 +791,7 @@
     async updateCurrentWorkspace(skipSave = true) {
       this.updated = skipSave;
       const dots = this.panel.querySelectorAll('.zen-theme-picker-dot');
-      const colors = Array.from(dots).map((dot) => {
+      const colors = Array.from(dots).sort((a, b) => a.getAttribute('data-index') - b.getAttribute('data-index')).map((dot) => {
         const color = dot.style.getPropertyValue('--zen-theme-picker-dot-color');
         if (color === 'undefined') {
           return;

@@ -138,7 +138,6 @@ jobs:
 
       - name: Rename artifacts
         run: |
-          cd engine
           echo "Tarballing DMG"
           set -ex
           mv ./dist/*.dmg ./zen-${{ matrix.arch }}-apple-darwin-dist.dmg

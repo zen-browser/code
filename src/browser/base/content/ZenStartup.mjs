@@ -31,13 +31,7 @@
           document.getElementById('zen-appcontent-navbar-container').appendChild(deckTemplate);
         }
 
-        // Disable smooth scroll
-        if (!Services.prefs.getBoolPref('zen.startup.smooth-scroll-in-tabs', false)) {
-          gBrowser.tabContainer.addEventListener('wheel', (event) => {
-            event.preventDefault(); // Prevent the smooth scroll behavior
-            gBrowser.tabContainer.scrollTop += event.deltaY * 20; // Apply immediate scroll
-          });
-        }
+        this._initSidebarScrolling();
 
         gZenCompactModeManager.init();
         ZenWorkspaces.init();
@@ -86,6 +80,35 @@
           sidebarPanelWrapper.prepend(elem);
         }
       }
+    },
+
+    _initSidebarScrolling() {
+      // Disable smooth scroll
+      if (!Services.prefs.getBoolPref('zen.startup.smooth-scroll-in-tabs', false)) {
+        gBrowser.tabContainer.addEventListener('wheel', (event) => {
+          event.preventDefault(); // Prevent the smooth scroll behavior
+          gBrowser.tabContainer.scrollTop += event.deltaY * 20; // Apply immediate scroll
+        });
+      }
+      // Detect overflow and underflow
+      const observer = new ResizeObserver((_) => {
+        const tabContainer = gBrowser.tabContainer;
+        const isVertical = tabContainer.getAttribute('orient') === 'vertical';
+        let contentSize =
+          tabContainer.getBoundingClientRect()[isVertical ? 'height' : 'width'];
+        // NOTE: This should be contentSize > scrollClientSize, but due
+        // to how Gecko internally rounds in those cases, we allow for some
+        // minor differences (the internal Gecko layout size is 1/60th of a
+        // pixel, so 0.02 should cover it).
+        let overflowing = contentSize - tabContainer.arrowScrollbox.scrollClientSize > 0.02;
+
+        tabContainer.arrowScrollbox.toggleAttribute("overflowing", overflowing);
+        tabContainer.arrowScrollbox.dispatchEvent(
+          new CustomEvent(overflowing ? "overflow" : "underflow")
+        );
+      });
+      observer.observe(document.getElementById('navigator-toolbox'));
+      
     },
 
     _initSearchBar() {

@@ -1,7 +1,16 @@
 diff --git a/browser/components/tabbrowser/content/tabs.js b/browser/components/tabbrowser/content/tabs.js
-index f7c39fe804182e2bdf53045ba3b6a5ba17079fc3..c98043855e7528fc9458ffd736101f15183b717d 100644
+index f7c39fe804182e2bdf53045ba3b6a5ba17079fc3..f1c65fc4b31141e65d059d25b03f98029d1774bc 100644
 --- a/browser/components/tabbrowser/content/tabs.js
 +++ b/browser/components/tabbrowser/content/tabs.js
+@@ -94,7 +94,7 @@
+         return this.hasAttribute("positionpinnedtabs");
+       };
+       this.arrowScrollbox._canScrollToElement = tab => {
+-        return (!tab.pinned || !arePositioningPinnedTabs()) && tab.visible;
++        return (!tab.hasAttribute("zen-essential") || !arePositioningPinnedTabs()) && tab.visible;
+       };
+ 
+       // Override for performance reasons. This is the size of a single element
 @@ -649,7 +649,7 @@
        if (this.#isContainerVerticalPinnedExpanded(tab)) {
          // In expanded vertical mode, the max number of pinned tabs per row is dynamic
@@ -180,6 +189,15 @@ index f7c39fe804182e2bdf53045ba3b6a5ba17079fc3..c98043855e7528fc9458ffd736101f15
 +        return Math.max(index, gBrowser._numVisiblePinTabs);
        }
      }
+ 
+@@ -2708,7 +2711,7 @@
+     }
+ 
+     _notifyBackgroundTab(aTab) {
+-      if (aTab.pinned || !aTab.visible || !this.overflowing) {
++      if (aTab.hasAttribute("zen-essential") || !aTab.visible || !this.overflowing) {
+         return;
+       }
  
 @@ -2726,12 +2729,14 @@
                selectedTab = {

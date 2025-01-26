@@ -19,6 +19,12 @@
     height: var(--zen-toolbar-height);
   }
 
+  @media (-moz-platform: macos) and (not (-moz-bool-pref: 'zen.view.mac.show-three-dot-menu')) {
+    &:not([customizing]) #PanelUI-button {
+      display: none;
+    }
+  }
+
   & #zen-sidebar-top-buttons .toolbarbutton-1 {
     & > .toolbarbutton-icon {
       padding: 5px;

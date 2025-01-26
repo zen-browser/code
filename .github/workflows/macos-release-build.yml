@@ -140,7 +140,8 @@ jobs:
         run: |
           cd engine
           echo "Tarballing DMG"
-          mv ./dist/zen-*.dmg ./zen-${{ matrix.arch }}-apple-darwin-dist.dmg
+          set -ex
+          mv ./dist/*.dmg ./zen-${{ matrix.arch }}-apple-darwin-dist.dmg
 
       - name: Upload dist dmg
         uses: actions/upload-artifact@v4

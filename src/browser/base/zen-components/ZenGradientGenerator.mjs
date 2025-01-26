@@ -246,51 +246,6 @@
       }
     }
 
-    onThemePickerClick(event) {
-      event.preventDefault();
-      if (event.button !== 0 || this.dragging) return;
-      const gradient = this.panel.querySelector('.zen-theme-picker-gradient');
-      const rect = gradient.getBoundingClientRect();
-      const padding = 90; // each side
-
-      const centerX = rect.left + rect.width / 2;
-      const centerY = rect.top + rect.height / 2;
-      const radius = (rect.width - padding) / 2;
-      let pixelX = event.clientX;
-      let pixelY = event.clientY;
-
-      // Check if the click is within the circle
-      const distance = Math.sqrt((pixelX - centerX) ** 2 + (pixelY - centerY) ** 2);
-      if (distance > radius) {
-        return; // Don't create a dot if clicking outside the circle
-      }
-
-      // Check if we clicked on an existing dot
-      const clickedElement = event.target;
-      const isExistingDot = clickedElement.classList.contains('zen-theme-picker-dot');
-
-      // Only proceed if not clicking on an existing dot
-      if (!isExistingDot) {
-        const relativeX = event.clientX - rect.left;
-        const relativeY = event.clientY - rect.top;
-
-        const color = this.getColorFromPosition(relativeX, relativeY);
-
-        // Create new dot
-        const dot = document.createElement('div');
-        dot.classList.add('zen-theme-picker-dot');
-        dot.addEventListener('mousedown', this.onDotMouseDown.bind(this));
-
-        dot.style.left = `${relativeX}px`;
-        dot.style.top = `${relativeY}px`;
-        dot.style.setProperty('--zen-theme-picker-dot-color', `rgb(${color[0]}, ${color[1]}, ${color[2]})`);
-
-        gradient.appendChild(dot);
-
-        this.updateCurrentWorkspace(true);
-      }
-    }
-
     onDotMouseDown(event) {
       event.preventDefault();
       if (event.button === 2) {

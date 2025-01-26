@@ -127,8 +127,9 @@ jobs:
       - name: Remove any existing .app folders
         run: |
           set -x
-          rm -rf "./obj-x86_64-apple-darwin/dist/zen/*.app"
-          rm -rf "./obj-aarch64-apple-darwin/dist/zen/*.app"
+          cd engine
+          rm -rf "./obj-x86_64-apple-darwin/dist/zen/${{ env.APP_NAME }}.app"
+          rm -rf "./obj-aarch64-apple-darwin/dist/zen/${{ env.APP_NAME }}.app"
 
       - name: Extract .app from dmg
         run: |

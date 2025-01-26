@@ -1,5 +1,5 @@
 diff --git a/browser/base/content/navigator-toolbox.inc.xhtml b/browser/base/content/navigator-toolbox.inc.xhtml
-index 00391af141d9015fe5839534e5e6b22a91ba65d9..17d8ac96986e698b09033b870c24fc2f61c47a05 100644
+index 00391af141d9015fe5839534e5e6b22a91ba65d9..ee31d5f5116bc8f19f56fb868eceefea558659d6 100644
 --- a/browser/base/content/navigator-toolbox.inc.xhtml
 +++ b/browser/base/content/navigator-toolbox.inc.xhtml
 @@ -2,7 +2,7 @@
@@ -29,23 +29,24 @@ index 00391af141d9015fe5839534e5e6b22a91ba65d9..17d8ac96986e698b09033b870c24fc2f
        <toolbartabstop/>
        <hbox id="TabsToolbar-customization-target" flex="1">
          <toolbarbutton id="firefox-view-button"
-@@ -40,6 +40,7 @@
+@@ -40,9 +40,14 @@
                         data-l10n-id="toolbar-button-firefox-view-2"
                         role="button"
                         aria-pressed="false"
 +                       hidden="true"
                         cui-areatype="toolbar"
                         removable="true"/>
- 
-@@ -55,9 +56,14 @@
- # significantly, there is an optimization in
- # DisplayPortUtils::MaybeCreateDisplayPortInFirstScrollFrameEncountered based
+-
++        <html:div id="zen-essentials-container" skipintoolbarset="true"></html:div>
++        <hbox id="zen-current-workspace-indicator" skipintoolbarset="true">
++          <hbox id="zen-current-workspace-indicator-icon"></hbox>
++          <hbox id="zen-current-workspace-indicator-name"></hbox>
++        </hbox>
+         <tabs id="tabbrowser-tabs"
+               is="tabbrowser-tabs"
+               aria-multiselectable="true"
+@@ -57,7 +62,7 @@
  # the current structure that we may want to revisit.
-+          <html:div id="zen-essentials-container"></html:div>
-+          <hbox id="zen-current-workspace-indicator">
-+            <hbox id="zen-current-workspace-indicator-icon"></hbox>
-+            <hbox id="zen-current-workspace-indicator-name"></hbox>
-+          </hbox>
            <html:div id="vertical-pinned-tabs-container" tabindex="-1"></html:div>
            <html:div id="vertical-pinned-tabs-container-separator"></html:div>
 -          <arrowscrollbox id="tabbrowser-arrowscrollbox" orient="horizontal" flex="1" clicktoscroll="" scrolledtostart="" scrolledtoend="">
@@ -53,7 +54,7 @@ index 00391af141d9015fe5839534e5e6b22a91ba65d9..17d8ac96986e698b09033b870c24fc2f
              <tab is="tabbrowser-tab" class="tabbrowser-tab" selected="true" visuallyselected="" fadein=""/>
              <hbox id="tabbrowser-arrowscrollbox-periphery">
                <toolbartabstop/>
-@@ -100,11 +106,12 @@
+@@ -100,11 +105,12 @@
  #include private-browsing-indicator.inc.xhtml
      <toolbarbutton id="content-analysis-indicator"
                     class="toolbarbutton-1 content-analysis-indicator-icon"/>
@@ -69,7 +70,7 @@ index 00391af141d9015fe5839534e5e6b22a91ba65d9..17d8ac96986e698b09033b870c24fc2f
    <toolbar id="nav-bar"
             class="browser-toolbar chromeclass-location"
             data-l10n-id="navbar-accessible"
-@@ -487,10 +494,12 @@
+@@ -487,10 +493,12 @@
                       consumeanchor="PanelUI-button"
                       data-l10n-id="appmenu-menu-button-closed2"/>
      </toolbaritem>

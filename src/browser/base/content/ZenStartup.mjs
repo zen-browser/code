@@ -32,10 +32,12 @@
         }
 
         // Disable smooth scroll
-        gBrowser.tabContainer.arrowScrollbox.smoothScroll = Services.prefs.getBoolPref(
-          'zen.startup.smooth-scroll-in-tabs',
-          false
-        );
+        if (!Services.prefs.getBoolPref('zen.startup.smooth-scroll-in-tabs', false)) {
+          gBrowser.tabContainer.addEventListener('wheel', (event) => {
+            event.preventDefault(); // Prevent the smooth scroll behavior
+            gBrowser.tabContainer.scrollTop += event.deltaY * 20; // Apply immediate scroll
+          });
+        }
 
         gZenCompactModeManager.init();
         ZenWorkspaces.init();

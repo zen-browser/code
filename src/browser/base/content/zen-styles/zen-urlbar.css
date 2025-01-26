@@ -32,10 +32,9 @@
 
 #urlbar-background {
   background: var(--zen-toolbar-element-bg) !important;
+  border-radius: var(--border-radius-medium);
   outline: none !important;
-}
 
-#urlbar-background {
   border: none !important;
   margin: 1px;
 

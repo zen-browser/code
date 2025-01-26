@@ -55,6 +55,10 @@
     }
   }
 
+  #tabbrowser-arrowscrollbox {
+    min-height: fit-content !important;
+  }
+
   #vertical-pinned-tabs-container, #tabbrowser-arrowscrollbox {
     .tabbrowser-tab[fadein='true'][zen-initial-fadein='true'] {
       animation: zen-new-tab-appear-vertical 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
@@ -105,7 +109,7 @@
   }
 
   & #nav-bar {
-    margin-bottom: 6px;
+    margin-bottom: calc(var(--zen-toolbox-padding) - 2px);
 
     & toolbarspring {
       display: none;
@@ -125,7 +129,7 @@
   background: light-dark(rgba(1, 1, 1, 0.075), rgba(255, 255, 255, 0.1));
   margin: 8px auto;
   border: none;
-  height: 1px;
+  min-height: 1px;
   width: 98%;
 
   #vertical-pinned-tabs-container:not(:has(tab:not([hidden]))) + & {
@@ -134,8 +138,8 @@
 }
 
 #navigator-toolbox {
-  --border-radius-medium: 12px;
-  --tab-border-radius: 8px;
+  --border-radius-medium: 10px;
+  --tab-border-radius: 6px;
   --zen-toolbox-min-width: 1px;
 
   --tab-hover-background-color: color-mix(in srgb, var(--toolbarbutton-hover-background) 50%, transparent 50%);
@@ -228,6 +232,7 @@
   margin-inline-start: 0 !important;
   padding-inline-start: 0 !important;
   overflow-x: hidden;
+  overflow-y: scroll;
 
   --tab-inner-inline-margin: 0;
 
@@ -352,7 +357,8 @@
   padding-inline-end: 0 !important;
   display: flex !important;
   flex-direction: column;
-  max-height: calc(100vh - 12 * (var(--tab-min-height) + 2 * var(--tab-block-margin))) !important;
+  min-height: fit-content !important;
+  overflow: visible;
 
   & .tabbrowser-tab:not(:hover) .tab-background:not([selected]):not([multiselected]) {
     background: transparent !important;
@@ -460,7 +466,7 @@
       bottom: calc(-0.5 * var(--zen-toolbox-padding));
     }
 
-    & > *:not(tabs):not(#search-container):not(#zen-workspaces-button),
+    & > :is(toolbaritem, toolbarbutton):not(#search-container):not(#zen-workspaces-button),
     & #tabbrowser-arrowscrollbox-periphery > toolbarbutton {
       width: 100% !important;
       border-radius: var(--border-radius-medium) !important;
@@ -895,6 +901,7 @@
   padding-bottom: var(--zen-toolbox-padding);
   overflow: hidden;
   gap: 3px;
+  order: -2;
 }
 
 #zen-essentials-container {
@@ -913,7 +920,10 @@
   --toolbarbutton-inner-padding: 0;
   max-width: unset;
   width: 100% !important;
-  border-radius: var(--border-radius-medium);
+
+  & .tab-background {
+    border-radius: var(--border-radius-medium) !important;
+  }
 
   --tab-selected-bgcolor: light-dark(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.2));
 

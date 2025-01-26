@@ -13,7 +13,7 @@ var gZenUIManager = {
     });
 
     new ResizeObserver(gZenCommonActions.throttle(this.updateTabsToolbar.bind(this), this.sidebarHeightThrottle)).observe(
-      document.getElementById('tabbrowser-tabs')
+      document.getElementById('TabsToolbar')
     );
 
     new ResizeObserver(
@@ -26,20 +26,25 @@ var gZenUIManager = {
 
   updateTabsToolbar() {
     // Set tabs max-height to the "toolbar-items" height
-    const toolbarItems = document.getElementById('tabbrowser-tabs');
-    const tabs = document.getElementById('tabbrowser-arrowscrollbox');
-    tabs.style.maxHeight = '0px'; // reset to 0
-    const toolbarRect = toolbarItems.getBoundingClientRect();
-    let height = toolbarRect.height;
-    // -5 for the controls padding
-    let totalHeight = toolbarRect.height - this.contentElementSeparation * 2 - 5;
-    // remove the height from other elements that aren't hidden
-    const otherElements = document.querySelectorAll('#tabbrowser-tabs > *:not([hidden="true"])');
-    for (let tab of otherElements) {
-      if (tabs === tab) continue;
-      totalHeight -= tab.getBoundingClientRect().height;
+    const tabs = document.getElementById('tabbrowser-tabs');
+    // Remove tabs so we can accurately calculate the height
+    // without them affecting the height of the toolbar
+    for (const tab of gBrowser.tabs) {
+      if (tab.hasAttribute('zen-essential')) {
+        continue;
+      }
+      tab.style.maxHeight = '0px';
     }
-    tabs.style.maxHeight = totalHeight + 'px';
+    tabs.style.removeProperty('max-height');
+    const toolbarRect = tabs.getBoundingClientRect();
+    let height = toolbarRect.height;
+    for (const tab of gBrowser.tabs) {
+      if (tab.hasAttribute('zen-essential')) {
+        continue;
+      }
+      tab.style.maxHeight = height + 'px';
+    }
+    tabs.style.maxHeight = height + 'px';
     //console.info('ZenThemeModifier: set tabs max-height to', totalHeight + 'px');
   },
 

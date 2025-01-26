@@ -458,7 +458,6 @@
   font-weight: 600;
   align-items: center;
   position: relative;
-  order: -1; /* After essential tabs */
 
   & #zen-current-workspace-indicator-icon {
     font-size: 14px;

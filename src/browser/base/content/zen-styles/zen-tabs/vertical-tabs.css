@@ -109,7 +109,7 @@
   }
 
   & #nav-bar {
-    margin-bottom: calc(var(--zen-toolbox-padding) - 2px);
+    margin-bottom: var(--zen-toolbox-padding);
 
     & toolbarspring {
       display: none;
@@ -351,6 +351,12 @@
   &::part(overflow-end-indicator) {
     display: none !important;
   }
+}
+
+#zen-browser-tabs-wrapper {
+  min-height: fit-content;
+  overflow-y: scroll;
+  height: 100%;
 }
 
 #vertical-pinned-tabs-container {
@@ -902,7 +908,6 @@
   padding-bottom: var(--zen-toolbox-padding);
   overflow: hidden;
   gap: 3px;
-  order: -2;
 }
 
 #zen-essentials-container {

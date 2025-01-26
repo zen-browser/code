@@ -1,5 +1,5 @@
 diff --git a/toolkit/content/widgets/arrowscrollbox.js b/toolkit/content/widgets/arrowscrollbox.js
-index 328c770d275ebbaada8a44438eaf738b1a62d985..1724b7bdba5ed3a82643e07cc3571040ddcf4911 100644
+index 328c770d275ebbaada8a44438eaf738b1a62d985..01256a9b4510b27e180e8b11f1436621ad3e45b5 100644
 --- a/toolkit/content/widgets/arrowscrollbox.js
 +++ b/toolkit/content/widgets/arrowscrollbox.js
 @@ -639,7 +639,7 @@
@@ -7,7 +7,7 @@ index 328c770d275ebbaada8a44438eaf738b1a62d985..1724b7bdba5ed3a82643e07cc3571040
      on_wheel(event) {
        // Don't consume the event if we can't scroll.
 -      if (!this.overflowing) {
-+      if (!this.overflowing || false) { // we handle this on ZenStartup
++      if (!this.overflowing || true) { // we handle this on ZenStartup
          return;
        }
  

@@ -13,9 +13,7 @@ height: var(--zen-toolbar-height);
     }
   }
 
-  &:not([zen-has-hover='true']):not([has-popup-menu]):not(:focus-within):not(:has(
-    *:is([panelopen='true'], [open='true'])
-  )) {
+  &:not([zen-has-hover='true']):not([has-popup-menu]):not(:focus-within):not(:has(*:is([panelopen='true'], [open='true']))) {
     transition-delay: 0.2s;
     height: var(--zen-element-separation);
     overflow: hidden;

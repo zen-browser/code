@@ -26,7 +26,7 @@ var gZenUIManager = {
 
   updateTabsToolbar() {
     // Set tabs max-height to the "toolbar-items" height
-    const tabs = document.getElementById('tabbrowser-tabs');
+    const tabs = document.getElementById('zen-browser-tabs-wrapper');
     // Remove tabs so we can accurately calculate the height
     // without them affecting the height of the toolbar
     for (const tab of gBrowser.tabs) {
@@ -42,10 +42,9 @@ var gZenUIManager = {
       if (tab.hasAttribute('zen-essential')) {
         continue;
       }
-      tab.style.maxHeight = height + 'px';
+      tab.style.removeProperty('max-height');
     }
     tabs.style.maxHeight = height + 'px';
-    //console.info('ZenThemeModifier: set tabs max-height to', totalHeight + 'px');
   },
 
   openAndChangeToTab(url, options) {

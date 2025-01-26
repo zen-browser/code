@@ -560,12 +560,11 @@ jobs:
             linux-aarch64.mar
             windows.mar
             windows-arm64.mar
-            macos-x86_64.mar
+            macos.mar
             macos-aarch64.mar
             zen.installer.exe
             zen.installer-arm64.exe
-            zen.macos-x86_64.dmg
-            zen.macos-aarch64.dmg
+            zen.macos-universal.dmg
           automatic_release_tag: 'twilight'
           title: 'Twilight build - ${{ needs.build-data.outputs.version }} (${{ needs.build-data.outputs.build_date }} at ${{ needs.build-data.outputs.build_time }})'
           draft: false

@@ -138,26 +138,16 @@ jobs:
 
       - name: Rename artifacts
         run: |
-          mv ./dist/output.mar macos-${{ matrix.arch }}.mar
           cd engine
-          echo "Tarballing dist..."
-          tar -czf zen-${{ matrix.arch }}-apple-darwin-dist.tar.gz ./obj-${{ matrix.arch }}-apple-darwin/dist/
-          echo "Tarballing dist done"
-          mv zen-${{ matrix.arch }}-apple-darwin-dist.tar.gz ../
+          echo "Tarballing DMG"
+          mv ./dist/zen-*.dmg ./zen-${{ matrix.arch }}-apple-darwin-dist.dmg
 
       - name: Upload dist dmg
         uses: actions/upload-artifact@v4
         with:
           retention-days: 1
-          name: zen-${{ matrix.arch }}-apple-darwin-dist.tar.gz
-          path: ./zen-${{ matrix.arch }}-apple-darwin-dist.tar.gz
-
-      - name: Upload build artifact (.mar)
-        uses: actions/upload-artifact@v4
-        with:
-          retention-days: 5
-          name: macos-${{ matrix.arch }}.mar
-          path: ./macos-${{ matrix.arch }}.mar
+          name: zen-${{ matrix.arch }}-apple-darwin-dist.dmg
+          path: ./zen-${{ matrix.arch }}-apple-darwin-dist.dmg
 
       - name: Upload build artifact (update manifests)
         uses: actions/upload-artifact@v4

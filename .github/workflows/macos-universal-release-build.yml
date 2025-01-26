@@ -95,27 +95,37 @@ jobs:
           ./mach --no-interactive bootstrap --application-choice browser --no-system-changes
           cd ..
 
-      - name: Download x86_64 dist from artifacts
+      - name: Download x86_64 DMG from artifacts
         uses: actions/download-artifact@v4
         with:
-          name: zen-x86_64-apple-darwin-dist.tar.gz
+          name: zen-x86_64-apple-darwin-dist.dmg
 
-      - name: Download aarch64 dist from artifacts
+      - name: Download aarch64 DMG from artifacts
         uses: actions/download-artifact@v4
         with:
-          name: zen-aarch64-apple-darwin-dist.tar.gz
+          name: zen-aarch64-apple-darwin-dist.dmg
 
-      - name: Extract
+      - name: Remove any existing .app folders
         run: |
-          brew install gnu-tar
-          export PATH=/usr/local/opt/gnu-tar/libexec/gnubin:$PATH
-
-          mv ./zen-x86_64-apple-darwin-dist.tar.gz ./engine/
-          mv ./zen-aarch64-apple-darwin-dist.tar.gz ./engine/
-
+          set -x
           cd engine
-          tar -xf ./zen-x86_64-apple-darwin-dist.tar.gz
-          tar -xf ./zen-aarch64-apple-darwin-dist.tar.gz
+          rm -rf "./obj-x86_64-apple-darwin/" || true
+          rm -rf "./obj-aarch64-apple-darwin/" || true
+
+      - name: Extract .app from dmg
+        run: |
+          set -ex
+          cd engine
+          echo "Extracting x86_64 .app from dmg"
+          mkdir -p ./obj-x86_64-apple-darwin/dist
+          mkdir -p ./obj-aarch64-apple-darwin/dist
+          ./mach python -m mozbuild.action.unpack_dmg \
+            ../zen-x86_64-apple-darwin-dist.dmg \
+            ./obj-x86_64-apple-darwin/dist
+          echo "Extracting aarch64 .app from dmg"
+          ./mach python -m mozbuild.action.unpack_dmg \
+            ../zen-aarch64-apple-darwin-dist.dmg \
+            ./obj-aarch64-apple-darwin/dist
 
       - name: Find first .app folder name
         run: |
@@ -123,26 +133,6 @@ jobs:
           export APP_NAME=$(basename "$(find . -maxdepth 1 -name "Zen *.app" -type d | head -n 1)" .app)
           echo "APP_NAME=$APP_NAME" >> $GITHUB_ENV
           echo "APP_NAME=$APP_NAME"
-
-      - name: Remove any existing .app folders
-        run: |
-          set -x
-          cd engine
-          rm -rf "./obj-x86_64-apple-darwin/dist/zen/${{ env.APP_NAME }}.app"
-          rm -rf "./obj-aarch64-apple-darwin/dist/zen/${{ env.APP_NAME }}.app"
-
-      - name: Extract .app from dmg
-        run: |
-          set -ex
-          cd engine
-          echo "Extracting x86_64 .app from dmg"
-          ./mach python -m mozbuild.action.unpack_dmg \
-            ./obj-x86_64-apple-darwin/dist/zen*.dmg \
-            ./obj-x86_64-apple-darwin/dist
-          echo "Extracting aarch64 .app from dmg"
-          ./mach python -m mozbuild.action.unpack_dmg \
-            ./obj-aarch64-apple-darwin/dist/zen*.dmg \
-            ./obj-aarch64-apple-darwin/dist
 
       - name: List .app folders
         run: |
@@ -181,8 +171,6 @@ jobs:
       - name: Unify architectures
         run: |
           cd engine
-          ls -la "./obj-x86_64-apple-darwin/dist/${{ env.APP_NAME }}.app/Contents"
-          ls -la "./obj-x86_64-apple-darwin/dist/${{ env.APP_NAME }}.app/Contents/MacOS"
           ./mach python "./toolkit/mozapps/installer/unify.py" "./obj-x86_64-apple-darwin/dist/${{ env.APP_NAME }}.app" "./obj-aarch64-apple-darwin/dist/${{ env.APP_NAME }}.app"
           echo "Merged aaarch64 into x86_64!"
 
@@ -209,7 +197,7 @@ jobs:
             --background ./browser/branding/${{ inputs.release-branch }}/background.png \
             --icon ./browser/branding/${{ inputs.release-branch }}/firefox.icns \
             --dsstore ./browser/branding/${{ inputs.release-branch }}/dsstore \
-            ./obj-x86_64-apple-darwin/dist/zen zen-macOS-universal-temp.dmg
+            ./obj-x86_64-apple-darwin/dist/zen ../zen-macOS-universal-temp.dmg
 
       - name: Sign .dmg
         run: |
@@ -224,19 +212,28 @@ jobs:
             --wait
           xcrun stapler staple "zen.macos-universal.dmg"
 
+      - name: Package for mar
+        env:
+          JUST_MAR: true
+        run: |
+          export SURFER_PLATFORM="darwin"
+          export ZEN_RELEASE=1
+          pnpm package
+          mv ./dist/output.mar ./macos.mar
+
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
           retention-days: 5
-          name: zen.macos-${{ matrix.arch }}.dmg
-          path: ./zen.macos-${{ matrix.arch }}.dmg
+          name: zen.macos-universal.dmg
+          path: ./zen.macos-universal.dmg
 
       - name: Upload build artifact (.mar)
         uses: actions/upload-artifact@v4
         with:
           retention-days: 5
-          name: macos-${{ matrix.arch }}.mar
-          path: ./macos-${{ matrix.arch }}.mar
+          name: macos.mar
+          path: ./macos.mar
 
       - name: Upload build artifact (update manifests)
         uses: actions/upload-artifact@v4

@@ -22,6 +22,8 @@ var gZenUIManager = {
         this.sidebarHeightThrottle
       )
     ).observe(document.getElementById('navigator-toolbox'));
+
+    window.addEventListener('TabClose', this.updateTabsToolbar.bind(this));
   },
 
   updateTabsToolbar() {

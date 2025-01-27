@@ -572,6 +572,7 @@
         gBrowser.pinTab(tab);
         this.onTabIconChanged(tab);
       }
+      gZenUIManager.updateTabsToolbar();
     }
 
     removeEssentials() {
@@ -584,6 +585,7 @@
         }
         gBrowser.unpinTab(tab);
       }
+      gZenUIManager.updateTabsToolbar();
     }
 
     _insertItemsIntoTabContextMenu() {

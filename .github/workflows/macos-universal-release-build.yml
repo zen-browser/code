@@ -191,7 +191,7 @@ jobs:
       - name: Sign .app
         run: |
           cd engine
-          ./mach macos-sign -v -r -c "release" -e "production" -a "./obj-x86_64-apple-darwin/dist/zen/${{ env.APP_NAME }}.app" --rcodesign-p12-file zenCert.p12 --rcodesign-p12-password-file zenpCertPassword.passwd
+          ./mach macos-sign -v -r -c "release" -e "production" -a "./obj-x86_64-apple-darwin/dist/${{ env.APP_NAME }}.app" --rcodesign-p12-file zenCert.p12 --rcodesign-p12-password-file zenpCertPassword.passwd
 
       - name: Remove sensitive information
         run: |

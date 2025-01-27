@@ -1,0 +1,13 @@
+diff --git a/tools/signing/macos/mach_commands.py b/tools/signing/macos/mach_commands.py
+index a513ad723805459c194d27b42dac68e9babba468..71851650edd9e27ed83da1ed169c9a6d81862a1c 100644
+--- a/tools/signing/macos/mach_commands.py
++++ b/tools/signing/macos/mach_commands.py
+@@ -37,7 +37,7 @@ from mozbuild.base import MachCommandConditions as conditions
+     "Release channel entitlements, but the configuration used will be the "
+     "Release configuration as defined in the repo working directory, not the "
+     "configuration from the revision of the earlier 120 build.",
+-    conditions=[conditions.is_firefox],
++
+ )
+ @CommandArgument(
+     "-v",

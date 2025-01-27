@@ -1,5 +1,5 @@
 diff --git a/browser/components/tabbrowser/content/tabs.js b/browser/components/tabbrowser/content/tabs.js
-index f7c39fe804182e2bdf53045ba3b6a5ba17079fc3..f1c65fc4b31141e65d059d25b03f98029d1774bc 100644
+index f7c39fe804182e2bdf53045ba3b6a5ba17079fc3..15b9e83426ead9efcbe6d2b72f3f00c08b06e884 100644
 --- a/browser/components/tabbrowser/content/tabs.js
 +++ b/browser/components/tabbrowser/content/tabs.js
 @@ -94,7 +94,7 @@
@@ -11,6 +11,15 @@ index f7c39fe804182e2bdf53045ba3b6a5ba17079fc3..f1c65fc4b31141e65d059d25b03f9802
        };
  
        // Override for performance reasons. This is the size of a single element
+@@ -352,7 +352,7 @@
+       // and we're not hitting the scroll buttons.
+       if (
+         event.button != 0 ||
+-        event.target != this.arrowScrollbox ||
++        event.target != this ||
+         event.composedTarget.localName == "toolbarbutton"
+       ) {
+         return;
 @@ -649,7 +649,7 @@
        if (this.#isContainerVerticalPinnedExpanded(tab)) {
          // In expanded vertical mode, the max number of pinned tabs per row is dynamic

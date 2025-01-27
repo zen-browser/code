@@ -141,6 +141,7 @@ jobs:
           echo "Tarballing DMG"
           set -ex
           mv ./dist/*.dmg ./zen-${{ matrix.arch }}-apple-darwin-dist.dmg
+          mv ./engine/obj-${{ matrix.arch }}-apple-darwin/dist/host/bin/mar ./zen-macos-host-mar
 
       - name: Upload dist dmg
         uses: actions/upload-artifact@v4
@@ -148,6 +149,14 @@ jobs:
           retention-days: 1
           name: zen-${{ matrix.arch }}-apple-darwin-dist.dmg
           path: ./zen-${{ matrix.arch }}-apple-darwin-dist.dmg
+
+      - name: Upload host mar
+        uses: actions/upload-artifact@v4
+        if: matrix.arch == 'x86_64'
+        with:
+          retention-days: 1
+          name: zen-macos-host-mar
+          path: ./zen-macos-host-mar
 
       - name: Upload build artifact (update manifests)
         uses: actions/upload-artifact@v4

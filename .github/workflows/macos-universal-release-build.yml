@@ -220,12 +220,20 @@ jobs:
             --wait
           xcrun stapler staple "zen.macos-universal.dmg"
 
+      - name: Download host mar
+        uses: actions/download-artifact@v4
+        with:
+          name: zen-macos-host-mar
+
       - name: Package for mar
         env:
           JUST_MAR: true
         run: |
           export SURFER_PLATFORM="darwin"
           export ZEN_RELEASE=1
+          # full path to zen-macos-host-mar
+          export MAR=$(pwd)/zen-macos-host-mar
+          echo "MAR=$MAR"
           pnpm package
           mv ./dist/output.mar ./macos.mar
 

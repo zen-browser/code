@@ -56,21 +56,6 @@
   }
 }
 
-@keyframes zen-new-tab-appear-vertical {
-  0% {
-    opacity: 0;
-    transform: translateY(-25px);
-  }
-  60% {
-    opacity: 0.8;
-    transform: translateY(4px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 @keyframes zen-main-app-wrapper-animation {
   from {
     opacity: 1;

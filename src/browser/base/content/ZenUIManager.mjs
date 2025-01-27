@@ -212,6 +212,31 @@ var gZenVerticalTabsManager = {
     return this.__topButtonsSeparatorElement;
   },
 
+  animateTab(aTab) {
+    if (!gZenUIManager.motion) {
+      return;
+    }
+    const isLastTab = aTab.nextElementSibling === null;
+    gZenUIManager.motion.animate(
+      aTab,
+      {
+        opacity: [0, 1],
+        transform: ['translateY(-20px)', 'translateY(0px)'],
+        marginBottom: isLastTab ? [] : ['-20px', '0px'],
+      },
+      {
+        duration: 0.2,
+        type: 'spring',
+        bounce: 0,
+      }
+    ).then(() => {
+      aTab.style.removeProperty('margin-bottom');
+      aTab.style.removeProperty('transform');
+      aTab.style.removeProperty('opacity');
+      aTab.style.removeProperty('filter');
+    });
+  },
+
   get actualWindowButtons() {
     // we have multiple ".titlebar-buttonbox-container" in the DOM, because of the titlebar
     if (!this.__actualWindowButtons) {

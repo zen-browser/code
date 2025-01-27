@@ -58,12 +58,6 @@
   #tabbrowser-arrowscrollbox {
     min-height: fit-content !important;
   }
-
-  #vertical-pinned-tabs-container, #tabbrowser-arrowscrollbox {
-    .tabbrowser-tab[fadein='true'][zen-initial-fadein='true'] {
-      animation: zen-new-tab-appear-vertical 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
-    }
-  }
 }
 
 :root[zen-window-buttons-reversed='true'] .titlebar-buttonbox-container {

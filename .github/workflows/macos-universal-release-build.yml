@@ -205,7 +205,7 @@ jobs:
             --background ./browser/branding/${{ inputs.release-branch }}/background.png \
             --icon ./browser/branding/${{ inputs.release-branch }}/firefox.icns \
             --dsstore ./browser/branding/${{ inputs.release-branch }}/dsstore \
-            ./obj-x86_64-apple-darwin/dist/zen ../zen-macOS-universal-temp.dmg
+            ./obj-x86_64-apple-darwin/dist/ ../zen-macOS-universal-temp.dmg
 
       - name: Sign .dmg
         run: |
@@ -242,10 +242,3 @@ jobs:
           retention-days: 5
           name: macos.mar
           path: ./macos.mar
-
-      - name: Upload build artifact (update manifests)
-        uses: actions/upload-artifact@v4
-        with:
-          retention-days: 5
-          name: macos_update_manifest_${{ matrix.arch }}
-          path: ./dist/update

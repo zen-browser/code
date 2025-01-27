@@ -1,0 +1,27 @@
+diff --git a/browser/components/tabbrowser/content/tab-hover-preview.mjs b/browser/components/tabbrowser/content/tab-hover-preview.mjs
+index a33dd675b2..b7df3cbd64 100644
+--- a/browser/components/tabbrowser/content/tab-hover-preview.mjs
++++ b/browser/components/tabbrowser/content/tab-hover-preview.mjs
+@@ -58,6 +58,12 @@ export default class TabHoverPreviewPanel {
+       "_prefCollectWireframes",
+       "browser.history.collectWireframes"
+     );
++    XPCOMUtils.defineLazyPreferenceGetter(
++      this,
++      "_prefZenDisplayFullUri",
++      "zen.tabs.experimental-show-full-uri-in-hover-preview",
++      false
++    );
+ 
+     this._panelOpener = new TabPreviewPanelTimedFunction(
+       () => {
+@@ -105,6 +111,9 @@ export default class TabHoverPreviewPanel {
+       if (url.protocol === "about:") {
+         return url.href;
+       }
++      if (this._prefZenDisplayFullUri === true) {
++        return `${url.href}`;
++      }
+       return `${url.hostname}`.replace(/^w{3}\./, "");
+     } catch {
+       return uri;

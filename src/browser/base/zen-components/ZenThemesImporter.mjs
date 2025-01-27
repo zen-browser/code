@@ -53,11 +53,9 @@ var gZenStylesheetManager = {
 
 var gZenThemesImporter = new (class {
   constructor() {
-    console.info('[ZenThemesImporter]: Initializing Zen Themes Importer');
-
     try {
       window.SessionStore.promiseInitialized.then(async () => {
-        if (Services.prefs.getBoolPref('zen.themes.disable-all', false)) {
+        if (Services.prefs.getBoolPref('zen.themes.disable-all', false) || Services.appinfo.inSafeMode) {
           console.log('[ZenThemesImporter]: Disabling all themes.');
           return;
         }
@@ -305,15 +303,15 @@ var gZenThemesImporter = new (class {
   }
 })();
 
-gZenActorsManager.addJSWindowActor("ZenThemeMarketplace", {
+gZenActorsManager.addJSWindowActor('ZenThemeMarketplace', {
   parent: {
-    esModuleURI: "chrome://browser/content/zen-components/actors/ZenThemeMarketplaceParent.sys.mjs",
+    esModuleURI: 'chrome://browser/content/zen-components/actors/ZenThemeMarketplaceParent.sys.mjs',
   },
   child: {
-    esModuleURI: "chrome://browser/content/zen-components/actors/ZenThemeMarketplaceChild.sys.mjs",
+    esModuleURI: 'chrome://browser/content/zen-components/actors/ZenThemeMarketplaceChild.sys.mjs',
     events: {
       DOMContentLoaded: {},
     },
   },
-  matches: ["https://*.zen-browser.app/*", "about:preferences"],
+  matches: [...Services.prefs.getStringPref('zen.injections.match-urls').split(','), 'about:preferences'],
 });

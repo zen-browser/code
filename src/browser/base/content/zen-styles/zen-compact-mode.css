@@ -1,124 +1,298 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 /* All overrides for compact mode go here */
 
-@media (-moz-bool-pref: 'zen.view.compact') {
-  :root:not([customizing]):not([inDOMFullscreen='true']) {
-    @media (-moz-bool-pref: 'zen.view.compact.hide-tabbar') {
-      #zen-sidebar-web-panel-wrapper:has(#zen-sidebar-web-panel[pinned='true']) {
-        margin-left: calc(var(--zen-sidebar-web-panel-spacing) * 2) !important;
-      }
+:root[zen-compact-mode='true']:not([customizing]):not([inDOMFullscreen='true']) {
+%include zen-tabs/vertical-tabs-topbuttons-fix.css
 
-      #zen-appcontent-wrapper {
-        margin-left: var(--zen-element-separation) !important;
-      }
+  @media (-moz-bool-pref: 'zen.view.compact.hide-tabbar') or (-moz-bool-pref: 'zen.view.use-single-toolbar') {
+    #zen-sidebar-web-panel-wrapper:has(#zen-sidebar-web-panel[pinned='true']) {
+      margin-left: var(--zen-sidebar-web-panel-spacing) !important;
+    }
 
-      #zen-sidebar-top-buttons-customization-target {
-        padding-inline-start: calc(var(--zen-toolbox-padding) - var(--toolbarbutton-outer-padding)) !important;
-      }
+    #zen-tabbox-wrapper {
+      /* Remove extra 1px of margine we have to add to the tabbox */
+      margin-left: 0 !important;
+    }
 
-      #zen-sidebar-splitter {
-        display: none !important;
-      }
+    #zen-appcontent-wrapper {
+      margin-left: var(--zen-element-separation) !important;
 
-      #navigator-toolbox {
-        --zen-toolbox-max-width: 54px !important;
-        --zen-compact-float: calc(var(--zen-element-separation) - 1px);
+      & #tabbrowser-tabbox {
+        margin-left: 0 !important;
+      }
+    }
+
+    #zen-sidebar-top-buttons-customization-target {
+      padding-inline-start: calc(var(--zen-toolbox-padding) - var(--toolbarbutton-outer-padding)) !important;
+    }
+
+    #zen-sidebar-splitter {
+      display: none !important;
+    }
+
+    #navigator-toolbox {
+      --zen-toolbox-max-width: 64px !important;
+      --zen-compact-float: var(--zen-element-separation);
+
+      &:not([animate='true']) {
         position: absolute;
-        z-index: 9;
-        transition: transform 0.2s ease-in-out, opacity 0.2s ease-in-out;
-        right: calc(100% - var(--zen-element-separation));
-        top: var(--zen-element-separation);
+        z-index: 10;
+        transition:
+          left 0.25s ease,
+          right 0.25s ease,
+          opacity 1.5s ease;
+        top: 0;
         bottom: var(--zen-element-separation);
         opacity: 0;
-        padding-left: var(--zen-compact-float) !important;
-        padding-bottom: 0 !important;
-        padding-top: 0 !important;
-      }
+        padding: 0 var(--zen-compact-float) !important;
 
-      & #browser:has(#navigator-toolbox[zen-right-side='true']) {
-        & #navigator-toolbox {
-          --zen-compact-float: calc(var(--zen-element-separation) + 1px);
-          padding-left: unset !important;
-          padding-right: var(--zen-compact-float) !important;
-          left: calc(100% - var(--zen-element-separation));
-          right: unset;
-        }
-
-        & .browserSidebarContainer {
-          margin-left: 0 !important;
-          margin-right: var(--zen-element-separation) !important;
-        }
-      }
-
-      #titlebar {
-        box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.1);
-        border-radius: calc(var(--zen-border-radius) - 2px);
-        padding: var(--zen-toolbox-padding) !important;
-        position: relative;
-        background: var(--zen-dialog-background);
-        outline: 1px solid light-dark(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.1));
-
-        @media (-moz-bool-pref: 'zen.view.compact.color-sidebar') {
-          background: var(--zen-main-browser-background-toolbar) !important;
-          background-attachment: fixed !important;
-          background-size: 2000px !important; /* Dont ask me why */
-          backdrop-filter: blur(5px) !important;
-        }
-      }
-
-      @media (-moz-bool-pref: 'zen.view.compact.hide-toolbar') {
-        #navigator-toolbox {
+        :root[zen-single-toolbar='true'] & {
           top: var(--zen-element-separation);
         }
       }
 
-      #navigator-toolbox:hover,
-      #navigator-toolbox[zen-has-hover],
-      #navigator-toolbox:focus-within,
-      #navigator-toolbox[zen-user-show],
-      #navigator-toolbox[flash-popup],
-      #navigator-toolbox[has-popup-menu],
-      #navigator-toolbox[movingtab],
-      #mainPopupSet:has(> #appMenu-popup:hover) ~ toolbox,
-      #navigator-toolbox:has(.tabbrowser-tab:active),
-      #navigator-toolbox:has(*[open='true']:not(tab):not(.zen-compact-mode-ignore)) {
-        opacity: 1;
+      &:not([zen-right-side='true']) #nav-bar {
+        margin-left: 0 !important;
+      }
 
-        transform: translateX(calc(100% - var(--zen-element-separation)));
-        #browser:has(#navigator-toolbox[zen-right-side='true']) & {
-          transform: translateX(calc(-100% + var(--zen-element-separation)));
-        }
+      & #urlbar[open] {
+        top: 0 !important;
       }
     }
 
-    @media (-moz-bool-pref: 'zen.view.compact.hide-toolbar') {
-      #navigator-toolbox {
+    &:not([zen-right-side='true']) #navigator-toolbox {
+      left: calc(-1 * var(--zen-sidebar-width) + var(--zen-element-separation));
+    }
+
+    /* When we have multiple toolbars and the top-toolbar is NOT being hidden,
+        * we need to adjust the top-padding of the toolbox to account for the
+        * extra toolbar height. */
+    @media not (-moz-bool-pref: 'zen.view.compact.hide-toolbar') {
+      &:not([zen-single-toolbar='true']) #navigator-toolbox:not([animate='true']) {
+        margin-top: var(--zen-toolbar-height) !important;
+      }
+    }
+
+    &[zen-right-side='true'] {
+      & #navigator-toolbox {
+        --zen-compact-float: calc(var(--zen-element-separation) + 1px);
+
+        &:not([animate='true']) {
+          right: calc(-1 * var(--zen-sidebar-width) + var(--zen-element-separation));
+        }
+      }
+
+      & .browserSidebarContainer {
+        margin-left: 0 !important;
+        margin-right: var(--zen-element-separation) !important;
+      }
+    }
+
+    #navigator-toolbox:not([animate='true']) #titlebar {
+      box-shadow: var(--zen-big-shadow);
+      border-radius: var(--zen-native-inner-radius);
+      padding: var(--zen-toolbox-padding) !important;
+      position: relative;
+      background: var(--zen-dialog-background);
+      border: 1px solid var(--zen-colors-border-contrast);
+
+      :root[zen-single-toolbar='true'] {
+        padding-top: 0 !important;
+        margin-left: 0 !important;
+      }
+
+      @media (-moz-bool-pref: 'zen.view.compact.color-sidebar') {
+        background: var(--zen-main-browser-background-toolbar) !important;
+        background-attachment: fixed !important;
+        background-size: 2000px !important; /* Dont ask me why */
+        backdrop-filter: blur(5px) !important;
+      }
+    }
+
+    #navigator-toolbox:hover,
+    #navigator-toolbox[zen-has-hover],
+    #navigator-toolbox[zen-user-show],
+    #navigator-toolbox[flash-popup],
+    #navigator-toolbox[has-popup-menu],
+    #navigator-toolbox[movingtab],
+    #navigator-toolbox:has(.tabbrowser-tab:active),
+    #navigator-toolbox:has(
+        *:is([panelopen='true'], [open='true'], #nav-bar:focus-within):not(tab):not(.zen-compact-mode-ignore)
+      ) {
+      &:not([animate='true']) {
+        --zen-compact-mode-func: linear(
+          0 0%,
+          0.002748 1%,
+          0.010544 2%,
+          0.022757 3%,
+          0.038804 4%,
+          0.058151 5%,
+          0.080308 6%,
+          0.104828 7.000000000000001%,
+          0.131301 8%,
+          0.159358 9%,
+          0.188662 10%,
+          0.21891 11%,
+          0.249828 12%,
+          0.281172 13%,
+          0.312724 14.000000000000002%,
+          0.344288 15%,
+          0.375693 16%,
+          0.40679 17%,
+          0.437447 18%,
+          0.467549 19%,
+          0.497 20%,
+          0.525718 21%,
+          0.553633 22%,
+          0.580688 23%,
+          0.60684 24%,
+          0.632052 25%,
+          0.656298 26%,
+          0.679562 27%,
+          0.701831 28.000000000000004%,
+          0.723104 28.999999999999996%,
+          0.743381 30%,
+          0.76267 31%,
+          0.780983 32%,
+          0.798335 33%,
+          0.814744 34%,
+          0.830233 35%,
+          0.844826 36%,
+          0.858549 37%,
+          0.87143 38%,
+          0.883498 39%,
+          0.894782 40%,
+          0.905314 41%,
+          0.915125 42%,
+          0.924247 43%,
+          0.93271 44%,
+          0.940547 45%,
+          0.947787 46%,
+          0.954463 47%,
+          0.960603 48%,
+          0.966239 49%,
+          0.971397 50%,
+          0.976106 51%,
+          0.980394 52%,
+          0.984286 53%,
+          0.987808 54%,
+          0.990984 55.00000000000001%,
+          0.993837 56.00000000000001%,
+          0.99639 56.99999999999999%,
+          0.998664 57.99999999999999%,
+          1.000679 59%,
+          1.002456 60%,
+          1.004011 61%,
+          1.005363 62%,
+          1.006528 63%,
+          1.007522 64%,
+          1.008359 65%,
+          1.009054 66%,
+          1.009618 67%,
+          1.010065 68%,
+          1.010405 69%,
+          1.010649 70%,
+          1.010808 71%,
+          1.01089 72%,
+          1.010904 73%,
+          1.010857 74%,
+          1.010757 75%,
+          1.010611 76%,
+          1.010425 77%,
+          1.010205 78%,
+          1.009955 79%,
+          1.009681 80%,
+          1.009387 81%,
+          1.009077 82%,
+          1.008754 83%,
+          1.008422 84%,
+          1.008083 85%,
+          1.00774 86%,
+          1.007396 87%,
+          1.007052 88%,
+          1.00671 89%,
+          1.006372 90%,
+          1.00604 91%,
+          1.005713 92%,
+          1.005394 93%,
+          1.005083 94%,
+          1.004782 95%,
+          1.004489 96%,
+          1.004207 97%,
+          1.003935 98%,
+          1.003674 99%,
+          1.003423 100%
+        );
+        transition:
+          left 0.3125s var(--zen-compact-mode-func),
+          right 0.3125s var(--zen-compact-mode-func);
+        opacity: 1;
+
+        left: -1px;
+        :root[zen-right-side='true'] & {
+          right: -1px;
+          left: auto;
+        }
+      }
+    }
+  }
+
+  @media (-moz-bool-pref: 'zen.view.compact.hide-toolbar') {
+    &:not([zen-single-toolbar='true']) {
+      & #navigator-toolbox {
+        top: 0;
+      }
+
+      & #navigator-toolbox {
         --zen-toolbox-top-align: var(--zen-element-separation);
       }
 
-      #sidebar-box,
-      #titlebar,
-      #zen-sidebar-web-panel-wrapper:has(#zen-sidebar-web-panel:not([pinned='true'])) {
+      & #sidebar-box,
+      & #titlebar,
+      & #zen-appcontent-wrapper,
+      & #zen-sidebar-web-panel-wrapper:has(#zen-sidebar-web-panel:not([pinned='true'])) {
         margin-top: var(--zen-element-separation) !important;
       }
 
-      #zen-sidebar-web-panel-wrapper:has(#zen-sidebar-web-panel[pinned='true']) {
+      & #zen-appcontent-wrapper {
+        z-index: 3 !important;
+      }
+
+      & #zen-sidebar-web-panel-wrapper:has(#zen-sidebar-web-panel[pinned='true']) {
         margin-top: calc(var(--zen-element-separation) * 2) !important;
       }
 
-      #zen-appcontent-navbar-container {
+      & #zen-appcontent-navbar-container {
         --zen-compact-toolbar-offset: 5px;
         position: absolute;
-        top: 0;
-        transform: translateY(calc(-100% + var(--zen-element-separation) + 1px));
+        top: calc((-1 * var(--zen-toolbar-height)) + var(--zen-element-separation) + 1px);
         left: 0;
-        z-index: 10;
+        z-index: 20;
         box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.3) !important;
         border-bottom-left-radius: var(--zen-border-radius);
         border-bottom-right-radius: var(--zen-border-radius);
-        transition: all 0.1s ease-in-out;
+        border-top-left-radius: env(-moz-gtk-csd-titlebar-radius);
+        border-top-right-radius: env(-moz-gtk-csd-titlebar-radius);
+        transition: all 0.15s ease;
         width: 100%;
         opacity: 0;
         background: var(--zen-dialog-background);
+
+        max-height: var(--zen-toolbar-height);
+        overflow: hidden;
+
+        & > * {
+          position: relative !important;
+        }
+
+        & #urlbar {
+          transform: translateY(-50%);
+          transition: transform 0.1s ease-in-out;
+        }
 
         @media (-moz-bool-pref: 'zen.view.compact.color-toolbar') {
           background-attachment: fixed;
@@ -129,16 +303,26 @@
         }
       }
 
-      #zen-appcontent-navbar-container:hover,
-      #zen-appcontent-navbar-container[zen-has-hover],
-      #zen-appcontent-navbar-container:focus-within,
-      #zen-appcontent-navbar-container[zen-user-show],
-      #zen-appcontent-navbar-container[has-popup-menu],
-      #zen-appcontent-navbar-container:has(*[open='true']) {
+      & #zen-appcontent-navbar-container:hover,
+      & #zen-appcontent-navbar-container[zen-has-hover],
+      & #zen-appcontent-navbar-container:focus-within,
+      & #zen-appcontent-navbar-container[zen-user-show],
+      & #zen-appcontent-navbar-container[has-popup-menu],
+      & #zen-appcontent-navbar-container:has(*:is([panelopen='true'], [open='true']):not(.zen-compact-mode-ignore)) {
         opacity: 1;
         border-top-width: 1px;
 
-        transform: translateY(-1px);
+        top: -1px;
+        overflow: initial;
+        max-height: unset;
+
+        & #urlbar {
+          transform: translateY(0);
+
+          &[open]:not([zen-floating-urlbar='true']) {
+            top: 0 !important;
+          }
+        }
       }
     }
   }

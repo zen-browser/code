@@ -1,4 +1,5 @@
 name: Windows PGO Builds
+
 on:
   workflow_call:
     inputs:
@@ -17,63 +18,76 @@ on:
 
 jobs:
   windows-profile-build:
-    name: Windows Profile Build - ${{ matrix.generic == true && 'generic' || 'specific' }}
+    name: |
+      Windows Profile Build - ${{ matrix.arch }}
     strategy:
       fail-fast: false
       matrix:
-        generic: [true, false]
-    runs-on: windows-latest
-    # Script edited from https://github.com/Floorp-Projects/Floorp/blob/ESR115/.github/workflows/window-generate-profile-data-and-jarlog.yml
+        arch: [x86_64, aarch64]
+
+    runs-on: ${{ inputs.release-branch == 'release' && 'windows-latest' || 'windows-latest' }}
+
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install Node.js and pnpm
-        uses: actions/setup-node@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version-file: '.nvmrc'
 
-      - name: Setup git
+      - name: Setup Git
         run: |
           git config --global user.email "mauro-balades@users.noreply.github.com"
           git config --global user.name "mauro-balades"
-      - name: Install pnpm
+
+      - name: Setup pnpm
         run: npm install -g pnpm
 
       - name: Install Surfer
-        run: |
-          npm i -g @zen-browser/surfer
-      - uses: actions/download-artifact@v4
-        name: Download artifact
+        run: npm i -g @zen-browser/surfer
+
+      - name: Load Surfer CI setup
+        run: pnpm surfer ci --brand ${{ inputs.release-branch }} --display-version ${{ inputs.build-version }}
+
+      - name: Download artifact
+        if: ${{ matrix.arch == 'x86_64' }}
+        uses: actions/download-artifact@v4
         with:
           path: C:\artifact
-          name: ${{ matrix.generic == true && 'generic' || 'specific' }}-zen-windows-x86_64-profile-data-and-jarlog.zip
+          name: ${{ matrix.arch == 'aarch64' && 'arm64' || matrix.arch }}-zen-windows-profile-data-and-jarlog.zip
 
       - name: Unpack artifact
+        if: ${{ matrix.arch == 'x86_64' }}
         run: |
           cd C:\artifact
           ls
           Expand-Archive -Path .\${{ inputs.profile-data-path-archive }} -DestinationPath C:\artifact
           ls
+
       - name: Setup
         run: |
-          (New-Object System.Net.WebClient).DownloadFile("https://ftp.mozilla.org/pub/mozilla/libraries/win32/MozillaBuildSetup-Latest.exe","C:\MozillaBuildSetup-Latest.exe")
+          (New-Object System.Net.WebClient).DownloadFile("https://ftp.mozilla.org/pub/mozilla/libraries/win32/MozillaBuildSetup-Latest.exe", "C:\MozillaBuildSetup-Latest.exe")
           C:\MozillaBuildSetup-Latest.exe /S | out-null
-      - name: Download firefox
+
+      - name: Download Firefox and dependencies
+        if: ${{ matrix.arch == 'x86_64' }}
         run: |
-          git config --global core.safecrlf false  
+          git config --global core.safecrlf false
           pnpm surfer download
 
       - name: Import patches
+        if: ${{ matrix.arch == 'x86_64' }}
         env:
           SURFER_NO_BRANDING_PATCH: true
-        run: pnpm surfer import 
+        run: pnpm surfer import
 
       - name: Generate
+        if: ${{ matrix.arch == 'x86_64' }}
         run: |
           ls
           $Env:USE_MINTTY = "0"
-          $workspace_dir_current = [regex]::replace($env:GITHUB_WORKSPACE, "^([A-Z]):", { "/" + $args.value.Substring(0, 1).toLower() }) -replace "\\","/"
+          $workspace_dir_current = [regex]::replace($env:GITHUB_WORKSPACE, "^([A-Z]):", { "/" + $args.value.Substring(0, 1).toLower() }) -replace "\\", "/"
           $workspace_dir = $workspace_dir_current + "/engine"
           echo $workspace_dir
           echo "cd $workspace_dir" '' >> mozilla-build-run.sh
@@ -83,22 +97,25 @@ jobs:
           echo 'LLVM_PROFDATA=/c/Users/runneradmin/.mozbuild/clang/bin/llvm-profdata.exe JARLOG_FILE=en-US.log ./mach python build/pgo/profileserver.py --binary /c/artifact/zen/zen.exe' '' >> mozilla-build-run.sh
           C:\mozilla-build\start-shell.bat $workspace_dir_current\mozilla-build-run.sh
 
-      - name: 🐛 Debug Session
+      - name: Debug session
         if: ${{ failure() }}
-        uses: Warpbuilds/gha-debug@v1.3
+        uses: WarpBuilds/action-debugger@v1.3
         timeout-minutes: 15
 
       - name: Move profile data
+        if: ${{ matrix.arch == 'x86_64' }}
         run: |
           dir
           dir engine
           mv engine/merged.profdata merged.profdata
           mv engine/en-US.log en-US.log
 
-      - name: Publish artifacts
+      - name: Upload artifacts
+        if: ${{ matrix.arch == 'x86_64' }}
         uses: actions/upload-artifact@v4
         with:
+          retention-days: 1
           path: |
             merged.profdata
             en-US.log
-          name: windows-profdata-${{ matrix.generic == true && 'generic' || 'specific' }}
+          name: windows-profdata-${{ matrix.arch == 'aarch64' && 'arm64' || matrix.arch }}

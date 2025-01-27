@@ -17,27 +17,21 @@
       <label><html:h2 data-l10n-id="zen-settings-workspaces-header"/></label>
       <description class="description-deemphasized" data-l10n-id="zen-settings-workspaces-description" />
 
-      <checkbox id="zenWorkspacesActivate"
-            data-l10n-id="zen-settings-workspaces-enabled"
-            preference="zen.workspaces.enabled"/>
-      <vbox class="indent">
-            <checkbox id="zenWorkspacesHideDefaultContainer"
-                  data-l10n-id="zen-settings-workspaces-hide-default-container-indicator"
-                  preference="zen.workspaces.hide-default-container-indicator"/>
-            <checkbox id="zenWorkspacesAllowPinnedTabsForDifferentWorkspaces"
-                  data-l10n-id="zen-settings-workspaces-allow-pinned-tabs-for-different-workspaces"
-                  preference="zen.workspaces.individual-pinned-tabs"/>
-            <checkbox id="zenWorkspacesDisplayAsIconStrip"
-                  data-l10n-id="zen-settings-workspaces-display-as-icon-strip"
-                  preference="zen.workspaces.show-icon-strip"/>
-            <checkbox id="zenWorkspacesForceContainerTabsToWorkspace"
-                  data-l10n-id="zen-settings-workspaces-force-container-tabs-to-workspace"
-                  preference="zen.workspaces.force-container-workspace"/>
-            <checkbox id="zenWorkspaceHideDeactivatedWorkspaces"
-                  data-l10n-id="zen-settings-workspaces-hide-deactivated-workspaces"
-                  preference="zen.workspaces.hide-deactivated-workspaces"/>
-            
-      </vbox>
+      <checkbox id="zenWorkspacesHideDefaultContainer"
+            data-l10n-id="zen-settings-workspaces-hide-default-container-indicator"
+            preference="zen.workspaces.hide-default-container-indicator"/>
+      <checkbox id="zenWorkspacesAllowPinnedTabsForDifferentWorkspaces"
+            data-l10n-id="zen-settings-workspaces-allow-pinned-tabs-for-different-workspaces"
+            preference="zen.workspaces.individual-pinned-tabs"/>
+      <checkbox id="zenWorkspacesDisplayAsIconStrip"
+            data-l10n-id="zen-settings-workspaces-display-as-icon-strip"
+            preference="zen.workspaces.show-icon-strip"/>
+      <checkbox id="zenWorkspacesForceContainerTabsToWorkspace"
+            data-l10n-id="zen-settings-workspaces-force-container-tabs-to-workspace"
+            preference="zen.workspaces.force-container-workspace"/>
+      <checkbox id="zenWorkspaceHideDeactivatedWorkspaces"
+            data-l10n-id="zen-settings-workspaces-hide-deactivated-workspaces"
+            preference="zen.workspaces.hide-deactivated-workspaces"/>
 </groupbox>
 
 <hbox id="zenTabsUnloadCategory"
@@ -81,6 +75,9 @@
       <checkbox id="zenPinnedTabRestorePinnedTabsToPinnedUrl"
                 data-l10n-id="zen-pinned-tab-manager-restore-pinned-tabs-to-pinned-url"
                 preference="zen.pinned-tab-manager.restore-pinned-tabs-to-pinned-url"/>
+      <checkbox id="zenPinnedTabContainerSpecificEssentials"
+                data-l10n-id="zen-pinned-tab-manager-container-specific-essentials-enabled"
+                preference="zen.workspaces.container-specific-essentials-enabled"/>
 
       <hbox align="center">
             <label id="zenPinnedTabCloseShortcutBehaviorLabel" data-l10n-id="zen-pinned-tab-manager-close-shortcut-behavior-label"/>

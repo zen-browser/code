@@ -10,60 +10,59 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
     <meta name="color-scheme" content="light dark">
     <meta name="referrer" content="no-referrer" />
 
-    <link
+    <linkset>
+      <link
+        rel="stylesheet"
+        type="text/css"
+        href="chrome://global/skin/in-content/common.css"
+      />
+      <link rel="stylesheet" href="chrome://global/skin/global.css" />
+      <link
+        rel="stylesheet"
+        href="chrome://browser/content/zen-welcome/welcome.css"
+      />
+      <link
       rel="stylesheet"
-      type="text/css"
-      href="chrome://global/skin/in-content/common.css"
-    />
-    <link rel="stylesheet" href="chrome://global/skin/global.css" />
-    <link
-      rel="stylesheet"
-      href="chrome://browser/content/zen-welcome/welcome.css"
+      href="chrome://browser/content/zen-styles/zen-branding.css"
     />
 
-    <link rel="localization" href="branding/brand.ftl" />
-    <link rel="localization" href="browser/zen-welcome.ftl" />
+      <link rel="localization" href="branding/brand.ftl" />
+      <link rel="localization" href="browser/zen-welcome.ftl" />
+    </linkset>
 
     <script src="chrome://browser/content/zenThemeModifier.js"></script>
   </head>
   <body class="gradient-background">
-    <div id="first-view">
+    <img id="zen-logo" src="chrome://branding/content/about-logo.png" />
+    <div id="main-view">
       <div class="page" id="welcome">
-        <img class="icon" src="chrome://branding/content/about-logo.png" />
-        <h1 data-l10n-id="welcome-dialog-welcome"></h1>
-  
-        <p data-l10n-id="welcome-dialog-welcome-subtext"></p>
-
+        <h1 class="zen-branding-title" data-l10n-id="welcome-dialog-welcome-title-part-1"></h1>
+        <h1 class="zen-branding-title" data-l10n-id="welcome-dialog-welcome-title-part-2"></h1>
       </div>
-  
+
       <div class="page page-split" id="import">
         <div>
           <h1 data-l10n-id="welcome-dialog-import"></h1>
           <p data-l10n-id="welcome-dialog-import-subtext"></p>
         </div>
-        <div>
-          <hbox>
-            <button
-              class="primary"
-              id="importBrowser"
-              data-l10n-id="welcome-dialog-import-action"
-            ></button>
-          </hbox>
-        </div>
+        <button
+          id="importBrowser"
+          data-l10n-id="welcome-dialog-import-action"
+        ></button>
       </div>
-  
+
       <div class="page page-split" id="theme">
         <div>
           <h1 data-l10n-id="welcome-dialog-theme"></h1>
           <p data-l10n-id="welcome-dialog-theme-subtext"></p>
         </div>
         <div>
-          <h2 data-l10n-id="welcome-dialog-theme-header-1"></h2>
-          <div id="colorListWrapper">
+          <h2 data-l10n-id="welcome-dialog-theme-header-1" class="delay-animation"></h2>
+          <div id="colorListWrapper" class="delay-animation">
           </div>
-          <h2 data-l10n-id="welcome-dialog-theme-header-2"></h2>
+          <h2 data-l10n-id="welcome-dialog-theme-header-2" class="delay-animation"></h2>
           <div id="themeList" class="cardGroup">
-            <svg viewBox="0 0 700 700" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg viewBox="0 0 700 700" fill="none" xmlns="http://www.w3.org/2000/svg" class="delay-animation-2">
               <g clip-path="url(#clip0_404_2706)">
               <rect width="700" height="700" fill="#F4F4F4"/>
               <g filter="url(#filter0_d_404_2706)">
@@ -92,7 +91,7 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
               </clipPath>
               </defs>
             </svg>
-            <svg viewBox="0 0 700 700" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg viewBox="0 0 700 700" fill="none" xmlns="http://www.w3.org/2000/svg" class="delay-animation-2">
               <g clip-path="url(#clip0_404_2709)">
               <rect width="700" height="700" fill="#515151"/>
               <g filter="url(#filter0_d_404_2709)">
@@ -120,11 +119,32 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
               <rect width="700" height="700" fill="white"/>
               </clipPath>
               </defs>
-            </svg>                
+            </svg>
           </div>
         </div>
       </div>
-  
+
+      <div class="page page-split" id="layout">
+        <div>
+          <h1 data-l10n-id="welcome-dialog-layout"></h1>
+          <p data-l10n-id="welcome-dialog-layout-subtext"></p>
+        </div>
+        <div id="layoutList" class="cardGroup">
+          <hbox layout="single" class="selected delay-animation">
+            <img src="chrome://browser/content/zen-images/layouts/single-toolbar.png" />
+            <p data-l10n-id="welcome-dialog-layout-single-toolbar"></p>
+          </hbox>
+          <hbox layout="multiple" class="delay-animation">
+            <img src="chrome://browser/content/zen-images/layouts/multiple-toolbar.png" />
+            <p data-l10n-id="welcome-dialog-layout-multiple-toolbar"></p>
+          </hbox>
+          <hbox layout="collapsed" class="delay-animation">
+            <img src="chrome://browser/content/zen-images/layouts/collapsed.png" />
+            <p data-l10n-id="welcome-dialog-layout-collapsed-toolbar"></p>
+          </hbox>
+        </div>
+      </div>
+
       <div class="page page-split" id="search">
         <div>
           <h1 data-l10n-id="welcome-dialog-search"></h1>
@@ -134,10 +154,10 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
           <div id="searchList" class="cardGroup"></div>
         </div>
       </div>
-  
+
       <div class="page" id="thanks">
-        <h1 data-l10n-id="welcome-dialog-thanks"></h1>
-        <p data-l10n-id="welcome-dialog-thanks-subtext"></p>
+        <h1 class="zen-branding-title" data-l10n-id="welcome-dialog-thanks-title-part-1"></h1>
+        <h1 class="zen-branding-title" data-l10n-id="welcome-dialog-thanks-title-part-2"></h1>
       </div>
       <div id="buttons-footer">
         <button
@@ -152,11 +172,6 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
         ></button>
       </div>
     </div>
-
-    <div id="second-view">
-
-    </div>
-
     <svg
       width="250" height="250" viewBox="0 0 250 250"
       id="circular-progress" style="--progress: 50"

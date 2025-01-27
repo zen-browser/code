@@ -11,19 +11,25 @@
     "start": "cd engine && ./mach run --noprofile",
     "import": "surfer import",
     "export": "surfer export",
-    "init": "npm run bootstrap && npm run import",
-    "bootstrap": "surfer download && surfer bootstrap",
+    "init": "npm run download && npm run bootstrap && npm run import",
+    "download": "surfer download",
+    "bootstrap": "surfer bootstrap && surfer bootstrap",
     "package": "surfer package",
     "update-ff": "python3 scripts/update_ff.py",
     "update-ff:raw": "surfer update",
     "update-newtab": "python3 scripts/update_newtab.py",
-    "pretty": "prettier . --write",
-    "lint": "npx prettier . --check",
-    "prepare": "husky"
+    "update-ff:rc": "python3 scripts/update_ff.py --rc",
+    "pretty": "prettier . --write && autopep8 -r --in-place scripts/ src/",
+    "lint": "npx prettier . --check && autopep8 --diff scripts/ src/",
+    "prepare": "husky",
+    "reset-ff": "surfer reset"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/zen-browser/core.git"
+  },
+  "hooks": {
+    "pre-commit": "npm run prepare"
   },
   "keywords": [],
   "author": "",
@@ -33,11 +39,12 @@
   },
   "homepage": "https://github.com/zen-browser/core#readme",
   "dependencies": {
-    "@zen-browser/surfer": "^1.5.2"
+    "@zen-browser/surfer": "^1.9.8"
   },
   "devDependencies": {
-    "husky": "^9.1.5",
-    "lint-staged": "^15.2.10",
-    "prettier": "^3.3.3"
+    "husky": "^9.1.7",
+    "lint-staged": "^15.3.0",
+    "prettier": "^3.4.2",
+    "prettier-plugin-sh": "^0.14.0"
   }
 }

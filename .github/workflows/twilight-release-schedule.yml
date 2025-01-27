@@ -1,8 +1,15 @@
 name: Zen Twilight Scheduled Releases
+
 on:
   schedule:
-    - cron: '0 0 * * *'
+    - cron: '0 23 * * *'
   workflow_dispatch:
+    inputs:
+      create_release:
+        description: 'Whether to do a release'
+        required: false
+        type: boolean
+        default: true
 
 jobs:
   twilight-release-schedule:
@@ -11,7 +18,7 @@ jobs:
     secrets: inherit
     uses: ./.github/workflows/build.yml
     with:
-      create_release: true
+      create_release: ${{ github.event_name != 'workflow_dispatch' && true || inputs.create_release }}
       update_branch: twilight
       update_version: false
 
@@ -20,12 +27,10 @@ jobs:
     runs-on: ubuntu-latest
     needs: twilight-release-schedule
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install Node.js and pnpm
-        uses: actions/setup-node@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: 20
-
-      # TODO:
+          node-version-file: '.nvmrc'

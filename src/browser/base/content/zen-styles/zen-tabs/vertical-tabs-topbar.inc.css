@@ -1,0 +1,35 @@
+height: var(--zen-toolbar-height);
+
+@media (-moz-bool-pref: 'zen.view.hide-window-controls') {
+  & {
+    transition:
+      height 0.15s ease,
+      opacity 0.1s ease-out;
+    transition-delay: 0.2s;
+
+    & > * {
+      transition: opacity 0.2s ease-out;
+      transition-delay: 0.2s;
+    }
+  }
+
+  &:not([zen-has-hover='true']):not([has-popup-menu]):not(:focus-within):not(:has(*:is([panelopen='true'], [open='true']))) {
+    transition-delay: 0.2s;
+    height: var(--zen-element-separation);
+    overflow: hidden;
+    opacity: 0;
+    & > * {
+      opacity: 0;
+      pointer-events: none;
+    }
+  }
+
+  @media (-moz-bool-pref: 'zen.view.experimental-no-window-controls') {
+    &:has(#PersonalToolbar[collapsed='true']) {
+      max-height: 0 !important;
+      overflow: hidden;
+      opacity: 0 !important;
+      pointer-events: none !important;
+    }
+  }
+}

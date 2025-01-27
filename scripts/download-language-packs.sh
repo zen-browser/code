@@ -1,4 +1,3 @@
-
 set -ex
 
 CURRENT_DIR=$(pwd)
@@ -32,9 +31,9 @@ cd $CURRENT_DIR
 
 # Move all the files to the correct location
 
-sh scripts/copy-language-pack.sh en-US
+python3 scripts/copy_language_pack.py en-US
 for lang in $(cat ./l10n/supported-languages); do
-  sh scripts/copy-language-pack.sh $lang
+  python3 scripts/copy_language_pack.py $lang
 done
 
 wait

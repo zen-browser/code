@@ -1,0 +1,13 @@
+diff --git a/old-configure.in b/old-configure.in
+index 036734708f20d658248a8b5b3a6d8adc2530a878..4e1f0d96cd355cc1195b58548b29c1a5d6bedaa8 100644
+--- a/old-configure.in
++++ b/old-configure.in
+@@ -89,7 +89,7 @@ dnl Mac bundle identifier (based on MOZ_APP_DISPLAYNAME)
+ if test -z "$MOZ_MACBUNDLE_ID"; then
+    MOZ_MACBUNDLE_ID=`echo $MOZ_APP_DISPLAYNAME | tr 'A-Z' 'a-z' | tr -dc 'a-z-'`
+ fi
+-MOZ_MACBUNDLE_ID=${MOZ_DISTRIBUTION_ID}.${MOZ_MACBUNDLE_ID}
++MOZ_MACBUNDLE_ID=app.zen-browser.zen
+ if test "$MOZ_DEBUG"; then
+   MOZ_MACBUNDLE_ID=${MOZ_MACBUNDLE_ID}debug
+ fi

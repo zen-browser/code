@@ -1,0 +1,15 @@
+diff --git a/browser/base/content/browser-commands.js b/browser/base/content/browser-commands.js
+index 352de44dda36e3f6672eb353f42978ede0cd2681..d6956a318c34bfb12b0ba957edab1166e1a4edaf 100644
+--- a/browser/base/content/browser-commands.js
++++ b/browser/base/content/browser-commands.js
+@@ -407,8 +407,8 @@ var BrowserCommands = {
+       (event.ctrlKey || event.metaKey || event.altKey) &&
+       gBrowser.selectedTab.pinned
+     ) {
+-      if (gBrowser.visibleTabs.length > gBrowser.pinnedTabCount) {
+-        gBrowser.tabContainer.selectedIndex = gBrowser.pinnedTabCount;
++      if (gBrowser.visibleTabs.length > gBrowser._numVisiblePinTabs) {
++        gBrowser.tabContainer.selectedIndex = gBrowser._numVisiblePinTabs;
+       }
+       return;
+     }

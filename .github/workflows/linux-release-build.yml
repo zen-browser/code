@@ -1,4 +1,5 @@
 name: Linux Release Build
+
 on:
   workflow_call:
     inputs:
@@ -13,35 +14,34 @@ on:
 
 jobs:
   build-linux:
-    
     permissions:
       contents: write
-    runs-on: ubuntu-latest
+    # aarch64 does not need full 16x
+    runs-on: ${{ (inputs.release-branch == 'release' && matrix.arch == 'x86_64') && 'self-hosted' || 'ubuntu-latest' }}
     strategy:
       fail-fast: false
       matrix:
-        generic: [true, false]
-    name: Build Linux - ${{ matrix.generic == true && 'Generic' || 'Specific' }}
+        arch: [x86_64, aarch64]
+    name: Build Linux - ${{ matrix.arch }}
 
     steps:
       - name: Free Disk Space (Ubuntu)
         uses: jlumbroso/free-disk-space@main
         with:
-          # this might remove tools that are actually needed,
-          # if set to "true" but frees about 6 GB
           tool-cache: false
 
-      - name: Install Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 20
-
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
           submodules: recursive
           token: ${{ secrets.DEPLOY_KEY }}
 
-      - name: Setup git
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+
+      - name: Setup Git
         run: |
           git config --global user.email "mauro-balades@users.noreply.github.com"
           git config --global user.name "mauro-balades"
@@ -51,7 +51,7 @@ jobs:
           set -x
           sudo apt-get update --fix-missing
           sudo apt-get update
-          sudo apt-get install dos2unix yasm nasm build-essential libgtk2.0-dev libpython3-dev m4 uuid libasound2-dev libcurl4-openssl-dev libdbus-1-dev libdrm-dev libdbus-glib-1-dev libdbus-glib-1-dev libgtk-3-dev libpulse-dev libx11-xcb-dev libxt-dev xvfb lld llvm
+          sudo apt-get install -y python3 python3-pip dos2unix yasm nasm build-essential libgtk2.0-dev libpython3-dev m4 uuid libasound2-dev libcurl4-openssl-dev libdbus-1-dev libdrm-dev libdbus-glib-1-dev libgtk-3-dev libpulse-dev libx11-xcb-dev libxt-dev xvfb lld llvm
 
       - name: Configure sccache
         uses: actions/github-script@v7
@@ -60,7 +60,7 @@ jobs:
             core.exportVariable('ACTIONS_CACHE_URL', process.env.ACTIONS_CACHE_URL || '');
             core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
 
-      - name: Install sccache
+      - name: Setup sccache
         env:
           LINK: https://github.com/mozilla/sccache/releases/download
           SCCACHE_VERSION: 0.2.13
@@ -72,13 +72,12 @@ jobs:
           echo "$HOME/.local/bin" >> $GITHUB_PATH
 
       - name: Save sccache
-        uses: actions/cache@v3
-        continue-on-error: false
+        uses: actions/cache@v4
         with:
           path: /home/runner/.cache/sccache
           key: ${{ runner.os }}-sccache
 
-      - name: Install pnpm
+      - name: Setup pnpm
         run: npm install -g pnpm
 
       - name: Get pnpm store directory
@@ -88,23 +87,30 @@ jobs:
           echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
 
       - name: Install dependencies
-        run: pnpm install
+        run: |
+          pnpm install
 
-      - name: Load surfer CI setup
+      - name: Load Surfer CI setup
         run: pnpm surfer ci --brand ${{ inputs.release-branch }} --display-version ${{ inputs.build-version }}
 
-      - name: Download firefox source and dependencies
+      - name: Download Firefox source and dependencies
         run: pnpm surfer download
 
-      - name: Fix rust version
+      - name: Fix Rust version
         run: |
           # Install a rust version compatible with LLVM 18
           curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain 1.79
           source $HOME/.cargo/env
 
+          if test "${{ matrix.arch }}" = "aarch64"; then
+            rustup target add aarch64-unknown-linux-gnu
+          else
+            rustup target add x86_64-unknown-linux-gnu
+          fi
+
       - name: Import
         env:
-          SURFER_COMPAT: ${{ matrix.generic == true }}
+          SURFER_COMPAT: ${{ matrix.arch }}
         run: pnpm surfer import
 
       - name: Build language packs
@@ -113,45 +119,50 @@ jobs:
       - name: Bootstrap
         run: |
           cd engine
+          export SURFER_PLATFORM="linux"
           ./mach --no-interactive bootstrap --application-choice browser
           cd ..
 
       - name: Build
         env:
-          SURFER_COMPAT: ${{ matrix.generic == true }}
+          SURFER_COMPAT: ${{ matrix.arch }}
+          ZEN_RELEASE_BRANCH: ${{ inputs.release-branch }}
         continue-on-error: true
-        run: sh .github/workflows/src/release-build.sh
-
-      - name: Build again if it failed
-        if: failure()
-        env:
-          SURFER_COMPAT: ${{ matrix.generic == true }}
-        run: sh .github/workflows/src/release-build.sh
+        run: |
+          export SURFER_PLATFORM="linux"
+          bash .github/workflows/src/release-build.sh
 
       - name: Package
         env:
-          SURFER_COMPAT: ${{ matrix.generic == true }}
-        run: pnpm package
+          SURFER_COMPAT: ${{ matrix.arch }}
+          ZEN_GA_DISABLE_PGO: true
+        run: |
+          export SURFER_PLATFORM="linux"
+          export ZEN_RELEASE=1
+          pnpm package
 
       - name: Rename artifacts
         run: |
-          mv dist/zen-*.tar.bz2 "zen.linux-${{ matrix.generic == true && 'generic' || 'specific' }}.tar.bz2"
-          mv dist/output.mar linux${{ matrix.generic == true && '-generic' || '' }}.mar
+          mv dist/zen-*.tar.bz2 "zen.linux-${{ matrix.arch }}.tar.bz2"
+          mv dist/output.mar linux${{ matrix.arch == 'aarch64' && '-aarch64' || '' }}.mar
 
-      - name: Upload binary
+      - name: Upload build artifact (binary)
         uses: actions/upload-artifact@v4
         with:
-          name: zen.linux-${{ matrix.generic == true && 'generic' || 'specific' }}.tar.bz2
-          path: ./zen.linux-${{ matrix.generic == true && 'generic' || 'specific' }}.tar.bz2
+          retention-days: 5
+          name: zen.linux-${{ matrix.arch }}.tar.bz2
+          path: ./zen.linux-${{ matrix.arch }}.tar.bz2
 
-      - name: Upload mar
+      - name: Upload build artifact (.mar)
         uses: actions/upload-artifact@v4
         with:
-          name: linux${{ matrix.generic == true && '-generic' || '' }}.mar
-          path: ./linux${{ matrix.generic == true && '-generic' || '' }}.mar
+          retention-days: 5
+          name: linux${{ matrix.arch == 'aarch64' && '-aarch64' || '' }}.mar
+          path: ./linux${{ matrix.arch == 'aarch64' && '-aarch64' || '' }}.mar
 
-      - name: Upload update manifests
+      - name: Upload build artifact (update manifests)
         uses: actions/upload-artifact@v4
         with:
-          name: linux_update_manifest_${{ matrix.generic == true && 'generic' || 'specific' }}
+          retention-days: 5
+          name: linux_update_manifest_${{ matrix.arch }}
           path: ./dist/update

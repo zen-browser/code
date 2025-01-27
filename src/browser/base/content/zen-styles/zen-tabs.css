@@ -1,9 +1,15 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 /* Styles for both vertical and horizontal tabs */
-@import url('chrome://browser/content/zen-styles/zen-tabs/horizontal-tabs.css');
 @import url('chrome://browser/content/zen-styles/zen-tabs/vertical-tabs.css');
+@import url('chrome://browser/content/zen-styles/zen-tabs/horizontal-tabs.css');
 
 #zen-tabbox-wrapper {
   position: relative;
+  z-index: 0;
 }
 
 @media (-moz-bool-pref: 'zen.workspaces.hide-default-container-indicator') {

@@ -1,26 +1,53 @@
 diff --git a/browser/components/tabbrowser/content/tabs.js b/browser/components/tabbrowser/content/tabs.js
-index f3a2f226a9056c5a75023281fdeb704cec49b4a6..ae808f0f16466edc3d5f70271cc40c80deb7ab07 100644
+index f7c39fe804182e2bdf53045ba3b6a5ba17079fc3..f1c65fc4b31141e65d059d25b03f98029d1774bc 100644
 --- a/browser/components/tabbrowser/content/tabs.js
 +++ b/browser/components/tabbrowser/content/tabs.js
-@@ -894,7 +894,7 @@
-             let postTransitionCleanup = () => {
-               tab.removeAttribute("tabdrop-samewindow");
+@@ -94,7 +94,7 @@
+         return this.hasAttribute("positionpinnedtabs");
+       };
+       this.arrowScrollbox._canScrollToElement = tab => {
+-        return (!tab.pinned || !arePositioningPinnedTabs()) && tab.visible;
++        return (!tab.hasAttribute("zen-essential") || !arePositioningPinnedTabs()) && tab.visible;
+       };
  
--              this._finishAnimateTabMove();
+       // Override for performance reasons. This is the size of a single element
+@@ -649,7 +649,7 @@
+       if (this.#isContainerVerticalPinnedExpanded(tab)) {
+         // In expanded vertical mode, the max number of pinned tabs per row is dynamic
+         // Set this before adjusting dragged tab's position
+-        let pinnedTabs = this.visibleTabs.slice(0, gBrowser.pinnedTabCount);
++        let pinnedTabs = this.visibleTabs.slice(0, gBrowser._numVisiblePinTabs);
+         let tabsPerRow = 0;
+         let position = 0;
+         for (let pinnedTab of pinnedTabs) {
+@@ -997,7 +997,7 @@
+           }
+         } else {
+           let pinned = draggedTab.pinned;
+-          let numPinned = gBrowser.pinnedTabCount;
++          let numPinned = gBrowser._numVisiblePinTabs;
+           let tabs = this.visibleTabs.slice(
+             pinned ? 0 : numPinned,
+             pinned ? numPinned : undefined
+@@ -1076,7 +1076,7 @@
+               let postTransitionCleanup = () => {
+                 tab.removeAttribute("tabdrop-samewindow");
+ 
+-                this._finishAnimateTabMove();
 +              this._finishAnimateTabMove(true);
-               if (dropIndex !== false) {
-                 gBrowser.moveTabTo(tab, dropIndex);
-                 if (incrementDropIndex) {
-@@ -904,7 +904,7 @@
+                 if (dropIndex !== false) {
+                   gBrowser.moveTabTo(tab, dropIndex);
+                   if (incrementDropIndex) {
+@@ -1086,7 +1086,7 @@
  
-               gBrowser.syncThrobberAnimations(tab);
-             };
--            if (gReduceMotion) {
+                 gBrowser.syncThrobberAnimations(tab);
+               };
+-              if (gReduceMotion) {
 +            if (gReduceMotion || true) {
-               postTransitionCleanup();
-             } else {
-               let onTransitionEnd = transitionendEvent => {
-@@ -1044,7 +1044,8 @@
+                 postTransitionCleanup();
+               } else {
+                 let onTransitionEnd = transitionendEvent => {
+@@ -1238,7 +1238,8 @@
        if (
          dt.mozUserCancelled ||
          dt.dropEffect != "none" ||
@@ -30,50 +57,61 @@ index f3a2f226a9056c5a75023281fdeb704cec49b4a6..ae808f0f16466edc3d5f70271cc40c80
        ) {
          delete draggedTab._dragData;
          return;
-@@ -1284,7 +1285,7 @@
-         }
+@@ -1487,7 +1488,7 @@
        }
  
--      let allChildren = [...verticalPinnedTabsContainer.children, ...children];
-+      let allChildren = [...document.getElementById("zen-essentials-container").children, ...verticalPinnedTabsContainer.children, ...children];
-       this._allTabs = allChildren;
-       return allChildren;
+       this.#allTabs = [
+-        ...this.verticalPinnedTabsContainer.children,
++      ...document.getElementById("zen-essentials-container").children, ...this.verticalPinnedTabsContainer.children,
+         ...children,
+       ];
+       return this.#allTabs;
+@@ -1556,6 +1557,7 @@
+       }
+ 
+       this.#focusableItems = [
++        ...document.getElementById("zen-essentials-container").children,
+         ...verticalPinnedTabsContainer.children,
+         ...focusableItems,
+       ];
+@@ -1579,8 +1581,8 @@
+     #isContainerVerticalPinnedExpanded(tab) {
+       return (
+         this.verticalMode &&
+-        tab.hasAttribute("pinned") &&
+-        this.hasAttribute("expanded")
++        (tab.hasAttribute("zen-essential")) &&
++        (this.hasAttribute("expanded") || document.documentElement.hasAttribute("zen-sidebar-expanded"))
+       );
      }
-@@ -1480,7 +1481,7 @@
+ 
+@@ -1778,7 +1780,7 @@
            let rect = ele => {
              return window.windowUtils.getBoundsWithoutFlushing(ele);
            };
--          let tab = this._getVisibleTabs()[gBrowser._numPinnedTabs];
-+          let tab = this._getVisibleTabs()[gBrowser._numVisiblePinTabs];
+-          let tab = this.visibleTabs[gBrowser.pinnedTabCount];
++          let tab = this.visibleTabs[gBrowser._numVisiblePinTabs];
            if (tab && rect(tab).width <= this._tabClipWidth) {
              this.setAttribute("closebuttons", "activetab");
            } else {
-@@ -1499,10 +1500,12 @@
+@@ -1794,6 +1796,7 @@
+         this.arrowScrollbox.ensureElementIsVisible(selectedTab, aInstant);
+       }
  
-     _handleTabSelect(aInstant) {
-       let selectedTab = this.selectedItem;
--      if (this.overflowing) {
--        this.arrowScrollbox.ensureElementIsVisible(selectedTab, aInstant);
--      }
-+      this.arrowScrollbox.ensureElementIsVisible(selectedTab, aInstant);
- 
-+      if (!aInstant && Services.prefs.getBoolPref('zen.view.compact')
-+          && Services.prefs.getBoolPref('zen.view.compact.toolbar-flash-popup')) {
-+        gZenCompactModeManager.flashSidebar();
-+      }
++      gZenCompactModeManager.flashSidebarIfNecessary(aInstant);
        selectedTab._notselectedsinceload = false;
      }
  
-@@ -1550,7 +1553,7 @@
+@@ -1841,7 +1844,7 @@
          if (isEndTab && !this._hasTabTempMaxWidth) {
            return;
          }
--        let numPinned = gBrowser._numPinnedTabs;
+-        let numPinned = gBrowser.pinnedTabCount;
 +        let numPinned = gBrowser._numVisiblePinTabs;
          // Force tabs to stay the same width, unless we're closing the last tab,
          // which case we need to let them expand just enough so that the overall
          // tabbar width is the same.
-@@ -1565,7 +1568,7 @@
+@@ -1856,7 +1859,7 @@
          let tabsToReset = [];
          for (let i = numPinned; i < tabs.length; i++) {
            let tab = tabs[i];
@@ -82,16 +120,16 @@ index f3a2f226a9056c5a75023281fdeb704cec49b4a6..ae808f0f16466edc3d5f70271cc40c80
            if (!isEndTab) {
              // keep tabs the same width
              tab.style.transition = "none";
-@@ -1630,13 +1633,13 @@
+@@ -1922,13 +1925,13 @@
        let verticalTabsContainer = document.getElementById(
          "vertical-pinned-tabs-container"
        );
--      let numPinned = gBrowser._numPinnedTabs;
+-      let numPinned = gBrowser.pinnedTabCount;
 +      let numPinned = gBrowser._numVisiblePinTabs;
  
--      if (gBrowser._numPinnedTabs !== verticalTabsContainer.children.length) {
-+      if (gBrowser._numVisiblePinTabs !== verticalTabsContainer.children.length) {
-         let tabs = this._getVisibleTabs();
+-      if (gBrowser.pinnedTabCount !== verticalTabsContainer.children.length) {
++      if (gBrowser.pinnedTabCount !== (verticalTabsContainer.children.length + document.getElementById("zen-essentials-container").children.length)) {
+         let tabs = this.visibleTabs;
          for (let i = 0; i < numPinned; i++) {
            tabs[i].style.marginInlineStart = "";
 -          verticalTabsContainer.appendChild(tabs[i]);
@@ -99,26 +137,38 @@ index f3a2f226a9056c5a75023281fdeb704cec49b4a6..ae808f0f16466edc3d5f70271cc40c80
          }
        }
  
-@@ -1660,7 +1663,7 @@
+@@ -1952,7 +1955,7 @@
  
      _positionPinnedTabs() {
-       let tabs = this._getVisibleTabs();
--      let numPinned = gBrowser._numPinnedTabs;
+       let tabs = this.visibleTabs;
+-      let numPinned = gBrowser.pinnedTabCount;
 +      let numPinned = gBrowser._numVisiblePinTabs;
        let absPositionHorizontalTabs =
          this.overflowing && tabs.length > numPinned && numPinned > 0;
  
-@@ -1934,7 +1937,7 @@
+@@ -2033,7 +2036,7 @@
+         return;
+       }
+ 
+-      let tabs = this.visibleTabs.slice(0, gBrowser.pinnedTabCount);
++      let tabs = this.visibleTabs.slice(0, gBrowser._numVisiblePinTabs);
+ 
+       let directionX = screenX > dragData.animLastScreenX;
+       let directionY = screenY > dragData.animLastScreenY;
+@@ -2221,9 +2224,9 @@
        }
  
        let pinned = draggedTab.pinned;
--      let numPinned = gBrowser._numPinnedTabs;
+-      let numPinned = gBrowser.pinnedTabCount;
 +      let numPinned = gBrowser._numVisiblePinTabs;
-       let tabs = this._getVisibleTabs().slice(
-         pinned ? 0 : numPinned,
+       let tabs = this.visibleTabs.slice(
+-        pinned ? 0 : numPinned,
++        pinned ? gBrowser._numZenEssentials : numPinned,
          pinned ? numPinned : undefined
-@@ -2059,8 +2062,8 @@
-       }
+       );
+ 
+@@ -2456,8 +2459,8 @@
+       );
      }
  
 -    _finishAnimateTabMove() {
@@ -128,15 +178,94 @@ index f3a2f226a9056c5a75023281fdeb704cec49b4a6..ae808f0f16466edc3d5f70271cc40c80
          return;
        }
  
-@@ -2218,9 +2221,9 @@
+@@ -2622,9 +2625,9 @@
        function newIndex(aTab, index) {
          // Don't allow mixing pinned and unpinned tabs.
          if (aTab.pinned) {
--          return Math.min(index, gBrowser._numPinnedTabs - 1);
+-          return Math.min(index, gBrowser.pinnedTabCount - 1);
 +          return Math.min(index, gBrowser._numVisiblePinTabs - 1);
          }
--        return Math.max(index, gBrowser._numPinnedTabs);
+-        return Math.max(index, gBrowser.pinnedTabCount);
 +        return Math.max(index, gBrowser._numVisiblePinTabs);
        }
      }
  
+@@ -2708,7 +2711,7 @@
+     }
+ 
+     _notifyBackgroundTab(aTab) {
+-      if (aTab.pinned || !aTab.visible || !this.overflowing) {
++      if (aTab.hasAttribute("zen-essential") || !aTab.visible || !this.overflowing) {
+         return;
+       }
+ 
+@@ -2726,12 +2729,14 @@
+               selectedTab = {
+                 left: selectedTab.left,
+                 right: selectedTab.right,
++                top: selectedTab.top,
++                bottom: selectedTab.bottom,
+               };
+             }
+             return [
+               this._lastTabToScrollIntoView,
+               this.arrowScrollbox.scrollClientRect,
+-              { left: lastTabRect.left, right: lastTabRect.right },
++              lastTabRect,
+               selectedTab,
+             ];
+           })
+@@ -2748,8 +2753,11 @@
+             delete this._lastTabToScrollIntoView;
+             // Is the new tab already completely visible?
+             if (
+-              scrollRect.left <= tabRect.left &&
+-              tabRect.right <= scrollRect.right
++              this.verticalMode
++                ? scrollRect.top <= tabRect.top &&
++                  tabRect.bottom <= scrollRect.bottom
++                : scrollRect.left <= tabRect.left &&
++                  tabRect.right <= scrollRect.right
+             ) {
+               return;
+             }
+@@ -2757,21 +2765,29 @@
+             if (this.arrowScrollbox.smoothScroll) {
+               // Can we make both the new tab and the selected tab completely visible?
+               if (
+-                !selectedRect ||
+-                Math.max(
+-                  tabRect.right - selectedRect.left,
+-                  selectedRect.right - tabRect.left
+-                ) <= scrollRect.width
++                !selectedRect || (this.verticalMode
++                  ? Math.max(
++                      tabRect.bottom - selectedRect.top,
++                      selectedRect.bottom - tabRect.top
++                    ) <= scrollRect.height
++                  : Math.max(
++                      tabRect.right - selectedRect.left,
++                      selectedRect.right - tabRect.left
++                    ) <= scrollRect.width)
+               ) {
+                 this.arrowScrollbox.ensureElementIsVisible(tabToScrollIntoView);
+                 return;
+               }
+ 
+-              this.arrowScrollbox.scrollByPixels(
+-                this.#rtlMode
+-                  ? selectedRect.right - scrollRect.right
+-                  : selectedRect.left - scrollRect.left
+-              );
++              let scrollPixels;
++              if (this.verticalMode) {
++                scrollPixels = tabRect.top - selectedRect.top;
++              } else if (this.#rtlMode) {
++                scrollPixels = selectedRect.right - scrollRect.right;
++              } else {
++                scrollPixels = selectedRect.left - scrollRect.left;
++              }
++              this.arrowScrollbox.scrollByPixels(scrollPixels);
+             }
+ 
+             if (!this._animateElement.hasAttribute("highlight")) {

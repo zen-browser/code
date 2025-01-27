@@ -1,20 +1,335 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 @media not (-moz-bool-pref: 'zen.tabs.vertical') {
-  #browser,
-  #navigator-toolbox {
-    flex-direction: row;
+  :root #browser {
+    display: flex !important;
+    flex-direction: column !important;
+  }
 
+  & #navigator-toolbox {
+    display: flex !important;
+    flex-direction: row !important;
     max-width: unset !important;
+    min-width: unset !important;
     width: 100% !important;
+    padding: var(--zen-toolbox-padding) !important;
+  }
+
+  #tabbrowser-tabs {
+    display: -webkit-box !important;
+    -webkit-box-orient: horizontal;
+    -webkit-box-pack: start;
+    max-width: 10000px !important;
+
+    --tabstrip-min-height: calc(var(--tab-min-height) - 4 * var(--tab-block-margin));
+    --tab-min-height: 10px !important;
+  }
+
+  #vertical-pinned-tabs-container-separator {
+    display: none !important;
+  }
+
+  #zen-essentials-container,
+  #vertical-pinned-tabs-container,
+  #tabbrowser-arrowscrollbox {
+    -webkit-box-flex: 1;
+  }
+
+  #vertical-pinned-tabs-container:empty {
+    -webkit-box-flex: 0 !important;
+    width: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    visibility: collapse !important;
+  }
+  #navigator-toolbox {
+    flex-direction: row !important;
+    align-items: center;
+  }
+
+  #titlebar {
+    flex-direction: row !important;
+    width: 100%;
+    height: 36px !important;
+  }
+
+  #zen-essentials-container {
+    --tab-min-height: 36px !important;
+    display: flex !important;
+    flex-direction: row !important;
+    padding-inline-end: 0 !important;
+  }
+
+  #vertical-pinned-tabs-container {
+    display: flex !important;
+    flex-direction: row !important;
+    padding-inline-end: 0 !important;
+  }
+
+  #zen-essentials-container .tabbrowser-tab {
+    width: 0% !important;
+  }
+
+  #vertical-pinned-tabs-container .tabbrowser-tab {
+    width: 0% !important;
+  }
+
+  .tabbrowser-tab[zen-glance-tab='true'] {
+    .tab-label-container {
+      display: none !important;
+      width: 0px !important;
+      max-width: 0px !important;
+    }
+  }
+
+  #tabbrowser-arrowscrollbox {
+    display: flex !important;
+    max-width: -moz-available;
+    overflow: hidden !important;
+  }
+
+  #TabsToolbar {
+    flex-direction: row !important;
+    gap: 8px;
+    overflow: hidden !important;
+    display: flex !important;
+  }
+
+  #TabsToolbar-customization-target {
+    flex-direction: row !important;
+  }
+
+  #tabbrowser-tabs[orient='vertical'] {
+    flex-direction: row !important;
+  }
+
+  tabs {
+    flex-direction: row !important;
+  }
+
+  #zen-essentials-container {
+    container-name: tab-container;
+    container-type: normal;
+    max-width: 36px !important;
+    flex: 1 1 36px !important;
+  }
+  #vertical-pinned-tabs-container {
+    container-name: tab-container;
+    container-type: normal;
+    max-width: 36px !important;
+    min-width: 36px !important;
+    flex: 1 1 36px !important;
+  }
+
+  #vertical-pinned-tabs-container .tab-close-button {
+    display: none !important;
+  }
+
+  #vertical-pinned-tabs-container .tab-reset-button {
+    display: none !important;
+  }
+
+  #vertical-pinned-tabs-container .tab-label-container {
+    display: none !important;
+  }
+
+  #vertical-pinned-tabs-container .tab-icon-image {
+    margin: 0 !important;
+  }
+
+  .tabbrowser-tab {
+    container-name: tab-container;
+    container-type: normal;
+    min-width: 40px !important;
+    flex: 1 1 150px !important;
+    width: -moz-available;
+
+    &:is(:hover, [visuallyselected]) .tab-close-button {
+      display: block;
+      --tab-inline-padding: 0; /* Avoid weird padding */
+      margin-inline-end: 0 !important;
+    }
+  }
+
+  .tabbrowser-tab[selected] {
+    flex: 2 0 150px !important;
+  }
+
+  @container tab-container (max-width: 80px) {
+    .tab-close-button {
+      margin-right: 0px !important;
+    }
+    .tab-icon-image {
+      padding: 0 !important;
+      margin-left: min(2.5px, 5%) !important;
+      margin-right: min(10px, 5%) !important;
+    }
+    .tab-label-container,
+    .tab-content {
+      margin: 0 !important;
+      padding-left: min(8px, 5%) !important;
+      padding-right: min(8px, 5%) !important;
+    }
+  }
+
+  @container tab-container (max-width: 44px) {
+    .tab-label-container {
+      display: none !important;
+    }
+    .tab-content {
+      justify-content: space-around !important;
+    }
+    .tab-close-button {
+      display: none !important;
+    }
+    .tabbrowser-tab[selected] {
+      & .tab-icon-image,
+      .tab-icon-stack {
+        display: none !important;
+      }
+      & .tab-content {
+        justify-content: space-around !important;
+        padding: 0 !important;
+      }
+      .tab-close-button {
+        display: block !important;
+      }
+    }
+  }
+
+  #vertical-pinned-tabs-container::after {
+    z-index: -1;
+    content: '';
+    position: absolute;
+    right: 0;
+    width: 1px;
+    height: 45%;
+    top: 50%;
+    transform: translateY(-50%);
+    background: hsl(255, 10%, 100%);
+  }
+
+  /* Other UI Elements */
+  #zen-current-workspace-indicator {
+    display: none !important;
   }
 
   #zen-sidebar-splitter {
     display: none !important;
   }
 
-  #tabbrowser-arrowscrollbox {
-    max-height: unset !important;
+  #tabbrowser-tabpanels {
+    padding-left: var(--zen-element-separation) !important;
   }
 
-  #titlebar {
+  #appcontent * {
+    overflow: visible !important;
+  }
+
+  #TabsToolbar-customization-target::after {
+    display: none !important;
+  }
+
+  #zen-sidebar-icons-wrapper {
+    width: auto !important;
+    padding: 0 !important;
+  }
+
+  /* Height Adjustments */
+  #vertical-pinned-tabs-container,
+  #zen-essentials-container,
+  #tabbrowser-arrowscrollbox {
+    max-height: none !important;
+  }
+
+  #PanelUI-zen-gradient-generator {
+    min-width: 390px !important;
+  }
+
+  #zen-essentials-container:not(:empty),
+  #vertical-pinned-tabs-container:not(:empty),
+  #tabbrowser-arrowscrollbox {
+    -webkit-box-flex: 1;
+    min-width: min-content;
+    width: auto !important;
+  }
+
+  #vertical-pinned-tabs-container:not(:empty) {
+    display: -webkit-box !important;
+    -webkit-box-orient: horizontal;
+    min-width: fit-content !important;
+    width: fit-content !important;
+    position: relative;
+    margin-right: -1px !important;
+  }
+
+  #vertical-pinned-tabs-container:not(:empty) .tabbrowser-tab {
+    position: relative;
+    display: -webkit-box !important;
+  }
+
+  #tabbrowser-arrowscrollbox {
+    margin-left: 0 !important;
+  }
+
+  #vertical-pinned-tabs-container:empty,
+  #zen-essentials-container:empty {
+    -webkit-box-flex: 0 !important;
+    width: 0 !important;
+    min-width: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    visibility: collapse !important;
+  }
+
+  #nav-bar {
+    width: unset !important;
+    min-width: 500px !important;
+  }
+
+  #tabbrowser-arrowscrollbox-periphery {
+    margin: 0 !important;
+  }
+
+  hbox#nav-bar-customization-target toolbarbutton.chromeclass-toolbar-additional:nth-of-type(1) {
+    padding-inline-start: var(--toolbar-start-end-padding) !important;
+  }
+
+  toolbar#PersonalToolbar {
+    padding-left: 6px !important;
+  }
+
+  .tab-context-line {
+    width: 100% !important;
+    height: 3px !important;
+  }
+
+  .tabbrowser-tab[zen-glance-tab='true'] {
+    flex-basis: fit-content !important;
+    max-width: 36px !important;
+  }
+
+  #zen-essentials-container .tabbrowser-tab[zen-glance-tab='true'] {
+    left: 2px;
+  }
+
+  #vertical-pinned-tabs-container .tabbrowser-tab[zen-glance-tab='true'] {
+    position: absolute !important;
+  }
+
+  #TabsToolbar-customization-target toolbarbutton,
+  #TabsToolbar-customization-target toolbarpaletteitem {
+    -webkit-box-flex: 0 !important;
+    min-width: min-content;
+    width: auto !important;
+
+    .toolbarbutton-text {
+      display: none !important;
+    }
   }
 }

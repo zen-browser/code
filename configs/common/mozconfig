@@ -3,8 +3,8 @@ ac_add_options --with-app-name=${binName}
 ac_add_options --with-app-basename=Zen
 ac_add_options --enable-official-branding
 
-# Localization
-ac_add_options --with-l10n-base="$PWD/browser/locales"
+# Localization (Must be an absolute path)
+ac_add_options --with-l10n-base="${topsrcdir}/browser/locales"
 
 export MOZ_USER_DIR="${name}"
 export MOZ_APP_BASENAME=Zen
@@ -12,7 +12,8 @@ export MOZ_APP_PROFILE=${binName}
 export MOZ_APP_DISPLAYNAME="${name}"
 export MOZ_BRANDING_DIRECTORY=${brandingDir}
 export MOZ_OFFICIAL_BRANDING_DIRECTORY=${brandingDir}
-export MOZ_DISTRIBUTION_ID=${appId}
+
+ac_add_options --with-distribution-id=app.zen-browser
 
 # Uncomment if builds are too resource hungry
 # mk_add_options MOZ_MAKE_FLAGS="-j4"
@@ -24,23 +25,24 @@ export MOZ_SOURCE_CHANGESET=${changeset}
 export MOZ_INCLUDE_SOURCE_INFO=1
 
 ac_add_options --enable-application=browser
-#ac_add_options --enable-clang-plugin
 
 if test "$ZEN_RELEASE"; then
+
+  ac_add_options --enable-clang-plugin
   ac_add_options --enable-bootstrap
-  
+
   ac_add_options --enable-release
   ac_add_options --disable-debug
   ac_add_options --disable-debug-symbols
   ac_add_options --disable-debug-js-modules
   ac_add_options --disable-tests
-  
-  ac_add_options --disable-jprof
+  ac_add_options --disable-js-shell
+
   ac_add_options --disable-vtune
 
   ac_add_options --enable-rust-simd
   ac_add_options --enable-wasm-simd
-  
+
   mk_add_options MOZ_PARALLEL_COMPILE=1
 
   ac_add_options --enable-proxy-bypass-protection
@@ -51,12 +53,18 @@ if test "$ZEN_RELEASE"; then
   ac_add_options --disable-geckodriver
   ac_add_options --disable-rust-tests
 
-  # Done by vlad, if something fails, it's his fault
   ac_add_options --disable-default-browser-agent
 
   if ! test "$ZEN_DISABLE_LTO"; then
-    export MOZ_LTO=cross,thin
-    ac_add_options --enable-lto=cross,thin
+    # only enable full LTO when ZEN_RELEASE_BRANCH is 'release'
+    if test "$ZEN_RELEASE_BRANCH" = "release"; then
+      # TODO: make it "full" once we have the resources to build it
+      export MOZ_LTO=cross,full
+      ac_add_options --enable-lto=cross,full
+    else
+      export MOZ_LTO=cross,thin
+      ac_add_options --enable-lto=cross,thin
+    fi
   fi
 
   ac_add_options --enable-jemalloc
@@ -64,10 +72,6 @@ if test "$ZEN_RELEASE"; then
   mk_add_options MOZILLA_OFFICIAL=1
   MOZILLA_OFFICIAL=1
   export MOZILLA_OFFICIAL=1
-
-  mk_add_options MOZ_OPTIMIZE=2
-  MOZ_OPTIMIZE=2
-  export MOZ_OPTIMIZE=2
 
   export OPT_LEVEL="3"
   ac_add_options OPT_LEVEL="3"
@@ -89,7 +93,6 @@ ac_add_options --enable-raw
 ac_add_options --enable-webrtc
 ac_add_options --enable-jxl
 ac_add_options --enable-av1
-ac_add_options --enable-eme=widevine
 
 ac_add_options --with-unsigned-addon-scopes=app,system
 
@@ -100,7 +103,3 @@ mk_add_options MOZ_TELEMETRY_REPORTING=
 # Allow loading unsigned extensions
 export MOZ_REQUIRE_SIGNING=
 mk_add_options MOZ_REQUIRE_SIGNING=
-
-# Sorry ptr, I didnt mean to!
-# Edit: ok, ill remove it, goodbye top #1 on fastest browsers benchmark :[
-# ac_add_options --without-wasm-sandboxed-libraries

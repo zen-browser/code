@@ -1,5 +1,5 @@
 diff --git a/toolkit/themes/shared/popup.css b/toolkit/themes/shared/popup.css
-index a86b2e0e04769e25acbc6f7d2294dae895e3392e..dce7e1a2bdf52e616c987a04c0d5c1c1ede42676 100644
+index 648c65a9c21dc0e670b50c82cbfb237a68a951d9..cdce283353eecf42a70b7ea3a806703ba10d6a17 100644
 --- a/toolkit/themes/shared/popup.css
 +++ b/toolkit/themes/shared/popup.css
 @@ -30,8 +30,7 @@ panel {
@@ -32,10 +32,11 @@ index a86b2e0e04769e25acbc6f7d2294dae895e3392e..dce7e1a2bdf52e616c987a04c0d5c1c1
  
    &::part(content) {
      display: flex;
-@@ -199,6 +187,5 @@ panel[type="arrow"] {
-   }
+@@ -198,7 +186,6 @@ panel:where([type="arrow"]) {
+     }
  
-   &[animating] {
--    pointer-events: none;
+     &[animating] {
+-      pointer-events: none;
+     }
    }
  }

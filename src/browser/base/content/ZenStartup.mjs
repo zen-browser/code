@@ -4,7 +4,6 @@
   XPCOMUtils.defineLazyPreferenceGetter(lazy, 'disableInitialUrlBarFocus', 'zen.urlbar.disable-initial-focus', false);
   var ZenStartup = {
     init() {
-      this.logHeader();
       this.openWatermark();
       window.SessionStore.promiseInitialized.then(() => {
         this._changeSidebarLocation();
@@ -29,17 +28,17 @@
         }
 
         // Fix notification deck
-        document
-          .getElementById('zen-appcontent-navbar-container')
-          .appendChild(document.getElementById('tab-notification-deck-template'));
+        const deckTemplate = document.getElementById('tab-notification-deck-template');
+        if (deckTemplate) {
+          document.getElementById('zen-appcontent-navbar-container').appendChild(deckTemplate);
+        }
 
-        // Disable smooth scroll
-        gBrowser.tabContainer.arrowScrollbox.smoothScroll = false;
+        this._initSidebarScrolling();
 
-        ZenWorkspaces.init();
-        gZenUIManager.init();
-        gZenVerticalTabsManager.init();
         gZenCompactModeManager.init();
+        ZenWorkspaces.init();
+        gZenVerticalTabsManager.init();
+        gZenUIManager.init();
 
         document.l10n.setAttributes(document.getElementById('tabs-newtab-button'), 'tabs-toolbar-new-tab');
       } catch (e) {
@@ -83,19 +82,35 @@
           sidebarPanelWrapper.prepend(elem);
         }
       }
+    },
 
-      // remove all styles except for the width, since we are xulstoring the complet style list
-      const width = toolbox.style.width || '270px';
-      toolbox.removeAttribute('style');
-      toolbox.style.width = width;
+    _initSidebarScrolling() {
+      // Disable smooth scroll
+      const canSmoothScroll = Services.prefs.getBoolPref('zen.startup.smooth-scroll-in-tabs', false);
+      const workspaceIndicator = document.getElementById('zen-current-workspace-indicator');
+      const tabsWrapper = document.getElementById('zen-browser-tabs-wrapper');
+      gBrowser.tabContainer.addEventListener('wheel', (event) => {
+        if (canSmoothScroll) return;
+        event.preventDefault(); // Prevent the smooth scroll behavior
+        gBrowser.tabContainer.scrollTop += event.deltaY * 20; // Apply immediate scroll
+      });
+      // Detect overflow and underflow
+      const observer = new ResizeObserver((_) => {
+        const tabContainer = gBrowser.tabContainer;
+        const isVertical = tabContainer.getAttribute('orient') === 'vertical';
+        let contentSize = tabsWrapper.getBoundingClientRect()[isVertical ? 'height' : 'width'];
+        // NOTE: This should be contentSize > scrollClientSize, but due
+        // to how Gecko internally rounds in those cases, we allow for some
+        // minor differences (the internal Gecko layout size is 1/60th of a
+        // pixel, so 0.02 should cover it).
+        let overflowing = contentSize - tabContainer.arrowScrollbox.scrollClientSize > 0.02;
 
-      // Set a splitter to navigator-toolbox
-      const splitter = document.createXULElement('splitter');
-      splitter.setAttribute('id', 'zen-sidebar-splitter');
-      splitter.setAttribute('orient', 'horizontal');
-      splitter.setAttribute('resizebefore', 'sibling');
-      splitter.setAttribute('resizeafter', 'none');
-      toolbox.insertAdjacentElement('afterend', splitter);
+        window.requestAnimationFrame(() => {
+          tabContainer.arrowScrollbox.toggleAttribute('overflowing', overflowing);
+          tabContainer.arrowScrollbox.dispatchEvent(new CustomEvent(overflowing ? 'overflow' : 'underflow'));
+        });
+      });
+      observer.observe(tabsWrapper);
     },
 
     _initSearchBar() {
@@ -107,21 +122,6 @@
       gURLBar._initCopyCutController();
       gURLBar._initPasteAndGo();
       gURLBar._initStripOnShare();
-    },
-
-    logHeader() {
-      console.info(`
-
-    Welcome to Zen Browser!
-
-  If you are seeing this message, it means that you have successfully opened Zen's developer console.
-  Here you can see all the logs and errors that Zen is generating.
-
-  If you have any questions or need help, please contact us in any media in https://zen-browser.app/
-
-  Note: This developer console is not the same as the browser console, it has access to Zen's internal functions and variables, including your passwords and other sensitive information. Please do not paste any code here unless you know what you are doing.
-
-  `);
     },
   };
 

@@ -44,7 +44,7 @@ export class ZenGlanceChild extends JSWindowActorChild {
 
       this.contentWindow.document.removeEventListener('click', this.clickListener);
     } else if (activationMethod === 'ctrl' || activationMethod === 'alt' || activationMethod === 'shift') {
-      this.contentWindow.document.addEventListener('click', this.clickListener);
+      this.contentWindow.document.addEventListener('click', this.clickListener, { capture: true });
 
       this.contentWindow.removeEventListener('mousedown', this.mouseDownListener);
       this.contentWindow.removeEventListener('mouseup', this.mouseUpListener);
@@ -62,7 +62,7 @@ export class ZenGlanceChild extends JSWindowActorChild {
       url = this.contentWindow.location.origin + url;
     }
     const rect = target.getBoundingClientRect();
-    this.sendAsyncMessage('ZenGlance:OpenGlance', { 
+    this.sendAsyncMessage('ZenGlance:OpenGlance', {
       url,
       x: rect.left,
       y: rect.top,
@@ -82,7 +82,6 @@ export class ZenGlanceChild extends JSWindowActorChild {
 
   async handleMouseDown(event) {
     const target = event.target.closest('A');
-    console.log('target', target);
     if (!target) {
       return;
     }
@@ -109,7 +108,7 @@ export class ZenGlanceChild extends JSWindowActorChild {
       return;
     } else if (activationMethod === 'meta' && !event.metaKey) {
       return;
-    }else if (activationMethod === 'mantain' || typeof activationMethod === 'undefined') {
+    } else if (activationMethod === 'mantain' || typeof activationMethod === 'undefined') {
       return;
     }
     // get closest A element
@@ -117,7 +116,7 @@ export class ZenGlanceChild extends JSWindowActorChild {
     if (target) {
       event.preventDefault();
       event.stopPropagation();
-      
+
       this.openGlance(target);
     }
   }

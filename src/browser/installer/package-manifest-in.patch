@@ -1,8 +1,8 @@
 diff --git a/browser/installer/package-manifest.in b/browser/installer/package-manifest.in
-index da760e143740a166df14d055cf3ec7b095b93d10..093dacee4356d4084432d53639873e3da006dd94 100644
+index 861ba1c484a4688857a3025455532ea9551b616a..570ac5122f50275d40e4deeeda0caeb577ee1bfd 100644
 --- a/browser/installer/package-manifest.in
 +++ b/browser/installer/package-manifest.in
-@@ -377,17 +377,17 @@ bin/libfreebl_64int_3.so
+@@ -384,17 +384,17 @@ bin/libfreebl_64int_3.so
  ; [MaintenanceService]
  ;
  #ifdef MOZ_MAINTENANCE_SERVICE
@@ -24,12 +24,3 @@ index da760e143740a166df14d055cf3ec7b095b93d10..093dacee4356d4084432d53639873e3d
  #if defined(XP_WIN)
  @BINPATH@/@DLL_PREFIX@mozwer@DLL_SUFFIX@
  #endif
-@@ -397,7 +397,7 @@ bin/libfreebl_64int_3.so
- ; [ minidump-analyzer ]
- ;
- #ifdef MOZ_CRASHREPORTER
--@BINPATH@/minidump-analyzer@BIN_SUFFIX@
-+;@BINPATH@/minidump-analyzer@BIN_SUFFIX@
- #endif
- 
- ; [ Ping Sender ]

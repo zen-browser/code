@@ -3,7 +3,6 @@ if test "$ZEN_CROSS_COMPILING"; then
 
   export WINSYSROOT="$(echo ~)/win-cross/vs2022"
 
-  export MIDL="$(echo ~)/win-cross/wine/bin/widl"
   export WINE="$(echo ~)/win-cross/wine/bin/wine64"
   export WINEDEBUG=-all
 
@@ -12,43 +11,48 @@ if test "$ZEN_CROSS_COMPILING"; then
 
   export CROSS_BUILD=1
   CROSS_COMPILE=1
-  TOOLS=$(echo ~)/win-cross
 
-  export WIN_UCRT_REDIST_DIR="$(echo ~)/win-cross/vs2022/Windows Kits/10/Redist/10.0.22621.0/ucrt/DLLs/x64"
-  export WIN32_REDIST_DIR="$(echo ~)/win-cross/vs2022/VC/Redist/MSVC/14.38.33135/x64/Microsoft.VC143.CRT"
-
-  export MIDL="$TOOLS/wine/bin/widl"
-  export MOZ_STUB_INSTALLER=1
-  export WINEDEBUG=-all
-  export WINE="$TOOLS/wine/bin/wine64"
+  if test "$SURFER_COMPAT" = "aarch64"; then
+    export WIN32_REDIST_DIR="$(echo ~)/win-cross/vs2022/VC/Redist/MSVC/14.38.33135/arm64/Microsoft.VC143.CRT"
+  else
+    export WIN32_REDIST_DIR="$(echo ~)/win-cross/vs2022/VC/Redist/MSVC/14.38.33135/x64/Microsoft.VC143.CRT"
+  fi
 
 fi
 
 #? https://bugzilla.mozilla.org/show_bug.cgi?id=1617793
 #? https://phabricator.services.mozilla.com/D170170
-ac_add_options --target=x86_64-pc-windows-msvc
-
 ac_add_options --disable-maintenance-service
 ac_add_options --disable-bits-download
- 
-if test "$SURFER_COMPAT" = "true"; then
-  ac_add_options --enable-optimize="-O3 -w -ftree-vectorize"
 
-  export CFLAGS="-mtune=haswell -march=x86-64 -O2 -Qvec -w"
-  export CPPFLAGS="-mtune=haswell -march=x86-64 -O2 -Qvec -w"
-  export CXXFLAGS="-flto=thin -mtune=haswell -march=x86-64 -O2 -Qvec -w"
-  export LDFLAGS="-Wl,-O2"
-  export RUSTFLAGS="-Clink-args=--icf=safe -C codegen-units=1 -Ctarget-cpu=x86-64"
-else
-  ac_add_options --enable-optimize="-O2 -msse3 -mssse3 -msse4.1 -msse4.2 -mavx -mavx2 -mfma -maes -ftree-vectorize -Xclang -w"
-  ac_add_options --enable-wasm-avx
+ac_add_options --disable-clang-plugin
 
-  export CFLAGS="-O2 -msse3 -mssse3 -msse4.1 -msse4.2 -mavx -mavx2 -mfma -maes -march=x86-64-v3"   
-  export CPPFLAGS="-O2 -msse3 -mssse3 -msse4.1 -msse4.2 -mavx -mavx2 -mfma -maes -march=x86-64-v3"
-  export CXXFLAGS="-O2 -flto=thin -msse3 -mssse3 -msse4.1 -msse4.2 -mavx -mavx2 -mfma -maes -march=x86-64-v3"
-  export LDFLAGS="-Wl,-O3 -march=x86-64-v3"
-  export RUSTFLAGS="-Clink-args=--icf=safe -C target-feature=+avx2 -C codegen-units=1 -Ctarget-cpu=x86-64-v3"    
+if test "$SURFER_COMPAT" = "x86_64"; then
+
+  ac_add_options --target=x86_64-pc-windows-msvc
+  ac_add_options --enable-eme=widevine
+
+  ac_add_options --enable-optimize="-O3 -w -ftree-vectorize -Qvec -mfpmath=sse -mprfchw -msse3 -mcx16 -msahf"
+
+  export LDFLAGS="-Wl,-O3"
+  export RUSTFLAGS="-Clink-args=--icf=safe"
+elif test "$SURFER_COMPAT" = "aarch64"; then
+  ac_add_options --target=aarch64-pc-windows-msvc
+  ac_add_options --enable-eme=widevine
+
+  ac_add_options --enable-optimize="-O2 -mtune=cortex-a55 -march=armv8.2-a+simd"
+
+  # override LTO settings
+  export MOZ_LTO=cross,thin
+  ac_add_options --enable-lto=cross,thin
+
+  export CFLAGS="-O2 -march=armv8.2-a+simd -mtune=cortex-a55"
+  export CPPFLAGS="-O2 -march=armv8.2-a+simd -mtune=cortex-a55"
+  export CXXFLAGS="-O2 -march=armv8.2-a+simd -mtune=cortex-a55"
+  export LDFLAGS="-Wl,-O2 -march=armv8.2-a+simd -mtune=cortex-a55"
+  export RUSTFLAGS="-C target-feature=+v8.2a -Ctarget-cpu=cortex-a55"
 fi
+
 #export POLLY="-mllvm -polly -mllvm -polly-2nd-level-tiling -mllvm -polly-loopfusion-greedy -mllvm -polly-pattern-matching-based-opts -mllvm -polly-position=before-vectorizer -mllvm -polly-vectorizer=stripmine"
 export VERBOSE=1
 
@@ -57,10 +61,14 @@ if test "$ZEN_CROSS_COMPILING"; then
     export CXXFLAGS="$CXXFLAGS -fprofile-generate -mllvm -enable-name-compression=false -mllvm -pgo-temporal-instrumentation -fprofile-update=atomic"
     mk_add_options "export MOZ_AUTOMATION_PACKAGE_GENERATED_SOURCES=0"
     ac_add_options --enable-profile-generate=cross
-  else
-    ac_add_options --enable-profile-use=cross
-    ac_add_options --with-pgo-profile-path=$(echo ~)/artifact/merged.profdata
-    ac_add_options --with-pgo-jarlog=$(echo ~)/artifact/en-US.log
+  elif test "$SURFER_COMPAT" = "x86_64"; then
+    # Dont use PGO on aarch64 builds and the ZEN_GA_DISABLE_PGO flag is not set
+    if test "$ZEN_GA_DISABLE_PGO"; then
+      export ZEN_DUMMY=1
+    else
+      ac_add_options --enable-profile-use=cross
+      ac_add_options --with-pgo-profile-path=$(echo ~)/artifact/merged.profdata
+      ac_add_options --with-pgo-jarlog=$(echo ~)/artifact/en-US.log
+    fi
   fi
-
 fi

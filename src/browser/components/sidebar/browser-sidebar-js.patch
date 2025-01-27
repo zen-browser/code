@@ -22,15 +22,15 @@ index 4a124003976684e014435854aef69ce29da541d2..61ce44751c36eea3e5ae2ddcc62e42c0
 +      this._splitter.style.order = browser.children.length + 1;
 +      this._splitter.style.marginRight = 0;
        // Indicate we've switched ordering to the box
-       this._box.setAttribute("positionend", true);
-       sidebarMain.setAttribute("positionend", true);
+       this._box.toggleAttribute("positionend", true);
+       sidebarMain.toggleAttribute("positionend", true);
 @@ -603,6 +604,9 @@ var SidebarController = {
-       this._box.removeAttribute("positionend");
-       sidebarMain.removeAttribute("positionend");
-       sidebarContainer.removeAttribute("positionend");
+       this._box.toggleAttribute("positionend", false);
+       sidebarMain.toggleAttribute("positionend", false);
+       sidebarContainer.toggleAttribute("positionend", false);
 +      this._box.style.order = 1;
 +      this._splitter.style.order = 2;
 +      this._splitter.style.removeProperty("margin-right");
+       this.toolbarButton &&
+         this.toolbarButton.toggleAttribute("positionend", false);
      }
- 
-     this.hideSwitcherPanel();

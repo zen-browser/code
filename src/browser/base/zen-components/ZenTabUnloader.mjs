@@ -219,7 +219,7 @@
     }
 
     unload(tab) {
-      gBrowser.discardBrowser(tab);
+      gBrowser.explicitUnloadTabs([tab]);
       tab.removeAttribute('linkedpanel');
     }
 
@@ -252,7 +252,7 @@
       if (
         (tab.pinned && !ignoreTimestamp) ||
         tab.selected ||
-        tab.multiselected ||
+        (tab.multiselected && !ignoreTimestamp) ||
         tab.hasAttribute('busy') ||
         tab.hasAttribute('pending') ||
         !tab.linkedPanel ||

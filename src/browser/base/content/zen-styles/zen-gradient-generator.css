@@ -1,8 +1,20 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 
 #PanelUI-zen-gradient-generator {
   --panel-width: 300px;
   --panel-padding: 10px;
   min-width: var(--panel-width);
+}
+
+#PanelUI-zen-gradient-generator .panel-viewcontainer,
+#PanelUI-zen-gradient-generator .panel-viewstack {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }
 
 #PanelUI-zen-gradient-degrees {
@@ -39,7 +51,7 @@
       bottom: 2px;
       right: 0;
       border: 2px solid var(--zen-colors-border);
-      transition: transform .2s;
+      transition: transform 0.2s;
     }
 
     &[dragging='true']::after {
@@ -140,7 +152,7 @@
       padding: 2px 4px !important;
       margin: 0 !important;
       margin-left: auto !important;
-      transition: opacity .1s;
+      transition: opacity 0.1s;
       opacity: 0;
     }
 
@@ -234,8 +246,8 @@
     box-shadow: 0 0 0 2px var(--zen-themed-toolbar-bg);
     cursor: pointer;
     border: 2px solid #fff;
-    animation: zen-theme-picker-dot-animation .5s;
-    transition: transform .2s;
+    animation: zen-theme-picker-dot-animation 0.5s;
+    transition: transform 0.2s;
     transform: translate(-50%, -50%);
 
     &[dragging='true'] {

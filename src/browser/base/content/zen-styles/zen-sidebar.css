@@ -1,3 +1,8 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 
 #zen-profile-button {
   & stack {
@@ -33,19 +38,6 @@
   }
 }
 
-/*#zen-profile-button::before {
-  background: transparent;
-  border-radius: 50%;
-  border: 3px solid var(--zen-colors-border);
-  position: absolute;
-  content: "";
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: calc(2 * var(--toolbarbutton-inner-padding) + 16px - 8px - var(--toolbarbutton-inner-padding));
-  height: calc(2 * var(--toolbarbutton-inner-padding) + 16px - 8px - var(--toolbarbutton-inner-padding));
-}*/
-
 /* Bookmarks sidebar */
 #zen-tabbox-wrapper {
   & #sidebar-splitter {
@@ -54,17 +46,16 @@
   }
 
   & #sidebar-box {
-    border-radius: var(--zen-border-radius);
-    box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.1);
-    margin-bottom: var(--zen-element-separation);
+    border-radius: var(--zen-native-inner-radius);
+    box-shadow: var(--zen-big-shadow);
     overflow: hidden;
     border: 1px solid var(--zen-colors-border);
 
-    :root:has(#navigator-toolbox:not([zen-right-side='true'])) &[positionend='true'] {
+    :root:not([zen-right-side='true']) &[positionend='true'] {
       margin-right: var(--zen-element-separation);
     }
 
-    :root:has(#navigator-toolbox[zen-right-side='true']) & {
+    :root[zen-right-side='true'] & {
       margin-left: var(--zen-element-separation);
     }
   }

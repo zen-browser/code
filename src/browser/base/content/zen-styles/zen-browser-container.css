@@ -1,21 +1,31 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 :root:not([inDOMFullscreen='true']):not([chromehidden~='location']):not([chromehidden~='toolbar']) {
   & #tabbrowser-tabbox #tabbrowser-tabpanels .browserSidebarContainer {
     width: -moz-available;
-    border-radius: var(--zen-webview-border-radius, var(--zen-border-radius));
+    border-radius: var(--zen-native-inner-radius);
     position: relative;
 
-    box-shadow: 0 0 1px 1px light-dark(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.5));
-    border-radius: var(--zen-border-radius);
-    overflow: hidden;
-    margin: 1px;
-    
-    #browser:has(#navigator-toolbox[zen-right-side='true']) & {
-      margin-right: 0;
-      margin-left: var(--zen-element-separation);
-    }
+    /* For glance */
+    transition:
+      transform 0.1s ease-in-out,
+      opacity 0.1s ease-in-out;
 
-    :root[zen-no-padding='true'] &:not([zen-split="true"]) {
-      border-radius: 0 !important;
+    overflow: hidden;
+
+    :root:not([zen-no-padding='true']) & {
+      box-shadow: var(--zen-big-shadow);
+    }
+  }
+
+  @media (-moz-bool-pref: 'zen.view.experimental-rounded-view') {
+    #tabbrowser-tabpanels {
+      mix-blend-mode: multiply;
+      -moz-osx-font-smoothing: grayscale;
+      isolation: isolate;
     }
   }
 }

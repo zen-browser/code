@@ -1,0 +1,13 @@
+diff --git a/modules/libpref/init/StaticPrefList.yaml b/modules/libpref/init/StaticPrefList.yaml
+index c63a259a51c4862bc8f73eabdc5730bfe2f28da4..f9b8431071e73ce55972c12354ed44bc3a4df9c0 100644
+--- a/modules/libpref/init/StaticPrefList.yaml
++++ b/modules/libpref/init/StaticPrefList.yaml
+@@ -17651,7 +17651,7 @@
+ # Whether we use the mica backdrop. Off by default for now.
+ - name: widget.windows.mica
+   type: bool
+-  value: false
++  value: true
+   mirror: once
+ #endif
+ 

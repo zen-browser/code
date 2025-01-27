@@ -13,7 +13,6 @@
         content/browser/zen-components/ZenSidebarManager.mjs    (zen-components/ZenSidebarManager.mjs)
         content/browser/zen-components/ZenProfileDialogUI.mjs   (zen-components/ZenProfileDialogUI.mjs)
         content/browser/zen-components/ZenKeyboardShortcuts.mjs (zen-components/ZenKeyboardShortcuts.mjs)
-        content/browser/zen-components/ZenThemeBuilder.mjs      (zen-components/ZenThemeBuilder.mjs)
         content/browser/zen-components/ZenThemesImporter.mjs    (zen-components/ZenThemesImporter.mjs)
         content/browser/zen-components/ZenTabUnloader.mjs       (zen-components/ZenTabUnloader.mjs)
         content/browser/zen-components/ZenPinnedTabsStorage.mjs (zen-components/ZenPinnedTabsStorage.mjs)
@@ -22,11 +21,13 @@
         content/browser/zen-components/ZenGradientGenerator.mjs (zen-components/ZenGradientGenerator.mjs)
         content/browser/zen-components/ZenGlanceManager.mjs     (zen-components/ZenGlanceManager.mjs)
         content/browser/zen-components/ZenActorsManager.mjs     (zen-components/ZenActorsManager.mjs)
+        content/browser/zen-components/ZenRices.mjs             (zen-components/ZenRices.mjs)
+        content/browser/zen-components/ZenEmojies.mjs           (zen-components/ZenEmojies.mjs)
 
         content/browser/zen-styles/zen-theme.css                (content/zen-styles/zen-theme.css)
         content/browser/zen-styles/zen-buttons.css              (content/zen-styles/zen-buttons.css)
         content/browser/zen-styles/zen-tabs.css                 (content/zen-styles/zen-tabs.css)
-        content/browser/zen-styles/zen-tabs/vertical-tabs.css   (content/zen-styles/zen-tabs/vertical-tabs.css)
+*       content/browser/zen-styles/zen-tabs/vertical-tabs.css   (content/zen-styles/zen-tabs/vertical-tabs.css)
         content/browser/zen-styles/zen-tabs/horizontal-tabs.css (content/zen-styles/zen-tabs/horizontal-tabs.css)
         content/browser/zen-styles/zen-browser-ui.css           (content/zen-styles/zen-browser-ui.css)
         content/browser/zen-styles/zen-animations.css           (content/zen-styles/zen-animations.css)
@@ -43,20 +44,34 @@
         content/browser/zen-styles/zen-popup.css                (content/zen-styles/zen-popup.css)
         content/browser/zen-styles/zen-sidebar-panels.css       (content/zen-styles/zen-sidebar-panels.css)
         content/browser/zen-styles/zen-gradient-generator.css   (content/zen-styles/zen-gradient-generator.css)
-        
+        content/browser/zen-styles/zen-rices.css                (content/zen-styles/zen-rices.css)
+        content/browser/zen-styles/zen-branding.css             (content/zen-styles/zen-branding.css)
+
         content/browser/zen-styles/zen-panels/bookmarks.css     (content/zen-styles/zen-panels/bookmarks.css)
         content/browser/zen-styles/zen-panels/extensions.css    (content/zen-styles/zen-panels/extensions.css)
         content/browser/zen-styles/zen-panels/print.css         (content/zen-styles/zen-panels/print.css)
         content/browser/zen-styles/zen-panels/welcome.css       (content/zen-styles/zen-panels/welcome.css)
 
-        content/browser/zen-styles/zen-compact-mode.css         (content/zen-styles/zen-compact-mode.css)
+*       content/browser/zen-styles/zen-compact-mode.css         (content/zen-styles/zen-compact-mode.css)
 
         # Images
         content/browser/zen-images/gradient.png                 (content/zen-images/gradient.png)
         content/browser/zen-images/gradient-display.png         (content/zen-images/gradient-display.png)
+        content/browser/zen-images/brand-header.svg             (content/zen-images/brand-header.svg)
+        content/browser/zen-images/layouts/collapsed.png        (content/zen-images/layouts/collapsed.png)
+        content/browser/zen-images/layouts/multiple-toolbar.png (content/zen-images/layouts/multiple-toolbar.png)
+        content/browser/zen-images/layouts/single-toolbar.png   (content/zen-images/layouts/single-toolbar.png)
 
         # Actors
         content/browser/zen-components/actors/ZenThemeMarketplaceParent.sys.mjs (zen-components/actors/ZenThemeMarketplaceParent.sys.mjs)
         content/browser/zen-components/actors/ZenThemeMarketplaceChild.sys.mjs  (zen-components/actors/ZenThemeMarketplaceChild.sys.mjs)
         content/browser/zen-components/actors/ZenGlanceChild.sys.mjs            (zen-components/actors/ZenGlanceChild.sys.mjs)
         content/browser/zen-components/actors/ZenGlanceParent.sys.mjs           (zen-components/actors/ZenGlanceParent.sys.mjs)
+
+        # Fonts
+        content/browser/zen-fonts/JunicodeVF-Italic.woff2       (content/zen-fonts/JunicodeVF-Italic.woff2)
+        content/browser/zen-fonts/JunicodeVF-Roman.woff2        (content/zen-fonts/JunicodeVF-Roman.woff2)
+
+        # JS Vendor
+        content/browser/zen-vendor/tsparticles.confetti.bundle.min.js (content/zen-vendor/tsparticles.confetti.bundle.min.js)
+        content/browser/zen-vendor/motion.min.mjs                      (content/zen-vendor/motion.min.mjs)

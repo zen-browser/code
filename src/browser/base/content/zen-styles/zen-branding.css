@@ -1,0 +1,29 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
+@font-face {
+  font-family: 'Zen-Junicode';
+  src: url('chrome://browser/content/zen-fonts/JunicodeVF-Roman.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Zen-Junicode-Italic';
+  src: url('chrome://browser/content/zen-fonts/JunicodeVF-Italic.woff2') format('woff2');
+}
+
+.zen-branding-title {
+  font-size: 6rem;
+  line-height: 0.9;
+  margin-bottom: 0.4rem;
+  font-family: 'Zen-Junicode', serif;
+  font-weight: 400;
+  font-style: normal;
+  font-feature-settings: 'swsh' 1;
+
+  & .zen-branding-title-italic {
+    font-family: 'Zen-Junicode-Italic', serif;
+  }
+}

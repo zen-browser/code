@@ -1,21 +1,18 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 
 .browserSidebarContainer:has([zen-glance-selected]),
 .browserSidebarContainer.zen-glance-overlay {
   visibility: inherit;
 }
 
-#tabbrowser-tabpanels {
-  transition: transform 0.1s ease-in-out;
-}
-
-#tabbrowser-tabpanels:has(.zen-glance-background) {
+.zen-glance-background {
   transform: scale(0.98);
   backdrop-filter: blur(5px);
-
-  & .zen-glance-background {
-    opacity: 0.6;
-    transition: opacity 0.1s ease-in-out;
-  }
+  opacity: 0.6;
 }
 
 #zen-glance-sidebar-container {
@@ -27,53 +24,53 @@
 }
 
 .browserSidebarContainer.zen-glance-overlay {
+  box-shadow: none !important;
+
   &[fade-out='true'] {
     background: transparent;
     opacity: 1;
 
     & .browserContainer {
-      opacity: 1 !important;
-      animation: zen-glance-content-animation-out .3s ease-out forwards !important;
-      animation-direction: reverse !important;
+      opacity: 1;
+      animation: zen-glance-content-animation-out 0.3s ease-in-out forwards !important;
 
       & browser {
-        opacity: 0;
-        transition: opacity .1s ease-in-out;
+        opacity: 1 !important;
       }
 
       & #zen-glance-sidebar-container {
         opacity: 0;
-        transition: opacity .1s ease-in-out;
+        transition: opacity 0.1s ease-in-out;
       }
     }
   }
 
   & .browserContainer {
     background: var(--zen-dialog-background);
-    box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.2);
-    transform: translate(var(--initial-x), var(--initial-y));
-    width: var(--initial-width);
-    height: var(--initial-height);
     position: fixed;
-    border-radius: var(--zen-border-radius);
-    overflow: hidden;
+    border-radius: var(--zen-native-inner-radius);
     opacity: 0;
     top: 0;
     left: 0;
     flex: unset !important;
-    border: 1px solid var(--zen-colors-border);
+    box-shadow: var(--zen-big-shadow);
 
     &[has-finished-animation='true'] {
       position: relative !important;
       transition: 0s !important;
       transform: none !important;
       margin: auto !important;
-      top: -5px !important;
+      top: 0 !important;
       left: 0 !important;
     }
 
+    & .browserStack {
+      border-radius: var(--zen-native-inner-radius);
+      overflow: hidden;
+    }
+
     & #zen-glance-sidebar-container {
-      position: fixed;
+      position: absolute;
       display: flex;
       top: 10%;
       left: 0;
@@ -84,8 +81,8 @@
       border: 1px solid var(--zen-colors-border);
       border-right: none;
 
-      border-top-left-radius: var(--zen-border-radius);
-      border-bottom-left-radius: var(--zen-border-radius);
+      border-top-left-radius: var(--zen-native-inner-radius);
+      border-bottom-left-radius: var(--zen-native-inner-radius);
 
       padding: 5px;
       gap: 6px;
@@ -108,7 +105,6 @@
       height: 100%;
       opacity: 1;
       transition: opacity 0.2s ease-in-out;
-      transition-delay: 0.1s;
     }
 
     &[animate-full='true'] {
@@ -121,8 +117,8 @@
     }
 
     &[animate='true'] {
-      animation: zen-glance-content-animation .3s ease-in-out forwards;
-      animation-delay: 0.1s;
+      position: absolute;
+      transform: translate(-50%, -50%);
 
       &:not([animate-end='true']) {
         pointer-events: none;

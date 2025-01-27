@@ -1,0 +1,64 @@
+app-id: app.zen_browser.zen
+runtime: org.freedesktop.Platform
+runtime-version: '24.08'
+sdk: org.freedesktop.Sdk
+base: org.mozilla.firefox.BaseApp
+base-version: '24.08'
+add-extensions:
+  org.freedesktop.Platform.ffmpeg-full:
+    directory: lib/ffmpeg
+    version: '24.08'
+    add-ld-path: .
+command: launch-script.sh
+finish-args:
+  - --share=ipc
+  - --share=network
+  - --socket=pulseaudio
+  - --socket=wayland
+  - --socket=fallback-x11
+  - --socket=pcsc
+  - --socket=cups
+  - --persist=.zen
+  - --filesystem=xdg-download:rw
+  - --device=all
+  - --talk-name=org.freedesktop.FileManager1
+  - --talk-name=org.freedesktop.ScreenSaver
+  - --own-name=org.mozilla.zen.*
+  - --own-name=org.mpris.MediaPlayer2.firefox.*
+  - --system-talk-name=org.freedesktop.NetworkManager
+  - --talk-name=org.a11y.Bus
+  - --env=GTK_PATH=/app/lib/gtkmodules
+  - --env=MESA_SHADER_CACHE_DIR=$XDG_RUNTIME_DIR/app/$FLATPAK_ID/cache/mesa_shader_cache_db
+modules:
+  - name: zen_browser
+    buildsystem: simple
+    build-commands:
+      - mv zen /app/
+      - mkdir -p /app/lib/ffmpeg
+
+      - install -Dm0755 metadata/launch-script.sh ${{FLATPAK_DEST}}/bin/launch-script.sh
+      - install -Dm0644 metadata/policies.json ${{FLATPAK_DEST}}/bin/distribution/policies.json
+      - install -Dm0644 metadata/icons/${{FLATPAK_ID}}.svg ${{FLATPAK_DEST}}/share/icons/hicolor/scalable/apps/${{FLATPAK_ID}}.svg
+      - install -Dm0644 metadata/${{FLATPAK_ID}}.metainfo.xml ${{FLATPAK_DEST}}/share/metainfo/${{FLATPAK_ID}}.metainfo.xml
+      - install -Dm0644 metadata/${{FLATPAK_ID}}.desktop ${{FLATPAK_DEST}}/share/applications/${{FLATPAK_ID}}.desktop
+
+    sources:
+      - type: archive
+        url: https://github.com/zen-browser/desktop/releases/download/{version}/zen.linux-x86_64.tar.bz2
+        sha256: {linux_sha256}
+        strip-components: 0
+        only-arches:
+          - x86_64
+
+      - type: archive
+        url: https://github.com/zen-browser/desktop/releases/download/{version}/zen.linux-aarch64.tar.bz2
+        sha256: {linux_aarch64_sha256}
+        strip-components: 0
+        only-arches:
+          - aarch64
+
+      - type: archive
+        url: https://github.com/zen-browser/flatpak/releases/download/{version}/archive.tar
+        sha256: {flatpak_sha256}
+        strip-components: 0
+        dest: metadata

@@ -1,5 +1,14 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 panel[type='arrow'][animate][animate='open']::part(content) {
-  animation: zen-jello-animation 0.3s ease-in-out;
+  animation: zen-jello-animation 0.35s ease;
+
+  @media (-moz-platform: macos) {
+    animation: zen-jello-animation-alt 0.35s ease;
+  }
 }
 
 panel[type='arrow'][animate]:not([animate='open'])::part(content) {

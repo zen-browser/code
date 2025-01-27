@@ -1,0 +1,24 @@
+diff --git a/browser/components/customizableui/content/panelUI.js b/browser/components/customizableui/content/panelUI.js
+index 1805bad6c58e060533f634ed9e511c05cad3ded1..f153761e406535270343fa1f430dea4f740cb2fc 100644
+--- a/browser/components/customizableui/content/panelUI.js
++++ b/browser/components/customizableui/content/panelUI.js
+@@ -496,8 +496,7 @@ const PanelUI = {
+         tempPanel.setAttribute("animate", "false");
+       }
+       tempPanel.setAttribute("context", "");
+-      document
+-        .getElementById(CustomizableUI.AREA_NAVBAR)
++      aAnchor.closest("toolbar")
+         .appendChild(tempPanel);
+ 
+       let multiView = document.createXULElement("panelmultiview");
+@@ -544,8 +543,8 @@ const PanelUI = {
+       }
+ 
+       if (viewShown) {
+-        CustomizableUI.addPanelCloseListeners(tempPanel);
+         tempPanel.addEventListener("popuphidden", panelRemover);
++        CustomizableUI.addPanelCloseListeners(tempPanel);
+       } else {
+         panelRemover();
+       }

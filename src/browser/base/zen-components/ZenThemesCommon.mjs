@@ -38,11 +38,11 @@ var ZenThemesCommon = {
         await IOUtils.writeJSON(this.themesDataFile, {});
         this.themes = {};
         gNotificationBox.appendNotification(
-          "zen-themes-corrupted",
+          'zen-themes-corrupted',
           {
-            label: { "l10n-id": "zen-themes-corrupted" },
-            image: "chrome://browser/skin/notification-icons/persistent-storage-blocked.svg",
-            priority: gNotificationBox.PRIORITY_INFO_MEDIUM,
+            label: { 'l10n-id': 'zen-themes-corrupted' },
+            image: 'chrome://browser/skin/notification-icons/persistent-storage-blocked.svg',
+            priority: gNotificationBox.PRIORITY_WARNING_HIGH,
           },
           []
         );

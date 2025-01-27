@@ -1,12 +1,22 @@
 diff --git a/browser/components/places/content/bookmarkProperties.xhtml b/browser/components/places/content/bookmarkProperties.xhtml
-index 047652a52e705d49f870399992873fce536c07b9..2932eb94e8c16eb05f172322a6ce3ea201ecd0b1 100644
+index 047652a52e705d49f870399992873fce536c07b9..37ea726fe427a31db8fae97c99fd38c8669fa0f9 100644
 --- a/browser/components/places/content/bookmarkProperties.xhtml
 +++ b/browser/components/places/content/bookmarkProperties.xhtml
-@@ -37,6 +37,7 @@
+@@ -37,6 +37,8 @@
      />
  
      <html:link rel="localization" href="browser/editBookmarkOverlay.ftl"/>
-+    <script src="chrome://browser/content/zenThemeModifier.js"></script>
++    <html:link rel="localization" href="browser/zen-workspaces.ftl"/>
++    <html:link rel="stylesheet" href="chrome://browser/content/zen-styles/zen-popup.css" />
    </linkset>
  
    <stringbundleset id="stringbundleset">
+@@ -44,6 +46,8 @@
+                   src="chrome://browser/locale/places/bookmarkProperties.properties"/>
+   </stringbundleset>
+ 
++  <script src="chrome://browser/content/zen-components/ZenWorkspacesStorage.mjs" />
++  <script src="chrome://browser/content/zenThemeModifier.js"></script>
+   <script src="chrome://browser/content/places/editBookmark.js"/>
+   <script src="chrome://browser/content/places/bookmarkProperties.js"/>
+   <script src="chrome://global/content/globalOverlay.js"/>

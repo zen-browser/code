@@ -1,6 +1,49 @@
-<script src="chrome://browser/content/zen-components/ZenThemeBuilder.mjs" defer=""/>
 <script src="chrome://browser/content/preferences/zen-settings.js"/>
 <html:template id="template-paneZenLooks">
+
+<hbox id="zenVerticalTabsCategory"
+      class="subcategory"
+      hidden="true"
+      data-category="paneZenLooks">
+<html:h1 data-l10n-id="zen-vertical-tabs-title"/>
+</hbox>
+
+<groupbox id="zenVerticalTabsGroup" data-category="paneZenLooks" hidden="true" class="highlighting-group">
+  <label><html:h2 data-l10n-id="zen-vertical-tabs-layout-header"/></label>
+    <description class="description-deemphasized" data-l10n-id="zen-vertical-tabs-layout-description" />
+    <hbox id="zenLayoutList">
+      <hbox layout="single">
+        <html:img src="chrome://browser/content/zen-images/layouts/single-toolbar.png" />
+        <label data-l10n-id="zen-layout-single-toolbar"></label>
+      </hbox>
+      <hbox layout="multiple">
+        <html:img src="chrome://browser/content/zen-images/layouts/multiple-toolbar.png" />
+        <label data-l10n-id="zen-layout-multiple-toolbar"></label>
+      </hbox>
+      <hbox layout="collapsed">
+        <html:img src="chrome://browser/content/zen-images/layouts/collapsed.png" />
+        <label data-l10n-id="zen-layout-collapsed-toolbar"></label>
+      </hbox>
+    </hbox>
+  <label><html:h2 data-l10n-id="zen-vertical-tabs-header"/></label>
+      <description class="description-deemphasized" data-l10n-id="zen-vertical-tabs-description" />
+
+      <checkbox id="zenLooksAndFeelNewtabUnderLastTab"
+            data-l10n-id="zen-vertical-tabs-newtab-on-tab-list"
+            preference="zen.tabs.show-newtab-vertical"/>
+    <vbox class="indent">
+        <checkbox id="zenLooksAndFeelShowTopNewtabBorder"
+                data-l10n-id="zen-vertical-tabs-newtab-top-button-border"
+                preference="zen.view.show-newtab-button-border-top"/>
+        <checkbox id="zenLooksAndFeelMoveNewtabToTop"
+                data-l10n-id="zen-vertical-tabs-newtab-top-button-up"
+                preference="zen.view.show-newtab-button-top"/>
+        <checkbox id="zenLooksAndFeelShowBottomBorder"
+                data-l10n-id="zen-vertical-tabs-show-bottom-border"
+                preference="zen.view.show-bottom-border"/>
+    </vbox>
+</groupbox>
+
 <hbox id="zenLooksCategory"
       class="subcategory"
       hidden="true"
@@ -67,7 +110,7 @@
             </g>
         </g>
     </g>
-</svg>      
+</svg>
                         </div>
                         <div class="web-appearance-choice-footer">
                         <input type="radio" name="web-appearance" value="amoled" data-l10n-id="preferences-web-appearance-choice-input-auto"
@@ -112,7 +155,7 @@
             </g>
         </g>
     </g>
-</svg>      
+</svg>
                         </div>
                         <div class="web-appearance-choice-footer">
                         <input type="radio" name="web-appearance" value="default" data-l10n-id="preferences-web-appearance-choice-input-light"
@@ -157,7 +200,7 @@
             </g>
         </g>
     </g>
-</svg>      
+</svg>
                         </div>
                         <div class="web-appearance-choice-footer">
                         <input type="radio" name="web-appearance" value="colorful" data-l10n-id="preferences-web-appearance-choice-input-dark"
@@ -192,9 +235,6 @@
       <label><html:h2 data-l10n-id="zen-look-and-feel-compact-view-header"/></label>
       <description class="description-deemphasized" data-l10n-id="zen-look-and-feel-compact-view-description" />
 
-      <checkbox id="zenLooksAndFeelShowCompactView"
-            data-l10n-id="zen-look-and-feel-compact-view-enabled"
-            preference="zen.view.compact"/>
         <html:div id="ZenCompactModeStyle">
             <form xmlns="http://www.w3.org/1999/xhtml" autocomplete="off" id="zen-compact-mode-styles-form">
                   <label class="web-appearance-choice">
@@ -296,6 +336,29 @@
         </hbox>
 </groupbox>
 
+<hbox id="zenUrlBarCategory"
+      class="subcategory"
+      hidden="true"
+      data-category="paneZenLooks">
+<html:h1 data-l10n-id="zen-urlbar-title"/>
+</hbox>
+
+<groupbox id="zenUrlbarGroup" data-category="paneZenLooks" hidden="true" class="highlighting-group">
+      <label><html:h2 data-l10n-id="zen-urlbar-header"/></label>
+      <description class="description-deemphasized" data-l10n-id="zen-urlbar-description" />
+
+      <hbox align="center">
+            <label data-l10n-id="zen-urlbar-behavior-label"/>
+            <menulist preference="zen.urlbar.behavior">
+                  <menupopup>
+                        <menuitem data-l10n-id="zen-urlbar-behavior-normal" value="normal"/>
+                        <menuitem data-l10n-id="zen-urlbar-behavior-floating-on-type" value="floating-on-type"/>
+                        <menuitem data-l10n-id="zen-urlbar-behavior-float" value="float"/>
+                  </menupopup>
+            </menulist>
+        </hbox>
+</groupbox>
+
 <hbox id="zenSplitViewCategory"
       class="subcategory"
       hidden="true"
@@ -310,33 +373,6 @@
       <checkbox id="zenLooksAndFeelSplitViewChangeOnHover"
             data-l10n-id="zen-split-view-change-on-hover"
             preference="zen.splitView.change-on-hover"/>
-</groupbox>
-
-<hbox id="zenVerticalTabsCategory"
-      class="subcategory"
-      hidden="true"
-      data-category="paneZenLooks">
-<html:h1 data-l10n-id="zen-vertical-tabs-title"/>
-</hbox>
-
-<groupbox id="zenVerticalTabsGroup" data-category="paneZenLooks" hidden="true" class="highlighting-group">
-      <label><html:h2 data-l10n-id="zen-vertical-tabs-header"/></label>
-      <description class="description-deemphasized" data-l10n-id="zen-vertical-tabs-description" />
-
-      <checkbox id="zenLooksAndFeelNewtabUnderLastTab"
-            data-l10n-id="zen-vertical-tabs-newtab-on-tab-list"
-            preference="zen.tabs.show-newtab-vertical"/>
-    <vbox class="indent">
-        <checkbox id="zenLooksAndFeelShowTopNewtabBorder"
-                data-l10n-id="zen-vertical-tabs-newtab-top-button-border"
-                preference="zen.view.show-newtab-button-border-top"/>
-        <checkbox id="zenLooksAndFeelMoveNewtabToTop"
-                data-l10n-id="zen-vertical-tabs-newtab-top-button-up"
-                preference="zen.view.show-newtab-button-top"/>
-        <checkbox id="zenLooksAndFeelShowBottomBorder"
-                data-l10n-id="zen-vertical-tabs-show-bottom-border"
-                preference="zen.view.show-bottom-border"/>
-    </vbox>
 </groupbox>
 
 </html:template>

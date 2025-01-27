@@ -1,0 +1,10 @@
+diff --git a/browser/themes/shared/light-dark-overrides.css b/browser/themes/shared/light-dark-overrides.css
+index 8b10da7c3ccbbfca30f77e2b7602794dccbf306d..f9188accee0e02d3ef6944b155da613fa6bd335d 100644
+--- a/browser/themes/shared/light-dark-overrides.css
++++ b/browser/themes/shared/light-dark-overrides.css
+@@ -5,5 +5,4 @@
+ #urlbar {
+   --urlbar-box-bgcolor: var(--toolbar-field-focus-background-color);
+   --urlbar-box-focus-bgcolor: var(--button-background-color);
+-  --urlbar-box-hover-bgcolor: var(--button-background-color-hover);
+ }

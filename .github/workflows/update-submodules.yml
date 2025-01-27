@@ -1,4 +1,3 @@
-
 name: Update Components Submodules
 
 on:
@@ -6,25 +5,27 @@ on:
     branches:
       - dev
   workflow_dispatch:
-  workflow_call: # This is a custom event that we will trigger manually
+  workflow_call:
 
 jobs:
   update-submodules:
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
+
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
-          submodules: 'recursive'
+          submodules: recursive
           token: ${{ secrets.DEPLOY_KEY }}
 
       - name: Update submodules
         run: |
           git submodule update --remote --merge
 
-      - uses: stefanzweifel/git-auto-commit-action@v4
+      - name: Commit
+        uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "[skip ci] 📦 Update Submodules!"
+          commit_message: '[skip ci] 📦 Update submodules'
           commit_user_name: Zen Browser Robot
-          commit_user_email: zen-browser-bot@users.noreply.github.com
+          commit_user_email: zen-browser-auto@users.noreply.github.com

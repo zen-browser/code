@@ -1,8 +1,8 @@
 diff --git a/toolkit/moz.configure b/toolkit/moz.configure
-index 06281a55f43ddff4f4d4a09ba05e9a830a221415..269728dccdd8a286b563a5d20da5280b7b3b1639 100644
+index 9c3bb513537f1efc44788fc3efb9f7561eca9c0e..dcada8742c5ea147d2378357c86c9a8b7dc639db 100644
 --- a/toolkit/moz.configure
 +++ b/toolkit/moz.configure
-@@ -81,6 +81,9 @@ option(
+@@ -81,10 +81,13 @@ option(
  )
  set_config("MOZ_INCLUDE_SOURCE_INFO", True, when="MOZ_INCLUDE_SOURCE_INFO")
  
@@ -12,7 +12,12 @@ index 06281a55f43ddff4f4d4a09ba05e9a830a221415..269728dccdd8a286b563a5d20da5280b
  option(
      "--with-distribution-id",
      nargs=1,
-@@ -886,9 +889,9 @@ set_define("MOZ_AV1", av1)
+-    default="org.mozilla",
++    default="app.zen-browser",
+     help="Set distribution-specific id",
+ )
+ set_config("MOZ_DISTRIBUTION_ID", depends("--with-distribution-id")(lambda v: v[0]))
+@@ -869,9 +872,9 @@ set_define("MOZ_AV1", av1)
  option("--disable-jxl", help="Disable jxl image support")
  
  
@@ -25,7 +30,7 @@ index 06281a55f43ddff4f4d4a09ba05e9a830a221415..269728dccdd8a286b563a5d20da5280b
          return True
  
  
-@@ -2036,7 +2039,7 @@ set_define("A11Y_LOG", True, when=a11y_log)
+@@ -2012,7 +2015,7 @@ set_define("A11Y_LOG", True, when=a11y_log)
  # ==============================================================
  @depends(milestone)
  def require_signing(milestone):

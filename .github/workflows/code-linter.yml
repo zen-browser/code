@@ -1,0 +1,37 @@
+name: Code Linter
+
+on:
+  push:
+    branches:
+      - dev
+  workflow_dispatch:
+  workflow_call:
+  pull_request:
+    branches:
+      - dev
+
+jobs:
+  pr-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+
+      - name: Setup autopep8
+        run: sudo apt install python3-autopep8
+
+      - name: Setup pnpm
+        run: npm install -g pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Lint
+        run: pnpm lint

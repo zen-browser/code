@@ -1,0 +1,15 @@
+diff --git a/browser/base/content/appmenu-viewcache.inc.xhtml b/browser/base/content/appmenu-viewcache.inc.xhtml
+index 3c5c4f29b1de25a4ce17089502f2251a27e5c7f5..dfa3260ed3c2bb6067745696fbf103c7e56c639a 100644
+--- a/browser/base/content/appmenu-viewcache.inc.xhtml
++++ b/browser/base/content/appmenu-viewcache.inc.xhtml
+@@ -421,6 +421,10 @@
+                      class="subviewbutton"
+                      data-l10n-id="appmenu-customizetoolbar"
+                      command="cmd_CustomizeToolbars"/>
++      <toolbarbutton id="appmenu-zen-share-rice"
++        class="subviewbutton"
++        data-l10n-id="appmenu-zen-share-rice"
++        oncommand="gZenThemePicker.shareTheme()" />
+       <toolbarseparator/>
+       <html:h2 id="appmenu-developer-tools"
+           data-l10n-id="appmenu-developer-tools-subheader"

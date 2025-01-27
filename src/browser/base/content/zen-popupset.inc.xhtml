@@ -35,7 +35,7 @@
       role="document"
       mainview-with-header="true"
       has-custom-header="true">
-      <box id="zenSplitViewModifierHeader"        
+      <box id="zenSplitViewModifierHeader"
         class="panel-header panel-header-with-additional-element panel-header-with-info-button">
         <html:h1>
           <html:span data-l10n-id="zen-split-view-modifier-header"></html:span>
@@ -96,7 +96,7 @@
       <toolbarbutton id="PanelUI-zen-profiles-privateWin" command="Tools:PrivateBrowsing" data-l10n-id="appmenuitem-new-private-window" class="subviewbutton"></toolbarbutton>
       <toolbarbutton id="PanelUI-zen-profiles-newProfile" oncommand="ZenProfileDialogUI.createProfileWizard();" data-l10n-id="appmenu-create-profile" class="subviewbutton"></toolbarbutton>
     </hbox>
-    <vbox id="PanelUI-zen-profiles-list">      
+    <vbox id="PanelUI-zen-profiles-list">
     </vbox>
   </vbox>
 </panelview>
@@ -104,7 +104,8 @@
 <panel flip="side" type="arrow" orient="vertical" id="PanelUI-zen-gradient-generator" position="bottomright topright" mainview="true" side="left" onpopuphidden="gZenThemePicker.handlePanelClose();">
   <panelmultiview id="PanelUI-zen-gradient-generator-multiview" mainViewId="PanelUI-zen-gradient-generator-view">
     <panelview id="PanelUI-zen-gradient-generator-view" class="PanelUI-subView zen-theme-picker" role="document" mainview-with-header="true" has-custom-header="true">
-      <hbox class="zen-theme-picker-gradient"></hbox>
+      <hbox class="zen-theme-picker-gradient">
+      </hbox>
       <hbox id="PanelUI-zen-gradient-generator-controls">
         <vbox id="PanelUI-zen-gradient-generator-options">
           <hbox id="PanelUI-zen-gradient-degrees">
@@ -145,10 +146,7 @@
     <panelview id="PanelUI-zen-workspaces-view" class="PanelUI-subView" role="document" mainview-with-header="true" has-custom-header="true" closemenu="none">
       <vbox>
         <hbox>
-          <h3 data-l10n-id="zen-panel-ui-workspaces-text"></h3>
-          <hbox class="translations-panel-beta" role="image" aria-label="Beta">
-            <image class="translations-panel-beta-icon"></image>
-          </hbox>
+          <h3 data-l10n-id="zen-panel-ui-workspaces-text" id="PanelUI-zen-workspaces-header"></h3>
           <toolbarbutton id="PanelUI-zen-workspaces-reorder-mode" oncommand="ZenWorkspaces.toggleReorderMode();" class="subviewbutton">
             <image></image>
           </toolbarbutton>
@@ -192,6 +190,9 @@
     </panelview>
     <panelview id="PanelUI-zen-workspaces-icon-picker" class="PanelUI-subView" role="document" mainview-with-header="true" has-custom-header="true">
       <vbox id="PanelUI-zen-workspaces-icon-picker-wrapper">
+        <html:div id="PanelUI-zen-workspaces-icon-search-bar">
+          <html:input autofocus="true" type="text" id="PanelUI-zen-workspaces-icon-search-input" oninput="ZenWorkspaces.conductSearch();"/>
+        </html:div>
       </vbox>
     </panelview>
   </panelmultiview>

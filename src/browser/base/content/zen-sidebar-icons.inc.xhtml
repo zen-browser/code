@@ -1,13 +1,16 @@
-<toolbar brighttext="true" 
-  id="zen-sidebar-icons-wrapper" 
-  fullscreentoolbar="true" 
+<toolbar brighttext="true"
+  id="zen-sidebar-icons-wrapper"
+  fullscreentoolbar="true"
   class="browser-toolbar customization-target zen-dont-hide-on-fullscreen"
   data-l10n-id="tabs-toolbar"
   customizable="true"
   skipintoolbarset="true"
   context="toolbar-context-menu"
   mode="icons">
-  <toolbarbutton id="zen-profile-button" 
+  <toolbarbutton removable="true" class="chromeclass-toolbar-additional toolbarbutton-1 zen-sidebar-action-button" id="zen-expand-sidebar-button" data-l10n-id="sidebar-zen-expand" cui-areatype="toolbar" oncommand="gZenVerticalTabsManager.toggleExpand();"></toolbarbutton>
+  <toolbarbutton removable="true" class="toolbarbutton-1 zen-sidebar-action-button zen-compact-mode-ignore" id="zen-sidepanel-button" data-l10n-id="sidebar-zen-sidepanel" onclick="gZenBrowserManagerSidebar.toggle();"></toolbarbutton>
+  <toolbarbutton id="zen-workspaces-button" class="chromeclass-toolbar-additional" overflows="false" removable="false"></toolbarbutton>
+  <toolbarbutton id="zen-profile-button"
     class="zen-sidebar-action-button toolbarbutton-1 chromeclass-toolbar-additional"
     delegatesanchor="true"
     onmousedown="ZenProfileDialogUI.showSubView(this, event)"

@@ -1,0 +1,67 @@
+diff --git a/browser/components/urlbar/UrlbarInput.sys.mjs b/browser/components/urlbar/UrlbarInput.sys.mjs
+index 3ab07e5864b3bb200608e7f619645f92ade129fe..31085d82271b0259cd69ec9691ea5f33fe29e19e 100644
+--- a/browser/components/urlbar/UrlbarInput.sys.mjs
++++ b/browser/components/urlbar/UrlbarInput.sys.mjs
+@@ -67,6 +67,13 @@ XPCOMUtils.defineLazyPreferenceGetter(
+   false
+ );
+ 
++XPCOMUtils.defineLazyPreferenceGetter(
++  lazy,
++  "ZEN_URLBAR_BEHAVIOR",
++  "zen.urlbar.behavior",
++  'default'
++);
++
+ const DEFAULT_FORM_HISTORY_NAME = "searchbar-history";
+ const SEARCH_BUTTON_CLASS = "urlbar-search-button";
+ 
+@@ -2152,6 +2159,11 @@ export class UrlbarInput {
+ 
+     this.setAttribute("breakout-extend", "true");
+ 
++    if (lazy.ZEN_URLBAR_BEHAVIOR == 'float' || (lazy.ZEN_URLBAR_BEHAVIOR == 'floating-on-type' && !this.focusedViaMousedown)) {
++      this.setAttribute("zen-floating-urlbar", "true");
++    } else {
++      this.removeAttribute("zen-floating-urlbar");
++    }
+     // Enable the animation only after the first extend call to ensure it
+     // doesn't run when opening a new window.
+     if (!this.hasAttribute("breakout-extend-animate")) {
+@@ -3875,6 +3887,11 @@ export class UrlbarInput {
+   }
+ 
+   _on_click(event) {
++    if (lazy.ZEN_URLBAR_BEHAVIOR === 'float' && event.target == this.inputField) {
++      event.zenOriginalTarget = this.textbox;
++      this._on_mousedown(event);
++    }
++
+     if (
+       event.target == this.inputField ||
+       event.target == this._inputContainer ||
+@@ -3986,9 +4003,12 @@ export class UrlbarInput {
+   }
+ 
+   _on_mousedown(event) {
+-    switch (event.currentTarget) {
++    switch (event.zenOriginalTarget || event.currentTarget) {
+       case this.textbox: {
+         this._mousedownOnUrlbarDescendant = true;
++        if (event.type != "click" && lazy.ZEN_URLBAR_BEHAVIOR === 'float') {
++          return true;
++        }
+ 
+         if (
+           event.target != this.inputField &&
+@@ -3998,8 +4018,8 @@ export class UrlbarInput {
+           break;
+         }
+ 
+-        this.focusedViaMousedown = !this.focused;
+-        this._preventClickSelectsAll = this.focused;
++        this.focusedViaMousedown = !(lazy.ZEN_URLBAR_BEHAVIOR === 'default' ? this.focused : this.hasAttribute("breakout-extend"));
++        this._preventClickSelectsAll = lazy.ZEN_URLBAR_BEHAVIOR === 'default' ? this.focused : this.hasAttribute("breakout-extend");
+ 
+         // Keep the focus status, since the attribute may be changed
+         // upon calling this.focus().

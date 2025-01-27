@@ -1,0 +1,182 @@
+diff --git a/browser/components/places/content/editBookmark.js b/browser/components/places/content/editBookmark.js
+index 9f17174fdd9cc1eaefb4330da1e10f40eeda2f31..e2c38872ee3a5c45d2e288e67d33f9ce24cab2b9 100644
+--- a/browser/components/places/content/editBookmark.js
++++ b/browser/components/places/content/editBookmark.js
+@@ -370,6 +370,10 @@ var gEditItemOverlay = {
+         this._keywordField.readOnly = this.readOnly;
+       }
+ 
++      if (showOrCollapse("workspaceRow", true, "workspace")) {
++        await this._initWorkspaceDropdown(aInfo);
++      }
++
+       // Collapse the tag selector if the item does not accept tags.
+       if (showOrCollapse("tagsRow", isBookmark || bulkTagging, "tags")) {
+         this._initTagsField();
+@@ -682,6 +686,7 @@ var gEditItemOverlay = {
+       if (this._paneInfo.isBookmark) {
+         options.tags = this._element("tagsField").value;
+         options.keyword = this._keyword;
++        options.workspaces = this._selectedWorkspaces;
+       }
+ 
+       if (this._paneInfo.bulkTagging) {
+@@ -1232,6 +1237,148 @@ var gEditItemOverlay = {
+   get bookmarkState() {
+     return this._bookmarkState;
+   },
++
++  async _initWorkspaceSelector() {
++    if(document.documentElement.getAttribute("windowtype") === "Places:Organizer") {
++      return;
++    }
++    this._workspaces = await ZenWorkspacesStorage.getWorkspaces();
++
++    const selectElement = this._workspaceSelect;
++
++    // Clear any existing options
++    while (selectElement.firstChild) {
++      selectElement.removeChild(selectElement.firstChild);
++    }
++
++    // For each workspace, create an option element
++    for (let workspace of this._workspaces) {
++      const option = document.createElementNS("http://www.w3.org/1999/xhtml", "option");
++      option.textContent = workspace.name;
++      option.value = workspace.uuid;
++      selectElement.appendChild(option);
++    }
++
++    selectElement.disabled = this.readOnly;
++  },
++  async onWorkspaceSelectionChange(event) {
++    if(document.documentElement.getAttribute("windowtype") === "Places:Organizer") {
++      return;
++    }
++    event.stopPropagation();
++
++    // Add new workspaces uuids
++    const checkboxes = this._workspaceList.querySelectorAll("input[type='checkbox']");
++    const newWorkspaces = [];
++    const selectedNames = [];
++
++    checkboxes.forEach(checkbox => {
++      if (checkbox.checked) {
++        newWorkspaces.push(checkbox.value);
++
++        const label = checkbox.parentNode.textContent.trim();
++        selectedNames.push(label);
++      }
++    });
++
++    this._selectedWorkspaces = [ ...newWorkspaces];
++
++    // Update the bookmark state
++    if (this._bookmarkState) {
++      await this._bookmarkState._workspacesChanged(this._selectedWorkspaces);
++    }
++
++    // Update summary text
++    this._workspaceSummary.textContent = selectedNames.length
++      ? selectedNames.join(", ")
++      : "-";
++  },
++
++  onWorkspaceDropdownToggle() {
++    if(document.documentElement.getAttribute("windowtype") === "Places:Organizer") {
++      return;
++    }
++
++    // Toggle active class on the container
++    const dropdown = this._workspaceList;
++    const button = this._workspaceSummary;
++
++    dropdown.hidden = !dropdown.hidden;
++
++    var expander = this._element("workspacesSelectorExpander");
++    expander.classList.toggle("expander-up", !dropdown.hidden);
++    expander.classList.toggle("expander-down", dropdown.hidden);
++
++    // Only update summary text when closing the dropdown
++    if (dropdown.hidden) {
++      const checkboxes = this._workspaceList.querySelectorAll("input[type='checkbox']");
++      const selectedLabels = [];
++
++      checkboxes.forEach(checkbox => {
++        if (checkbox.checked) {
++          const label = checkbox.parentNode.textContent.trim();
++          selectedLabels.push(label);
++        }
++      });
++
++      button.textContent = selectedLabels.length
++        ? selectedLabels.join(", ")
++        : "-";
++    }
++  },
++
++  async _initWorkspaceDropdown(aInfo) {
++    if(document.documentElement.getAttribute("windowtype") === "Places:Organizer") {
++      return;
++    }
++    this._workspaces = await ZenWorkspacesStorage.getWorkspaces();
++    const workspaceList = this._workspaceList;
++    if(aInfo.node?.bookmarkGuid) {
++      this._selectedWorkspaces = await ZenWorkspaceBookmarksStorage.getBookmarkWorkspaces(aInfo.node.bookmarkGuid);
++    }
++
++    // Clear existing items
++    workspaceList.innerHTML = "";
++
++    // Create checkbox items for each workspace
++    for (let workspace of this._workspaces) {
++      const li = document.createElementNS("http://www.w3.org/1999/xhtml", "li");
++      const label = document.createElementNS("http://www.w3.org/1999/xhtml", "label");
++      const input = document.createElementNS("http://www.w3.org/1999/xhtml", "input");
++
++      input.setAttribute("type", "checkbox");
++      input.setAttribute("name", "workspace");
++      input.setAttribute("value", workspace.uuid);
++
++      // Check if this workspace is selected
++      input.checked = this._selectedWorkspaces?.includes(workspace.uuid) ?? false;
++
++      input.addEventListener("click", this.onWorkspaceSelectionChange.bind(this));
++
++      label.appendChild(input);
++      label.appendChild(document.createTextNode(workspace.name));
++      li.appendChild(label);
++      workspaceList.appendChild(li);
++    }
++
++    // Get the names of selected workspaces for initial summary
++    const selectedNames = this._workspaces
++      .filter(ws => this._selectedWorkspaces?.includes(ws.uuid))
++      .map(ws => ws.name);
++
++    // Update summary text with comma-separated list
++    this._workspaceSummary.textContent = selectedNames.length
++      ? selectedNames.join(", ")
++      : "-";
++
++    // Handle read-only state
++    if (this.readOnly) {
++      this._workspaceDropdown.setAttribute("disabled", "true");
++    } else {
++      this._workspaceDropdown.removeAttribute("disabled");
++    }
++  },
++  _selectedWorkspaces : [],
+ };
+ 
+ ChromeUtils.defineLazyGetter(gEditItemOverlay, "_folderTree", () => {
+@@ -1267,6 +1414,9 @@ for (let elt of [
+   "locationField",
+   "keywordField",
+   "tagsField",
++  "workspaceDropdown",
++  "workspaceSummary",
++  "workspaceList",
+ ]) {
+   let eltScoped = elt;
+   ChromeUtils.defineLazyGetter(gEditItemOverlay, `_${eltScoped}`, () =>

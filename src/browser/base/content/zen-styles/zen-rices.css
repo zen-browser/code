@@ -1,0 +1,226 @@
+#zen-rice-share-dialog-overlay:not([hidden]) {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#zen-rice-share-dialog,
+#zen-rice-share-dialog-notice {
+  color: var(--panel-color);
+  background: var(--arrowpanel-background);
+  border-radius: var(--zen-native-inner-radius);
+  box-shadow: 0 0 1px 1px hsla(0, 0%, 0%, 0.2);
+  border: var(--zen-appcontent-border);
+  overflow: hidden;
+
+  animation: zen-jello-animation-large 0.4s ease;
+  max-width: 400px;
+
+  &[animate='true'] {
+    animation: zen-rice-submit-animation 1s cubic-bezier(0.77, 0, 0.18, 1);
+  }
+
+  & .zen-rice-share-content {
+    padding: 10px 0;
+    border-top: var(--zen-appcontent-border);
+    background: var(--arrowpanel-background);
+    position: relative;
+    align-items: center;
+
+    min-height: 50px;
+
+    &:has(#zen-rice-share-first-form:not([fade-out])),
+    &:has(#zen-rice-share-success) {
+      padding-top: 20px;
+    }
+
+    & > vbox {
+      width: 100%;
+      padding: 0 10px;
+    }
+
+    & #zen-rice-share-first-form input[type='text'] {
+      width: 100%;
+      padding: 1px 2px;
+      border: 0;
+      border-bottom: 1px solid var(--zen-appcontent-border);
+      background: transparent;
+      font-style: italic;
+      font-weight: 600;
+    }
+
+    & #zen-rice-share-name {
+      font-style: normal !important;
+      font-size: 24px;
+      margin-left: 1px;
+    }
+
+    & .indent {
+      margin-left: 30px;
+    }
+  }
+
+  & .zen-rice-share-header {
+    height: 200px;
+    margin-bottom: -20px;
+  }
+
+  & #zen-rice-share-options {
+    padding: 10px 0;
+
+    max-height: 30px;
+    overflow: hidden;
+    transition:
+      max-height 0.3s ease,
+      height 0.3s ease;
+    &[zen-collapsed='false'] {
+      max-height: 350px;
+    }
+
+    & > .options-header {
+      font-weight: 600;
+      margin-bottom: 5px;
+      position: relative;
+      cursor: pointer;
+      align-items: center;
+
+      color: inherit;
+      -moz-context-properties: fill, fill-opacity;
+      fill: var(--toolbarbutton-icon-fill);
+
+      & label {
+        width: fit-content;
+        cursor: pointer;
+      }
+    }
+
+    & > .options-header image {
+      transition: transform 0.3s ease;
+      width: 15px;
+      height: 15px;
+    }
+
+    &[zen-collapsed='false'] > .options-header image {
+      transform: rotate(90deg);
+    }
+
+    & > checkbox {
+      margin-left: 15px;
+    }
+  }
+
+  & .panel-footer {
+    margin: 0;
+    margin-top: 10px;
+
+    & button {
+      justify-content: center;
+    }
+  }
+
+  #zen-rice-share-error {
+    border: 1px solid rgba(255, 0, 0, 0.5);
+    background: rgba(255, 0, 0, 0.1);
+    padding: 5px;
+    transition: opacity 0.3s ease;
+    border-radius: var(--zen-native-inner-radius);
+
+    @starting-style {
+      opacity: 0;
+    }
+
+    & button {
+      margin-left: auto;
+      margin-top: 2px;
+    }
+  }
+
+  /* Animations */
+  #zen-rice-share-first-form[fade-out] {
+    position: absolute;
+    transform: translateX(-100%);
+    pointer-events: none;
+    animation: zen-rice-form-out 0.5s ease;
+  }
+
+  #zen-rice-share-second-form {
+    animation: zen-rice-form-in 0.5s ease forwards;
+    justify-content: center;
+
+    & > hbox {
+      width: 100%;
+      height: 5px;
+      border-radius: 100px;
+      border: 1px solid var(--zen-colors-border);
+      position: relative;
+      overflow: hidden;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: var(--zen-primary-color);
+        transition: width 4s cubic-bezier(1, 0, 0, 1);
+
+        @starting-style {
+          width: 0;
+        }
+      }
+    }
+
+    &[fade-out] {
+      position: absolute !important;
+      animation: zen-rice-form-out 0.5s ease forwards;
+    }
+  }
+
+  #zen-rice-share-success {
+    overflow-y: hidden;
+    max-height: 0px;
+    animation: zen-rice-form-in-2 0.5s ease forwards;
+
+    & > h1 {
+      margin: 0;
+      font-size: 20px;
+    }
+
+    & > p {
+      color: var(--text-color-deemphasized);
+    }
+
+    & label {
+      margin: 0;
+      margin-top: 15px;
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+  }
+}
+
+#zen-rice-share-dialog-notice {
+  padding: 15px;
+
+  & br {
+    margin-bottom: 10px;
+  }
+
+  & > p {
+    color: var(--text-color-deemphasized);
+    margin-top: 10px;
+  }
+
+  .panel-footer {
+    margin-top: 10px;
+    align-items: center;
+  }
+}

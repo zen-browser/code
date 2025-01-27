@@ -8,7 +8,7 @@ index bc8e72a3cd07e8746c6fbf190bdd2bf70f4000d4..07031dfdfadf393db5fd848948e33510
  :host {
 -  border-inline-end: 1px solid var(--in-content-border-color);
 +  border: 1px solid var(--in-content-border-color);
-   background-color: var(--in-content-box-background);
+   background-color: var(--background-color-box);
    display: flex;
    flex-direction: column;
 @@ -161,3 +161,8 @@ ol {

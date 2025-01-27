@@ -95,6 +95,14 @@ jobs:
           ./mach --no-interactive bootstrap --application-choice browser --no-system-changes
           cd ..
 
+      - name: Import
+        run: pnpm surfer import
+
+      - name: Populate mozconfig
+        env:
+          SURFER_MOZCONFIG_ONLY: true
+        run: pnpm build
+
       - name: Download x86_64 DMG from artifacts
         uses: actions/download-artifact@v4
         with:
@@ -141,9 +149,6 @@ jobs:
           cd engine/obj-x86_64-apple-darwin/dist
           find . -maxdepth 1 -name "*.app" -type d
           cd ../..
-
-      - name: Import
-        run: pnpm surfer import
 
       - name: create .p12 for codesign 🖊️
         run: |

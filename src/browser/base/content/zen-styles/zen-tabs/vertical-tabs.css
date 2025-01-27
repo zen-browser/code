@@ -145,7 +145,7 @@
   @media (-moz-platform: windows) {
     /* More native look */
     --border-radius-medium: 8px;
-    --tab-border-radius: 4px;
+    --tab-border-radius: 6px;
   }
 
   --tab-hover-background-color: color-mix(in srgb, var(--toolbarbutton-hover-background) 50%, transparent 50%);

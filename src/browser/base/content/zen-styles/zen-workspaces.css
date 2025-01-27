@@ -68,9 +68,12 @@
             filter 0.2s;
         }
 
+        #zen-current-workspace-indicator-icon,
         &[active='true'] {
           filter: none;
           opacity: 1;
+          color: transparent;
+          text-shadow: 0 0 0 color-mix(in srgb, var(--zen-primary-color) 80%, transparent 20%);
         }
       }
     }

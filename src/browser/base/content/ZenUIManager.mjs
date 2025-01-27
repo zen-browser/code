@@ -35,6 +35,7 @@ var gZenUIManager = {
       }
       tab.style.maxHeight = '0px';
     }
+    tabs.style.flex = '1';
     tabs.style.removeProperty('max-height');
     const toolbarRect = tabs.getBoundingClientRect();
     let height = toolbarRect.height;
@@ -44,6 +45,7 @@ var gZenUIManager = {
       }
       tab.style.removeProperty('max-height');
     }
+    tabs.style.removeProperty('flex');
     tabs.style.maxHeight = height + 'px';
   },
 

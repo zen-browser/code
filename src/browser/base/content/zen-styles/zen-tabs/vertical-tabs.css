@@ -356,7 +356,6 @@
 #zen-browser-tabs-wrapper {
   min-height: fit-content;
   overflow-y: scroll;
-  height: 100%;
 }
 
 #vertical-pinned-tabs-container {

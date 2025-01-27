@@ -1317,42 +1317,37 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
   }
 
   async _animateTabs(direction, out = false) {
-    const selector = `#tabbrowser-tabs *:is(#zen-current-workspace-indicator, #vertical-pinned-tabs-container-separator, .tabbrowser-tab:not([zen-essential], [hidden]))`;
-    const extraSelector = `#tabbrowser-arrowscrollbox-periphery > toolbarbutton`;
+    const selector = `#zen-browser-tabs-wrapper`;
+    const extraSelector = `#zen-current-workspace-indicator`;
     this.tabContainer.removeAttribute('dont-animate-tabs');
+    const tabsWidth = this.tabContainer.getBoundingClientRect().width;
     // order by actual position in the children list to animate
     const elements = Array.from([
       ...this.tabContainer.querySelectorAll(selector),
       ...this.tabContainer.querySelectorAll(extraSelector),
-    ])
-      .sort((a, b) => a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING)
-      .reverse();
+    ]);
     if (out) {
       return gZenUIManager.motion.animate(
         elements,
         {
-          transform: `translateX(${direction === 'left' ? '-' : ''}100%)`,
-          opacity: 0,
+          transform: `translateX(${direction === 'left' ? '-' : ''}${tabsWidth}px)`,
         },
         {
           type: 'spring',
           bounce: 0,
           duration: 0.12,
-          // delay: gZenUIManager.motion.stagger(0.01),
         }
       );
     }
     return gZenUIManager.motion.animate(
       elements,
       {
-        transform: [`translateX(${direction === 'left' ? '-' : ''}100%)`, 'translateX(0%)'],
-        opacity: 1,
+        transform: [`translateX(${direction === 'left' ? '-' : ''}${tabsWidth}px)`, 'translateX(0px)'],
       },
       {
         duration: 0.15,
         type: 'spring',
         bounce: 0,
-        // delay: gZenUIManager.motion.stagger(0.02),
       }
     );
   }

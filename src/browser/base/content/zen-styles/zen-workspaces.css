@@ -61,18 +61,13 @@
 
       @media not (-moz-bool-pref: 'zen.workspaces.hide-deactivated-workspaces') {
         & {
-          opacity: 0.4;
-          filter: grayscale(1);
-          transition:
-            opacity 0.2s,
-            filter 0.2s;
+          color: transparent;
+          text-shadow: 0 0 0 var(--zen-toolbar-element-bg);
+          transition: text-shadow 0.4s ease;
+          transition-delay: 0.2s; /* Wait for new accent color to be applied */
         }
 
-        #zen-current-workspace-indicator-icon,
         &[active='true'] {
-          filter: none;
-          opacity: 1;
-          color: transparent;
           text-shadow: 0 0 0 color-mix(in srgb, var(--zen-primary-color) 80%, transparent 20%);
         }
       }

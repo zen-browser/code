@@ -51,7 +51,7 @@
     &[animating='true']::after {
       background: var(--zen-main-browser-background-old);
       backdrop-filter: blur(5px);
-      animation: zen-main-app-wrapper-animation 0.4s ease forwards;
+      animation: zen-main-app-wrapper-animation 0.5s ease forwards;
       transition: 0s;
     }
   }

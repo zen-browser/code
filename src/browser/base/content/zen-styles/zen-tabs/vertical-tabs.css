@@ -148,6 +148,12 @@
     --tab-border-radius: 6px;
   }
 
+  @media (-moz-platform: macos) {
+    /* More native look */
+    --border-radius-medium: 12px;
+    --tab-border-radius: 10px;
+  }
+
   --tab-hover-background-color: color-mix(in srgb, var(--toolbarbutton-hover-background) 50%, transparent 50%);
 
   min-width: var(--zen-toolbox-min-width);
@@ -237,7 +243,8 @@
 #tabbrowser-tabs {
   margin-inline-start: 0 !important;
   padding-inline-start: 0 !important;
-  overflow: hidden;
+  overflow-y: unset !important; /* DO NOT CHANGE THIS: Firefox renders badly workspace changes */
+  overflow-x: clip;
 
   --tab-inner-inline-margin: 0;
 
@@ -361,6 +368,7 @@
 #zen-browser-tabs-wrapper {
   min-height: fit-content;
   overflow-y: auto;
+  overflow-x: hidden;
 }
 
 #vertical-pinned-tabs-container {

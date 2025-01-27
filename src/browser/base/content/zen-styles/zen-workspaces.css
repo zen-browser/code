@@ -62,9 +62,8 @@
       @media not (-moz-bool-pref: 'zen.workspaces.hide-deactivated-workspaces') {
         & {
           color: transparent;
-          text-shadow: 0 0 0 var(--zen-toolbar-element-bg);
-          transition: text-shadow 0.4s ease;
-          transition-delay: 0.2s; /* Wait for new accent color to be applied */
+          text-shadow: 0 0 0 light-dark(rgba(0, 0, 0, 0.2), rgba(255, 255, 255, 0.15));
+          transition: text-shadow 0.2s ease;
         }
 
         &[active='true'] {

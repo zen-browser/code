@@ -269,7 +269,7 @@
       }
     }
 
-    &:not([zen-essential='true']):active {
+    &:active {
       scale: 0.98;
     }
 
@@ -986,7 +986,7 @@
       position: relative;
 
       &::before {
-        background: light-dark(rgba(255, 255, 255, 0.75), rgba(68, 64, 64, 0.75));
+        background: light-dark(rgba(255, 255, 255, 0.85), rgba(68, 64, 64, 0.85));
         margin: 2px;
         border-radius: calc(var(--border-radius-medium) - 2px);
         position: absolute;
@@ -998,7 +998,7 @@
     }
 
     &[selected]:hover .tab-background::before {
-      background: light-dark(rgba(255, 255, 255, 0.70), rgba(68, 64, 64, 0.70));
+      background: light-dark(rgba(255, 255, 255, 0.80), rgba(68, 64, 64, 0.80));
     }
   }
 }

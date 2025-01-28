@@ -1,24 +1,8 @@
 diff --git a/browser/themes/windows/browser.css b/browser/themes/windows/browser.css
-index 95b571aca107a6b3e0e5a7e5eb8672c66be9bf61..9ed448c2142b6a5dbb6132ffe5e65a1771a4a525 100644
+index f49604e53780763b9aa19897458c45f0be6cbc9b..aa9da99641ba4a3b7f67a27acbbf6c75c1346ced 100644
 --- a/browser/themes/windows/browser.css
 +++ b/browser/themes/windows/browser.css
-@@ -31,15 +31,6 @@
-       &:not([lwtheme]) {
-         background-color: transparent;
- 
--        /* Accent color in titlebar overrides Mica. */
--        @media not (-moz-windows-accent-color-in-titlebar) {
--          /* Hide the Firefox buttons since Windows draws their own.
--           * FIXME(emilio): Find a way of hiding the native buttons, or make them
--           * taller, this is very hacky. */
--          .titlebar-buttonbox {
--            opacity: 0;
--          }
--        }
-       }
-     }
- 
-@@ -57,7 +48,7 @@
+@@ -47,7 +47,7 @@
      }
  
      &[sizemode="normal"] #navigator-toolbox {

@@ -20,8 +20,10 @@
   }
 
   @media (-moz-platform: macos) and (not (-moz-bool-pref: 'zen.view.mac.show-three-dot-menu')) {
-    &:not([customizing]) #PanelUI-button {
-      display: none;
+    &:not([customizing]) #PanelUI-button:not([open]):not([panelopen]) {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
     }
   }
 

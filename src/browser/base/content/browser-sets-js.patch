@@ -1,13 +1,13 @@
 diff --git a/browser/base/content/browser-sets.js b/browser/base/content/browser-sets.js
-index 3031278749317d153624c6ccfbcc9d47aaf4089f..e67a8c3b56c01334627350c494b0139638ebf19a 100644
+index 61aef2d420a78fb1910f556b71f6db75a16180ed..a3a1e70bedb760c165c338c28de6f2ee924df8de 100644
 --- a/browser/base/content/browser-sets.js
 +++ b/browser/base/content/browser-sets.js
-@@ -245,7 +245,7 @@ document.addEventListener(
+@@ -250,7 +250,7 @@ document.addEventListener(
          }
        });
  
 -    document.getElementById("mainKeyset").addEventListener("command", event => {
 +    document.getElementById("zenKeyset").addEventListener("command", event => {
-       switch (event.target.id) {
-         case "goHome":
-           BrowserCommands.home();
+       const SIDEBAR_REVAMP_PREF = "sidebar.revamp";
+       const SIDEBAR_REVAMP_ENABLED = Services.prefs.getBoolPref(
+         SIDEBAR_REVAMP_PREF,

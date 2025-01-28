@@ -246,8 +246,21 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     this._swipeState.cumulativeDelta += event.delta;
 
     // Determine swipe direction based on cumulative delta
-    if (Math.abs(this._swipeState.cumulativeDelta) > 0.25) {
+    if (Math.abs(this._swipeState.cumulativeDelta) > 1.5) {
       this._swipeState.direction = this._swipeState.cumulativeDelta > 0 ? 'left' : 'right';
+    }
+
+    // Apply a translateX to the tab strip to give the user feedback on the swipe
+    const stripWidth = document.getElementById('tabbrowser-tabs').scrollWidth;
+    // To make the animation larger, we multiply the delta by 5
+    let translateX = this._swipeState.cumulativeDelta * 10;
+    if (this._swipeState.direction === 'left') {
+      translateX = Math.min(translateX, stripWidth);
+    } else {
+      translateX = Math.max(translateX, -stripWidth);
+    }
+    for (const element of this._animateTabsElements) {
+      element.style.transform = `translateX(${translateX}px)`;
     }
   }
 
@@ -262,6 +275,8 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     if (this._swipeState.direction) {
       let direction = this.naturalScroll ? -1 : 1;
       this.changeWorkspaceShortcut(rawDirection * direction);
+    } else {
+      this._cancelSwipeAnimation();
     }
 
     // Reset swipe state
@@ -1273,10 +1288,29 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     }
   }
 
+  _cancelSwipeAnimation() {
+    const existingTransform = this._animateTabsElements[0].style.transform;
+    const newTransform = 'translateX(0)';
+    for (const element of this._animateTabsElements) {
+      gZenUIManager.motion.animate(
+        element,
+        {
+          transform: existingTransform ? [existingTransform, newTransform] : newTransform,
+        },
+        {
+          type: 'spring',
+          bounce: 0,
+          duration: 0.12,
+        }
+      );
+    }
+  }
+
   async _performWorkspaceChange(window, { onInit = false, explicitAnimationDirection = undefined } = {}) {
     const previousWorkspace = await this.getActiveWorkspace();
 
     if (previousWorkspace && previousWorkspace.uuid === window.uuid && !onInit) {
+      this._cancelSwipeAnimation();
       return;
     }
 
@@ -1316,21 +1350,24 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     }
   }
 
-  async _animateTabs(direction, out = false) {
+  get _animateTabsElements() {
     const selector = `#zen-browser-tabs-wrapper`;
     const extraSelector = `#zen-current-workspace-indicator`;
+    return [...this.tabContainer.querySelectorAll(selector), ...this.tabContainer.querySelectorAll(extraSelector)];
+  }
+
+  async _animateTabs(direction, out = false) {
     this.tabContainer.removeAttribute('dont-animate-tabs');
     const tabsWidth = this.tabContainer.getBoundingClientRect().width;
     // order by actual position in the children list to animate
-    const elements = Array.from([
-      ...this.tabContainer.querySelectorAll(selector),
-      ...this.tabContainer.querySelectorAll(extraSelector),
-    ]);
+    const elements = this._animateTabsElements;
     if (out) {
+      const existingTransform = elements[0].style.transform;
+      const newTransform = `translateX(${direction === 'left' ? '-' : ''}${tabsWidth}px)`;
       return gZenUIManager.motion.animate(
         elements,
         {
-          transform: `translateX(${direction === 'left' ? '-' : ''}${tabsWidth}px)`,
+          transform: existingTransform ? [existingTransform, newTransform] : newTransform,
         },
         {
           type: 'spring',

@@ -1,5 +1,5 @@
 diff --git a/modules/libpref/init/StaticPrefList.yaml b/modules/libpref/init/StaticPrefList.yaml
-index ce2393978f77f55f42ae9b97e5d40328ce8eaae4..4a20d3c4574c2a123140f44e2f1455fa181b0700 100644
+index ce2393978f77f55f42ae9b97e5d40328ce8eaae4..6b0dac8f404107ae62003c38456d567708467b53 100644
 --- a/modules/libpref/init/StaticPrefList.yaml
 +++ b/modules/libpref/init/StaticPrefList.yaml
 @@ -18060,7 +18060,7 @@
@@ -11,10 +11,16 @@ index ce2393978f77f55f42ae9b97e5d40328ce8eaae4..4a20d3c4574c2a123140f44e2f1455fa
    mirror: once
  #endif
  
-@@ -18173,6 +18173,13 @@
+@@ -18173,6 +18173,19 @@
    mirror: always
  #endif
  
++# Dummy pref to always generate StaticPrefs_zen.h in every OS
++- name: zen.browser.is-cool
++  type: bool
++  value: true
++  mirror: never
++
 +#ifdef XP_MACOSX
 +- name: zen.widget.mac.mono-window-controls
 +  type: RelaxedAtomicBool

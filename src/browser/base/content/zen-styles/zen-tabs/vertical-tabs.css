@@ -275,7 +275,7 @@
       }
     }
 
-    &:not([zen-essential='true']):active {
+    &:active {
       scale: 0.98;
     }
 

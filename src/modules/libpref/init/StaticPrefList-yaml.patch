@@ -1,8 +1,20 @@
 diff --git a/modules/libpref/init/StaticPrefList.yaml b/modules/libpref/init/StaticPrefList.yaml
-index c63a259a51c4862bc8f73eabdc5730bfe2f28da4..f9b8431071e73ce55972c12354ed44bc3a4df9c0 100644
+index 5c5992d7b32e4c16d6a92815ca6fd54e8fcec824..03d3ae7af3addf76a3f4a79b49b7560aa5431e31 100644
 --- a/modules/libpref/init/StaticPrefList.yaml
 +++ b/modules/libpref/init/StaticPrefList.yaml
-@@ -17651,7 +17651,7 @@
+@@ -17384,6 +17384,11 @@
+   value: false
+   mirror: always
+ 
++- name: zen.widget.mac.mono-window-controls
++  type: RelaxedAtomicBool
++  value: true
++  mirror: always
++
+ #ifdef XP_MACOSX
+ 
+ # Whether to shift by the menubar height on fullscreen mode.
+@@ -17810,7 +17815,7 @@
  # Whether we use the mica backdrop. Off by default for now.
  - name: widget.windows.mica
    type: bool

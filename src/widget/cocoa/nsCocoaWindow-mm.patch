@@ -1,0 +1,19 @@
+diff --git a/widget/cocoa/nsCocoaWindow.mm b/widget/cocoa/nsCocoaWindow.mm
+index f1c87dd8faef8c6caf9248ce7d9f40c12f5db9f6..6057495421c8cfe05a2dc83f21ee4353c8ad9958 100644
+--- a/widget/cocoa/nsCocoaWindow.mm
++++ b/widget/cocoa/nsCocoaWindow.mm
+@@ -682,9 +682,11 @@ static unsigned int WindowMaskForBorderStyle(BorderStyle aBorderStyle) {
+       continue;
+     }
+     NSWindow* win = ancestor->GetCocoaWindow();
+-    [[win standardWindowButton:NSWindowCloseButton] setEnabled:!aModal];
+-    [[win standardWindowButton:NSWindowMiniaturizeButton] setEnabled:!aModal];
+-    [[win standardWindowButton:NSWindowZoomButton] setEnabled:!aModal];
++
++    auto zenBtnEnabled = StaticPrefs::zen_widget_mac_mono_window_controls() ? false : !aModal;
++    [[win standardWindowButton:NSWindowCloseButton] setEnabled:zenBtnEnabled];
++    [[win standardWindowButton:NSWindowMiniaturizeButton] setEnabled:zenBtnEnabled];
++    [[win standardWindowButton:NSWindowZoomButton] setEnabled:zenBtnEnabled];
+   }
+   if (aModal) {
+     mWindow.level = NSModalPanelWindowLevel;

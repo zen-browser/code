@@ -1,5 +1,5 @@
 diff --git a/browser/components/tabbrowser/content/tabs.js b/browser/components/tabbrowser/content/tabs.js
-index 8aeb244ffca9f48661805f5b7d860b5896055562..5d49a40b35b2bc4ea2c9b8423bde07508326eaca 100644
+index 8aeb244ffca9f48661805f5b7d860b5896055562..94b6a5ee6b89965fc63a8e8d1075bd0de37c4d15 100644
 --- a/browser/components/tabbrowser/content/tabs.js
 +++ b/browser/components/tabbrowser/content/tabs.js
 @@ -94,7 +94,7 @@
@@ -7,7 +7,7 @@ index 8aeb244ffca9f48661805f5b7d860b5896055562..5d49a40b35b2bc4ea2c9b8423bde0750
        this.arrowScrollbox._canScrollToElement = element => {
          if (isTab(element)) {
 -          return !element.pinned || !this.hasAttribute("positionpinnedtabs");
-+          return !tab.hasAttribute("zen-essential") || !this.hasAttribute("positionpinnedtabs");
++          return !element.hasAttribute("zen-essential") || !this.hasAttribute("positionpinnedtabs");
          }
          return true;
        };

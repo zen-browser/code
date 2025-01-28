@@ -56,6 +56,11 @@ panel {
   --panel-border-radius: var(--zen-native-inner-radius);
 }
 
+/* split-view popup */
+#confirmation-hint {
+  --arrowpanel-background: var(--zen-colors-primary);
+}
+
 /* app menu */
 .addon-banner-item,
 .panel-banner-item {

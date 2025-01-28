@@ -1,8 +1,32 @@
 diff --git a/browser/base/content/browser-commands.js b/browser/base/content/browser-commands.js
-index 352de44dda36e3f6672eb353f42978ede0cd2681..d6956a318c34bfb12b0ba957edab1166e1a4edaf 100644
+index 352de44dda36e3f6672eb353f42978ede0cd2681..916876ed2924cada725dc68e42cfac0c3abedae0 100644
 --- a/browser/base/content/browser-commands.js
 +++ b/browser/base/content/browser-commands.js
-@@ -407,8 +407,8 @@ var BrowserCommands = {
+@@ -7,6 +7,13 @@
+ 
+ "use strict";
+ 
++XPCOMUtils.defineLazyPreferenceGetter(
++  lazy,
++  "ZEN_URLBAR_BEHAVIOR",
++  "zen.urlbar.behavior",
++  'default'
++);
++
+ var kSkipCacheFlags =
+   Ci.nsIWebNavigation.LOAD_FLAGS_BYPASS_PROXY |
+   Ci.nsIWebNavigation.LOAD_FLAGS_BYPASS_CACHE;
+@@ -345,6 +352,9 @@ var BrowserCommands = {
+             }
+           }
+           openTrustedLinkIn(url, where, options);
++          if (lazy.ZEN_URLBAR_BEHAVIOR === 'float' && url === BROWSER_NEW_TAB_URL) {
++            gURLBar.view.input.startQuery();
++          }
+         }),
+       },
+       "browser-open-newtab-start"
+@@ -407,8 +417,8 @@ var BrowserCommands = {
        (event.ctrlKey || event.metaKey || event.altKey) &&
        gBrowser.selectedTab.pinned
      ) {

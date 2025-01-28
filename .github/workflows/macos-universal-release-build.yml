@@ -229,10 +229,14 @@ jobs:
         env:
           JUST_MAR: true
         run: |
+          # we don't need it anymore
+          set -ex
+          rm -rf ./obj-aarch64-apple-darwin
           export SURFER_PLATFORM="darwin"
           export ZEN_RELEASE=1
           # full path to zen-macos-host-mar
           export MAR=$(pwd)/zen-macos-host-mar
+          chmod +x $MAR
           echo "MAR=$MAR"
           pnpm package
           mv ./dist/output.mar ./macos.mar

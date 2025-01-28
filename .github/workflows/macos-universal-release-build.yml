@@ -231,7 +231,7 @@ jobs:
         run: |
           # we don't need it anymore
           set -ex
-          rm -rf ./obj-aarch64-apple-darwin
+          rm -rf ./engine/obj-aarch64-apple-darwin
           export SURFER_PLATFORM="darwin"
           export ZEN_RELEASE=1
           # full path to zen-macos-host-mar

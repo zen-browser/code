@@ -28,7 +28,7 @@
 
 #browser {
   width: 100%;
-  background: var(--zen-main-browser-background);
+  background: var(--zen-main-browser-background) !important;
 
   will-change: background-color;
 

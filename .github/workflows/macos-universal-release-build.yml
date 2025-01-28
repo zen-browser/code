@@ -225,6 +225,13 @@ jobs:
         with:
           name: zen-macos-host-mar
 
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          retention-days: 5
+          name: zen.macos-universal.dmg
+          path: ./zen.macos-universal.dmg
+
       - name: Package for mar
         env:
           JUST_MAR: true
@@ -238,15 +245,8 @@ jobs:
           export MAR=$(pwd)/zen-macos-host-mar
           chmod +x $MAR
           echo "MAR=$MAR"
-          pnpm package
+          pnpm package --verbose
           mv ./dist/output.mar ./macos.mar
-
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v4
-        with:
-          retention-days: 5
-          name: zen.macos-universal.dmg
-          path: ./zen.macos-universal.dmg
 
       - name: Upload build artifact (.mar)
         uses: actions/upload-artifact@v4
@@ -254,3 +254,10 @@ jobs:
           retention-days: 5
           name: macos.mar
           path: ./macos.mar
+
+      - name: Upload build artifact (update manifests)
+        uses: actions/upload-artifact@v4
+        with:
+          retention-days: 5
+          name: macos_update_manifest
+          path: ./dist/update

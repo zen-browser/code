@@ -530,8 +530,7 @@ jobs:
             cp -a ../windows_update_manifest_arm64/.  updates/
           fi
 
-          cp -a ../macos_update_manifest_aarch64/.  updates/
-          cp -a ../macos_update_manifest_x86_64/.  updates/
+          cp -a ../macos_update_manifest/.  updates/
 
       - name: Commit
         uses: stefanzweifel/git-auto-commit-action@v5
@@ -561,7 +560,6 @@ jobs:
             windows.mar
             windows-arm64.mar
             macos.mar
-            macos-aarch64.mar
             zen.installer.exe
             zen.installer-arm64.exe
             zen.macos-universal.dmg
@@ -595,8 +593,7 @@ jobs:
             linux-aarch64.mar
             .github/workflows/object/windows-x64-signed-x86_64/windows.mar
             .github/workflows/object/windows-x64-signed-arm64/windows-arm64.mar
-            macos-x86_64.mar
-            macos-aarch64.mar
+            macos.mar
             .github/workflows/object/windows-x64-signed-x86_64/zen.installer.exe
             .github/workflows/object/windows-x64-signed-arm64/zen.installer-arm64.exe
             zen.macos-x86_64.dmg

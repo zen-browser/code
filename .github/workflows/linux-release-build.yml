@@ -11,6 +11,10 @@ on:
         description: 'The branch to build'
         required: true
         type: string
+      MOZ_BUILD_DATE:
+        type: string
+        required: true
+        default: ""
 
 jobs:
   build-linux:
@@ -130,6 +134,9 @@ jobs:
         continue-on-error: true
         run: |
           export SURFER_PLATFORM="linux"
+          if [[ -n ${{ inputs.MOZ_BUILD_DATE }} ]];then
+            export MOZ_BUILD_DATE=${{ inputs.MOZ_BUILD_DATE }}
+          fi
           bash .github/workflows/src/release-build.sh
 
       - name: Package

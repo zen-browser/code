@@ -18,6 +18,10 @@ on:
         description: 'The branch to build'
         required: true
         type: string
+      MOZ_BUILD_DATE:
+        type: string
+        required: true
+        default: ""
 
 jobs:
   windows-build:
@@ -215,6 +219,9 @@ jobs:
           export ZEN_CROSS_COMPILING=1
           if test ${{ inputs.generate-gpo }} = true; then
             export ZEN_GA_GENERATE_PROFILE=1
+          fi
+          if [[ -n ${{ inputs.MOZ_BUILD_DATE }} ]];then
+            export MOZ_BUILD_DATE=${{ inputs.MOZ_BUILD_DATE }}
           fi
           bash .github/workflows/src/release-build.sh
 

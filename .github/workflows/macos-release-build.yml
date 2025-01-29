@@ -11,6 +11,10 @@ on:
         description: 'The branch to build'
         required: true
         type: string
+      MOZ_BUILD_DATE:
+        type: string
+        required: true
+        default: ""
 
 jobs:
   mac-build:
@@ -118,72 +122,47 @@ jobs:
           ZEN_RELEASE_BRANCH: ${{ inputs.release-branch }}
         run: |
           export SURFER_PLATFORM="darwin"
+          if [[ -n ${{ inputs.MOZ_BUILD_DATE }} ]];then
+            export MOZ_BUILD_DATE=${{ inputs.MOZ_BUILD_DATE }}
+          fi
           bash .github/workflows/src/release-build.sh
-
-      - name: Import APPLE DEVELOPER ID CERTIFICATE for .app
-        uses: Apple-Actions/import-codesign-certs@v3
-        with:
-          p12-file-base64: ${{ secrets.macOS_CERTIFICATES_P12_For_App_BASE64 }}
-          p12-password: ${{ secrets.macOS_CERTIFICATES_P12_PASSWORD }}
-
-      - name: Import provisioning profile for .app
-        run: |
-          echo "${{ secrets.macOS_PROVISIONING_PROFILE }}" | base64 --decode > ./engine/Zen_Browser.provisionprofile
-          ls -la
 
       - name: Package
         env:
           SURFER_COMPAT: ${{ matrix.arch }}
           ZEN_GA_DISABLE_PGO: true
-          MACOS_APPLE_ACCOUNT_ID: ${{ secrets.macOS_AppleAccountId }}
-          MACOS_APPLE_DEVELOPER_ID_TEAM_ID: ${{ secrets.macOS_AppleDeveloperIdTeamId }}
-          MACOS_APPLE_DEVELOPER_ID_PASSWORD: ${{ secrets.macOS_AppleDeveloperIdPassword }}
         run: |
           export SURFER_PLATFORM="darwin"
-          export MACOS_APPLE_DEVELOPER_ID="${{ secrets.macOS_AppleDeveloperId }}"
           export ZEN_RELEASE=1
           pnpm package
 
       - name: Rename artifacts
         run: |
-          mv ./dist/output.mar macos-${{ matrix.arch }}.mar
-
-      - name: Remove sensitive information
-        run: |
-          rm -f ./engine/Zen_Browser.provisionprofile
-
-      - name: Sign .dmg
-        run: |
+          echo "Tarballing DMG"
           set -ex
-          hdiutil convert ./dist/*.dmg -format UDZO -imagekey zlib-level=9 -o zen.macos-${{ matrix.arch }}.dmg
-          xattr -cr zen.macos-${{ matrix.arch }}.dmg
-          codesign -s "${{ secrets.macOS_AppleDeveloperId }}" zen.macos-${{ matrix.arch }}.dmg
-          xcrun notarytool submit "zen.macos-${{ matrix.arch }}.dmg" \
-            --apple-id "${{ secrets.macOS_AppleAccountId }}" \
-            --team-id "${{ secrets.macOS_AppleDeveloperIdTeamId }}" \
-            --password "${{ secrets.macOS_AppleDeveloperIdPassword }}" \
-            --no-s3-acceleration \
-            --verbose \
-            --wait
-          xcrun stapler staple "zen.macos-${{ matrix.arch }}.dmg"
+          mv ./dist/*.dmg ./zen-${{ matrix.arch }}-apple-darwin-dist.dmg
+          mv ./engine/obj-${{ matrix.arch }}-apple-darwin/dist/host/bin/mar ./zen-macos-host-mar
+          mv ./engine/obj-${{ matrix.arch }}-apple-darwin/dist/bin/platform.ini ./platform.ini
 
-      - name: Upload build artifact
+      - name: Upload dist dmg
         uses: actions/upload-artifact@v4
         with:
-          retention-days: 5
-          name: zen.macos-${{ matrix.arch }}.dmg
-          path: ./zen.macos-${{ matrix.arch }}.dmg
+          retention-days: 1
+          name: zen-${{ matrix.arch }}-apple-darwin-dist.dmg
+          path: ./zen-${{ matrix.arch }}-apple-darwin-dist.dmg
 
-      - name: Upload build artifact (.mar)
+      - name: Upload host mar
         uses: actions/upload-artifact@v4
+        if: matrix.arch == 'aarch64'
         with:
-          retention-days: 5
-          name: macos-${{ matrix.arch }}.mar
-          path: ./macos-${{ matrix.arch }}.mar
+          retention-days: 1
+          name: zen-macos-host-mar
+          path: ./zen-macos-host-mar
 
-      - name: Upload build artifact (update manifests)
+      - name: Upload platform.ini
         uses: actions/upload-artifact@v4
+        if: matrix.arch == 'x86_64'
         with:
-          retention-days: 5
-          name: macos_update_manifest_${{ matrix.arch }}
-          path: ./dist/update
+          retention-days: 1
+          name: platform.ini
+          path: ./platform.ini

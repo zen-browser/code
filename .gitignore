@@ -9,3 +9,5 @@ dist/
 
 windsign-temp/
 venv/
+
+!firefox-cache/

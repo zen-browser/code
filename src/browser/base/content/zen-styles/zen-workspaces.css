@@ -378,19 +378,15 @@
 @media (-moz-bool-pref: "zen.theme.pill-button") {
   #PanelUI-zen-workspaces-list toolbarbutton {
     &.zen-workspace-button[active="true"] .zen-workspace-icon::before {
-      background-color: transparent !important;
+      background-color: transparent;
     }
-  }
-
-  #PanelUI-zen-workspaces-list toolbarbutton {
-    & .zen-workspace-icon {
-      border: 3px solid var(--zen-colors-border) !important;
+  
+    &.zen-workspace-icon {
+      border: 3px solid var(--zen-colors-border);
     }
-  }
-
-  #PanelUI-zen-workspaces-list toolbarbutton {
+  
     &.zen-workspace-button[active="true"] .zen-workspace-icon {
-      border: 3px solid var(--toolbarbutton-icon-fill-attention) !important;
+      border: 3px solid var(--toolbarbutton-icon-fill-attention);
     }
   }
 }

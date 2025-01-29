@@ -181,17 +181,18 @@ jobs:
           p12-file-base64: ${{ secrets.macOS_CERTIFICATES_P12_For_App_BASE64 }}
           p12-password: ${{ secrets.macOS_CERTIFICATES_P12_PASSWORD }}
 
+      - name: Copy provisioning profile for .app (embedded in .app)
+        run: |
+          cd engine
+          echo "Copying provisioning profile for .app on both architectures (${{ env.APP_NAME }})"
+          cp ./Zen_Browser.provisionprofile "./embedded.provisionprofile"
+
+
       - name: Sign .app
         run: |
           cd engine
           # TODO: Change it to "production" once we figure out the issue with the webauth
           ./mach macos-sign -v -r -c "release" -e "production" -a "./obj-x86_64-apple-darwin/dist/${{ env.APP_NAME }}.app" --rcodesign-p12-file zenCert.p12 --rcodesign-p12-password-file zenpCertPassword.passwd
-
-      - name: Copy provisioning profile for .app (embedded in .app)
-        run: |
-          cd engine
-          echo "Copying provisioning profile for .app on both architectures (${{ env.APP_NAME }})"
-          cp ./Zen_Browser.provisionprofile "./obj-x86_64-apple-darwin/dist/${{ env.APP_NAME }}.app/Contents/embedded.provisionprofile"
 
       - name: Create DMG
         run: |

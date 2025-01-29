@@ -14,7 +14,7 @@ on:
       MOZ_BUILD_DATE:
         type: string
         required: true
-        default: ""
+        default: ''
 
 jobs:
   build-linux:

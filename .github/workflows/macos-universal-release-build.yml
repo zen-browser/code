@@ -102,9 +102,9 @@ jobs:
         env:
           SURFER_MOZCONFIG_ONLY: true
         run: |
-              pnpm build
-              cd engine
-              ./mach configure
+          pnpm build
+          cd engine
+          ./mach configure
 
       - name: Download x86_64 DMG from artifacts
         uses: actions/download-artifact@v4
@@ -186,7 +186,6 @@ jobs:
           cd engine
           echo "Copying provisioning profile for .app on both architectures (${{ env.APP_NAME }})"
           cp ./Zen_Browser.provisionprofile "./embedded.provisionprofile"
-
 
       - name: Sign .app
         run: |

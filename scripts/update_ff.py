@@ -56,6 +56,7 @@ def update_readme(last_version, new_version, is_rc=False):
   except FileNotFoundError as e:
     raise RuntimeError(f"README.md file not found: {e}")
 
+
 def update_l10n_last_commit_hash():
   L10N_REPO = "https://github.com/mozilla-l10n/firefox-l10n"
   try:
@@ -67,6 +68,7 @@ def update_l10n_last_commit_hash():
   except KeyboardInterrupt:
     print("Exiting...")
   shutil.rmtree("l10n-temp")
+
 
 def main():
   """Main function to update versions and README."""

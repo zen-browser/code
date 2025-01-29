@@ -217,13 +217,15 @@ var gZenVerticalTabsManager = {
       return;
     }
     const isLastTab = aTab.nextElementSibling === null;
+    const tabSize = aTab.getBoundingClientRect().height;
+    const transform = `-${tabSize}px`;
     gZenUIManager.motion
       .animate(
         aTab,
         {
           opacity: [0, 1],
-          transform: ['translateY(-50px)', 'translateY(0px)'],
-          marginBottom: isLastTab ? [] : ['-20px', '0px'],
+          transform: ["scale(0.95)", "scale(1)"],
+          marginBottom: isLastTab ? [] : [transform, '0px'],
         },
         {
           duration: 0.2,
@@ -234,7 +236,13 @@ var gZenVerticalTabsManager = {
         aTab.style.removeProperty('margin-bottom');
         aTab.style.removeProperty('transform');
         aTab.style.removeProperty('opacity');
-        aTab.style.removeProperty('filter');
+      });
+    gZenUIManager.motion
+      .animate(aTab.querySelector('.tab-stack'), {
+        filter: ['blur(2px)', 'blur(0px)'],
+      })
+      .then(() => {
+        aTab.querySelector('.tab-stack').style.removeProperty('filter');
       });
   },
 

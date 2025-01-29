@@ -173,8 +173,8 @@ jobs:
         run: |
           cd engine
           echo "Copying provisioning profile for .app on both architectures (${{ env.APP_NAME }})"
-          cp ./Zen_Browser.provisionprofile "./obj-x86_64-apple-darwin/dist/${{ env.APP_NAME }}.app/Contents/embedded.provisionprofile"
-          cp ./Zen_Browser.provisionprofile "./obj-aarch64-apple-darwin/dist/${{ env.APP_NAME }}.app/Contents/embedded.provisionprofile"
+          # cp ./Zen_Browser.provisionprofile "./obj-x86_64-apple-darwin/dist/${{ env.APP_NAME }}.app/Contents/embedded.provisionprofile"
+          # cp ./Zen_Browser.provisionprofile "./obj-aarch64-apple-darwin/dist/${{ env.APP_NAME }}.app/Contents/embedded.provisionprofile"
 
       - name: Unify architectures
         run: |
@@ -192,7 +192,7 @@ jobs:
         run: |
           cd engine
           # TODO: Change it to "production" once we figure out the issue with the webauth
-          ./mach macos-sign -v -r -c "release" -e "production" -a "./obj-x86_64-apple-darwin/dist/${{ env.APP_NAME }}.app" --rcodesign-p12-file zenCert.p12 --rcodesign-p12-password-file zenpCertPassword.passwd
+          ./mach macos-sign -v -r -c "release" -e "production-without-restricted" -a "./obj-x86_64-apple-darwin/dist/${{ env.APP_NAME }}.app" --rcodesign-p12-file zenCert.p12 --rcodesign-p12-password-file zenpCertPassword.passwd
 
       - name: Remove sensitive information
         run: |
@@ -233,6 +233,11 @@ jobs:
           name: zen.macos-universal.dmg
           path: ./zen.macos-universal.dmg
 
+      - name: Download platform.ini
+        uses: actions/download-artifact@v4
+        with:
+          name: platform.ini
+
       - name: Package for mar
         env:
           JUST_MAR: true
@@ -240,6 +245,8 @@ jobs:
           # we don't need it anymore
           set -ex
           rm -rf ./engine/obj-aarch64-apple-darwin
+          mkdir -p ./engine/obj-x86_64-apple-darwin/dist/bin
+          mv ./platform.ini ./engine/obj-x86_64-apple-darwin/dist/bin/platform.ini
           export SURFER_PLATFORM="darwin"
           export ZEN_RELEASE=1
           # full path to zen-macos-host-mar

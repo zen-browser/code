@@ -169,13 +169,6 @@ jobs:
           echo "${{ secrets.macOS_PROVISIONING_PROFILE }}" | base64 --decode > ./engine/Zen_Browser.provisionprofile
           ls -la
 
-      - name: Copy provisioning profile for .app on both architectures (embedded in .app)
-        run: |
-          cd engine
-          echo "Copying provisioning profile for .app on both architectures (${{ env.APP_NAME }})"
-          # cp ./Zen_Browser.provisionprofile "./obj-x86_64-apple-darwin/dist/${{ env.APP_NAME }}.app/Contents/embedded.provisionprofile"
-          # cp ./Zen_Browser.provisionprofile "./obj-aarch64-apple-darwin/dist/${{ env.APP_NAME }}.app/Contents/embedded.provisionprofile"
-
       - name: Unify architectures
         run: |
           cd engine
@@ -192,11 +185,13 @@ jobs:
         run: |
           cd engine
           # TODO: Change it to "production" once we figure out the issue with the webauth
-          ./mach macos-sign -v -r -c "release" -e "production-without-restricted" -a "./obj-x86_64-apple-darwin/dist/${{ env.APP_NAME }}.app" --rcodesign-p12-file zenCert.p12 --rcodesign-p12-password-file zenpCertPassword.passwd
+          ./mach macos-sign -v -r -c "release" -e "production" -a "./obj-x86_64-apple-darwin/dist/${{ env.APP_NAME }}.app" --rcodesign-p12-file zenCert.p12 --rcodesign-p12-password-file zenpCertPassword.passwd
 
-      - name: Remove sensitive information
+      - name: Copy provisioning profile for .app (embedded in .app)
         run: |
-          rm -f ./engine/Zen_Browser.provisionprofile
+          cd engine
+          echo "Copying provisioning profile for .app on both architectures (${{ env.APP_NAME }})"
+          cp ./Zen_Browser.provisionprofile "./obj-x86_64-apple-darwin/dist/${{ env.APP_NAME }}.app/Contents/embedded.provisionprofile"
 
       - name: Create DMG
         run: |
@@ -207,6 +202,10 @@ jobs:
             --icon ./browser/branding/${{ inputs.release-branch }}/firefox.icns \
             --dsstore ./browser/branding/${{ inputs.release-branch }}/dsstore \
             ./obj-x86_64-apple-darwin/dist/ ../zen-macOS-universal-temp.dmg
+
+      - name: Remove sensitive information
+        run: |
+          rm -f ./engine/Zen_Browser.provisionprofile
 
       - name: Sign .dmg
         run: |

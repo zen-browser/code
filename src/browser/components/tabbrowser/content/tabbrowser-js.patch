@@ -1,5 +1,5 @@
 diff --git a/browser/components/tabbrowser/content/tabbrowser.js b/browser/components/tabbrowser/content/tabbrowser.js
-index ce68c339f35416574b7bc7ebf8c93378f653242b..394f76f94cc70314da37941062f8cf011a858e03 100644
+index ce68c339f35416574b7bc7ebf8c93378f653242b..810b9c96bc26cc75e37c8b1ed6a61c1a51e123b8 100644
 --- a/browser/components/tabbrowser/content/tabbrowser.js
 +++ b/browser/components/tabbrowser/content/tabbrowser.js
 @@ -409,11 +409,39 @@
@@ -199,6 +199,15 @@ index ce68c339f35416574b7bc7ebf8c93378f653242b..394f76f94cc70314da37941062f8cf01
          tab.initialize();
        }
  
+@@ -3715,7 +3799,7 @@
+       // Ensure we have an index if one was not provided.
+       if (typeof index != "number") {
+         // Move the new tab after another tab if needed, to the end otherwise.
+-        index = Infinity;
++        index = Services.prefs.getBoolPref("zen.view.show-newtab-button-top") ? this.pinnedTabCount + 1 : Infinity;
+         if (
+           !bulkOrderedOpen &&
+           ((openerTab &&
 @@ -4070,6 +4154,10 @@
          return;
        }

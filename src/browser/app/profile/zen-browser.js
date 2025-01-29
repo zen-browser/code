@@ -89,8 +89,8 @@ pref('zen.theme.gradient', true);
 pref('zen.theme.essentials-favicon-bg', false);
 
 pref('zen.tabs.show-newtab-vertical', true);
-pref('zen.view.show-newtab-button-border-top', true);
-pref('zen.view.show-newtab-button-top', false);
+pref('zen.view.show-newtab-button-border-top', false);
+pref('zen.view.show-newtab-button-top', true);
 
 #ifdef MOZILLA_OFFICIAL
 pref('zen.rice.api.url', 'https://share.zen-browser.app', locked);

@@ -125,11 +125,15 @@
   background: light-dark(rgba(1, 1, 1, 0.075), rgba(255, 255, 255, 0.1));
   margin: 8px auto;
   border: none;
-  min-height: 1px;
+  height: 1px;
+  max-height: 1px;
   width: 98%;
+  transition: margin 0.2s ease-in-out, background 0.2s ease-in-out, max-height 0.2s ease-in-out;
 
-  #vertical-pinned-tabs-container:not(:has(tab:not([hidden]))) + & {
-    display: none;
+  #vertical-pinned-tabs-container:not(:has(tab:not([hidden]))) + &,
+  #tabbrowser-tabs:not(:has(#tabbrowser-arrowscrollbox tab:not([hidden]))) & {
+    max-height: 0;
+    margin: 0 auto;
   }
 }
 

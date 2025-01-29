@@ -65,7 +65,8 @@
           transition: filter 0.2s;
         }
 
-        &[active='true'], &:hover {
+        &[active='true'],
+        &:hover {
           filter: grayscale(0);
         }
       }

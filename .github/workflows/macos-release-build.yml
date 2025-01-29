@@ -142,6 +142,7 @@ jobs:
           set -ex
           mv ./dist/*.dmg ./zen-${{ matrix.arch }}-apple-darwin-dist.dmg
           mv ./engine/obj-${{ matrix.arch }}-apple-darwin/dist/host/bin/mar ./zen-macos-host-mar
+          mv ./engine/obj-${{ matrix.arch }}-apple-darwin/dist/bin/platform.ini ./platform.ini
 
       - name: Upload dist dmg
         uses: actions/upload-artifact@v4
@@ -158,3 +159,10 @@ jobs:
           name: zen-macos-host-mar
           path: ./zen-macos-host-mar
 
+      - name: Upload platform.ini
+        uses: actions/upload-artifact@v4
+        if: matrix.arch == 'x86_64'
+        with:
+          retention-days: 1
+          name: platform.ini
+          path: ./platform.ini

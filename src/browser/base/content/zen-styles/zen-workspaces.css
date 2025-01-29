@@ -61,13 +61,12 @@
 
       @media not (-moz-bool-pref: 'zen.workspaces.hide-deactivated-workspaces') {
         & {
-          color: transparent;
-          text-shadow: 0 0 0 light-dark(rgba(0, 0, 0, 0.2), rgba(255, 255, 255, 0.15));
-          transition: text-shadow 0.2s ease;
+          filter: grayscale(0.5);
+          transition: filter 0.2s;
         }
 
-        &[active='true'] {
-          text-shadow: 0 0 0 color-mix(in srgb, var(--zen-primary-color) 80%, transparent 20%);
+        &[active='true'], &:hover {
+          filter: grayscale(0);
         }
       }
     }

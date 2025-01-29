@@ -1,8 +1,16 @@
 diff --git a/widget/cocoa/nsCocoaWindow.mm b/widget/cocoa/nsCocoaWindow.mm
-index f1c87dd8faef8c6caf9248ce7d9f40c12f5db9f6..6057495421c8cfe05a2dc83f21ee4353c8ad9958 100644
+index f1c87dd8faef8c6caf9248ce7d9f40c12f5db9f6..f5280b8fc6cf46d3941d1ff04835b12dd2755170 100644
 --- a/widget/cocoa/nsCocoaWindow.mm
 +++ b/widget/cocoa/nsCocoaWindow.mm
-@@ -682,9 +682,11 @@ static unsigned int WindowMaskForBorderStyle(BorderStyle aBorderStyle) {
+@@ -51,6 +51,7 @@
+ #include "mozilla/ScopeExit.h"
+ #include "mozilla/StaticPrefs_gfx.h"
+ #include "mozilla/StaticPrefs_widget.h"
++#include "mozilla/StaticPrefs_zen.h"
+ #include "mozilla/WritingModes.h"
+ #include "mozilla/layers/CompositorBridgeChild.h"
+ #include "mozilla/widget/Screen.h"
+@@ -682,9 +683,11 @@ static unsigned int WindowMaskForBorderStyle(BorderStyle aBorderStyle) {
        continue;
      }
      NSWindow* win = ancestor->GetCocoaWindow();

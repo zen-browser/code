@@ -239,7 +239,7 @@ var gZenVerticalTabsManager = {
       });
     gZenUIManager.motion
       .animate(aTab.querySelector('.tab-stack'), {
-        filter: ['blur(2px)', 'blur(0px)'],
+        filter: ['blur(1px)', 'blur(0px)'],
       })
       .then(() => {
         aTab.querySelector('.tab-stack').style.removeProperty('filter');

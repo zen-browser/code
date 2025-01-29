@@ -224,7 +224,7 @@ var gZenVerticalTabsManager = {
         aTab,
         {
           opacity: [0, 1],
-          transform: ["scale(0.95)", "scale(1)"],
+          transform: ['scale(0.95)', 'scale(1)'],
           marginBottom: isLastTab ? [] : [transform, '0px'],
         },
         {

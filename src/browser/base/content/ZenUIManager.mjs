@@ -221,7 +221,7 @@ var gZenVerticalTabsManager = {
       .animate(
         aTab,
         {
-          opacity: [0, 1],
+          opacity: [0.7, 1],
           transform: ['translateY(-20px)', 'translateY(0px)'],
           marginBottom: isLastTab ? [] : ['-20px', '0px'],
         },

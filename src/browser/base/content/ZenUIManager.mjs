@@ -1,6 +1,7 @@
 var gZenUIManager = {
   _popupTrackingElements: [],
   _hoverPausedForExpand: false,
+  _hasLoadedDOM: false,
 
   init() {
     document.addEventListener('popupshowing', this.onPopupShowing.bind(this));
@@ -22,6 +23,10 @@ var gZenUIManager = {
         this.sidebarHeightThrottle
       )
     ).observe(document.getElementById('navigator-toolbox'));
+
+    window.addEventListener('DOMContentLoaded', () => {
+      this._hasLoadedDOM = true;
+    }, { once: true });
 
     window.addEventListener('TabClose', this.updateTabsToolbar.bind(this));
   },
@@ -213,7 +218,7 @@ var gZenVerticalTabsManager = {
   },
 
   animateTab(aTab) {
-    if (!gZenUIManager.motion) {
+    if (!gZenUIManager.motion || !aTab || !this._hasLoadedDOM) {
       return;
     }
     // get next visible tab

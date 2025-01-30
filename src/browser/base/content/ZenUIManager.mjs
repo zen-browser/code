@@ -24,9 +24,9 @@ var gZenUIManager = {
       )
     ).observe(document.getElementById('navigator-toolbox'));
 
-    window.addEventListener('DOMContentLoaded', () => {
+    SessionStore.promiseAllWindowsRestored.then(() => {
       this._hasLoadedDOM = true;
-    }, { once: true });
+    });
 
     window.addEventListener('TabClose', this.updateTabsToolbar.bind(this));
   },
@@ -218,7 +218,7 @@ var gZenVerticalTabsManager = {
   },
 
   animateTab(aTab) {
-    if (!gZenUIManager.motion || !aTab || !this._hasLoadedDOM) {
+    if (!gZenUIManager.motion || !aTab || !gZenUIManager._hasLoadedDOM) {
       return;
     }
     // get next visible tab

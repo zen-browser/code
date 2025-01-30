@@ -129,6 +129,7 @@ Zen couldn't be in its current state without the help of these amazing projects!
 
 - Zen's default preferences are based on [BetterFox](https://github.com/yokoffing/Betterfox)
 - Gradient image extracted from [Arc Palette](https://github.com/neurokitti/Arc_Palette)
+- `icons.css` has been modified from [Edge Firefox](https://github.com/bmFtZQ/edge-frfox) (MIT licensed file)
 
 ### 🖥️ Comparison with other browsers
 

@@ -72,7 +72,7 @@
 }
 
 #browser {
-  --zen-toolbox-padding: max(5px, calc(var(--zen-element-separation) / 1.5));
+  --zen-toolbox-padding: max(.4rem, calc(var(--zen-element-separation) / 1.5));
 }
 
 :root[zen-single-toolbar='true'] {
@@ -941,6 +941,7 @@
 
   & .tab-background {
     border-radius: var(--border-radius-medium) !important;
+    transition: background 0.2s ease-in-out;
   }
 
   --tab-selected-bgcolor: light-dark(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.2));
@@ -970,6 +971,10 @@
   & .tab-icon-image,
   & .tab-icon-overlay {
     margin-inline-end: 0 !important;
+  }
+
+  &:hover .tab-background {
+    background: var(--tab-selected-bgcolor);
   }
 
   @media (-moz-bool-pref: 'zen.theme.essentials-favicon-bg') {

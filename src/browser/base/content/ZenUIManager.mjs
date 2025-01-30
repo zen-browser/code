@@ -216,26 +216,38 @@ var gZenVerticalTabsManager = {
     if (!gZenUIManager.motion) {
       return;
     }
-    const isLastTab = aTab.nextElementSibling === null;
+    // get next visible tab
+    const isLastTab = () => {
+      const visibleTabs = gBrowser.visibleTabs;
+      return visibleTabs[visibleTabs.length - 1] === aTab;
+    };
+
+    const tabSize = aTab.getBoundingClientRect().height;
+    const transform = `-${tabSize}px`;
     gZenUIManager.motion
       .animate(
         aTab,
         {
           opacity: [0, 1],
-          transform: ['translateY(-20px)', 'translateY(0px)'],
-          marginBottom: isLastTab ? [] : ['-20px', '0px'],
+          transform: ['scale(0.95)', 'scale(1)'],
+          marginBottom: isLastTab() ? [] : [transform, '0px'],
         },
         {
           duration: 0.2,
-          type: 'spring',
-          bounce: 0,
+          easing: 'ease-out',
         }
       )
       .then(() => {
         aTab.style.removeProperty('margin-bottom');
         aTab.style.removeProperty('transform');
         aTab.style.removeProperty('opacity');
-        aTab.style.removeProperty('filter');
+      });
+    gZenUIManager.motion
+      .animate(aTab.querySelector('.tab-stack'), {
+        filter: ['blur(1px)', 'blur(0px)'],
+      })
+      .then(() => {
+        aTab.querySelector('.tab-stack').style.removeProperty('filter');
       });
   },
 

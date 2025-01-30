@@ -202,7 +202,7 @@ pref('zen.workspaces.hide-default-container-indicator', true);
 pref('zen.workspaces.individual-pinned-tabs', true);
 pref('zen.workspaces.show-icon-strip', true);
 pref('zen.workspaces.force-container-workspace', false);
-pref('zen.workspaces.open-new-tab-if-last-unpinned-tab-is-closed', true);
+pref('zen.workspaces.open-new-tab-if-last-unpinned-tab-is-closed', false);
 pref('zen.workspaces.show-workspace-indicator', true);
 pref('zen.workspaces.swipe-actions', true);
 pref('zen.workspaces.wrap-around-navigation', true);

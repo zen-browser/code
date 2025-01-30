@@ -39,7 +39,7 @@ body {
 #welcome .zen-branding-title,
 #thanks .zen-branding-title {
   text-align: center;
-  font-size: 9rem;
+  font-size: 7rem;
 }
 
 #buttons-footer {
@@ -60,11 +60,6 @@ body {
   & button:nth-child(2) {
     animation-delay: 1s;
   }
-}
-
-body:has(#welcome:not([hidden='true'])) {
-  background: var(--zen-branding-coral);
-  color: var(--zen-branding-paper);
 }
 
 body:has(:is(#welcome, #thanks):not([hidden='true'])) {

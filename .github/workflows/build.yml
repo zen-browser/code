@@ -596,8 +596,7 @@ jobs:
             macos.mar
             .github/workflows/object/windows-x64-signed-x86_64/zen.installer.exe
             .github/workflows/object/windows-x64-signed-arm64/zen.installer-arm64.exe
-            zen.macos-x86_64.dmg
-            zen.macos-aarch64.dmg
+            zen.macos-universal.dmg
 
   prepare-flatpak:
     if: ${{ inputs.create_release && inputs.update_branch == 'release' }}

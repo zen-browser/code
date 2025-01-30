@@ -216,7 +216,12 @@ var gZenVerticalTabsManager = {
     if (!gZenUIManager.motion) {
       return;
     }
-    const isLastTab = aTab.nextElementSibling === null;
+    // get next visible tab
+    const isLastTab = () => {
+      const visibleTabs = gBrowser.visibleTabs;
+      return visibleTabs[visibleTabs.length - 1] === aTab;
+    };
+
     const tabSize = aTab.getBoundingClientRect().height;
     const transform = `-${tabSize}px`;
     gZenUIManager.motion
@@ -225,7 +230,7 @@ var gZenVerticalTabsManager = {
         {
           opacity: [0, 1],
           transform: ['scale(0.95)', 'scale(1)'],
-          marginBottom: isLastTab ? [] : [transform, '0px'],
+          marginBottom: isLastTab() ? [] : [transform, '0px'],
         },
         {
           duration: 0.2,

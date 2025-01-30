@@ -246,7 +246,7 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     this._swipeState.cumulativeDelta += event.delta;
 
     // Determine swipe direction based on cumulative delta
-    if (Math.abs(this._swipeState.cumulativeDelta) > 1.5) {
+    if (Math.abs(this._swipeState.cumulativeDelta) > 1) {
       this._swipeState.direction = this._swipeState.cumulativeDelta > 0 ? 'left' : 'right';
     }
 

@@ -767,13 +767,13 @@
         const separation = 8;
         const middleY = targetTab.screenY + rect.height / 2;
         const indicator = this.dragIndicator;
-        let top=0;
+        let top = 0;
         if (event.screenY > middleY) {
           top = rect.top + rect.height + 'px';
         } else {
           top = rect.top + 'px';
         }
-        indicator.style.setProperty('--indicator-left', rect.left + (separation/2) + 'px');
+        indicator.style.setProperty('--indicator-left', rect.left + separation / 2 + 'px');
         indicator.style.setProperty('--indicator-width', rect.width - separation + 'px');
         indicator.style.top = top;
       } else {

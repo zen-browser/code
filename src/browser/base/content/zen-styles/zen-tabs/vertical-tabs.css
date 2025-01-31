@@ -76,6 +76,9 @@
   @media (-moz-platform: macos) {
     --zen-min-toolbox-padding: .52rem;
   }
+  @media (-moz-platform: linux) {
+    --zen-min-toolbox-padding: .35rem;
+  }
   --zen-toolbox-padding: max(var(--zen-min-toolbox-padding), calc(var(--zen-element-separation) / 1.5));
 }
 

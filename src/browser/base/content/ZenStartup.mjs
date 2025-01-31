@@ -109,6 +109,9 @@
         });
       });
       observer.observe(tabsWrapper);
+      tabsWrapper.addEventListener('dblclick', (event) => {
+        // DO NOT REMOVE, THIS IS TO FIX "OPEN NEW TAB" ON DOUBLE CLICK
+      });
     },
 
     _initSearchBar() {

@@ -327,6 +327,10 @@
       }
 
       const actualPin = this._pinsCache.find((pin) => pin.uuid === tab.getAttribute('zen-pin-id'));
+
+      if(!actualPin) {
+        return;
+      }
       actualPin.position = tab.position;
       await ZenPinnedTabsStorage.savePin(actualPin);
     }
@@ -557,8 +561,8 @@
       }
     }
 
-    addToEssentials() {
-      const tabs = TabContextMenu.contextTab.multiselected ? gBrowser.selectedTabs : [TabContextMenu.contextTab];
+    addToEssentials(tab) {
+      const tabs = tab ? [tab] : TabContextMenu.contextTab.multiselected ? gBrowser.selectedTabs : [TabContextMenu.contextTab];
       for (let i = 0; i < tabs.length; i++) {
         const tab = tabs[i];
         tab.setAttribute('zen-essential', 'true');
@@ -575,8 +579,8 @@
       gZenUIManager.updateTabsToolbar();
     }
 
-    removeEssentials() {
-      const tabs = TabContextMenu.contextTab.multiselected ? gBrowser.selectedTabs : [TabContextMenu.contextTab];
+    removeEssentials(tab) {
+      const tabs = tab ? [tab] : TabContextMenu.contextTab.multiselected ? gBrowser.selectedTabs : [TabContextMenu.contextTab];
       for (let i = 0; i < tabs.length; i++) {
         const tab = tabs[i];
         tab.removeAttribute('zen-essential');
@@ -639,6 +643,138 @@
       document.getElementById('context_unpinSelectedTabs').hidden =
         document.getElementById('context_unpinSelectedTabs').hidden || contextTab.getAttribute('zen-essential');
       document.getElementById('context_zen-pinned-tab-separator').hidden = !isVisible;
+    }
+
+    moveToAnotherTabContainerIfNecessary(event, draggedTab) {
+      const pinnedTabsTarget = event.target.closest("#vertical-pinned-tabs-container");
+      const essentialTabsTarget = event.target.closest("#zen-essentials-container");
+      const tabsTarget = event.target.closest("#tabbrowser-arrowscrollbox");
+
+      let moved = false;
+      let isVertical = true;
+      let isRegularTabs = false;
+      // Check for pinned tabs container
+      if (pinnedTabsTarget) {
+        if (!draggedTab.pinned) {
+          gBrowser.pinTab(draggedTab);
+          moved = true;
+        } else if (draggedTab.hasAttribute("zen-essential")) {
+          this.removeEssentials(draggedTab);
+          gBrowser.pinTab(draggedTab);
+          moved = true;
+        }
+      }
+      // Check for essentials container
+      else if (essentialTabsTarget) {
+        if (!draggedTab.hasAttribute("zen-essential")) {
+          this.addToEssentials(draggedTab);
+          moved = true;
+          isVertical = false;
+        }
+      }
+      // Check for normal tabs container
+      else if (tabsTarget) {
+        if (draggedTab.pinned && !draggedTab.hasAttribute("zen-essential")) {
+          gBrowser.unpinTab(draggedTab);
+          moved = true;
+          isRegularTabs = true;
+        } else if (draggedTab.hasAttribute("zen-essential")) {
+          this.removeEssentials(draggedTab);
+          moved = true;
+          isRegularTabs = true;
+        }
+      }
+
+      // If the tab was moved, adjust its position relative to the target tab
+      if (moved) {
+        const targetTab = event.target.closest(".tabbrowser-tab");
+        if (targetTab) {
+          const rect = targetTab.getBoundingClientRect();
+          let newIndex = targetTab._tPos;
+
+          if (isVertical) {
+            const middleY = targetTab.screenY + rect.height / 2;
+            if(!isRegularTabs && event.screenY > middleY) {
+              newIndex++;
+            } else  if(isRegularTabs && event.screenY < middleY) {
+              newIndex--;
+            }
+
+          } else {
+            const middleX = targetTab.screenX + rect.width / 2;
+            if (event.screenX > middleX) {
+              newIndex++;
+            }
+          }
+          gBrowser.moveTabTo(draggedTab, newIndex);
+        }
+      }
+
+      return moved;
+    }
+
+    removeTabContainersDragoverClass() {
+      document
+        .querySelectorAll(".tabbrowser-tab.drag-over-before, .tabbrowser-tab.drag-over-after")
+        .forEach(tab => {
+          tab.classList.remove("drag-over-before", "drag-over-after");
+        });
+    }
+
+    applyDragoverClass(event, draggedTab) {
+      this.removeTabContainersDragoverClass();
+
+      const pinnedTabsTarget = event.target.closest("#vertical-pinned-tabs-container");
+      const essentialTabsTarget = event.target.closest("#zen-essentials-container");
+      const tabsTarget = event.target.closest("#tabbrowser-arrowscrollbox");
+      const targetTab = event.target.closest(".tabbrowser-tab");
+
+      // If there's no valid target tab, nothing to do
+      if (!targetTab) {
+        return;
+      }
+
+      let shouldAddDragOverElement = false;
+      let isVertical = true;
+
+      // Decide whether we should show a dragover class for the given target
+      if (pinnedTabsTarget) {
+        if (!draggedTab.pinned || draggedTab.hasAttribute("zen-essential")) {
+          shouldAddDragOverElement = true;
+        }
+      } else if (essentialTabsTarget) {
+        if (!draggedTab.hasAttribute("zen-essential")) {
+          shouldAddDragOverElement = true;
+          isVertical = false;
+        }
+      } else if (tabsTarget) {
+        if (draggedTab.pinned || draggedTab.hasAttribute("zen-essential")) {
+          shouldAddDragOverElement = true;
+        }
+      }
+
+      if (!shouldAddDragOverElement) {
+        return;
+      }
+
+      // Calculate middle to decide 'before' or 'after'
+      const rect = targetTab.getBoundingClientRect();
+
+      if (isVertical) {
+        const middleY = targetTab.screenY + rect.height / 2;
+        if (event.screenY > middleY) {
+          targetTab.classList.add("drag-over-before");
+        } else {
+          targetTab.classList.add("drag-over-after");
+        }
+      } else {
+        const middleX = targetTab.screenX + rect.width / 2;
+        if (event.screenX > middleX) {
+          targetTab.classList.add("drag-over-before");
+        } else {
+          targetTab.classList.add("drag-over-after");
+        }
+      }
     }
   }
 

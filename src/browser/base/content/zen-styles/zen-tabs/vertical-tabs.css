@@ -1071,3 +1071,29 @@
 %include vertical-tabs-topbuttons-fix.css
   }
 }
+
+#vertical-pinned-tabs-container .tabbrowser-tab,
+#tabbrowser-arrowscrollbox .tabbrowser-tab,
+#zen-essentials-container .tabbrowser-tab {
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+/* Vertical tabs reordering indicators */
+#vertical-pinned-tabs-container .tabbrowser-tab.drag-over-before,
+#tabbrowser-arrowscrollbox .tabbrowser-tab.drag-over-before {
+  box-shadow: 0 3px 6px -2px var(--toolbarbutton-active-background, rgba(0, 0, 255, 0.2));
+}
+
+#vertical-pinned-tabs-container .tabbrowser-tab.drag-over-after,
+#tabbrowser-arrowscrollbox .tabbrowser-tab.drag-over-after {
+  box-shadow: 0 -3px 6px -2px var(--toolbarbutton-active-background, rgba(0, 0, 255, 0.2));
+}
+
+/* Horizontal tabs reordering indicators */
+#zen-essentials-container .tabbrowser-tab.drag-over-before {
+  box-shadow: 3px 0 6px -2px var(--toolbarbutton-active-background, rgba(0, 255, 0, 0.2));
+}
+
+#zen-essentials-container .tabbrowser-tab.drag-over-after {
+  box-shadow: -3px 0 6px -2px var(--toolbarbutton-active-background, rgba(0, 255, 0, 0.2));
+}

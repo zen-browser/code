@@ -1,8 +1,8 @@
 diff --git a/modules/libpref/init/StaticPrefList.yaml b/modules/libpref/init/StaticPrefList.yaml
-index c63a259a51c4862bc8f73eabdc5730bfe2f28da4..f9b8431071e73ce55972c12354ed44bc3a4df9c0 100644
+index 5c5992d7b32e4c16d6a92815ca6fd54e8fcec824..6c8e67e36f02b578c800fa460868135afb73c66b 100644
 --- a/modules/libpref/init/StaticPrefList.yaml
 +++ b/modules/libpref/init/StaticPrefList.yaml
-@@ -17651,7 +17651,7 @@
+@@ -17810,7 +17810,7 @@
  # Whether we use the mica backdrop. Off by default for now.
  - name: widget.windows.mica
    type: bool
@@ -11,3 +11,23 @@ index c63a259a51c4862bc8f73eabdc5730bfe2f28da4..f9b8431071e73ce55972c12354ed44bc
    mirror: once
  #endif
  
+@@ -17923,6 +17923,19 @@
+   mirror: always
+ #endif
+ 
++# Dummy pref to always generate StaticPrefs_zen.h in every OS
++- name: zen.browser.is-cool
++  type: bool
++  value: true
++  mirror: never
++
++#ifdef XP_MACOSX
++- name: zen.widget.mac.mono-window-controls
++  type: RelaxedAtomicBool
++  value: false
++  mirror: always
++#endif
++
+ #---------------------------------------------------------------------------
+ # Prefs starting with "zoom."
+ #---------------------------------------------------------------------------

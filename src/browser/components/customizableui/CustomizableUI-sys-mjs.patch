@@ -143,7 +143,7 @@ index e6b9b7dcfab179e7552c146eb1551b45ad042266..d9d838a7a51f67b52b69f419024cc317
      // it, so check for both cases explicitly.
      let targetContentWidth = Math.max(targetWidth, targetChildrenWidth);
 -    let isOverflowing = Math.floor(targetContentWidth) > totalAvailWidth;
-+    if (win.gZenVerticalTabsManager._hasSetSingleToolbar && this.#toolbar == 'nav-bar') return { isOverflowing: false, targetContentWidth, totalAvailWidth };
++    if (win.gZenVerticalTabsManager._hasSetSingleToolbar && this.#toolbar.id == 'nav-bar') return { isOverflowing: false, targetContentWidth, totalAvailWidth };
 +    let isOverflowing = Math.floor(targetContentWidth) + (win.gZenVerticalTabsManager._hasSetSingleToolbar ? 0.1 : 0) > totalAvailWidth;
      return { isOverflowing, targetContentWidth, totalAvailWidth };
    }

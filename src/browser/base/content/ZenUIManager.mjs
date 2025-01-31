@@ -1,6 +1,7 @@
 var gZenUIManager = {
   _popupTrackingElements: [],
   _hoverPausedForExpand: false,
+  _hasLoadedDOM: false,
 
   init() {
     document.addEventListener('popupshowing', this.onPopupShowing.bind(this));
@@ -22,6 +23,10 @@ var gZenUIManager = {
         this.sidebarHeightThrottle
       )
     ).observe(document.getElementById('navigator-toolbox'));
+
+    SessionStore.promiseAllWindowsRestored.then(() => {
+      this._hasLoadedDOM = true;
+    });
 
     window.addEventListener('TabClose', this.updateTabsToolbar.bind(this));
   },
@@ -210,6 +215,45 @@ var gZenVerticalTabsManager = {
     }
     this.__topButtonsSeparatorElement = document.getElementById('zen-sidebar-top-buttons-separator');
     return this.__topButtonsSeparatorElement;
+  },
+
+  animateTab(aTab) {
+    if (!gZenUIManager.motion || !aTab || !gZenUIManager._hasLoadedDOM) {
+      return;
+    }
+    // get next visible tab
+    const isLastTab = () => {
+      const visibleTabs = gBrowser.visibleTabs;
+      return visibleTabs[visibleTabs.length - 1] === aTab;
+    };
+
+    const tabSize = aTab.getBoundingClientRect().height;
+    const transform = `-${tabSize}px`;
+    gZenUIManager.motion
+      .animate(
+        aTab,
+        {
+          opacity: [0, 1],
+          transform: ['scale(0.95)', 'scale(1)'],
+          marginBottom: isLastTab() ? [] : [transform, '0px'],
+        },
+        {
+          duration: 0.2,
+          easing: 'ease-out',
+        }
+      )
+      .then(() => {
+        aTab.style.removeProperty('margin-bottom');
+        aTab.style.removeProperty('transform');
+        aTab.style.removeProperty('opacity');
+      });
+    gZenUIManager.motion
+      .animate(aTab.querySelector('.tab-stack'), {
+        filter: ['blur(1px)', 'blur(0px)'],
+      })
+      .then(() => {
+        aTab.querySelector('.tab-stack').style.removeProperty('filter');
+      });
   },
 
   get actualWindowButtons() {

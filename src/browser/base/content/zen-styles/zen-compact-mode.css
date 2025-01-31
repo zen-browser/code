@@ -228,8 +228,8 @@
           1.003423 100%
         );
         transition:
-          left 0.3125s var(--zen-compact-mode-func),
-          right 0.3125s var(--zen-compact-mode-func);
+          left 0.3s var(--zen-compact-mode-func),
+          right 0.3s var(--zen-compact-mode-func);
         opacity: 1;
 
         left: -1px;

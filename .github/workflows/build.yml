@@ -54,6 +54,18 @@ jobs:
           echo "GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}"
           echo "GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}"
 
+  buildid:
+    name: Generate build ID
+    runs-on: ubuntu-latest
+    outputs:
+      buildids: ${{ steps.get.outputs.bid }}
+    steps:
+      - id: get
+        shell: bash -xe {0}
+        run: |
+          bdat=`date +"%Y%m%d%I%M%S"`
+          echo "bid=${bdat}" >> $GITHUB_OUTPUT
+
   start-self-host:
     runs-on: ubuntu-latest
     needs: debug-inputs
@@ -294,7 +306,7 @@ jobs:
   windows-step-1:
     name: Windows build step 1 (PGO build)
     uses: ./.github/workflows/windows-release-build.yml
-    needs: [build-data]
+    needs: [build-data, buildid]
     permissions:
       contents: write
     secrets: inherit
@@ -303,6 +315,7 @@ jobs:
       generate-gpo: true
       profile-data-path-archive: zen-windows-profile-data-and-jarlog.zip
       release-branch: ${{ inputs.update_branch }}
+      MOZ_BUILD_DATE: ${{needs.buildid.outputs.buildids}}
 
   windows-step-2:
     name: Windows build step 2 (Generate profile data)
@@ -322,11 +335,12 @@ jobs:
     permissions:
       contents: write
     secrets: inherit
-    needs: [build-data, windows-step-2, start-self-host]
+    needs: [build-data, windows-step-2, start-self-host, buildid]
     with:
       build-version: ${{ needs.build-data.outputs.version }}
       generate-gpo: false
       release-branch: ${{ inputs.update_branch }}
+      MOZ_BUILD_DATE: ${{needs.buildid.outputs.buildids}}
 
   linux:
     name: Linux build
@@ -334,10 +348,11 @@ jobs:
     permissions:
       contents: write
     secrets: inherit
-    needs: [build-data, start-self-host]
+    needs: [build-data, start-self-host, buildid]
     with:
       build-version: ${{ needs.build-data.outputs.version }}
       release-branch: ${{ inputs.update_branch }}
+      MOZ_BUILD_DATE: ${{needs.buildid.outputs.buildids}}
 
   mac:
     name: macOS build
@@ -345,7 +360,19 @@ jobs:
     permissions:
       contents: write
     secrets: inherit
-    needs: [build-data]
+    needs: [build-data, buildid]
+    with:
+      build-version: ${{ needs.build-data.outputs.version }}
+      release-branch: ${{ inputs.update_branch }}
+      MOZ_BUILD_DATE: ${{needs.buildid.outputs.buildids}}
+
+  mac-uni:
+    name: macOS build (Universal)
+    uses: ./.github/workflows/macos-universal-release-build.yml
+    permissions:
+      contents: write
+    secrets: inherit
+    needs: [build-data, mac]
     with:
       build-version: ${{ needs.build-data.outputs.version }}
       release-branch: ${{ inputs.update_branch }}
@@ -453,7 +480,7 @@ jobs:
     if: ${{ inputs.create_release || inputs.update_branch == 'twilight' }}
     permissions: write-all
     name: Release
-    needs: [build-data, linux, windows-step-3, check-release, mac, appimage, source, lint, stop-self-hosted]
+    needs: [build-data, linux, windows-step-3, check-release, mac-uni, appimage, source, lint, stop-self-hosted]
     runs-on: ubuntu-latest
     environment:
       name: ${{ inputs.update_branch == 'release' && 'Deploy-Release' || 'Deploy-Twilight' }}
@@ -503,8 +530,7 @@ jobs:
             cp -a ../windows_update_manifest_arm64/.  updates/
           fi
 
-          cp -a ../macos_update_manifest_aarch64/.  updates/
-          cp -a ../macos_update_manifest_x86_64/.  updates/
+          cp -a ../macos_update_manifest/.  updates/
 
       - name: Commit
         uses: stefanzweifel/git-auto-commit-action@v5
@@ -533,12 +559,10 @@ jobs:
             linux-aarch64.mar
             windows.mar
             windows-arm64.mar
-            macos-x86_64.mar
-            macos-aarch64.mar
+            macos.mar
             zen.installer.exe
             zen.installer-arm64.exe
-            zen.macos-x86_64.dmg
-            zen.macos-aarch64.dmg
+            zen.macos-universal.dmg
           automatic_release_tag: 'twilight'
           title: 'Twilight build - ${{ needs.build-data.outputs.version }} (${{ needs.build-data.outputs.build_date }} at ${{ needs.build-data.outputs.build_time }})'
           draft: false
@@ -569,12 +593,10 @@ jobs:
             linux-aarch64.mar
             .github/workflows/object/windows-x64-signed-x86_64/windows.mar
             .github/workflows/object/windows-x64-signed-arm64/windows-arm64.mar
-            macos-x86_64.mar
-            macos-aarch64.mar
+            macos.mar
             .github/workflows/object/windows-x64-signed-x86_64/zen.installer.exe
             .github/workflows/object/windows-x64-signed-arm64/zen.installer-arm64.exe
-            zen.macos-x86_64.dmg
-            zen.macos-aarch64.dmg
+            zen.macos-universal.dmg
 
   prepare-flatpak:
     if: ${{ inputs.create_release && inputs.update_branch == 'release' }}

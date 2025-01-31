@@ -2,7 +2,7 @@ name: Check Firefox Candidate Release
 
 on:
   schedule:
-    - cron: '0 21 * * 1'
+    - cron: '59 4 * * 2'
   workflow_dispatch:
 
 jobs:

@@ -128,12 +128,9 @@ index ff90a70bdad6c94ec4b90027ff102972d0eb28e5..87e68c2a0663a3da3e6d86277ce2f0c5
          }
        }
  
-+      requestAnimationFrame(() => {
-+        t.setAttribute("zen-initial-fadein", "true");
-+        setTimeout(() => {
-+          t.removeAttribute("zen-initial-fadein");
-+        }, 2000);
-+      });
++      if (typeof window.gZenVerticalTabsManager !== "undefined") {
++        gZenVerticalTabsManager.animateTab(t);
++      }
 +
        // Additionally send pinned tab events
        if (pinned) {
@@ -202,7 +199,16 @@ index ff90a70bdad6c94ec4b90027ff102972d0eb28e5..87e68c2a0663a3da3e6d86277ce2f0c5
          tab.initialize();
        }
  
-@@ -4095,6 +4182,10 @@
+@@ -3715,7 +3799,7 @@
+       // Ensure we have an index if one was not provided.
+       if (typeof index != "number") {
+         // Move the new tab after another tab if needed, to the end otherwise.
+-        index = Infinity;
++        index = Services.prefs.getBoolPref("zen.view.show-newtab-button-top") ? this.pinnedTabCount : Infinity;
+         if (
+           !bulkOrderedOpen &&
+           ((openerTab &&
+@@ -4070,6 +4154,10 @@
          return;
        }
  

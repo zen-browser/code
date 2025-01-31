@@ -1,17 +1,17 @@
 diff --git a/browser/base/content/browser.xhtml b/browser/base/content/browser.xhtml
-index ca8953f3604f4f70de76576964af5f3c733f17a0..a2731ef6d4392301217cd05f6583e4814f1118e2 100644
+index 891c067d6ad718061c410c04743bed25744504b5..560abfe817b94f535919ed29c21a912b09d63ac5 100644
 --- a/browser/base/content/browser.xhtml
 +++ b/browser/base/content/browser.xhtml
-@@ -101,6 +101,8 @@
+@@ -99,6 +99,8 @@
  
-   <title data-l10n-id="browser-main-window-title"></title>
+   <title data-l10n-id="browser-main-window-default-title"></title>
  
 +#include zen-preloaded.inc.xhtml
 +
  # All JS files which are needed by browser.xhtml and other top level windows to
  # support MacOS specific features *must* go into the global-scripts.inc file so
  # that they can be shared with macWindow.inc.xhtml.
-@@ -145,6 +147,7 @@
+@@ -143,6 +145,7 @@
    window.addEventListener("DOMContentLoaded",
      gBrowserInit.onDOMContentLoaded.bind(gBrowserInit), { once: true });
  </script>
@@ -19,7 +19,7 @@ index ca8953f3604f4f70de76576964af5f3c733f17a0..a2731ef6d4392301217cd05f6583e481
  </head>
  <html:body xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
  # All sets except for popupsets (commands, keys, and stringbundles)
-@@ -166,9 +169,12 @@
+@@ -164,9 +167,12 @@
      </vbox>
    </html:template>
  

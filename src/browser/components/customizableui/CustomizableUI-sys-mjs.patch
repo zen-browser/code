@@ -1,5 +1,5 @@
 diff --git a/browser/components/customizableui/CustomizableUI.sys.mjs b/browser/components/customizableui/CustomizableUI.sys.mjs
-index b953d7d2c8fa7fe2d320bd7cb7af9aeeef0abc86..67dbc54de5704be8fe09ec9982e3a2191a5f15dc 100644
+index e6b9b7dcfab179e7552c146eb1551b45ad042266..d9d838a7a51f67b52b69f419024cc3174ae5260b 100644
 --- a/browser/components/customizableui/CustomizableUI.sys.mjs
 +++ b/browser/components/customizableui/CustomizableUI.sys.mjs
 @@ -13,6 +13,7 @@ ChromeUtils.defineESModuleGetters(lazy, {
@@ -19,8 +19,8 @@ index b953d7d2c8fa7fe2d320bd7cb7af9aeeef0abc86..67dbc54de5704be8fe09ec9982e3a219
  
  const kSpecialWidgetPfx = "customizableui-special-";
  
-@@ -307,13 +308,11 @@ var CustomizableUIInternal = {
-       "spring",
+@@ -317,13 +318,11 @@ var CustomizableUIInternal = {
+       "vertical-spacer",
        "urlbar-container",
        "spring",
 -      "save-to-pocket-button",
@@ -35,7 +35,7 @@ index b953d7d2c8fa7fe2d320bd7cb7af9aeeef0abc86..67dbc54de5704be8fe09ec9982e3a219
      this.registerArea(
        CustomizableUI.AREA_NAVBAR,
        {
-@@ -321,7 +320,6 @@ var CustomizableUIInternal = {
+@@ -331,7 +330,6 @@ var CustomizableUIInternal = {
          overflowable: true,
          defaultPlacements: navbarPlacements,
          verticalTabsDefaultPlacements: [
@@ -43,7 +43,7 @@ index b953d7d2c8fa7fe2d320bd7cb7af9aeeef0abc86..67dbc54de5704be8fe09ec9982e3a219
            "alltabs-button",
          ],
          defaultCollapsed: false,
-@@ -346,10 +344,7 @@ var CustomizableUIInternal = {
+@@ -356,10 +354,7 @@ var CustomizableUIInternal = {
        {
          type: CustomizableUI.TYPE_TOOLBAR,
          defaultPlacements: [
@@ -54,7 +54,7 @@ index b953d7d2c8fa7fe2d320bd7cb7af9aeeef0abc86..67dbc54de5704be8fe09ec9982e3a219
          ],
          verticalTabsDefaultPlacements: [],
          defaultCollapsed: null,
-@@ -412,6 +407,7 @@ var CustomizableUIInternal = {
+@@ -422,6 +417,7 @@ var CustomizableUIInternal = {
        CustomizableUI.AREA_NAVBAR,
        CustomizableUI.AREA_BOOKMARKS,
        CustomizableUI.AREA_TABSTRIP,
@@ -62,7 +62,7 @@ index b953d7d2c8fa7fe2d320bd7cb7af9aeeef0abc86..67dbc54de5704be8fe09ec9982e3a219
      ]);
      if (AppConstants.platform != "macosx") {
        toolbars.add(CustomizableUI.AREA_MENUBAR);
-@@ -1127,6 +1123,9 @@ var CustomizableUIInternal = {
+@@ -1151,6 +1147,9 @@ var CustomizableUIInternal = {
          placements = gPlacements.get(area);
        }
  
@@ -72,7 +72,7 @@ index b953d7d2c8fa7fe2d320bd7cb7af9aeeef0abc86..67dbc54de5704be8fe09ec9982e3a219
        // For toolbars that need it, mark as dirty.
        let defaultPlacements = areaProperties.get("defaultPlacements");
        if (
-@@ -1540,7 +1539,7 @@ var CustomizableUIInternal = {
+@@ -1564,7 +1563,7 @@ var CustomizableUIInternal = {
          lazy.log.info(
            "Widget " + aWidgetId + " not found, unable to remove from " + aArea
          );
@@ -81,7 +81,7 @@ index b953d7d2c8fa7fe2d320bd7cb7af9aeeef0abc86..67dbc54de5704be8fe09ec9982e3a219
        }
  
        this.notifyDOMChange(widgetNode, null, container, true, () => {
-@@ -1550,7 +1549,7 @@ var CustomizableUIInternal = {
+@@ -1574,7 +1573,7 @@ var CustomizableUIInternal = {
          // We also need to remove the panel context menu if it's there:
          this.ensureButtonContextMenu(widgetNode);
          if (gPalette.has(aWidgetId) || this.isSpecialWidget(aWidgetId)) {
@@ -90,7 +90,7 @@ index b953d7d2c8fa7fe2d320bd7cb7af9aeeef0abc86..67dbc54de5704be8fe09ec9982e3a219
          } else {
            window.gNavToolbox.palette.appendChild(widgetNode);
          }
-@@ -2654,7 +2653,6 @@ var CustomizableUIInternal = {
+@@ -2678,7 +2677,6 @@ var CustomizableUIInternal = {
      if (!this.isWidgetRemovable(aWidgetId)) {
        return;
      }
@@ -98,7 +98,7 @@ index b953d7d2c8fa7fe2d320bd7cb7af9aeeef0abc86..67dbc54de5704be8fe09ec9982e3a219
      let placements = gPlacements.get(oldPlacement.area);
      let position = placements.indexOf(aWidgetId);
      if (position != -1) {
-@@ -3609,7 +3607,7 @@ var CustomizableUIInternal = {
+@@ -3669,7 +3667,7 @@ var CustomizableUIInternal = {
      }
    },
  
@@ -107,7 +107,7 @@ index b953d7d2c8fa7fe2d320bd7cb7af9aeeef0abc86..67dbc54de5704be8fe09ec9982e3a219
      for (let [areaId, areaNodes] of gBuildAreas) {
        let placements = gPlacements.get(areaId);
        let isFirstChangedToolbar = true;
-@@ -3620,7 +3618,7 @@ var CustomizableUIInternal = {
+@@ -3680,7 +3678,7 @@ var CustomizableUIInternal = {
          if (area.get("type") == CustomizableUI.TYPE_TOOLBAR) {
            let defaultCollapsed = area.get("defaultCollapsed");
            let win = areaNode.ownerGlobal;
@@ -116,7 +116,7 @@ index b953d7d2c8fa7fe2d320bd7cb7af9aeeef0abc86..67dbc54de5704be8fe09ec9982e3a219
              win.setToolbarVisibility(
                areaNode,
                typeof defaultCollapsed == "string"
-@@ -4583,6 +4581,7 @@ export var CustomizableUI = {
+@@ -4658,6 +4656,7 @@ export var CustomizableUI = {
    unregisterArea(aName, aDestroyPlacements) {
      CustomizableUIInternal.unregisterArea(aName, aDestroyPlacements);
    },
@@ -124,7 +124,7 @@ index b953d7d2c8fa7fe2d320bd7cb7af9aeeef0abc86..67dbc54de5704be8fe09ec9982e3a219
    /**
     * Add a widget to an area.
     * If the area to which you try to add is not known to CustomizableUI,
-@@ -6408,11 +6407,11 @@ class OverflowableToolbar {
+@@ -6483,11 +6482,11 @@ class OverflowableToolbar {
          parseFloat(style.paddingLeft) -
          parseFloat(style.paddingRight) -
          toolbarChildrenWidth;
@@ -138,7 +138,7 @@ index b953d7d2c8fa7fe2d320bd7cb7af9aeeef0abc86..67dbc54de5704be8fe09ec9982e3a219
      });
  
      lazy.log.debug(
-@@ -6422,7 +6421,8 @@ class OverflowableToolbar {
+@@ -6497,7 +6496,8 @@ class OverflowableToolbar {
      // If the target has min-width: 0, their children might actually overflow
      // it, so check for both cases explicitly.
      let targetContentWidth = Math.max(targetWidth, targetChildrenWidth);
@@ -148,7 +148,7 @@ index b953d7d2c8fa7fe2d320bd7cb7af9aeeef0abc86..67dbc54de5704be8fe09ec9982e3a219
      return { isOverflowing, targetContentWidth, totalAvailWidth };
    }
  
-@@ -6516,7 +6516,7 @@ class OverflowableToolbar {
+@@ -6591,7 +6591,7 @@ class OverflowableToolbar {
          }
        }
        if (!inserted) {
@@ -157,7 +157,7 @@ index b953d7d2c8fa7fe2d320bd7cb7af9aeeef0abc86..67dbc54de5704be8fe09ec9982e3a219
        }
        child.removeAttribute("cui-anchorid");
        child.removeAttribute("overflowedItem");
-@@ -6678,6 +6678,9 @@ class OverflowableToolbar {
+@@ -6753,6 +6753,9 @@ class OverflowableToolbar {
     * @param {MouseEvent} aEvent the click event.
     */
    #onClickDefaultListButton(aEvent) {

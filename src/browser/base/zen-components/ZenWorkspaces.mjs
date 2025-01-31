@@ -1306,10 +1306,11 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     }
   }
 
-  async _performWorkspaceChange(window, { onInit = false, explicitAnimationDirection = undefined } = {}) {
+  async _performWorkspaceChange(window, { onInit = false, alwaysChange = false, explicitAnimationDirection = undefined } = {}) {
     const previousWorkspace = await this.getActiveWorkspace();
+    alwaysChange = alwaysChange || onInit;
 
-    if (previousWorkspace && previousWorkspace.uuid === window.uuid && !onInit) {
+    if (previousWorkspace && previousWorkspace.uuid === window.uuid && !alwaysChange) {
       this._cancelSwipeAnimation();
       return;
     }
@@ -1814,7 +1815,9 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
       if (matchingWorkspaces.length === 1) {
         const workspace = matchingWorkspaces[0];
         if (workspace.uuid !== this.getActiveWorkspaceFromCache().uuid) {
-          this.changeWorkspace(workspace);
+          window.addEventListener('TabSelected', (event) => {
+            this.changeWorkspace(workspace, { alwaysChange: true });
+          }, { once: true });
           return [userContextId, true, workspace.uuid];
         }
       }

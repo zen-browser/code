@@ -373,6 +373,8 @@
   min-height: fit-content;
   overflow-y: auto;
   overflow-x: hidden;
+  height: 100%;
+  scrollbar-width: thin;
 }
 
 #vertical-pinned-tabs-container {

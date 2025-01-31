@@ -328,7 +328,7 @@
 
       const actualPin = this._pinsCache.find((pin) => pin.uuid === tab.getAttribute('zen-pin-id'));
 
-      if(!actualPin) {
+      if (!actualPin) {
         return;
       }
       actualPin.position = tab.position;
@@ -646,9 +646,9 @@
     }
 
     moveToAnotherTabContainerIfNecessary(event, draggedTab) {
-      const pinnedTabsTarget = event.target.closest("#vertical-pinned-tabs-container");
-      const essentialTabsTarget = event.target.closest("#zen-essentials-container");
-      const tabsTarget = event.target.closest("#tabbrowser-arrowscrollbox");
+      const pinnedTabsTarget = event.target.closest('#vertical-pinned-tabs-container');
+      const essentialTabsTarget = event.target.closest('#zen-essentials-container');
+      const tabsTarget = event.target.closest('#tabbrowser-arrowscrollbox');
 
       let moved = false;
       let isVertical = true;
@@ -658,7 +658,7 @@
         if (!draggedTab.pinned) {
           gBrowser.pinTab(draggedTab);
           moved = true;
-        } else if (draggedTab.hasAttribute("zen-essential")) {
+        } else if (draggedTab.hasAttribute('zen-essential')) {
           this.removeEssentials(draggedTab);
           gBrowser.pinTab(draggedTab);
           moved = true;
@@ -666,7 +666,7 @@
       }
       // Check for essentials container
       else if (essentialTabsTarget) {
-        if (!draggedTab.hasAttribute("zen-essential")) {
+        if (!draggedTab.hasAttribute('zen-essential')) {
           this.addToEssentials(draggedTab);
           moved = true;
           isVertical = false;
@@ -674,11 +674,11 @@
       }
       // Check for normal tabs container
       else if (tabsTarget) {
-        if (draggedTab.pinned && !draggedTab.hasAttribute("zen-essential")) {
+        if (draggedTab.pinned && !draggedTab.hasAttribute('zen-essential')) {
           gBrowser.unpinTab(draggedTab);
           moved = true;
           isRegularTabs = true;
-        } else if (draggedTab.hasAttribute("zen-essential")) {
+        } else if (draggedTab.hasAttribute('zen-essential')) {
           this.removeEssentials(draggedTab);
           moved = true;
           isRegularTabs = true;
@@ -687,19 +687,18 @@
 
       // If the tab was moved, adjust its position relative to the target tab
       if (moved) {
-        const targetTab = event.target.closest(".tabbrowser-tab");
+        const targetTab = event.target.closest('.tabbrowser-tab');
         if (targetTab) {
           const rect = targetTab.getBoundingClientRect();
           let newIndex = targetTab._tPos;
 
           if (isVertical) {
             const middleY = targetTab.screenY + rect.height / 2;
-            if(!isRegularTabs && event.screenY > middleY) {
+            if (!isRegularTabs && event.screenY > middleY) {
               newIndex++;
-            } else  if(isRegularTabs && event.screenY < middleY) {
+            } else if (isRegularTabs && event.screenY < middleY) {
               newIndex--;
             }
-
           } else {
             const middleX = targetTab.screenX + rect.width / 2;
             if (event.screenX > middleX) {
@@ -714,20 +713,24 @@
     }
 
     removeTabContainersDragoverClass() {
-      document
-        .querySelectorAll(".tabbrowser-tab.drag-over-before, .tabbrowser-tab.drag-over-after")
-        .forEach(tab => {
-          tab.classList.remove("drag-over-before", "drag-over-after");
-        });
+      this.dragIndicator.remove();
+      this._dragIndicator = null;
+    }
+
+    get dragIndicator() {
+      if (!this._dragIndicator) {
+        this._dragIndicator = document.createElement('div');
+        this._dragIndicator.id = 'zen-drag-indicator';
+        document.body.appendChild(this._dragIndicator);
+      }
+      return this._dragIndicator;
     }
 
     applyDragoverClass(event, draggedTab) {
-      this.removeTabContainersDragoverClass();
-
-      const pinnedTabsTarget = event.target.closest("#vertical-pinned-tabs-container");
-      const essentialTabsTarget = event.target.closest("#zen-essentials-container");
-      const tabsTarget = event.target.closest("#tabbrowser-arrowscrollbox");
-      const targetTab = event.target.closest(".tabbrowser-tab");
+      const pinnedTabsTarget = event.target.closest('#vertical-pinned-tabs-container');
+      const essentialTabsTarget = event.target.closest('#zen-essentials-container');
+      const tabsTarget = event.target.closest('#tabbrowser-arrowscrollbox');
+      const targetTab = event.target.closest('.tabbrowser-tab');
 
       // If there's no valid target tab, nothing to do
       if (!targetTab) {
@@ -739,16 +742,16 @@
 
       // Decide whether we should show a dragover class for the given target
       if (pinnedTabsTarget) {
-        if (!draggedTab.pinned || draggedTab.hasAttribute("zen-essential")) {
+        if (!draggedTab.pinned || draggedTab.hasAttribute('zen-essential')) {
           shouldAddDragOverElement = true;
         }
       } else if (essentialTabsTarget) {
-        if (!draggedTab.hasAttribute("zen-essential")) {
+        if (!draggedTab.hasAttribute('zen-essential')) {
           shouldAddDragOverElement = true;
           isVertical = false;
         }
       } else if (tabsTarget) {
-        if (draggedTab.pinned || draggedTab.hasAttribute("zen-essential")) {
+        if (draggedTab.pinned || draggedTab.hasAttribute('zen-essential')) {
           shouldAddDragOverElement = true;
         }
       }
@@ -761,19 +764,20 @@
       const rect = targetTab.getBoundingClientRect();
 
       if (isVertical) {
+        const separation = 8;
         const middleY = targetTab.screenY + rect.height / 2;
+        const indicator = this.dragIndicator;
+        let top=0;
         if (event.screenY > middleY) {
-          targetTab.classList.add("drag-over-before");
+          top = rect.top + rect.height + 'px';
         } else {
-          targetTab.classList.add("drag-over-after");
+          top = rect.top + 'px';
         }
+        indicator.style.setProperty('--indicator-left', rect.left + (separation/2) + 'px');
+        indicator.style.setProperty('--indicator-width', rect.width - separation + 'px');
+        indicator.style.top = top;
       } else {
-        const middleX = targetTab.screenX + rect.width / 2;
-        if (event.screenX > middleX) {
-          targetTab.classList.add("drag-over-before");
-        } else {
-          targetTab.classList.add("drag-over-after");
-        }
+        // SUPPORT FOR ESSENTIALS
       }
     }
   }

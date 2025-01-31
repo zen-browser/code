@@ -1815,9 +1815,13 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
       if (matchingWorkspaces.length === 1) {
         const workspace = matchingWorkspaces[0];
         if (workspace.uuid !== this.getActiveWorkspaceFromCache().uuid) {
-          window.addEventListener('TabSelected', (event) => {
-            this.changeWorkspace(workspace, { alwaysChange: true });
-          }, { once: true });
+          window.addEventListener(
+            'TabSelected',
+            (event) => {
+              this.changeWorkspace(workspace, { alwaysChange: true });
+            },
+            { once: true }
+          );
           return [userContextId, true, workspace.uuid];
         }
       }

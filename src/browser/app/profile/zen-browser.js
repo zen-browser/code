@@ -123,6 +123,7 @@ pref('zen.view.compact.toolbar-hide-after-hover.duration', 1000);
 pref('zen.view.compact.color-toolbar', true);
 pref('zen.view.compact.color-sidebar', true);
 pref('zen.view.compact.animate-sidebar', true);
+pref('zen.view.compact.show-sidebar-on-hover', true);
 
 pref('zen.urlbar.behavior', 'floating-on-type'); // default, floating-on-type, float
 

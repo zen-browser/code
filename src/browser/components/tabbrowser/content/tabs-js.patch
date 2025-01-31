@@ -1,5 +1,5 @@
 diff --git a/browser/components/tabbrowser/content/tabs.js b/browser/components/tabbrowser/content/tabs.js
-index 8aeb244ffca9f48661805f5b7d860b5896055562..94b6a5ee6b89965fc63a8e8d1075bd0de37c4d15 100644
+index 8aeb244ffca9f48661805f5b7d860b5896055562..aa672d49e5d3e8e0ce4747187becbc790e25a5f1 100644
 --- a/browser/components/tabbrowser/content/tabs.js
 +++ b/browser/components/tabbrowser/content/tabs.js
 @@ -94,7 +94,7 @@
@@ -16,7 +16,7 @@ index 8aeb244ffca9f48661805f5b7d860b5896055562..94b6a5ee6b89965fc63a8e8d1075bd0d
        if (
          event.button != 0 ||
 -        event.target != this.arrowScrollbox ||
-+        event.target != this ||
++        event.target != document.getElementById("zen-browser-tabs-wrapper") ||
          event.composedTarget.localName == "toolbarbutton"
        ) {
          return;

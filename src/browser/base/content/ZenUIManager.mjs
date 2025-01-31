@@ -28,7 +28,7 @@ var gZenUIManager = {
       this._hasLoadedDOM = true;
     });
 
-    window.addEventListener('TabClose', this.updateTabsToolbar.bind(this));
+    window.addEventListener('TabClose', this.onTabClose.bind(this));
   },
 
   updateTabsToolbar() {
@@ -54,6 +54,24 @@ var gZenUIManager = {
     }
     tabs.style.removeProperty('flex');
     tabs.style.maxHeight = height + 'px';
+  },
+
+  get tabsWrapper() {
+    if (this._tabsWrapper) {
+      return this._tabsWrapper;
+    }
+    this._tabsWrapper = document.getElementById('zen-browser-tabs-wrapper');
+    return this._tabsWrapper;
+  },
+
+  saveScrollbarState() {
+    this._scrollbarState = this.tabsWrapper.scrollTop;
+  },
+
+  onTabClose(event) {
+    this.updateTabsToolbar();
+    this.tabsWrapper.scrollTop = this._scrollbarState;
+    this._scrollbarState = 0;
   },
 
   openAndChangeToTab(url, options) {
@@ -248,7 +266,7 @@ var gZenVerticalTabsManager = {
         aTab.style.removeProperty('opacity');
       });
     gZenUIManager.motion
-      .animate(aTab.querySelector('.tab-stack'), {
+      .animate(aTab.querySelector('.tab-content'), {
         filter: ['blur(1px)', 'blur(0px)'],
       })
       .then(() => {

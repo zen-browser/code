@@ -1080,7 +1080,7 @@
   position: fixed;
   z-index: 1000;
   background: var(--zen-drag-indicator-bg);
-  transition: top 0.1s ease;
+  transition: top 0.1s ease-out;
   pointer-events: none;
   left: calc(var(--indicator-left) + 2 * var(--zen-drag-indicator-height) + 4px);
   border-radius: 5px;

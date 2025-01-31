@@ -72,7 +72,11 @@
 }
 
 #browser {
-  --zen-toolbox-padding: max(.4rem, calc(var(--zen-element-separation) / 1.5));
+  --zen-min-toolbox-padding: .4rem;
+  @media (-moz-platform: macos) {
+    --zen-min-toolbox-padding: .52rem;
+  }
+  --zen-toolbox-padding: max(var(--zen-min-toolbox-padding), calc(var(--zen-element-separation) / 1.5));
 }
 
 :root[zen-single-toolbar='true'] {

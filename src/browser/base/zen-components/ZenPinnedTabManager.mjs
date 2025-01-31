@@ -327,6 +327,10 @@
       }
 
       const actualPin = this._pinsCache.find((pin) => pin.uuid === tab.getAttribute('zen-pin-id'));
+
+      if(!actualPin) {
+        return;
+      }
       actualPin.position = tab.position;
       await ZenPinnedTabsStorage.savePin(actualPin);
     }
@@ -648,7 +652,7 @@
 
       let moved = false;
       let isVertical = true;
-
+      let isRegularTabs = false;
       // Check for pinned tabs container
       if (pinnedTabsTarget) {
         if (!draggedTab.pinned) {
@@ -673,9 +677,11 @@
         if (draggedTab.pinned && !draggedTab.hasAttribute("zen-essential")) {
           gBrowser.unpinTab(draggedTab);
           moved = true;
+          isRegularTabs = true;
         } else if (draggedTab.hasAttribute("zen-essential")) {
           this.removeEssentials(draggedTab);
           moved = true;
+          isRegularTabs = true;
         }
       }
 
@@ -688,9 +694,12 @@
 
           if (isVertical) {
             const middleY = targetTab.screenY + rect.height / 2;
-            if (event.screenY > middleY) {
+            if(!isRegularTabs && event.screenY > middleY) {
               newIndex++;
+            } else  if(isRegularTabs && event.screenY < middleY) {
+              newIndex--;
             }
+
           } else {
             const middleX = targetTab.screenX + rect.width / 2;
             if (event.screenX > middleX) {

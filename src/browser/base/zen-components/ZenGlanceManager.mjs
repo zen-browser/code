@@ -93,9 +93,6 @@
         browser: newTab.linkedBrowser,
       });
       this.#currentGlanceID = newUUID;
-      setTimeout(() => {
-        gBrowser.tabContainer._invalidateCachedTabs(); // remove tiny tab from the tabstrip
-      }, 0);
       return this.#currentBrowser;
     }
 
@@ -152,6 +149,21 @@
       window.requestAnimationFrame(() => {
         this.quickOpenGlance();
 
+        gZenUIManager.motion
+          .animate(
+            this.#currentParentTab.linkedBrowser.closest('.browserSidebarContainer'),
+            {
+              scale: 0.98,
+              backdropFilter: 'blur(5px)',
+              opacity: 0.6,
+            },
+            {
+              duration: 0.4,
+              type: 'spring',
+              bounce: 0.2,
+            }
+          );
+
         this.overlay.removeAttribute('fade-out');
         this.browserWrapper.setAttribute('animate', true);
         const top = initialY + initialHeight / 2;
@@ -203,6 +215,7 @@
 
       this.browserWrapper.removeAttribute('has-finished-animation');
       if (noAnimation) {
+        this.#currentParentTab.linkedBrowser.closest('.browserSidebarContainer').removeAttribute('style');
         this.quickCloseGlance({ closeCurrentTab: false });
         return;
       }
@@ -228,6 +241,7 @@
       this.overlay.style.pointerEvents = 'none';
       this.quickCloseGlance({ justAnimateParent: true, clearID: false });
       const originalPosition = this.#glances.get(this.#currentGlanceID).originalPosition;
+      this.#currentParentTab.linkedBrowser.closest('.browserSidebarContainer').removeAttribute('style');
       gZenUIManager.motion
         .animate(
           this.browserWrapper,
@@ -269,6 +283,7 @@
           this.lastCurrentTab._closingGlance = true;
 
           gBrowser.tabContainer._invalidateCachedTabs();
+          gBrowser.selectedTab = this.#currentParentTab;
           gBrowser.removeTab(this.lastCurrentTab, { animate: false });
           this.#currentBrowser.remove();
 
@@ -294,6 +309,8 @@
       }
       this._duringOpening = true;
       this.showSidebarButtons();
+
+      gBrowser.selectedTab = this.#currentTab;
 
       const parentBrowserContainer = this.#currentParentTab.linkedBrowser.closest('.browserSidebarContainer');
       parentBrowserContainer.classList.add('deck-selected');
@@ -362,6 +379,11 @@
       }
       this.#currentGlanceID = tab.getAttribute('glance-id');
       if (gBrowser.selectedTab === this.#currentParentTab && this.#currentBrowser) {
+        const curTab = this.#currentTab;
+        setTimeout(() => {
+          gBrowser.selectedTab = curTab;
+        }, 0);
+      } else if (gBrowser.selectedTab === this.#currentTab && this.#currentParentTab) {
         setTimeout(this.quickOpenGlance.bind(this), 0);
       }
     }
@@ -504,6 +526,10 @@
       this.openGlance(data);
 
       return false;
+    }
+
+    getFocusedTab(aDir) {
+      return aDir< 0 ? this.#currentParentTab : this.#currentTab;
     }
   }
 

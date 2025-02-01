@@ -9,12 +9,6 @@
   visibility: inherit;
 }
 
-.zen-glance-background {
-  transform: scale(0.98);
-  backdrop-filter: blur(5px);
-  opacity: 0.6;
-}
-
 #zen-glance-sidebar-container {
   display: none;
 

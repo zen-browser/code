@@ -1,0 +1,22 @@
+diff --git a/toolkit/content/widgets/tabbox.js b/toolkit/content/widgets/tabbox.js
+index 033582a3badb65d50f58a11f8a259e28eaa04ef3..a2f655f2444bcf638434f39278e1a3de725de4d6 100644
+--- a/toolkit/content/widgets/tabbox.js
++++ b/toolkit/content/widgets/tabbox.js
+@@ -820,7 +820,7 @@
+         if (tab == startTab) {
+           return null;
+         }
+-        if (filter(tab)) {
++        if (filter(tab) && !tab.hasAttribute("zen-glance-tab")) {
+           return tab;
+         }
+       }
+@@ -883,7 +883,7 @@
+       let { ariaFocusedItem } = this;
+       let startTab = ariaFocusedItem;
+       if (!ariaFocusedItem || !this.allTabs.includes(ariaFocusedItem)) {
+-        startTab = this.selectedItem;
++        startTab = gZenGlanceManager.getFocusedTab(aDir) || this.selectedItem;
+       }
+       let newTab = null;
+ 

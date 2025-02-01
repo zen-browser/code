@@ -149,20 +149,19 @@
       window.requestAnimationFrame(() => {
         this.quickOpenGlance();
 
-        gZenUIManager.motion
-          .animate(
-            this.#currentParentTab.linkedBrowser.closest('.browserSidebarContainer'),
-            {
-              scale: 0.98,
-              backdropFilter: 'blur(5px)',
-              opacity: 0.6,
-            },
-            {
-              duration: 0.4,
-              type: 'spring',
-              bounce: 0.2,
-            }
-          );
+        gZenUIManager.motion.animate(
+          this.#currentParentTab.linkedBrowser.closest('.browserSidebarContainer'),
+          {
+            scale: 0.98,
+            backdropFilter: 'blur(5px)',
+            opacity: 0.6,
+          },
+          {
+            duration: 0.4,
+            type: 'spring',
+            bounce: 0.2,
+          }
+        );
 
         this.overlay.removeAttribute('fade-out');
         this.browserWrapper.setAttribute('animate', true);
@@ -535,7 +534,7 @@
     }
 
     getFocusedTab(aDir) {
-      return aDir< 0 ? this.#currentParentTab : this.#currentTab;
+      return aDir < 0 ? this.#currentParentTab : this.#currentTab;
     }
   }
 

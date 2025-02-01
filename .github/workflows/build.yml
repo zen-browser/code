@@ -407,7 +407,7 @@ jobs:
       - name: Download Linux build
         uses: actions/download-artifact@v4
         with:
-          name: zen.linux-${{ matrix.arch }}.tar.bz2
+          name: zen.linux-${{ matrix.arch }}.tar.xz
 
       - name: Execute AppImage build
         run: |
@@ -547,8 +547,8 @@ jobs:
         with:
           files: |
             zen.source.tar.zst
-            zen.linux-x86_64.tar.bz2
-            zen.linux-aarch64.tar.bz2
+            zen.linux-x86_64.tar.xz
+            zen.linux-aarch64.tar.xz
             zen-x86_64.AppImage
             zen-x86_64.AppImage.zsync
             zen-aarch64.AppImage
@@ -581,8 +581,8 @@ jobs:
           title: 'Release build - ${{ needs.build-data.outputs.version }} (${{ needs.build-data.outputs.build_date }})'
           files: |
             zen.source.tar.zst
-            zen.linux-x86_64.tar.bz2
-            zen.linux-aarch64.tar.bz2
+            zen.linux-x86_64.tar.xz
+            zen.linux-aarch64.tar.xz
             zen-x86_64.AppImage
             zen-x86_64.AppImage.zsync
             zen-aarch64.AppImage
@@ -674,12 +674,12 @@ jobs:
       - name: Download Linux x86_64 build
         uses: actions/download-artifact@v4
         with:
-          name: zen.linux-x86_64.tar.bz2
+          name: zen.linux-x86_64.tar.xz
 
       - name: Download Linux aarch64 build
         uses: actions/download-artifact@v4
         with:
-          name: zen.linux-aarch64.tar.bz2
+          name: zen.linux-aarch64.tar.xz
 
       - name: Update repository
         uses: actions/checkout@v4
@@ -701,8 +701,8 @@ jobs:
           python3 ./zen-browser/scripts/prepare-flatpak-release.py \
             --flatpak-archive archive.tar \
             --version ${{ needs.build-data.outputs.version }} \
-            --linux-archive zen.linux-x86_64.tar.bz2 \
-            --linux-aarch64-archive zen.linux-aarch64.tar.bz2 \
+            --linux-archive zen.linux-x86_64.tar.xz \
+            --linux-aarch64-archive zen.linux-aarch64.tar.xz \
             --output app.zen_browser.zen.yml \
             --template-root ./zen-browser/flatpak
 
@@ -715,7 +715,7 @@ jobs:
         run: |
           rm -rf zen-browser
           rm -rf archive.tar
-          rm -rf zen.linux-x86_64.tar.bz2
+          rm -rf zen.linux-x86_64.tar.xz
 
       - name: Upload Flatpak manifest
         uses: actions/upload-artifact@v4

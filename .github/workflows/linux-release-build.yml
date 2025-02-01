@@ -150,15 +150,15 @@ jobs:
 
       - name: Rename artifacts
         run: |
-          mv dist/zen-*.tar.bz2 "zen.linux-${{ matrix.arch }}.tar.bz2"
+          mv dist/zen-*.tar.xz "zen.linux-${{ matrix.arch }}.tar.xz"
           mv dist/output.mar linux${{ matrix.arch == 'aarch64' && '-aarch64' || '' }}.mar
 
       - name: Upload build artifact (binary)
         uses: actions/upload-artifact@v4
         with:
           retention-days: 5
-          name: zen.linux-${{ matrix.arch }}.tar.bz2
-          path: ./zen.linux-${{ matrix.arch }}.tar.bz2
+          name: zen.linux-${{ matrix.arch }}.tar.xz
+          path: ./zen.linux-${{ matrix.arch }}.tar.xz
 
       - name: Upload build artifact (.mar)
         uses: actions/upload-artifact@v4

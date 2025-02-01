@@ -108,9 +108,7 @@
     }
 
     &[animate-full='true'] {
-      opacity: 1;
-      animation: zen-glance-buttons-animation-full 0.2s ease-in-out forwards !important;
-
+      transform: translate(-50%, -50%);
       & #zen-glance-sidebar-container {
         opacity: 0 !important;
       }

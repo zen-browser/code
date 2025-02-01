@@ -67,7 +67,9 @@
       };
       this.currentParentTab = currentTab;
       const newTab = existingTab ?? gBrowser.addTrustedTab(Services.io.newURI(url).spec, newTabOptions);
-
+      if (currentTab.hasAttribute('zenDefaultUserContextId')) {
+        newTab.setAttribute('zenDefaultUserContextId', true);
+      }
       gBrowser.selectedTab = newTab;
       currentTab.querySelector('.tab-content').appendChild(newTab);
       newTab.setAttribute('zen-glance-tab', true);
@@ -89,7 +91,6 @@
       this.browserWrapper?.removeAttribute('animate');
       this.browserWrapper?.removeAttribute('animate-end');
       this.browserWrapper?.removeAttribute('animate-full');
-      this.browserWrapper?.removeAttribute('animate-full-end');
       this.browserWrapper?.removeAttribute('has-finished-animation');
       this.overlay?.removeAttribute('post-fade-out');
 
@@ -363,16 +364,19 @@
       this.#currentTab.removeAttribute('zen-glance-tab');
       gBrowser.selectedTab = this.#currentTab;
       this.currentParentTab.linkedBrowser.closest('.browserSidebarContainer').classList.remove('zen-glance-background');
-      setTimeout(() => {
-        window.requestAnimationFrame(() => {
-          this.browserWrapper.setAttribute('animate-full-end', true);
-          this.overlay.classList.remove('zen-glance-overlay');
-          setTimeout(() => {
-            this.animatingFullOpen = false;
-            this.closeGlance({ noAnimation: true });
-          }, 600);
-        });
-      }, 300);
+      gZenUIManager.motion.animate(this.browserWrapper, {
+        width: ['85%', '100%'],
+        height: ['100%', '100%'],
+      }, {
+        duration: 0.4,
+        type: 'spring',
+      }).then(() => {
+        this.browserWrapper.removeAttribute('animate-full');
+        this.overlay.classList.remove('zen-glance-overlay');
+        this.browserWrapper.removeAttribute('style');
+        this.animatingFullOpen = false;
+        this.closeGlance({ noAnimation: true });
+      });
     }
 
     openGlanceForBookmark(event) {

@@ -73,18 +73,18 @@ var gZenCommonActions = {
     }
   },
   CopyCurrentURLAsMarkdownToClipboard() {
-    const currentUrl = gBrowser.currentURI.spec;
-    const tabTitle = gBrowser.selectedTab.label;
-    if (currentUrl && tabTitle) {
-        const markdownLink = `[${tabTitle}](${currentUrl})`
-        let str = Cc['@mozilla.org/supports-string;1'].createInstance(Ci.nsISupportsString);
-        str.data = markdownLink;
-        let transferable = Cc['@mozilla.org/widget/transferable;1'].createInstance(Ci.nsITransferable);
-        transferable.init(getLoadContext());
-        transferable.addDataFlavor('text/plain');
-        transferable.setTransferData('text/plain', str);
-        Services.clipboard.setData(transferable, null, Ci.nsIClipboard.kGlobalClipboard);
-        ConfirmationHint.show(document.getElementById('PanelUI-menu-button'), 'zen-copy-current-url-confirmation');
+    const currentTabs = gZenViewSplitter.getTabsInCurrentView()
+    if (currentTabs) {
+      const stringArray = currentTabs.map(t => `[${t.label}](${t.linkedBrowser.currentURI.spec})`)
+      const markdownString = stringArray.join("\n")
+      let str = Cc['@mozilla.org/supports-string;1'].createInstance(Ci.nsISupportsString);
+      str.data = markdownString;
+      let transferable = Cc['@mozilla.org/widget/transferable;1'].createInstance(Ci.nsITransferable);
+      transferable.init(getLoadContext());
+      transferable.addDataFlavor('text/plain');
+      transferable.setTransferData('text/plain', str);
+      Services.clipboard.setData(transferable, null, Ci.nsIClipboard.kGlobalClipboard);
+      ConfirmationHint.show(document.getElementById('PanelUI-menu-button'), 'zen-copy-current-url-confirmation');
     }
   },
 

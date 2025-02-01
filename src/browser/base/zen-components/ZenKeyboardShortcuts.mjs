@@ -909,19 +909,19 @@ class ZenKeyboardShortcutsVersioner {
       window.addEventListener('zen-devtools-keyset-added', listener);
     }
     if (version < 8) {
-        // Migrate from 7 to 8
-        // In this new version, we add the "Copy URL as Markdown" shortcut to the default shortcuts
-        data.push(
-            new KeyShortcut(
-                'zen-copy-url-markdown',
-                'C',
-                '',
-                ZEN_OTHER_SHORTCUTS_GROUP,
-                KeyShortcutModifiers.fromObject({ accel: true, shift: true, alt: true }),
-                'code:gZenCommonActions.CopyCurrentURLAsMarkdownToClipboard()',
-                'zen-text-action-copy-url-markdown-shortcut'
-              )
+      // Migrate from 7 to 8
+      // In this new version, we add the "Copy URL as Markdown" shortcut to the default shortcuts
+      data.push(
+        new KeyShortcut(
+          'zen-copy-url-markdown',
+          'C',
+          '',
+          ZEN_OTHER_SHORTCUTS_GROUP,
+          KeyShortcutModifiers.fromObject({ accel: true, shift: true, alt: true }),
+          'code:gZenCommonActions.CopyCurrentURLAsMarkdownToClipboard()',
+          'zen-text-action-copy-url-markdown-shortcut'
         )
+      )
     }
     return data;
   }

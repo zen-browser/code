@@ -9,11 +9,6 @@
     border-radius: var(--zen-native-inner-radius);
     position: relative;
 
-    /* For glance */
-    transition:
-      transform 0.1s ease-in-out,
-      opacity 0.1s ease-in-out;
-
     overflow: hidden;
 
     :root:not([zen-no-padding='true']) & {

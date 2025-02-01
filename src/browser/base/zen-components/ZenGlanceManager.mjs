@@ -102,8 +102,8 @@
       this.contentWrapper = browser.closest('.browserStack');
     }
 
-    showSidebarButtons() {
-      if (this.sidebarButtons.hasAttribute('hidden')) {
+    showSidebarButtons(animate = false) {
+      if (this.sidebarButtons.hasAttribute('hidden') && animate) {
         gZenUIManager.motion.animate(
           this.sidebarButtons.querySelectorAll('toolbarbutton'),
           { x: [-50, 0], opacity: [0, 1] },
@@ -141,7 +141,7 @@
       const browserElement = this.createBrowserElement(data.url, currentTab, existingTab);
 
       this.fillOverlay(browserElement);
-      this.showSidebarButtons();
+      this.showSidebarButtons(true);
 
       this.overlay.classList.add('zen-glance-overlay');
 
@@ -249,7 +249,7 @@
             ...originalPosition,
             opacity: 0,
           },
-          { type: 'spring', bounce: 0, duration: 0.5 }
+          { type: 'spring', bounce: 0, duration: 0.7 }
         )
         .then(() => {
           this.browserWrapper.removeAttribute('animate');
@@ -313,17 +313,22 @@
       gBrowser.selectedTab = this.#currentTab;
 
       const parentBrowserContainer = this.#currentParentTab.linkedBrowser.closest('.browserSidebarContainer');
-      parentBrowserContainer.classList.add('deck-selected');
       parentBrowserContainer.classList.add('zen-glance-background');
       parentBrowserContainer.classList.remove('zen-glance-overlay');
+      parentBrowserContainer.classList.add('deck-selected');
       this.#currentParentTab.linkedBrowser.zenModeActive = true;
       this.#currentParentTab.linkedBrowser.docShellIsActive = true;
       this.#currentBrowser.zenModeActive = true;
       this.#currentBrowser.docShellIsActive = true;
       this.#currentBrowser.setAttribute('zen-glance-selected', true);
       this.fillOverlay(this.#currentBrowser);
-
       this.#currentParentTab._visuallySelected = true;
+      setTimeout(() => {
+        // just to make sure
+        parentBrowserContainer.classList.add('deck-selected');
+        this.#currentParentTab._visuallySelected = true;
+      }, 0);
+
       this.overlay.classList.add('deck-selected');
       this.overlay.classList.add('zen-glance-overlay');
 
@@ -363,6 +368,7 @@
       }
     }
 
+    // note: must be async to avoid timing issues
     onLocationChange(browser) {
       const tab = gBrowser.getTabForBrowser(browser);
       if (this.animatingFullOpen) {

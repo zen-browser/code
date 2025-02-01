@@ -8,9 +8,7 @@
   #endif
 #endif
 
-pref("browser.tabs.cardPreview.enabled", true);
-pref("browser.tabs.hoverPreview.enabled", true);
-pref("browser.tabs.cardPreview.delayMs", 100);
+pref("browser.tabs.hoverPreview.enabled", false);
 
 #ifdef MOZ_UPDATE_CHANNEL
 pref("devtools.debugger.prompt-connection", true);

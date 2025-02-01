@@ -364,19 +364,25 @@
       this.#currentTab.removeAttribute('zen-glance-tab');
       gBrowser.selectedTab = this.#currentTab;
       this.currentParentTab.linkedBrowser.closest('.browserSidebarContainer').classList.remove('zen-glance-background');
-      gZenUIManager.motion.animate(this.browserWrapper, {
-        width: ['85%', '100%'],
-        height: ['100%', '100%'],
-      }, {
-        duration: 0.4,
-        type: 'spring',
-      }).then(() => {
-        this.browserWrapper.removeAttribute('animate-full');
-        this.overlay.classList.remove('zen-glance-overlay');
-        this.browserWrapper.removeAttribute('style');
-        this.animatingFullOpen = false;
-        this.closeGlance({ noAnimation: true });
-      });
+      gZenUIManager.motion
+        .animate(
+          this.browserWrapper,
+          {
+            width: ['85%', '100%'],
+            height: ['100%', '100%'],
+          },
+          {
+            duration: 0.4,
+            type: 'spring',
+          }
+        )
+        .then(() => {
+          this.browserWrapper.removeAttribute('animate-full');
+          this.overlay.classList.remove('zen-glance-overlay');
+          this.browserWrapper.removeAttribute('style');
+          this.animatingFullOpen = false;
+          this.closeGlance({ noAnimation: true });
+        });
     }
 
     openGlanceForBookmark(event) {

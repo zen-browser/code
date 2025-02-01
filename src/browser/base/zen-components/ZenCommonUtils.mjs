@@ -60,10 +60,12 @@ class ZenPreloadedFeature {
 
 var gZenCommonActions = {
   copyCurrentURLToClipboard() {
-    const currentUrl = gBrowser.currentURI.spec;
-    if (currentUrl) {
+    const currentTabs = gZenViewSplitter.getTabsInCurrentView()
+    if (currentTabs) {
+      const stringArray = currentTabs.map(t => `${t.linkedBrowser.currentURI.spec}`)
+      const markdownString = stringArray.join("\n")
       let str = Cc['@mozilla.org/supports-string;1'].createInstance(Ci.nsISupportsString);
-      str.data = currentUrl;
+      str.data = markdownString;
       let transferable = Cc['@mozilla.org/widget/transferable;1'].createInstance(Ci.nsITransferable);
       transferable.init(getLoadContext());
       transferable.addDataFlavor('text/plain');

@@ -23,27 +23,38 @@
   }
 }
 
-.browserSidebarContainer.zen-glance-overlay {
-  box-shadow: none !important;
+#zen-glance-sidebar-container {
+  position: absolute;
+  display: flex;
+  z-index: 999;
 
-  &[fade-out='true'] {
-    background: transparent;
-    opacity: 1;
+  &[hidden='true'] {
+    display: none;
+  }
 
-    & .browserContainer {
-      opacity: 1;
-      animation: zen-glance-content-animation-out 0.3s ease-in-out forwards !important;
+  top: 10%;
+  transform: translateY(-50%);
 
-      & browser {
-        opacity: 1 !important;
-      }
+  padding: 5px;
+  gap: 12px;
+  right: 1%;
 
-      & #zen-glance-sidebar-container {
-        opacity: 0;
-        transition: opacity 0.1s ease-in-out;
-      }
+  & toolbarbutton {
+    width: 32px;
+    height: 32px;
+    background: var(--zen-dialog-background);
+    border-radius: 999px;
+    appearance: none;
+    box-shadow: 0 0 12px 1px rgba(0, 0, 0, 0.07);
+
+    & label {
+      display: none;
     }
   }
+}
+
+.browserSidebarContainer.zen-glance-overlay {
+  box-shadow: none !important;
 
   & .browserContainer {
     background: var(--zen-dialog-background);
@@ -69,37 +80,6 @@
       overflow: hidden;
     }
 
-    & #zen-glance-sidebar-container {
-      position: absolute;
-      display: flex;
-      top: 10%;
-      left: 0;
-      transform: translateY(-50%);
-      opacity: 0;
-      background: var(--zen-dialog-background);
-
-      border: 1px solid var(--zen-colors-border);
-      border-right: none;
-
-      border-top-left-radius: var(--zen-native-inner-radius);
-      border-bottom-left-radius: var(--zen-native-inner-radius);
-
-      padding: 5px;
-      gap: 6px;
-
-      animation: zen-glance-buttons-animation 0.2s ease-in-out forwards;
-      animation-delay: 0.3s;
-
-      & toolbarbutton {
-        width: 32px;
-        height: 32px;
-
-        & label {
-          display: none;
-        }
-      }
-    }
-
     & browser {
       width: 100%;
       height: 100%;
@@ -116,22 +96,13 @@
 
     &[animate='true'] {
       position: absolute;
-      transform: translate(-50%, -50%);
+    }
+  }
 
-      &:not([animate-end='true']) {
-        pointer-events: none;
-
-        & browser {
-          opacity: 0;
-          visibility: hidden;
-        }
-
-        & #zen-glance-sidebar-container {
-          opacity: 0;
-          animation: none;
-          pointer-events: none;
-        }
-      }
+  &[fade-out='true'] {
+    & browser {
+      transition: opacity 0.1s ease;
+      opacity: 0;
     }
   }
 }

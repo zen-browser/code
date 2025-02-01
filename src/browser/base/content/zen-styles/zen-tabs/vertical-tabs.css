@@ -311,13 +311,22 @@
     /* We have a tab inside a tab, this means, it's a glance tab */
     & .tabbrowser-tab {
       pointer-events: none;
-      margin: 0;
+      margin: 0 0 0 4px;
       --toolbarbutton-inner-padding: 0;
       --border-radius-medium: 8px;
+      width: 24px;
+      height: 24px;
+      --tab-min-height: 24px;
+      --tab-min-width: 24px;
 
       & .tab-background {
-        background: transparent;
+        background: var(--zen-toolbar-element-bg) !important;
+        margin-block: 0 !important;
+        margin-inline: 0 !important;
         box-shadow: none !important;
+      }
+      & .tab-content {
+        padding: 0 5px;
       }
       & label { display: none !important; }
       & .tab-close-button,
@@ -327,6 +336,8 @@
 
       & .tab-icon-image {
         --toolbarbutton-inner-padding: 0 !important;
+        width: 14px;
+        height: 14px;
       }
     }
 

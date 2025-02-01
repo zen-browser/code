@@ -96,7 +96,7 @@ export class ZenGlanceChild extends JSWindowActorChild {
   }
 
   handleClick(event) {
-    if (this.ensureOnlyKeyModifiers(event)) {
+    if (this.ensureOnlyKeyModifiers(event) || event.button !== 0 || event.defaultPrevented) {
       return;
     }
     const activationMethod = this._activationMethod;

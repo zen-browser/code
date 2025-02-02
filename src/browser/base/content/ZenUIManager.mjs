@@ -29,6 +29,7 @@ var gZenUIManager = {
     });
 
     window.addEventListener('TabClose', this.onTabClose.bind(this));
+    window.addEventListener('TabSelect', this.onTabSelect.bind(this));
   },
 
   updateTabsToolbar() {
@@ -143,11 +144,26 @@ var gZenUIManager = {
     this.__currentPopupTrackElement = null;
   },
 
+  _prevUrlbarLabel: null,
+  _lastSearch: "",
+
+  onTabSelect(event) {
+    this._prevUrlbarLabel = null;
+    this._lastSearch = "";
+    if (gURLBar.hasAttribute('zen-newtab')) {
+      this.handleUrlbarClose();
+    }
+  },
+
   handleNewTab(werePassedURL, searchClipboard, where) {
     const shouldOpenURLBar = Services.prefs.getBoolPref('zen.urlbar.replace-newtab')
       && !werePassedURL && !searchClipboard && where === 'tab';
     if (shouldOpenURLBar) {
-      gURLBar._untrimmedValue = "";
+      if (this._prevUrlbarLabel !== gURLBar._untrimmedValue) {
+        this._lastSearch = "";
+      }
+      this._prevUrlbarLabel = gURLBar._untrimmedValue;
+      gURLBar._untrimmedValue = this._lastSearch;
       gURLBar._zenHandleUrlbarClose = this.handleUrlbarClose.bind(this);
       gURLBar.setAttribute('zen-newtab', true);
       document.getElementById('Browser:OpenLocation').doCommand();
@@ -157,8 +173,12 @@ var gZenUIManager = {
   },
 
   handleUrlbarClose() {
-    gURLBar.removeAttribute('zen-newtab');
+    gURLBar.controller.clearLastQueryContextCache();
+    gURLBar.blur();
     gURLBar._zenHandleUrlbarClose = null;
+    gURLBar.removeAttribute('zen-newtab');
+    this._lastSearch = gURLBar._untrimmedValue;
+    gURLBar.handleRevert();
   },
 };
 

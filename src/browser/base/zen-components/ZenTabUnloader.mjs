@@ -173,7 +173,7 @@
     }
 
     handleTabClose(tab) {
-      // Nothing yet
+      tab.lastActivity = null;
     }
 
     handleTabOpen(tab) {

@@ -350,13 +350,6 @@
       this.#currentBrowser.setAttribute('zen-glance-selected', true);
       this.fillOverlay(this.#currentBrowser);
       this.#currentParentTab._visuallySelected = true;
-      setTimeout(() => {
-        setTimeout(() => {
-          // just to make sure
-          parentBrowserContainer.classList.add('deck-selected');
-          this.#currentParentTab._visuallySelected = true;
-        }, 0);
-      }, 0);
 
       this.overlay.classList.add('deck-selected');
       this.overlay.classList.add('zen-glance-overlay');
@@ -367,6 +360,9 @@
     quickCloseGlance({ closeCurrentTab = true, closeParentTab = true, justAnimateParent = false, clearID = true } = {}) {
       const parentHasBrowser = !!this.#currentParentTab.linkedBrowser;
       this.hideSidebarButtons();
+      if (parentHasBrowser) {
+        this.#currentParentTab.linkedBrowser.closest('.browserSidebarContainer').classList.remove('zen-glance-background');
+      }
       if (!justAnimateParent && this.overlay) {
         if (parentHasBrowser) {
           if (closeParentTab) {
@@ -388,9 +384,6 @@
         }
         this.#currentBrowser.removeAttribute('zen-glance-selected');
         this.overlay.classList.remove('zen-glance-overlay');
-      }
-      if (parentHasBrowser) {
-        this.#currentParentTab.linkedBrowser.closest('.browserSidebarContainer').classList.remove('zen-glance-background');
       }
       if (clearID) {
         this.#currentGlanceID = null;

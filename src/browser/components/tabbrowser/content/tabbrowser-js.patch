@@ -1,5 +1,5 @@
 diff --git a/browser/components/tabbrowser/content/tabbrowser.js b/browser/components/tabbrowser/content/tabbrowser.js
-index ff90a70bdad6c94ec4b90027ff102972d0eb28e5..9aaa4b0cd8a8bb76c59415f2322d739cbe00302e 100644
+index ff90a70bdad6c94ec4b90027ff102972d0eb28e5..8063e0149827bb3da06b25079efa2a5a6fdfbb3a 100644
 --- a/browser/components/tabbrowser/content/tabbrowser.js
 +++ b/browser/components/tabbrowser/content/tabbrowser.js
 @@ -406,11 +406,39 @@
@@ -268,7 +268,17 @@ index ff90a70bdad6c94ec4b90027ff102972d0eb28e5..9aaa4b0cd8a8bb76c59415f2322d739c
          aTab.selected ||
          aTab.closing ||
          // Tabs that are sharing the screen, microphone or camera cannot be hidden.
-@@ -7443,6 +7532,7 @@
+@@ -5727,6 +5816,9 @@
+           this.tabContainer.insertBefore(aTab, neighbor);
+         }
+       });
++      if (aTab.hasAttribute("glance-id")) {
++        this.moveTabTo(aTab.querySelector("tab[glance-id]"), aIndex, options);
++      }
+     }
+ 
+     moveTabToGroup(aTab, aGroup) {
+@@ -7443,6 +7535,7 @@
              aWebProgress.isTopLevel
            ) {
              this.mTab.setAttribute("busy", "true");
@@ -276,7 +286,7 @@ index ff90a70bdad6c94ec4b90027ff102972d0eb28e5..9aaa4b0cd8a8bb76c59415f2322d739c
              gBrowser._tabAttrModified(this.mTab, ["busy"]);
              this.mTab._notselectedsinceload = !this.mTab.selected;
              gBrowser.syncThrobberAnimations(this.mTab);
-@@ -8411,7 +8501,7 @@ var TabContextMenu = {
+@@ -8411,7 +8504,7 @@ var TabContextMenu = {
      );
      contextUnpinSelectedTabs.hidden =
        !this.contextTab.pinned || !multiselectionContext;
@@ -285,7 +295,7 @@ index ff90a70bdad6c94ec4b90027ff102972d0eb28e5..9aaa4b0cd8a8bb76c59415f2322d739c
      // Move Tab items
      let contextMoveTabOptions = document.getElementById(
        "context_moveTabOptions"
-@@ -8444,7 +8534,7 @@ var TabContextMenu = {
+@@ -8444,7 +8537,7 @@ var TabContextMenu = {
      let contextMoveTabToStart = document.getElementById("context_moveToStart");
      let isFirstTab =
        tabsToMove[0] == visibleTabs[0] ||
@@ -294,7 +304,7 @@ index ff90a70bdad6c94ec4b90027ff102972d0eb28e5..9aaa4b0cd8a8bb76c59415f2322d739c
      contextMoveTabToStart.disabled = isFirstTab && allSelectedTabsAdjacent;
  
      document.getElementById("context_openTabInWindow").disabled =
-@@ -8677,6 +8767,7 @@ var TabContextMenu = {
+@@ -8677,6 +8770,7 @@ var TabContextMenu = {
      if (this.contextTab.multiselected) {
        gBrowser.removeMultiSelectedTabs();
      } else {

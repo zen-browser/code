@@ -673,7 +673,7 @@
         }
       }
       // Check for normal tabs container
-      else if (tabsTarget) {
+      else if (tabsTarget || event.target.id === 'zen-browser-tabs-wrapper') {
         if (draggedTab.pinned && !draggedTab.hasAttribute('zen-essential')) {
           gBrowser.unpinTab(draggedTab);
           moved = true;

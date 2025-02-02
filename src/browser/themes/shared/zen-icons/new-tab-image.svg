@@ -1,11 +1,1 @@
-<!--
-   - This Source Code Form is subject to the terms of the Mozilla Public
-   - License, v. 2.0. If a copy of the MPL was not distributed with this
-   - file, You can obtain one at http://mozilla.org/MPL/2.0/.
-   -->
-<svg width="16" height="16" xmlns="http://www.w3.org/2000/svg" fill="context-fill" fill-opacity="context-fill-opacity">
-  <path d="M3 1c-1.099 0-2 .9-2 2v10c0 1.099.9 2 2 2h10c1.099 0 2-.9 2-2V3c0-1.099-.9-2-2-2H3zm0 1h3v1.5C6 4.323 6.677 5 7.5 5H14v8c0 .563-.437 1-1 1H3c-.563 0-1-.437-1-1V3c0-.563.437-1 1-1zm4 0h6c.563 0 1 .437 1 1v1H7.5a.493.493 0 0 1-.5-.5V2z"/>
-  <circle cx="5" cy="9" r="1"/>
-  <circle cx="8" cy="9" r="1"/>
-  <circle cx="11" cy="9" r="1"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" height="18" width="18" viewBox="0 0 18 18"><g stroke-linecap="round" stroke-width="1.5" fill="none" stroke="currentColor" stroke-linejoin="round" class="nc-icon-wrapper"><rect x="1.75" y="2.75" width="14.5" height="12.5" rx="2" ry="2" transform="translate(18 18) rotate(180)"></rect><circle cx="4.25" cy="5.25" r=".75" fill="currentColor" data-color="color-2" data-stroke="none" stroke="none"></circle><circle cx="6.75" cy="5.25" r=".75" fill="currentColor" data-color="color-2" data-stroke="none" stroke="none"></circle></g></svg>

@@ -1,9 +1,1 @@
-<!--
-   - This Source Code Form is subject to the terms of the Mozilla Public
-   - License, v. 2.0. If a copy of the MPL was not distributed with this
-   - file, You can obtain one at http://mozilla.org/MPL/2.0/.
-   -->
-<svg width="16" height="16" xmlns="http://www.w3.org/2000/svg" fill="context-fill" fill-opacity="context-fill-opacity">
-  <path d="M8 0a.5.5 0 0 0-.5.5v10.79L3.854 7.644a.5.5 0 1 0-.707.707l4.5 4.5a.5.5 0 0 0 .707 0l4.5-4.5a.5.5 0 0 0-.707-.707L8.501 11.29V.5a.5.5 0 0 0-.5-.5z"/>
-  <path d="M1.5 12a.5.5 0 0 0-.5.5v1C1 14.875 2.125 16 3.5 16h9c1.375 0 2.5-1.125 2.5-2.5v-1a.5.5 0 0 0-1 0v1c0 .834-.666 1.5-1.5 1.5h-9c-.834 0-1.5-.666-1.5-1.5v-1a.5.5 0 0 0-.5-.5z"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" height="18" width="18" viewBox="0 0 18 18"><g stroke-linecap="round" stroke-width="1.5" fill="none" stroke="currentColor" stroke-linejoin="round" class="nc-icon-wrapper"><path d="M11.75,6.75h1c1.105,0,2,.895,2,2v5.5c0,1.105-.895,2-2,2H5.25c-1.105,0-2-.895-2-2v-5.5c0-1.105,.895-2,2-2h1"></path><polyline points="12 10.25 9 13.25 6 10.25" data-color="color-2"></polyline><line x1="9" y1="13.25" x2="9" y2="1.75" data-color="color-2"></line></g></svg>

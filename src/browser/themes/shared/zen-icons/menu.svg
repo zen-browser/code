@@ -1,10 +1,1 @@
-<!--
-   - This Source Code Form is subject to the terms of the Mozilla Public
-   - License, v. 2.0. If a copy of the MPL was not distributed with this
-   - file, You can obtain one at http://mozilla.org/MPL/2.0/.
-   -->
-<svg width="16" height="16" xmlns="http://www.w3.org/2000/svg" fill="context-fill" fill-opacity="context-fill-opacity">
-  <circle cx="8" cy="8" r="1.25"/>
-  <circle cx="13.25" cy="8" r="1.25"/>
-  <circle cx="2.75" cy="8" r="1.25"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" height="18" width="18" viewBox="0 0 18 18"><g stroke-linecap="round" stroke-width="1.5" fill="none" stroke="currentColor" stroke-linejoin="round" class="nc-icon-wrapper"><circle cx="9" cy="9" r=".5" fill="currentColor" data-color="color-2"></circle><circle cx="3.25" cy="9" r=".5" fill="currentColor"></circle><circle cx="14.75" cy="9" r=".5" fill="currentColor"></circle></g></svg>

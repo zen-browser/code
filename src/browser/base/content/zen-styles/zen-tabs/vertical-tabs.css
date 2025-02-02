@@ -748,11 +748,10 @@
 /* Mark: Override the default tab close button */
 #tabbrowser-tabs {
   & .tabbrowser-tab {
-    &[pinned] .tab-close-button {
+    &[pinned][visuallyselected] .tab-close-button {
       display: none !important;
     }
 
-    &[pinned]:not([zen-essential]):hover .tab-reset-button,
     &[pinned][visuallyselected]:not([zen-essential]) .tab-reset-button {
       display: block;
     }
@@ -761,7 +760,7 @@
       display: none;
     }
 
-    &:not([pinned]) .tab-reset-button {
+    &:not([pinned][visuallyselected]) .tab-reset-button {
       display: none;
     }
 
@@ -777,7 +776,7 @@
   border-radius: var(--tab-border-radius);
   color: inherit;
   fill: currentColor;
-  padding: 6px;
+  padding: var(--tab-close-button-padding);
   width: 24px;
   height: 24px;
   outline: var(--toolbarbutton-outline);

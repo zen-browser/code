@@ -1,10 +1,1 @@
-<!--
-   - This Source Code Form is subject to the terms of the Mozilla Public
-   - License, v. 2.0. If a copy of the MPL was not distributed with this
-   - file, You can obtain one at http://mozilla.org/MPL/2.0/.
-   -->
-<svg width="16" height="16" xmlns="http://www.w3.org/2000/svg" fill="context-fill" fill-opacity="context-fill-opacity">
-  <defs><clipPath id="a"><path d="M2.1 0 16 13.9V0zM0 .7V16h15.3z"/></clipPath></defs>
-  <path clip-path="url(#a)" d="M8 4c-2.335 0-4.671.296-7.008.887A1.32 1.32 0 0 0 0 6.17v2.549c0 1.804 1.44 3.28 3.236 3.28H5.24a2.11 2.11 0 0 0 1.596-.732l.53-.611a.835.835 0 0 1 1.268 0l.53.611A2.11 2.11 0 0 0 10.76 12h2.004C14.559 12 16 10.523 16 8.719v-2.55c0-.602-.404-1.134-.993-1.282A28.51 28.51 0 0 0 8 4zm0 1c2.249 0 4.503.285 6.762.856.135.034.238.16.238.314v2.549C15 9.986 13.991 11 12.764 11H10.76c-.32 0-.624-.14-.838-.387l-.53-.611a1.834 1.834 0 0 0-2.781 0l-.53.611a1.11 1.11 0 0 1-.84.387H3.237C2.01 11 1.001 9.986 1.001 8.719V6.17c0-.154.104-.28.238-.315A27.504 27.504 0 0 1 8.001 5zm-.04 1A.75.75 0 1 0 8 6h-.039zM2.5 7a.5.5 0 0 0 0 1H4a.5.5 0 0 0 0-1H2.5zm9.502 0a.5.5 0 0 0-.004 1l1.5.004a.502.502 0 0 0 .502-.5c0-.276-.222-.5-.498-.5L12.002 7z"/>
-  <path d="M.5 0a.5.5 0 0 0-.354.146.5.5 0 0 0 0 .707l15 15a.5.5 0 0 0 .707 0 .5.5 0 0 0 0-.707l-15-15A.5.5 0 0 0 .499 0z"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" height="18" width="18" viewBox="0 0 18 18"><g stroke-linecap="round" stroke-width="1.5" fill="none" stroke="currentColor" stroke-linejoin="round" class="nc-icon-wrapper"><path d="M15.012,6.524c.315,.763,.488,1.6,.488,2.476,0,3.59-2.91,6.5-6.5,6.5-.877,0-1.713-.174-2.476-.488"></path><path d="M4.404,13.596c-1.176-1.176-1.904-2.801-1.904-4.596,0-3.59,2.91-6.5,6.5-6.5,1.795,0,3.42,.728,4.596,1.904"></path><path d="M7.409,10.591c-.407-.407-.659-.97-.659-1.591,0-1.243,1.007-2.25,2.25-2.25,.621,0,1.184,.252,1.591,.659" data-color="color-2"></path><line x1="9" y1="1" x2="9" y2="2.5"></line><line x1="17" y1="9" x2="15.5" y2="9"></line><line x1="9" y1="17" x2="9" y2="15.5"></line><line x1="1" y1="9" x2="2.5" y2="9"></line><line x1="2" y1="16" x2="16" y2="2" data-color="color-2"></line></g></svg>

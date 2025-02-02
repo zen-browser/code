@@ -1,16 +1,1 @@
-<!--
-   - This Source Code Form is subject to the terms of the Mozilla Public
-   - License, v. 2.0. If a copy of the MPL was not distributed with this
-   - file, You can obtain one at http://mozilla.org/MPL/2.0/.
-   -->
-<svg width="11" height="11" viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g clip-path="url(#clip0_2002_244)">
-<path d="M5.20215 0.582397V10.5824" stroke="context-fill"></path>
-</g>
-<rect x="0.702148" y="1.0824" width="9" height="9" rx="1.5" stroke="context-fill"></rect>
-<defs>
-<clipPath id="clip0_2002_244">
-<rect x="0.202148" y="0.582397" width="10" height="10" rx="2" fill="context-fill" fill-opacity="context-fill-opacity" />
-</clipPath>
-</defs>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" height="18" width="18" viewBox="0 0 18 18"><g stroke-linecap="round" stroke-width="1.5" fill="none" stroke="currentColor" stroke-linejoin="round" class="nc-icon-wrapper"><line x1="9" y1="1.75" x2="9" y2="16.25" data-color="color-2"></line><path d="M6.25,15.25h-1.5c-1.105,0-2-.895-2-2V4.75c0-1.105,.895-2,2-2h1.5"></path><path d="M11.75,15.25h1.5c1.105,0,2-.895,2-2V4.75c0-1.105-.895-2-2-2h-1.5"></path></g></svg>

@@ -146,6 +146,8 @@
   --fp-contextmenu-bgcolor: light-dark(Menu, rgb(43 42 51 / 0.95));
   --toolbar-bgcolor: transparent;
 
+  --tab-close-button-padding: 5px !important;
+
   --toolbarbutton-active-background: var(--zen-toolbar-element-bg);
 
   --input-bgcolor: var(--zen-colors-tertiary) !important;

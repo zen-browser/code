@@ -1,8 +1,1 @@
-<!--
-   - This Source Code Form is subject to the terms of the Mozilla Public
-   - License, v. 2.0. If a copy of the MPL was not distributed with this
-   - file, You can obtain one at http://mozilla.org/MPL/2.0/.
-   -->
-<svg width="16" height="16" xmlns="http://www.w3.org/2000/svg" fill="context-fill" fill-opacity="context-fill-opacity">
-  <path d="M10.977 1.002a.569.569 0 0 0-.6.576v2.129l-.225.016c-3.562.282-5.65 2.536-6.148 6.627-.064.525.538.853.928.505 1.432-1.278 2.911-2.072 4.445-2.39.246-.051.493-.089.742-.115l.258-.024v2.096l.006.082c.06.453.61.666.947.334l4.496-4.422.059-.066a.588.588 0 0 0-.059-.768l-4.496-4.42-.062-.053a.537.537 0 0 0-.291-.107zM3.5 2A2.5 2.5 0 0 0 1 4.5v8A2.5 2.5 0 0 0 3.5 15h8a2.5 2.5 0 0 0 2.5-2.5v-1a.5.5 0 0 0-1 0v1a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 2 12.5v-8A1.5 1.5 0 0 1 3.5 3h3a.5.5 0 0 0 0-1h-3zm7.877.611L14.824 6l-3.447 3.389V7.232l-1.356.122-.007.001c-1.703.182-3.31.864-4.826 2 .298-1.338.807-2.344 1.476-3.066.83-.894 1.989-1.442 3.563-1.568l1.15-.078V2.61z"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" height="18" width="18" viewBox="0 0 18 18"><g stroke-linecap="round" stroke-width="1.5" fill="none" stroke="currentColor" stroke-linejoin="round" class="nc-icon-wrapper"><path d="M11.75,4.5V1.75s4.5,4.25,4.5,4.25l-4.5,4.25v-2.75c-3.625,0-6,3.5-6,3.5,0,0,0-6.5,6-6.5Z" data-color="color-2"></path><path d="M7.25,2.75h-2.5c-1.105,0-2,.895-2,2V13.25c0,1.105,.895,2,2,2H13.25c1.105,0,2-.895,2-2v-2.5"></path></g></svg>

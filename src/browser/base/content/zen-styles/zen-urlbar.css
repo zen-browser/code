@@ -131,7 +131,7 @@
   #tracking-protection-icon-container {
     margin-inline-end: calc(-16px - 2 * var(--urlbar-icon-padding)) !important;
     opacity: 0;
-    transition: all 0.2s;
+    transition: all 0.1s ease;
   }
 
   #identity-permission-box > *:not(#permissions-granted-icon) {
@@ -234,8 +234,22 @@ button.popup-notification-dropmarker {
 }
 
 @container urlbar-container (width < 350px) {
+  #userContext-icons {
+    transition: all 0.1s ease;
+  }
+
   #userContext-label {
     display: none;
+  }
+
+  #userContext-indicator {
+    margin-inline-end: 2px;
+  }
+
+  #urlbar:hover:not([breakout-extend='true']) #userContext-icons {
+    margin-inline-end: calc(-16px - 2 * var(--urlbar-icon-padding)) !important;
+    opacity: 0;
+    pointer-events: none;
   }
 }
 

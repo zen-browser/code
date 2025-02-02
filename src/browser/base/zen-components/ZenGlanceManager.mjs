@@ -304,18 +304,12 @@
           this.lastCurrentTab.removeAttribute('zen-glance-tab');
           this.lastCurrentTab._closingGlance = true;
 
-          gBrowser.tabContainer._invalidateCachedTabs();
-          const prevSelected = gBrowser.selectedTab;
           if (!isDifferent) {
             gBrowser.selectedTab = this.#currentParentTab;
           }
-          if (!(onTabClose && prevSelected === this.lastCurrentTab)) {
-            gBrowser.removeTab(this.lastCurrentTab, { animate: true });
-          }
-
-          setTimeout(() => {
-            prevOverlay.remove(); // Just to be sure
-          }, 0);
+          this._ignoreClose = true;
+          gBrowser.removeTab(this.lastCurrentTab, { animate: true });
+          gBrowser.tabContainer._invalidateCachedTabs();
 
           this.#currentParentTab.removeAttribute('glance-id');
 
@@ -442,10 +436,9 @@
           this._ignoreClose = false;
           return false;
         }
-        this._ignoreClose = isDifferent;
         this.closeGlance({ onTabClose: true, setNewID: isDifferent ? oldGlanceID : null, isDifferent });
         // only keep continueing tab close if we are not on the currently selected tab
-        return true;
+        return !isDifferent;
       }
       return false;
     }

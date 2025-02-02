@@ -1,5 +1,5 @@
 diff --git a/browser/base/content/browser.js b/browser/base/content/browser.js
-index 9a65dcc7ad41ab961907c95338e023b173d4f474..9477e0c115ed3c4a670f1ac63846b6de01bf8b8c 100644
+index 019b168c1aeae7e1c97a3ae58c99a48a27f54134..1f051e8a1e8a58e8bb721196deecfa36f4089dd6 100644
 --- a/browser/base/content/browser.js
 +++ b/browser/base/content/browser.js
 @@ -32,6 +32,7 @@ ChromeUtils.defineESModuleGetters(this, {
@@ -10,7 +10,7 @@ index 9a65dcc7ad41ab961907c95338e023b173d4f474..9477e0c115ed3c4a670f1ac63846b6de
    DevToolsSocketStatus:
      "resource://devtools/shared/security/DevToolsSocketStatus.sys.mjs",
    DownloadUtils: "resource://gre/modules/DownloadUtils.sys.mjs",
-@@ -630,6 +631,15 @@ XPCOMUtils.defineLazyPreferenceGetter(
+@@ -632,6 +633,15 @@ XPCOMUtils.defineLazyPreferenceGetter(
    false
  );
  
@@ -26,19 +26,18 @@ index 9a65dcc7ad41ab961907c95338e023b173d4f474..9477e0c115ed3c4a670f1ac63846b6de
  customElements.setElementCreationCallback("screenshots-buttons", () => {
    Services.scriptloader.loadSubScript(
      "chrome://browser/content/screenshots/screenshots-buttons.js",
-@@ -3440,6 +3450,11 @@ var XULBrowserWindow = {
+@@ -3440,6 +3450,10 @@ var XULBrowserWindow = {
      AboutReaderParent.updateReaderButton(gBrowser.selectedBrowser);
      TranslationsParent.onLocationChange(gBrowser.selectedBrowser);
  
 +    gZenViewSplitter.onLocationChange(gBrowser.selectedBrowser);
 +    ZenWorkspaces.onLocationChange(gBrowser.selectedBrowser);
 +    gZenTabUnloader.onLocationChange(gBrowser.selectedBrowser);
-+    gZenGlanceManager.onLocationChange(gBrowser.selectedBrowser);
 +
      PictureInPicture.updateUrlbarToggle(gBrowser.selectedBrowser);
  
      if (!gMultiProcessBrowser) {
-@@ -4435,7 +4450,7 @@ nsBrowserAccess.prototype = {
+@@ -4435,7 +4449,7 @@ nsBrowserAccess.prototype = {
      // Passing a null-URI to only create the content window,
      // and pass true for aSkipLoad to prevent loading of
      // about:blank
@@ -47,7 +46,7 @@ index 9a65dcc7ad41ab961907c95338e023b173d4f474..9477e0c115ed3c4a670f1ac63846b6de
        null,
        aParams,
        aWhere,
-@@ -4443,6 +4458,10 @@ nsBrowserAccess.prototype = {
+@@ -4443,6 +4457,10 @@ nsBrowserAccess.prototype = {
        aName,
        true
      );
@@ -58,7 +57,7 @@ index 9a65dcc7ad41ab961907c95338e023b173d4f474..9477e0c115ed3c4a670f1ac63846b6de
    },
  
    openURIInFrame: function browser_openURIInFrame(
-@@ -7281,6 +7300,12 @@ var gDialogBox = {
+@@ -7285,6 +7303,12 @@ var gDialogBox = {
      parentElement.showModal();
      this._didOpenHTMLDialog = true;
  

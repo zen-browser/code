@@ -1,5 +1,5 @@
 diff --git a/browser/components/tabbrowser/content/tabs.js b/browser/components/tabbrowser/content/tabs.js
-index 8aeb244ffca9f48661805f5b7d860b5896055562..e07019130c199401702889c6765434de0bd708a2 100644
+index 8aeb244ffca9f48661805f5b7d860b5896055562..566fe3b925738589910598d0242931dd680a8d1e 100644
 --- a/browser/components/tabbrowser/content/tabs.js
 +++ b/browser/components/tabbrowser/content/tabs.js
 @@ -94,7 +94,7 @@
@@ -204,11 +204,11 @@ index 8aeb244ffca9f48661805f5b7d860b5896055562..e07019130c199401702889c6765434de
        }
  
 -      let tabs = this.visibleTabs.slice(0, gBrowser.pinnedTabCount);
-+      let tabs = this.visibleTabs.slice(0, gBrowser._numVisiblePinTabs);
++      let tabs = this.visibleTabs.slice(0, gBrowser._numVisiblePinTabs).filter(tab => !tab.hasAttribute("zen-glance-tab"));
  
        let directionX = screenX > dragData.animLastScreenX;
        let directionY = screenY > dragData.animLastScreenY;
-@@ -2257,9 +2281,9 @@
+@@ -2257,11 +2281,11 @@
        }
  
        let pinned = draggedTab.pinned;
@@ -218,8 +218,11 @@ index 8aeb244ffca9f48661805f5b7d860b5896055562..e07019130c199401702889c6765434de
 -        pinned ? 0 : numPinned,
 +        pinned ? gBrowser._numZenEssentials : numPinned,
          pinned ? numPinned : undefined
-       );
+-      );
++      ).filter(tab => !tab.hasAttribute("zen-glance-tab"));
  
+       if (this.#rtlMode) {
+         tabs.reverse();
 @@ -2502,8 +2526,9 @@
        );
      }

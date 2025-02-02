@@ -31,15 +31,22 @@
 
   padding: 5px;
   gap: 12px;
-  right: 1%;
+  left: 3%;
 
   & toolbarbutton {
     width: 32px;
     height: 32px;
-    background: var(--zen-dialog-background);
+    background: light-dark(rgba(0, 0, 0, 0.9), rgba(255, 255, 255, 0.9));
+    fill: light-dark(white, black);
+    transition: background 0.2s ease;
     border-radius: 999px;
     appearance: none;
     box-shadow: 0 0 12px 1px rgba(0, 0, 0, 0.07);
+    opacity: 0;
+
+    &:hover {
+      background: light-dark(rgba(0, 0, 0, 0.8), rgba(255, 255, 255, 0.8));
+    }
 
     & label {
       display: none;
@@ -98,5 +105,10 @@
       transition: opacity 0.1s ease;
       opacity: 0;
     }
+  }
+
+  & browser[animate-glance-open='true'] {
+    transition: opacity 0.2s ease-in-out;
+    opacity: 0;
   }
 }

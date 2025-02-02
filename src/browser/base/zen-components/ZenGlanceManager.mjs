@@ -9,6 +9,7 @@
     init() {
       window.addEventListener('keydown', this.onKeyDown.bind(this));
       window.addEventListener('TabClose', this.onTabClose.bind(this));
+      window.addEventListener('TabSelect', this.onLocationChange.bind(this));
 
       XPCOMUtils.defineLazyPreferenceGetter(
         this._lazyPref,
@@ -106,8 +107,8 @@
       if (this.sidebarButtons.hasAttribute('hidden') && animate) {
         gZenUIManager.motion.animate(
           this.sidebarButtons.querySelectorAll('toolbarbutton'),
-          { x: [-50, 0], opacity: [0, 1] },
-          { delay: gZenUIManager.motion.stagger(0.2) }
+          { x: [50, 0], opacity: [0, 1] },
+          { delay: gZenUIManager.motion.stagger(0.1) }
         );
       }
       this.sidebarButtons.removeAttribute('hidden');
@@ -121,6 +122,12 @@
       if (this.#currentBrowser) {
         return;
       }
+      if (gBrowser.selectedTab === this.#currentParentTab) {
+        gBrowser.selectedTab = this.#currentTab;
+        return;
+      }
+      this.animatingOpen = true;
+      this._animating = true;
 
       const initialX = data.x;
       const initialY = data.y;
@@ -135,26 +142,23 @@
 
       const currentTab = ownerTab ?? gBrowser.selectedTab;
 
-      this.animatingOpen = true;
-      this._animating = true;
-
       const browserElement = this.createBrowserElement(data.url, currentTab, existingTab);
 
       this.fillOverlay(browserElement);
-      this.showSidebarButtons(true);
 
       this.overlay.classList.add('zen-glance-overlay');
 
       this.browserWrapper.removeAttribute('animate-end');
       window.requestAnimationFrame(() => {
-        this.quickOpenGlance();
+        this.quickOpenGlance({ dontOpenButtons: true });
+        this.showSidebarButtons(true);
 
         gZenUIManager.motion.animate(
           this.#currentParentTab.linkedBrowser.closest('.browserSidebarContainer'),
           {
-            scale: 0.98,
-            backdropFilter: 'blur(5px)',
-            opacity: 0.6,
+            scale: [1, 0.98],
+            backdropFilter: ['blur(0px)', 'blur(5px)'],
+            opacity: [1, 0.5],
           },
           {
             duration: 0.4,
@@ -162,7 +166,7 @@
             bounce: 0.2,
           }
         );
-
+        this.#currentBrowser.setAttribute('animate-glance-open', true);
         this.overlay.removeAttribute('fade-out');
         this.browserWrapper.setAttribute('animate', true);
         const top = initialY + initialHeight / 2;
@@ -191,12 +195,13 @@
               opacity: 1,
             },
             {
-              duration: 0.4,
+              duration: 0.3,
               type: 'spring',
               bounce: 0.2,
             }
           )
           .then(() => {
+            this.#currentBrowser.removeAttribute('animate-glance-open');
             this.overlay.style.removeProperty('overflow');
             this.browserWrapper.removeAttribute('animate');
             this.browserWrapper.setAttribute('animate-end', true);
@@ -207,7 +212,7 @@
       });
     }
 
-    closeGlance({ noAnimation = false, onTabClose = false } = {}) {
+    closeGlance({ noAnimation = false, onTabClose = false, setNewID = null, isDifferent = false } = {}) {
       if (this._animating || !this.#currentBrowser || this.animatingOpen || this._duringOpening) {
         return;
       }
@@ -240,15 +245,29 @@
       this.overlay.style.pointerEvents = 'none';
       this.quickCloseGlance({ justAnimateParent: true, clearID: false });
       const originalPosition = this.#glances.get(this.#currentGlanceID).originalPosition;
-      this.#currentParentTab.linkedBrowser.closest('.browserSidebarContainer').removeAttribute('style');
+      gZenUIManager.motion.animate(
+        this.#currentParentTab.linkedBrowser.closest('.browserSidebarContainer'),
+        {
+          scale: [0.98, 1],
+          backdropFilter: ['blur(5px)', 'blur(0px)'],
+          opacity: [0.5, 1],
+        },
+        {
+          duration: 0.4,
+          type: 'spring',
+          bounce: 0.2,
+        }
+      ).then(() => {
+        this.#currentParentTab.linkedBrowser.closest('.browserSidebarContainer').removeAttribute('style');
+      });
       gZenUIManager.motion
         .animate(
           this.browserWrapper,
           {
             ...originalPosition,
-            opacity: 0,
+            opacity: 0.3,
           },
-          { type: 'spring', bounce: 0, duration: 0.7 }
+          { type: 'spring', bounce: 0, duration: 0.4, easing: 'ease' }
         )
         .then(() => {
           this.browserWrapper.removeAttribute('animate');
@@ -282,8 +301,13 @@
           this.lastCurrentTab._closingGlance = true;
 
           gBrowser.tabContainer._invalidateCachedTabs();
-          gBrowser.selectedTab = this.#currentParentTab;
-          gBrowser.removeTab(this.lastCurrentTab, { animate: false });
+          const prevSelected = gBrowser.selectedTab;
+          if (!isDifferent) {
+            gBrowser.selectedTab = this.#currentParentTab;
+          }
+          if (!(onTabClose && prevSelected === this.lastCurrentTab)) {
+            gBrowser.removeTab(this.lastCurrentTab, { animate: true });
+          }
           this.#currentBrowser.remove();
 
           setTimeout(() => {
@@ -293,23 +317,27 @@
           this.#currentParentTab.removeAttribute('glance-id');
 
           this.#glances.delete(this.#currentGlanceID);
-          this.#currentGlanceID = null;
+          this.#currentGlanceID = setNewID;
 
           this.lastCurrentTab = null;
           this._duringOpening = false;
 
           this._animating = false;
+
+          if (this.#currentGlanceID) {
+            this.quickOpenGlance();
+          }
         });
     }
 
-    quickOpenGlance() {
+    quickOpenGlance({ dontOpenButtons = false } = {}) {
       if (!this.#currentBrowser || this._duringOpening) {
         return;
       }
       this._duringOpening = true;
-      this.showSidebarButtons();
-
-      gBrowser.selectedTab = this.#currentTab;
+      if (!dontOpenButtons) {
+        this.showSidebarButtons();
+      }
 
       const parentBrowserContainer = this.#currentParentTab.linkedBrowser.closest('.browserSidebarContainer');
       parentBrowserContainer.classList.add('zen-glance-background');
@@ -323,9 +351,11 @@
       this.fillOverlay(this.#currentBrowser);
       this.#currentParentTab._visuallySelected = true;
       setTimeout(() => {
-        // just to make sure
-        parentBrowserContainer.classList.add('deck-selected');
-        this.#currentParentTab._visuallySelected = true;
+        setTimeout(() => {
+          // just to make sure
+          parentBrowserContainer.classList.add('deck-selected');
+          this.#currentParentTab._visuallySelected = true;
+        }, 0);
       }, 0);
 
       this.overlay.classList.add('deck-selected');
@@ -337,7 +367,7 @@
     quickCloseGlance({ closeCurrentTab = true, closeParentTab = true, justAnimateParent = false, clearID = true } = {}) {
       const parentHasBrowser = !!this.#currentParentTab.linkedBrowser;
       this.hideSidebarButtons();
-      if (!justAnimateParent) {
+      if (!justAnimateParent && this.overlay) {
         if (parentHasBrowser) {
           if (closeParentTab) {
             this.#currentParentTab.linkedBrowser.closest('.browserSidebarContainer').classList.remove('deck-selected');
@@ -367,9 +397,15 @@
       }
     }
 
+    onLocationChangeOpenGlance() {
+      if (!this.animatingOpen) {
+        this.quickOpenGlance();
+      }
+    }
+
     // note: must be async to avoid timing issues
-    onLocationChange(browser) {
-      const tab = gBrowser.getTabForBrowser(browser);
+    onLocationChange(event) {
+      const tab = event.target;
       if (this.animatingFullOpen) {
         return;
       }
@@ -388,8 +424,8 @@
         setTimeout(() => {
           gBrowser.selectedTab = curTab;
         }, 0);
-      } else if (gBrowser.selectedTab === this.#currentTab && this.#currentParentTab) {
-        setTimeout(this.quickOpenGlance.bind(this), 0);
+      } else if (gBrowser.selectedTab === this.#currentTab) {
+        setTimeout(this.onLocationChangeOpenGlance.bind(this), 0);
       }
     }
 
@@ -409,13 +445,10 @@
           this._ignoreClose = false;
           return false;
         }
-        this._ignoreClose = true;
-        this.closeGlance({ noAnimation: isDifferent, onTabClose: true });
-        if (isDifferent) {
-          this.#currentGlanceID = oldGlanceID;
-        }
+        this._ignoreClose = isDifferent;
+        this.closeGlance({ onTabClose: true, setNewID: isDifferent ? oldGlanceID : null, isDifferent });
         // only keep continueing tab close if we are not on the currently selected tab
-        return !isDifferent;
+        return true;
       }
       return false;
     }

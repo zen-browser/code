@@ -179,7 +179,7 @@
       * 1. If the native radius - the separation is less than 4px, use 4px.
       * 2. Otherwise, use the the calculated value (inner radius = outer radius - separation).
     */
-      max(5px, calc(var(--zen-native-content-radius) - var(--zen-element-separation)))
+      max(5px, calc(var(--zen-native-content-radius) - var(--zen-element-separation) / 2))
   );
 
   /** Other theme-related styles */

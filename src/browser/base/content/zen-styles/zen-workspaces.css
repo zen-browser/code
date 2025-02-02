@@ -460,6 +460,27 @@
   align-items: center;
   position: relative;
 
+  &::before {
+    border-radius: var(--border-radius-medium);
+    background: transparent;
+    transition: background 0.1s;
+    pointer-events: none;
+    content: '';
+    position: absolute;
+    top: 6px;
+    left: 2px;
+    z-index: -1;
+    width: calc(100% - 4px);
+    height: calc(100% - 12px);
+  }
+
+  &:hover,
+  &[open='true'] {
+    &::before {
+      background: var(--zen-toolbar-element-bg);
+    }
+  }
+
   & #zen-current-workspace-indicator-icon {
     font-size: 14px;
   }

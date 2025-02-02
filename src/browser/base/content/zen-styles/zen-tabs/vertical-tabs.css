@@ -737,11 +737,11 @@
 /* Mark: Move sidebar to the right */
 :root[zen-right-side='true'] {
   & #navigator-toolbox {
-    order: 9 !important;
+    order: 10 !important;
   }
 
   & #zen-sidebar-splitter {
-    order: 10 !important;
+    order: 9 !important;
   }
 }
 
@@ -960,7 +960,7 @@
 
   & .tab-background {
     border-radius: var(--border-radius-medium) !important;
-    transition: background 0.2s ease-in-out;
+    transition: background 0.1s ease-in-out;
   }
 
   --tab-selected-bgcolor: light-dark(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.2));
@@ -1021,7 +1021,7 @@
         inset: 0;
         z-index: 0;
         content: "";
-        transition: background 0.2s ease-in-out;
+        transition: background 0.1s ease-in-out;
       }
     }
 

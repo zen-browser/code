@@ -737,11 +737,11 @@
 /* Mark: Move sidebar to the right */
 :root[zen-right-side='true'] {
   & #navigator-toolbox {
-    order: 3 !important;
+    order: 9 !important;
   }
 
   & #zen-sidebar-splitter {
-    order: 2 !important;
+    order: 10 !important;
   }
 }
 

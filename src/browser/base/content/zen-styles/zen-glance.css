@@ -10,14 +10,6 @@
 }
 
 #zen-glance-sidebar-container {
-  display: none;
-
-  & toolbarbutton:hover {
-    background: var(--button-background-color-hover);
-  }
-}
-
-#zen-glance-sidebar-container {
   position: absolute;
   display: flex;
   z-index: 999;
@@ -37,7 +29,6 @@
     width: 32px;
     height: 32px;
     background: light-dark(rgba(0, 0, 0, 0.9), rgba(255, 255, 255, 0.9));
-    fill: light-dark(white, black);
     transition: background 0.2s ease;
     border-radius: 999px;
     appearance: none;
@@ -50,6 +41,10 @@
 
     & label {
       display: none;
+    }
+
+    & image {
+      filter: invert(1);
     }
   }
 }

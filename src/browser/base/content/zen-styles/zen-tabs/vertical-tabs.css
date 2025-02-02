@@ -361,6 +361,7 @@
   align-items: center;
 
   padding-top: var(--zen-element-separation);
+  --toolbarbutton-inner-padding: 4px;
 
   & > toolbarbutton:not(#zen-workspaces-button) {
     padding: 0 !important;

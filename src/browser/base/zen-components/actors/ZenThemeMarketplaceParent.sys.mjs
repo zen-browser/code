@@ -122,10 +122,10 @@ export class ZenThemeMarketplaceParent extends JSWindowActorParent {
   }
 
   getStyleSheetFullContent(style = '') {
-    let stylesheet = '@-moz-document url-prefix("chrome:") {';
+    let stylesheet = '@-moz-document url-prefix("chrome:") {\n';
 
     for (const line of style.split('\n')) {
-      stylesheet += `  ${line}`;
+      stylesheet += `  ${line}\n`;
     }
 
     stylesheet += '}';

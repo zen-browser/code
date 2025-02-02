@@ -1,5 +1,5 @@
 diff --git a/browser/components/tabbrowser/content/tabbrowser.js b/browser/components/tabbrowser/content/tabbrowser.js
-index ff90a70bdad6c94ec4b90027ff102972d0eb28e5..8063e0149827bb3da06b25079efa2a5a6fdfbb3a 100644
+index ff90a70bdad6c94ec4b90027ff102972d0eb28e5..cca93dc8fe6300a5bee22029bbe2369e9240ba35 100644
 --- a/browser/components/tabbrowser/content/tabbrowser.js
 +++ b/browser/components/tabbrowser/content/tabbrowser.js
 @@ -406,11 +406,39 @@
@@ -196,6 +196,15 @@ index ff90a70bdad6c94ec4b90027ff102972d0eb28e5..8063e0149827bb3da06b25079efa2a5a
          if (
            !bulkOrderedOpen &&
            ((openerTab &&
+@@ -3780,7 +3859,7 @@
+       }
+ 
+       /** @type {MozTabbrowserTab|undefined} */
+-      let tabAfter = this.tabs.at(index);
++      let tabAfter = this.tabs.filter(tab => !tab.hasAttribute("zen-glance-tab")).at(index);
+       this.tabContainer._invalidateCachedTabs();
+ 
+       if (tabGroup) {
 @@ -4095,6 +4174,9 @@
          return;
        }

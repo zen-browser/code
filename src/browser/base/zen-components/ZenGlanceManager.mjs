@@ -245,21 +245,23 @@
       this.overlay.style.pointerEvents = 'none';
       this.quickCloseGlance({ justAnimateParent: true, clearID: false });
       const originalPosition = this.#glances.get(this.#currentGlanceID).originalPosition;
-      gZenUIManager.motion.animate(
-        this.#currentParentTab.linkedBrowser.closest('.browserSidebarContainer'),
-        {
-          scale: [0.98, 1],
-          backdropFilter: ['blur(5px)', 'blur(0px)'],
-          opacity: [0.5, 1],
-        },
-        {
-          duration: 0.4,
-          type: 'spring',
-          bounce: 0.2,
-        }
-      ).then(() => {
-        this.#currentParentTab.linkedBrowser.closest('.browserSidebarContainer').removeAttribute('style');
-      });
+      gZenUIManager.motion
+        .animate(
+          this.#currentParentTab.linkedBrowser.closest('.browserSidebarContainer'),
+          {
+            scale: [0.98, 1],
+            backdropFilter: ['blur(5px)', 'blur(0px)'],
+            opacity: [0.5, 1],
+          },
+          {
+            duration: 0.4,
+            type: 'spring',
+            bounce: 0.2,
+          }
+        )
+        .then(() => {
+          this.#currentParentTab.linkedBrowser.closest('.browserSidebarContainer').removeAttribute('style');
+        });
       gZenUIManager.motion
         .animate(
           this.browserWrapper,

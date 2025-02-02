@@ -94,6 +94,7 @@
         browser: newTab.linkedBrowser,
       });
       this.#currentGlanceID = newUUID;
+      gBrowser.selectedTab = newTab;
       return this.#currentBrowser;
     }
 
@@ -224,6 +225,7 @@
         return;
       }
 
+      this.closingGlance = true;
       this._animating = true;
 
       gBrowser._insertTabAtIndex(this.#currentTab, {
@@ -310,7 +312,6 @@
           if (!(onTabClose && prevSelected === this.lastCurrentTab)) {
             gBrowser.removeTab(this.lastCurrentTab, { animate: true });
           }
-          this.#currentBrowser.remove();
 
           setTimeout(() => {
             prevOverlay.remove(); // Just to be sure
@@ -325,6 +326,7 @@
           this._duringOpening = false;
 
           this._animating = false;
+          this.closingGlance = false;
 
           if (this.#currentGlanceID) {
             this.quickOpenGlance();
@@ -401,7 +403,7 @@
     // note: must be async to avoid timing issues
     onLocationChange(event) {
       const tab = event.target;
-      if (this.animatingFullOpen) {
+      if (this.animatingFullOpen || this.closingGlance) {
         return;
       }
       if (this._duringOpening || !tab.hasAttribute('glance-id')) {

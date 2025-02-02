@@ -60,12 +60,23 @@ class ZenPreloadedFeature {
 
 var gZenCommonActions = {
   copyCurrentURLToClipboard() {
-    const currentTabs = gZenViewSplitter.getTabsInCurrentView()
-    if (currentTabs) {
-      const stringArray = currentTabs.map(t => `${t.linkedBrowser.currentURI.spec}`)
-      const markdownString = stringArray.join("\n")
+    let urlStringToCopy = "";
+    if (Services.prefs.getBoolPref('zen.keyboard.shortcuts.copy-all-tab-urls-in-view', false)) {
+      const currentTabs = gZenViewSplitter.getTabsInCurrentView();
+      if (currentTabs) {
+        const stringArray = currentTabs.map(t => `${t.linkedBrowser.currentURI.spec}`);
+        urlStringToCopy = stringArray.join("\n");
+      }
+    } else {
+      const currentUrl = gBrowser.currentURI.spec;
+      if (currentUrl) {
+
+        urlStringToCopy = `${currentUrl}`
+      }
+    }
+    if (urlStringToCopy) {
       let str = Cc['@mozilla.org/supports-string;1'].createInstance(Ci.nsISupportsString);
-      str.data = markdownString;
+      str.data = urlStringToCopy;
       let transferable = Cc['@mozilla.org/widget/transferable;1'].createInstance(Ci.nsITransferable);
       transferable.init(getLoadContext());
       transferable.addDataFlavor('text/plain');
@@ -75,10 +86,21 @@ var gZenCommonActions = {
     }
   },
   CopyCurrentURLAsMarkdownToClipboard() {
-    const currentTabs = gZenViewSplitter.getTabsInCurrentView()
-    if (currentTabs) {
-      const stringArray = currentTabs.map(t => `[${t.label}](${t.linkedBrowser.currentURI.spec})`)
-      const markdownString = stringArray.join("\n")
+    let markdownString = "";
+    if (Services.prefs.getBoolPref('zen.keyboard.shortcuts.copy-all-tab-urls-in-view', false)) {
+      const currentTabs = gZenViewSplitter.getTabsInCurrentView();
+      if (currentTabs) {
+        const stringArray = currentTabs.map(t => `[${t.label}](${t.linkedBrowser.currentURI.spec})`);
+        markdownString = stringArray.join("\n");
+      }
+    } else {
+      const currentUrl = gBrowser.currentURI.spec;
+      const tabTitle = gBrowser.selectedTab.label;
+      if (currentUrl && tabTitle) {
+        markdownString = `[${tabTitle}](${currentUrl})`;
+      }
+    }
+    if (markdownString) {
       let str = Cc['@mozilla.org/supports-string;1'].createInstance(Ci.nsISupportsString);
       str.data = markdownString;
       let transferable = Cc['@mozilla.org/widget/transferable;1'].createInstance(Ci.nsITransferable);

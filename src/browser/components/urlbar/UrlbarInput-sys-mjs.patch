@@ -1,5 +1,5 @@
 diff --git a/browser/components/urlbar/UrlbarInput.sys.mjs b/browser/components/urlbar/UrlbarInput.sys.mjs
-index 3ab07e5864b3bb200608e7f619645f92ade129fe..31085d82271b0259cd69ec9691ea5f33fe29e19e 100644
+index 50968dc04b527438acf30151f0c2e92f8b45097c..3053415e9df106c5d811e9fd597c05c51f83977b 100644
 --- a/browser/components/urlbar/UrlbarInput.sys.mjs
 +++ b/browser/components/urlbar/UrlbarInput.sys.mjs
 @@ -67,6 +67,13 @@ XPCOMUtils.defineLazyPreferenceGetter(
@@ -16,7 +16,7 @@ index 3ab07e5864b3bb200608e7f619645f92ade129fe..31085d82271b0259cd69ec9691ea5f33
  const DEFAULT_FORM_HISTORY_NAME = "searchbar-history";
  const SEARCH_BUTTON_CLASS = "urlbar-search-button";
  
-@@ -2152,6 +2159,11 @@ export class UrlbarInput {
+@@ -2144,6 +2151,11 @@ export class UrlbarInput {
  
      this.setAttribute("breakout-extend", "true");
  
@@ -28,7 +28,27 @@ index 3ab07e5864b3bb200608e7f619645f92ade129fe..31085d82271b0259cd69ec9691ea5f33
      // Enable the animation only after the first extend call to ensure it
      // doesn't run when opening a new window.
      if (!this.hasAttribute("breakout-extend-animate")) {
-@@ -3875,6 +3887,11 @@ export class UrlbarInput {
+@@ -2163,6 +2175,10 @@ export class UrlbarInput {
+       return;
+     }
+ 
++    if (this._zenHandleUrlbarClose) {
++      this._zenHandleUrlbarClose();
++    }
++
+     this.removeAttribute("breakout-extend");
+     this.#updateTextboxPosition();
+   }
+@@ -3305,7 +3321,7 @@ export class UrlbarInput {
+     } else {
+       where = lazy.BrowserUtils.whereToOpenLink(event, false, false);
+     }
+-    if (lazy.UrlbarPrefs.get("openintab")) {
++    if (lazy.UrlbarPrefs.get("openintab") || this.hasAttribute("zen-newtab")) {
+       if (where == "current") {
+         where = "tab";
+       } else if (where == "tab") {
+@@ -3859,6 +3875,11 @@ export class UrlbarInput {
    }
  
    _on_click(event) {
@@ -40,7 +60,16 @@ index 3ab07e5864b3bb200608e7f619645f92ade129fe..31085d82271b0259cd69ec9691ea5f33
      if (
        event.target == this.inputField ||
        event.target == this._inputContainer ||
-@@ -3986,9 +4003,12 @@ export class UrlbarInput {
+@@ -3930,7 +3951,7 @@ export class UrlbarInput {
+       }
+     }
+ 
+-    if (this.focusedViaMousedown) {
++    if (this.focusedViaMousedown || this.hasAttribute("zen-newtab")) {
+       this.view.autoOpen({ event });
+     } else {
+       if (this._untrimOnFocusAfterKeydown) {
+@@ -3970,9 +3991,12 @@ export class UrlbarInput {
    }
  
    _on_mousedown(event) {
@@ -54,7 +83,7 @@ index 3ab07e5864b3bb200608e7f619645f92ade129fe..31085d82271b0259cd69ec9691ea5f33
  
          if (
            event.target != this.inputField &&
-@@ -3998,8 +4018,8 @@ export class UrlbarInput {
+@@ -3982,8 +4006,8 @@ export class UrlbarInput {
            break;
          }
  

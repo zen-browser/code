@@ -142,6 +142,24 @@ var gZenUIManager = {
     this.__currentPopup = null;
     this.__currentPopupTrackElement = null;
   },
+
+  handleNewTab(werePassedURL, searchClipboard, where) {
+    const shouldOpenURLBar = Services.prefs.getBoolPref('zen.urlbar.replace-newtab')
+      && !werePassedURL && !searchClipboard && where === 'tab';
+    if (shouldOpenURLBar) {
+      gURLBar._untrimmedValue = "";
+      gURLBar._zenHandleUrlbarClose = this.handleUrlbarClose.bind(this);
+      gURLBar.setAttribute('zen-newtab', true);
+      document.getElementById('Browser:OpenLocation').doCommand();
+      return true;
+    }
+    return false;
+  },
+
+  handleUrlbarClose() {
+    gURLBar.removeAttribute('zen-newtab');
+    gURLBar._zenHandleUrlbarClose = null;
+  },
 };
 
 var gZenVerticalTabsManager = {

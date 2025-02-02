@@ -1,8 +1,19 @@
 diff --git a/browser/base/content/browser-commands.js b/browser/base/content/browser-commands.js
-index 352de44dda36e3f6672eb353f42978ede0cd2681..d6956a318c34bfb12b0ba957edab1166e1a4edaf 100644
+index 352de44dda36e3f6672eb353f42978ede0cd2681..66d1616da17df3430cec0994a346f0f446944f1a 100644
 --- a/browser/base/content/browser-commands.js
 +++ b/browser/base/content/browser-commands.js
-@@ -407,8 +407,8 @@ var BrowserCommands = {
+@@ -318,6 +318,10 @@ var BrowserCommands = {
+       }
+     }
+ 
++    if (gZenUIManager.handleNewTab(werePassedURL, searchClipboard, where)) {
++      return;
++    }
++
+     // A notification intended to be useful for modular peformance tracking
+     // starting as close as is reasonably possible to the time when the user
+     // expressed the intent to open a new tab.  Since there are a lot of
+@@ -407,8 +411,8 @@ var BrowserCommands = {
        (event.ctrlKey || event.metaKey || event.altKey) &&
        gBrowser.selectedTab.pinned
      ) {

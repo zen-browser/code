@@ -122,6 +122,7 @@ pref('zen.view.compact.color-toolbar', true);
 pref('zen.view.compact.color-sidebar', true);
 pref('zen.view.compact.animate-sidebar', true);
 
+pref('zen.urlbar.replace-newtab', true);
 pref('zen.urlbar.behavior', 'floating-on-type'); // default, floating-on-type, float
 
 #ifdef XP_MACOSX

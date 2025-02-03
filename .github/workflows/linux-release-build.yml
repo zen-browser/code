@@ -81,24 +81,15 @@ jobs:
           path: /home/runner/.cache/sccache
           key: ${{ runner.os }}-sccache
 
-      - name: Setup pnpm
-        run: npm install -g pnpm
-
-      - name: Get pnpm store directory
-        id: pnpm-cache
-        shell: bash
-        run: |
-          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
-
       - name: Install dependencies
         run: |
-          pnpm install
+          npm install
 
       - name: Load Surfer CI setup
-        run: pnpm surfer ci --brand ${{ inputs.release-branch }} --display-version ${{ inputs.build-version }}
+        run: npm run surfer ci --brand ${{ inputs.release-branch }} --display-version ${{ inputs.build-version }}
 
       - name: Download Firefox source and dependencies
-        run: pnpm surfer download
+        run: npm run download
 
       - name: Fix Rust version
         run: |
@@ -115,7 +106,7 @@ jobs:
       - name: Import
         env:
           SURFER_COMPAT: ${{ matrix.arch }}
-        run: pnpm surfer import
+        run: npm run import
 
       - name: Build language packs
         run: sh scripts/download-language-packs.sh
@@ -146,7 +137,7 @@ jobs:
         run: |
           export SURFER_PLATFORM="linux"
           export ZEN_RELEASE=1
-          pnpm package
+          npm run package
 
       - name: Rename artifacts
         run: |

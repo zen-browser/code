@@ -19,14 +19,11 @@ jobs:
         with:
           node-version-file: '.nvmrc'
 
-      - name: Setup pnpm
-        run: npm install -g pnpm
-
       - name: Install Surfer
         run: npm i -g @zen-browser/surfer
 
       - name: Install dependencies
-        run: pnpm install
+        run: npm install
 
       - name: Download Firefox and dependencies
         run: surfer download

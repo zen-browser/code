@@ -27,11 +27,8 @@ jobs:
       - name: Setup autopep8
         run: sudo apt install python3-autopep8
 
-      - name: Setup pnpm
-        run: npm install -g pnpm
-
       - name: Install dependencies
-        run: pnpm install
+        run: npm install
 
       - name: Lint
-        run: pnpm lint
+        run: npm run lint

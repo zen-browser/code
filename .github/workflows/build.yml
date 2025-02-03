@@ -142,18 +142,9 @@ jobs:
         with:
           node-version-file: '.nvmrc'
 
-      - name: Setup pnpm
-        run: npm install -g pnpm
-
-      - name: Get pnpm store directory
-        id: pnpm-cache
-        shell: bash
-        run: |
-          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
-
       - name: Install dependencies
         run: |
-          pnpm install
+          npm install
 
       - name: Setup Surfer
         run: |
@@ -162,12 +153,12 @@ jobs:
       - name: Bump version
         if: ${{ inputs.update_version && inputs.update_branch == 'release' }}
         run: |
-          pnpm surfer ci --brand ${{ inputs.update_branch }} --bump prerelease
+          npm run surfer ci --brand ${{ inputs.update_branch }} --bump prerelease
 
       - name: Bump version without new version
         if: ${{ !inputs.update_version || inputs.update_branch == 'twilight' }}
         run: |
-          pnpm surfer ci --brand ${{ inputs.update_branch }}
+          npm run surfer ci --brand ${{ inputs.update_branch }}
 
       - name: Debug
         run: |
@@ -211,18 +202,9 @@ jobs:
         with:
           node-version-file: '.nvmrc'
 
-      - name: Setup pnpm
-        run: npm install -g pnpm
-
-      - name: Get pnpm store directory
-        id: pnpm-cache
-        shell: bash
-        run: |
-          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
-
       - name: Install dependencies
         run: |
-          pnpm install
+          npm install
 
       - name: Setup Surfer
         run: |
@@ -231,14 +213,14 @@ jobs:
       - name: Activate Surfer CLI
         run: |
           echo "There's a bug in the Surfer CLI, we run this so that Surfer sets everything up correctly"
-          pnpm surfer ci --brand ${{ inputs.update_branch }} --display-version ${{ needs.build-data.outputs.version }}
+          npm run surfer ci --brand ${{ inputs.update_branch }} --display-version ${{ needs.build-data.outputs.version }}
 
       - name: Check version
         run: |
           echo "$(pwd)"
           ls .
-          echo "version=$(pnpm surfer get version | xargs)" >> $GITHUB_OUTPUT
-          if [[ $(pnpm surfer get version | xargs) == ${{ needs.build-data.outputs.version }} ]]; then
+          echo "version=$(npm run surfer get version | xargs)" >> $GITHUB_OUTPUT
+          if [[ $(npm run surfer get version | xargs) == ${{ needs.build-data.outputs.version }} ]]; then
             echo ">>> Version matches"
           else
             echo ">>> Version mismatch"
@@ -268,27 +250,18 @@ jobs:
           git config --global user.email "mauro-balades@users.noreply.github.com"
           git config --global user.name "mauro-balades"
 
-      - name: Setup pnpm
-        run: npm install -g pnpm
-
-      - name: Get pnpm store directory
-        id: pnpm-cache
-        shell: bash
-        run: |
-          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
-
       - name: Install dependencies
         run: |
-          pnpm install
+          npm install
 
       - name: Load Surfer CI setup
-        run: pnpm surfer ci --brand ${{ inputs.update_branch }} --display-version ${{ needs.build-data.outputs.version }}
+        run: npm run surfer ci --brand ${{ inputs.update_branch }} --display-version ${{ needs.build-data.outputs.version }}
 
       - name: Download Firefox source and dependencies
-        run: pnpm surfer download --verbose
+        run: npm run download --verbose
 
       - name: Import
-        run: pnpm surfer import --verbose
+        run: npm run import -- --verbose
 
       - name: Compress
         run: |
@@ -400,7 +373,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          npm install -g pnpm
+          npm install
           sudo apt-get update
           sudo apt-get -y install libfuse2 desktop-file-utils appstream
 

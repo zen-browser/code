@@ -17,12 +17,12 @@ if command -v Xvfb &> /dev/null; then
     export DISPLAY=:2
   fi
   export ZEN_RELEASE=1
-  pnpm build
+  npm run build
 else
   echo "Xvfb could not be found, running without it"
   echo "ASSUMING YOU ARE RUNNING THIS ON MACOS"
 
   set -v
   export ZEN_RELEASE=1
-  pnpm build
+  npm run build
 fi

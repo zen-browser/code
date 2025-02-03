@@ -1,5 +1,5 @@
 diff --git a/browser/components/tabbrowser/content/tab.js b/browser/components/tabbrowser/content/tab.js
-index d41c486c02a6f09dcff5741a59ad8b617294c481..544ca38934d9b0fe0722082c71ee58f148c2cc90 100644
+index d41c486c02a6f09dcff5741a59ad8b617294c481..0328460c7eb45d8ffb9de4f9b8d4a7bdd7a5b7b3 100644
 --- a/browser/components/tabbrowser/content/tab.js
 +++ b/browser/components/tabbrowser/content/tab.js
 @@ -37,6 +37,7 @@
@@ -31,7 +31,7 @@ index d41c486c02a6f09dcff5741a59ad8b617294c481..544ca38934d9b0fe0722082c71ee58f1
          if (this.multiselected) {
            gBrowser.removeMultiSelectedTabs();
          } else {
-+          gZenPinnedTabManager._removePinnedAttributes(this.contextTab, true);
++          gZenPinnedTabManager._removePinnedAttributes(this, true);
            gBrowser.removeTab(this, {
              animate: true,
              triggeringEvent: event,

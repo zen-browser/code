@@ -1,0 +1,15 @@
+diff --git a/browser/themes/shared/urlbar-searchbar.css b/browser/themes/shared/urlbar-searchbar.css
+index 45aa61f93d354da432eceb1c276466609a6910d0..6585158b855af19689e86ef6a833f63736ec225c 100644
+--- a/browser/themes/shared/urlbar-searchbar.css
++++ b/browser/themes/shared/urlbar-searchbar.css
+@@ -291,7 +291,9 @@
+ }
+ 
+ #urlbar[breakout][breakout-extend] {
+-  margin-left: calc(-1 * var(--urlbar-margin-inline));
++  :root:not([zen-single-toolbar='true']) {
++    margin-left: calc(-1 * var(--urlbar-margin-inline));
++  }
+   width: calc(var(--urlbar-width) + 2 * var(--urlbar-margin-inline));
+ 
+   > .urlbar-input-container {

@@ -162,19 +162,17 @@ var gZenUIManager = {
 
   handleUrlbarClose(onSwitch) {
     gURLBar._zenHandleUrlbarClose = null;
+    gURLBar.removeAttribute('zen-newtab');
     if (onSwitch) {
       this._prevUrlbarLabel = null;
       this._lastSearch = '';
     } else {
       this._lastSearch = gURLBar._untrimmedValue;
     }
-    if (this._prevUrlbarLabel) {
-      gURLBar.setURI(this._prevUrlbarLabel, false, false, false, true);
-    }
-    gURLBar.removeAttribute('zen-newtab');
+    gURLBar.setURI(this._prevUrlbarLabel, false, false, false, true);
     gURLBar.handleRevert();
     if (gURLBar.focused) {
-      gURLBar.view.close();
+      gURLBar.view.close({ elementPicked: onSwitch });
       gURLBar.updateTextOverflow();
       if (gBrowser.selectedTab.linkedBrowser && onSwitch) {
         gURLBar.getBrowserState(gBrowser.selectedTab.linkedBrowser).urlbarFocused = false;

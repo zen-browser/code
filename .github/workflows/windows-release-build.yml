@@ -232,7 +232,7 @@ jobs:
           export ZEN_CROSS_COMPILING=1
           export ZEN_RELEASE=1
           npm run package
-          mv ./dist/zen-$(npm run surfer get version | xargs).en-US.win64${{ matrix.arch == 'aarch64' && '-aarch64' || '' }}.zip zen.win64.zip
+          mv ./dist/zen-$(npm run surfer -- get version | xargs).en-US.win64${{ matrix.arch == 'aarch64' && '-aarch64' || '' }}.zip zen.win64.zip
           ls ./dist
           ls .
 

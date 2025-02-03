@@ -219,8 +219,8 @@ jobs:
         run: |
           echo "$(pwd)"
           ls .
-          echo "version=$(npm run surfer get version | xargs)" >> $GITHUB_OUTPUT
-          if [[ $(npm run surfer get version | xargs) == ${{ needs.build-data.outputs.version }} ]]; then
+          echo "version=$(npm run surfer -- get version | xargs)" >> $GITHUB_OUTPUT
+          if [[ $(npm run surfer -- get version | xargs) == ${{ needs.build-data.outputs.version }} ]]; then
             echo ">>> Version matches"
           else
             echo ">>> Version mismatch"

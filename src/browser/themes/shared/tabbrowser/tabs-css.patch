@@ -1,8 +1,8 @@
 diff --git a/browser/themes/shared/tabbrowser/tabs.css b/browser/themes/shared/tabbrowser/tabs.css
-index e5adf8c853bc6f92d1f5aae6398bb979a114b4fd..8d0783f8a23fabdfe90e5b9136e16a962b35dd5e 100644
+index 96f930638c04c7ddcc8dc1a7fe4dce8b12a325e6..9232b0b8404268fb587f4787621f1026ad23e9c7 100644
 --- a/browser/themes/shared/tabbrowser/tabs.css
 +++ b/browser/themes/shared/tabbrowser/tabs.css
-@@ -31,7 +31,7 @@
+@@ -33,7 +33,7 @@
    --tab-icon-overlay-fill: light-dark(white, black);
    --tab-icon-overlay-stroke: light-dark(black, white);
    --tab-label-line-height: 1.7;
@@ -11,7 +11,7 @@ index e5adf8c853bc6f92d1f5aae6398bb979a114b4fd..8d0783f8a23fabdfe90e5b9136e16a96
    --tab-hover-background-color: color-mix(in srgb, currentColor 11%, transparent);
    --tab-selected-textcolor: var(--toolbar-color);
    --tab-selected-bgcolor: var(--toolbar-bgcolor);
-@@ -205,8 +205,7 @@
+@@ -207,8 +207,7 @@
    }
  
    #tabbrowser-tabs[positionpinnedtabs] > #tabbrowser-arrowscrollbox > &[pinned] {
@@ -21,7 +21,7 @@ index e5adf8c853bc6f92d1f5aae6398bb979a114b4fd..8d0783f8a23fabdfe90e5b9136e16a96
    }
  
    #tabbrowser-tabs[movingtab] &:is([selected], [multiselected]) {
-@@ -250,6 +249,7 @@
+@@ -252,6 +251,7 @@
      border-radius: inherit;
      position: relative;
      overflow: hidden;
@@ -29,7 +29,16 @@ index e5adf8c853bc6f92d1f5aae6398bb979a114b4fd..8d0783f8a23fabdfe90e5b9136e16a96
  
      &::before {
        position: absolute;
-@@ -573,14 +573,14 @@
+@@ -511,7 +511,7 @@
+       background-repeat: no-repeat;
+       border-radius: 10px;
+       -moz-context-properties: fill;
+-      fill: var(--tab-icon-overlay-fill);
++      filter: invert(1);
+     }
+   }
+ 
+@@ -569,14 +569,14 @@
    }
  
    &[textoverflow] {
@@ -48,7 +57,7 @@ index e5adf8c853bc6f92d1f5aae6398bb979a114b4fd..8d0783f8a23fabdfe90e5b9136e16a96
        direction: rtl;
        mask-image: linear-gradient(to right, transparent, black var(--tab-label-mask-size));
      }
-@@ -1069,7 +1069,7 @@ tab-group {
+@@ -1146,7 +1146,7 @@
    margin-inline: var(--tab-inner-inline-margin);
  
    #tabbrowser-tabs[orient="vertical"]:not([expanded]) & > .toolbarbutton-text {
@@ -57,7 +66,7 @@ index e5adf8c853bc6f92d1f5aae6398bb979a114b4fd..8d0783f8a23fabdfe90e5b9136e16a96
    }
  
    &:hover {
-@@ -1283,7 +1283,7 @@ tab-group {
+@@ -1347,7 +1347,7 @@
    toolbarbutton:not(#firefox-view-button),
    toolbarpaletteitem:not(#wrapper-firefox-view-button)
  ) ~ #tabbrowser-tabs {
@@ -66,7 +75,7 @@ index e5adf8c853bc6f92d1f5aae6398bb979a114b4fd..8d0783f8a23fabdfe90e5b9136e16a96
    padding-inline-start: calc(var(--tab-overflow-pinned-tabs-width) + 2px);
    margin-inline-start: 2px;
  }
-@@ -1318,7 +1318,6 @@ toolbar:not(#TabsToolbar) #firefox-view-button {
+@@ -1381,7 +1381,6 @@ toolbar:not(#TabsToolbar) #firefox-view-button {
    list-style-image: url(chrome://global/skin/icons/plus.svg);
  }
  

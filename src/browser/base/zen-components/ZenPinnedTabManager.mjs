@@ -450,15 +450,13 @@
       }
     }
 
-    _onCloseTabShortcut(event, selectedTab = gBrowser.selectedTab) {
+    _onCloseTabShortcut(event, selectedTab = gBrowser.selectedTab, behavior = lazy.zenPinnedTabCloseShortcutBehavior) {
       if (!selectedTab?.pinned) {
         return;
       }
 
       event.stopPropagation();
       event.preventDefault();
-
-      const behavior = lazy.zenPinnedTabCloseShortcutBehavior;
 
       switch (behavior) {
         case 'close':

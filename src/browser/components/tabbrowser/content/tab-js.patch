@@ -1,5 +1,5 @@
 diff --git a/browser/components/tabbrowser/content/tab.js b/browser/components/tabbrowser/content/tab.js
-index d41c486c02a6f09dcff5741a59ad8b617294c481..855152a13afdf58433c228e3675e2e0eebe3892e 100644
+index d41c486c02a6f09dcff5741a59ad8b617294c481..44535569b609d9bcd09f10e46e3161ce0a331c30 100644
 --- a/browser/components/tabbrowser/content/tab.js
 +++ b/browser/components/tabbrowser/content/tab.js
 @@ -37,6 +37,7 @@
@@ -33,7 +33,7 @@ index d41c486c02a6f09dcff5741a59ad8b617294c481..855152a13afdf58433c228e3675e2e0e
        }
 +
 +      if (event.target.classList.contains("tab-reset-button")) {
-+        gZenPinnedTabManager._resetTabToStoredState(this);
++        gZenPinnedTabManager._onCloseTabShortcut(event, this, 'unload-switch');
 +        gBrowser.tabContainer._blockDblClick = true;
 +      }
      }

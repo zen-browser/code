@@ -29,7 +29,7 @@
 
   & #zen-sidebar-top-buttons .toolbarbutton-1 {
     & > .toolbarbutton-icon {
-      padding: 5px;
+      padding: 4px;
     }
   }
 
@@ -749,12 +749,15 @@
 /* Mark: Override the default tab close button */
 #tabbrowser-tabs {
   & .tabbrowser-tab {
-    &[pinned][visuallyselected] .tab-close-button {
+    &[pinned]:not([pending='true']) .tab-close-button {
       display: none !important;
     }
 
-    &[pinned][visuallyselected]:not([zen-essential]) .tab-reset-button {
-      display: block;
+    &[pinned]:not([pending='true']):not([zen-essential]) {
+      &:hover .tab-reset-button,
+      &[visuallyselected] .tab-reset-button {
+        display: block;
+      }
     }
 
     &[zen-essential] .tab-reset-button {

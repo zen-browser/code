@@ -29,7 +29,6 @@ var gZenUIManager = {
     });
 
     window.addEventListener('TabClose', this.onTabClose.bind(this));
-    window.addEventListener('TabSelect', this.onTabSelect.bind(this));
   },
 
   updateTabsToolbar() {
@@ -147,38 +146,40 @@ var gZenUIManager = {
   _prevUrlbarLabel: null,
   _lastSearch: "",
 
-  onTabSelect(event) {
-    this._prevUrlbarLabel = null;
-    this._lastSearch = "";
-    if (gURLBar.hasAttribute('zen-newtab')) {
-      this.handleUrlbarClose();
-    }
-  },
-
   handleNewTab(werePassedURL, searchClipboard, where) {
     const shouldOpenURLBar = Services.prefs.getBoolPref('zen.urlbar.replace-newtab')
       && !werePassedURL && !searchClipboard && where === 'tab';
     if (shouldOpenURLBar) {
-      if (this._prevUrlbarLabel !== gURLBar._untrimmedValue) {
-        this._lastSearch = "";
-      }
       this._prevUrlbarLabel = gURLBar._untrimmedValue;
-      gURLBar._untrimmedValue = this._lastSearch;
       gURLBar._zenHandleUrlbarClose = this.handleUrlbarClose.bind(this);
       gURLBar.setAttribute('zen-newtab', true);
       document.getElementById('Browser:OpenLocation').doCommand();
+      gURLBar.search(this._lastSearch);
       return true;
     }
     return false;
   },
 
-  handleUrlbarClose() {
-    gURLBar.controller.clearLastQueryContextCache();
-    gURLBar.blur();
+  handleUrlbarClose(onSwitch) {
     gURLBar._zenHandleUrlbarClose = null;
+    if (onSwitch) {
+      this._prevUrlbarLabel = null;
+      this._lastSearch = "";
+    } else {
+      this._lastSearch = gURLBar._untrimmedValue;
+    }
+    if (this._prevUrlbarLabel) {
+      gURLBar.setURI(this._prevUrlbarLabel, false, false, false, true);
+    }
     gURLBar.removeAttribute('zen-newtab');
-    this._lastSearch = gURLBar._untrimmedValue;
     gURLBar.handleRevert();
+    if (gURLBar.focused) {
+      gURLBar.view.close();
+      gURLBar.updateTextOverflow();
+      if (gBrowser.selectedTab.linkedBrowser && onSwitch) {
+        gURLBar.getBrowserState(gBrowser.selectedTab.linkedBrowser).urlbarFocused = false;
+      }
+    }
   },
 };
 

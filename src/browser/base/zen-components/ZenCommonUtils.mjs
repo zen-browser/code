@@ -61,7 +61,7 @@ class ZenPreloadedFeature {
 var gZenCommonActions = {
   copyCurrentURLToClipboard() {
     let urlStringToCopy = "";
-    if (Services.prefs.getBoolPref('zen.keyboard.shortcuts.copy-all-tab-urls-in-view', false)) {
+    if (Services.prefs.getBoolPref('zen.keyboard.shortcuts.copy-current-url.copy-all-in-split-view', false)) {
       const currentTabs = gZenViewSplitter.getTabsInCurrentView();
       if (currentTabs) {
         const stringArray = currentTabs.map(t => `${t.linkedBrowser.currentURI.spec}`);
@@ -87,7 +87,7 @@ var gZenCommonActions = {
   },
   CopyCurrentURLAsMarkdownToClipboard() {
     let markdownString = "";
-    if (Services.prefs.getBoolPref('zen.keyboard.shortcuts.copy-all-tab-urls-in-view', false)) {
+    if (Services.prefs.getBoolPref('zen.keyboard.shortcuts.copy-current-url-as-markdown.copy-all-in-split-view', false)) {
       const currentTabs = gZenViewSplitter.getTabsInCurrentView();
       if (currentTabs) {
         const stringArray = currentTabs.map(t => `[${t.label}](${t.linkedBrowser.currentURI.spec})`);

@@ -918,10 +918,10 @@ class ZenKeyboardShortcutsVersioner {
           '',
           ZEN_OTHER_SHORTCUTS_GROUP,
           KeyShortcutModifiers.fromObject({ accel: true, shift: true, alt: true }),
-          'code:gZenCommonActions.CopyCurrentURLAsMarkdownToClipboard()',
+          'code:gZenCommonActions.copyCurrentURLAsMarkdownToClipboard()',
           'zen-text-action-copy-url-markdown-shortcut'
         )
-      )
+      );
     }
     return data;
   }

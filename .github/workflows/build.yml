@@ -212,15 +212,14 @@ jobs:
 
       - name: Activate Surfer CLI
         run: |
-          echo "There's a bug in the Surfer CLI, we run this so that Surfer sets everything up correctly"
           npm run surfer -- ci --brand ${{ inputs.update_branch }} --display-version ${{ needs.build-data.outputs.version }}
 
       - name: Check version
         run: |
           echo "$(pwd)"
-          ls .
-          echo "version=$(npm run surfer -- get version | xargs)" >> $GITHUB_OUTPUT
-          if [[ $(npm run surfer -- get version | xargs) == ${{ needs.build-data.outputs.version }} ]]; then
+          echo $(npm run --silent surfer -- get version | xargs)
+          echo "version=$(npm run --silent surfer -- get version | xargs)" >> $GITHUB_OUTPUT
+          if [[ $(npm run --silent surfer -- get version | xargs) == ${{ needs.build-data.outputs.version }} ]]; then
             echo ">>> Version matches"
           else
             echo ">>> Version mismatch"

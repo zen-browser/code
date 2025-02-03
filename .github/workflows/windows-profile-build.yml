@@ -45,7 +45,7 @@ jobs:
         run: npm i -g @zen-browser/surfer
 
       - name: Load Surfer CI setup
-        run: npm run surfer ci --brand ${{ inputs.release-branch }} --display-version ${{ inputs.build-version }}
+        run: npm run surfer -- ci --brand ${{ inputs.release-branch }} --display-version ${{ inputs.build-version }}
 
       - name: Download artifact
         if: ${{ matrix.arch == 'x86_64' }}

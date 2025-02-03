@@ -86,7 +86,7 @@ jobs:
           npm install
 
       - name: Load Surfer CI setup
-        run: npm run surfer ci --brand ${{ inputs.release-branch }} --display-version ${{ inputs.build-version }}
+        run: npm run surfer -- ci --brand ${{ inputs.release-branch }} --display-version ${{ inputs.build-version }}
 
       - name: Download Firefox source and dependencies
         run: npm run download

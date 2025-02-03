@@ -144,11 +144,11 @@ var gZenUIManager = {
   },
 
   _prevUrlbarLabel: null,
-  _lastSearch: "",
+  _lastSearch: '',
 
   handleNewTab(werePassedURL, searchClipboard, where) {
-    const shouldOpenURLBar = Services.prefs.getBoolPref('zen.urlbar.replace-newtab')
-      && !werePassedURL && !searchClipboard && where === 'tab';
+    const shouldOpenURLBar =
+      Services.prefs.getBoolPref('zen.urlbar.replace-newtab') && !werePassedURL && !searchClipboard && where === 'tab';
     if (shouldOpenURLBar) {
       this._prevUrlbarLabel = gURLBar._untrimmedValue;
       gURLBar._zenHandleUrlbarClose = this.handleUrlbarClose.bind(this);
@@ -164,7 +164,7 @@ var gZenUIManager = {
     gURLBar._zenHandleUrlbarClose = null;
     if (onSwitch) {
       this._prevUrlbarLabel = null;
-      this._lastSearch = "";
+      this._lastSearch = '';
     } else {
       this._lastSearch = gURLBar._untrimmedValue;
     }

@@ -649,7 +649,7 @@
       const tabsTarget = event.target.closest('#tabbrowser-arrowscrollbox');
 
       let moved = false;
-      let isVertical = true;
+      let isVertical = this.expandedSidebarMode;
       let isRegularTabs = false;
       // Check for pinned tabs container
       if (pinnedTabsTarget) {
@@ -724,6 +724,10 @@
       return this._dragIndicator;
     }
 
+    get expandedSidebarMode() {
+      return document.documentElement.getAttribute('zen-sidebar-expanded') === 'true';
+    }
+
     applyDragoverClass(event, draggedTab) {
       const pinnedTabsTarget = event.target.closest('#vertical-pinned-tabs-container');
       const essentialTabsTarget = event.target.closest('#zen-essentials-container');
@@ -736,7 +740,7 @@
       }
 
       let shouldAddDragOverElement = false;
-      let isVertical = true;
+      let isVertical = this.expandedSidebarMode;
 
       // Decide whether we should show a dragover class for the given target
       if (pinnedTabsTarget) {
@@ -755,6 +759,7 @@
       }
 
       if (!shouldAddDragOverElement) {
+        this.removeTabContainersDragoverClass();
         return;
       }
 
@@ -771,11 +776,26 @@
         } else {
           top = rect.top + 'px';
         }
+        indicator.setAttribute('orientation', 'horizontal');
         indicator.style.setProperty('--indicator-left', rect.left + separation / 2 + 'px');
         indicator.style.setProperty('--indicator-width', rect.width - separation + 'px');
         indicator.style.top = top;
+        indicator.style.removeProperty('left');
       } else {
-        // SUPPORT FOR ESSENTIALS
+        const separation = 8;
+        const middleX = targetTab.screenX + rect.width / 2;
+        const indicator = this.dragIndicator;
+        let left = 0;
+        if (event.screenX > middleX) {
+          left = rect.left + rect.width + 1 + 'px';
+        } else {
+          left = rect.left - 2 + 'px';
+        }
+        indicator.setAttribute('orientation', 'vertical');
+        indicator.style.setProperty('--indicator-top', rect.top + separation / 2 + 'px');
+        indicator.style.setProperty('--indicator-height', rect.height - separation + 'px');
+        indicator.style.left = left;
+        indicator.style.removeProperty('top');
       }
     }
   }

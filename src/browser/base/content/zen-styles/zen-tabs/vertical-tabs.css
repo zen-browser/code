@@ -995,7 +995,7 @@
   }
 
   &:hover .tab-background {
-    background: var(--tab-selected-bgcolor);
+    background: color-mix(in srgb, var(--zen-toolbar-element-bg) 50%, var(--tab-selected-bgcolor) 50%);
   }
 
   @media (-moz-bool-pref: 'zen.theme.essentials-favicon-bg') {
@@ -1091,27 +1091,46 @@
 #zen-drag-indicator {
   --zen-drag-indicator-height: 2px;
   --zen-drag-indicator-bg: color-mix(in srgb, var(--zen-primary-color) 50%, light-dark(rgba(0, 0, 0, .85), rgba(255, 255, 255, .95)) 50%);
-  width: calc(var(--indicator-width) - 2 * var(--zen-drag-indicator-height) - 4px);
-  height: var(--zen-drag-indicator-height);
   position: fixed;
   z-index: 1000;
   background: var(--zen-drag-indicator-bg);
-  transition: top 0.1s ease-out;
   pointer-events: none;
-  left: calc(var(--indicator-left) + 2 * var(--zen-drag-indicator-height) + 4px);
   border-radius: 5px;
 
   &::before {
     content: "";
     position: absolute;
-    left: calc(-2 * var(--zen-drag-indicator-height));
-    top: 50%;
     height: calc(2 * var(--zen-drag-indicator-height));
     width: calc(2 * var(--zen-drag-indicator-height));
     border: var(--zen-drag-indicator-height) solid var(--zen-drag-indicator-bg);
     border-radius: 50%;
-    transform: translate(calc(-1 * var(--zen-drag-indicator-height)), -50%);
     background: transparent;
+  }
+
+  &[orientation='horizontal'] {
+    left: calc(var(--indicator-left) + 2 * var(--zen-drag-indicator-height) + 4px);
+    width: calc(var(--indicator-width) - 2 * var(--zen-drag-indicator-height) - 4px);
+    height: var(--zen-drag-indicator-height);
+    transition: top 0.1s ease-out, left 0.1s ease-out, width 0.1s ease-out;
+
+    &::before {
+      left: calc(-2 * var(--zen-drag-indicator-height));
+      top: 50%;
+      transform: translate(calc(-1 * var(--zen-drag-indicator-height)), -50%);
+    }
+  }
+
+  &[orientation='vertical'] {
+    top: calc(var(--indicator-top) + 2 * var(--zen-drag-indicator-height) + 4px);
+    height: calc(var(--indicator-height) - 2 * var(--zen-drag-indicator-height) - 4px);
+    width: var(--zen-drag-indicator-height);
+    transition: top 0.1s ease-out, left 0.1s ease-out, height 0.1s ease-out;
+
+    &::before {
+      top: calc(-2 * var(--zen-drag-indicator-height));
+      left: 50%;
+      transform: translate(-50%, calc(-1 * var(--zen-drag-indicator-height)));
+    }
   }
 }
 

@@ -1,5 +1,5 @@
 diff --git a/browser/components/tabbrowser/content/tab.js b/browser/components/tabbrowser/content/tab.js
-index d41c486c02a6f09dcff5741a59ad8b617294c481..44535569b609d9bcd09f10e46e3161ce0a331c30 100644
+index d41c486c02a6f09dcff5741a59ad8b617294c481..544ca38934d9b0fe0722082c71ee58f148c2cc90 100644
 --- a/browser/components/tabbrowser/content/tab.js
 +++ b/browser/components/tabbrowser/content/tab.js
 @@ -37,6 +37,7 @@
@@ -27,7 +27,15 @@ index d41c486c02a6f09dcff5741a59ad8b617294c481..44535569b609d9bcd09f10e46e3161ce
          event.target.classList.contains("tab-icon-overlay")
        ) {
          eventMaySelectTab = false;
-@@ -553,6 +555,11 @@
+@@ -544,6 +546,7 @@
+         if (this.multiselected) {
+           gBrowser.removeMultiSelectedTabs();
+         } else {
++          gZenPinnedTabManager._removePinnedAttributes(this.contextTab, true);
+           gBrowser.removeTab(this, {
+             animate: true,
+             triggeringEvent: event,
+@@ -553,6 +556,11 @@
          // (see tabbrowser-tabs 'click' handler).
          gBrowser.tabContainer._blockDblClick = true;
        }

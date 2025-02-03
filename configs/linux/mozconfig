@@ -1,70 +1,130 @@
-# Setting the compiler based on the existence of clang bin directory
-if test -d "$HOME/.mozbuild/clang/bin"; then
-    export CC="$HOME/.mozbuild/clang/bin/clang"
-    export CXX="$HOME/.mozbuild/clang/bin/clang++"
-else
-    export CC=clang
-    export CXX=clang++
-fi
+#!/bin/sh
+# Architecture-specific optimizations
+# Implements strict error handling and security best practices
+set -euo pipefail
 
-if test "$SURFER_COMPAT" = "x86_64"; then
+# ------------------------ Configuration Constants ----------------------------
+CLANG_HOME="${HOME}/.mozbuild/clang/bin"
+SCCACHE_PATH="/home/runner/.mozbuild/sccache/sccache"
+OPTIMIZATION_LEVEL="-O3"
+BASE_LDFLAGS="-Wl,-O3"
+RUST_ICF_FLAGS="-Clink-args=--icf=safe"
+
+# -------------------------- Utility Functions --------------------------------
+die() {
+    echo "ERROR: $*" >&2
+    exit 1
+}
+
+validate_architecture() {
+    case "${SURFER_COMPAT:-}" in
+        x86_64|aarch64) return 0 ;;
+        *) die "Unsupported architecture: ${SURFER_COMPAT:-}" ;;
+    esac
+}
+
+# ------------------------ Compiler Configuration -----------------------------
+configure_compiler() {
+    if [ -d "${CLANG_HOME}" ] && [ -x "${CLANG_HOME}/clang" ]; then
+        export CC="${CLANG_HOME}/clang"
+        export CXX="${CLANG_HOME}/clang++"
+    else
+        export CC=clang
+        export CXX=clang++
+    fi
+}
+
+# ------------------------ Architecture-Specific Flags ------------------------
+configure_x86_64() {
     ac_add_options --target=x86_64-pc-linux
     ac_add_options --enable-eme=widevine
 
-    # Enable Profile Guided Optimization
-    if test "$ZEN_GA_DISABLE_PGO"; then
-      export ZEN_DUMMY=1
-    else
-      export MOZ_PGO=1
-      ac_add_options MOZ_PGO=1
-    fi
+    local vectorization_flags=(
+        "-ftree-vectorize" 
+        "-Qvec" 
+        "-mfpmath=sse" 
+        "-mprfchw" 
+        "-msse3" 
+        "-mcx16" 
+        "-msahf"
+    )
 
-    # Optimization flags for SURFER_COMPAT
-    ac_add_options --enable-optimize="-O3 -w -ftree-vectorize -Qvec -mfpmath=sse -mprfchw -msse3 -mcx16 -msahf"
+    ac_add_options --enable-optimize="${OPTIMIZATION_LEVEL} ${vectorization_flags[*]}"
+    export LDFLAGS="${LDFLAGS} ${BASE_LDFLAGS}"
+    export RUSTFLAGS="${RUSTFLAGS} ${RUST_ICF_FLAGS}"
+}
 
-    export LDFLAGS="$LDFLAGS -Wl,-O3"
-    export RUSTFLAGS="$RUSTFLAGS -Clink-args=--icf=safe"
-elif test "$SURFER_COMPAT" = "aarch64"; then
+configure_aarch64() {
     ac_add_options --target=aarch64-linux-gnu
-
-    ac_add_options --enable-optimize="-O3"
-
-    # override LTO settings
+    ac_add_options --enable-optimize="${OPTIMIZATION_LEVEL}"
+    
     export MOZ_LTO=cross,thin
     ac_add_options --enable-lto=cross,thin
 
-    export CFLAGS="$CFLAGS -O3"
-    export CPPFLAGS="$CPPFLAGS -O3"
-    export CXXFLAGS="$CXXFLAGS -O3"
-    export LDFLAGS="$LDFLAGS -Wl,-O3"
-    export RUSTFLAGS="$RUSTFLAGS -Clink-args=--icf=safe"
-fi
+    # Consolidated flag exports for ARM
+    export CFLAGS="${CFLAGS} ${OPTIMIZATION_LEVEL}"
+    export CPPFLAGS="${CPPPFLAGS} ${OPTIMIZATION_LEVEL}"
+    export CXXFLAGS="${CXXFLAGS} ${OPTIMIZATION_LEVEL}"
+    export LDFLAGS="${LDFLAGS} ${BASE_LDFLAGS}"
+    export RUSTFLAGS="${RUSTFLAGS} ${RUST_ICF_FLAGS}"
+}
 
-    export VERBOSE=1
-    # Uncomment if you want to enable Polly optimizations
-    #export POLLY="-mllvm -polly -mllvm -polly-2nd-level-tiling -mllvm -polly-loopfusion-greedy -mllvm -polly-pattern-matching-based-opts -mllvm -polly-position=before-vectorizer -mllvm -polly-vectorizer=stripmine"
+# ---------------------------- PGO Configuration ------------------------------
+configure_pgo() {
+    if [ -z "${ZEN_GA_DISABLE_PGO:-}" ]; then
+        export MOZ_PGO=1
+        ac_add_options MOZ_PGO=1
+    else
+        export ZEN_DUMMY=1
+    fi
+}
 
-# Common options
-ac_add_options --enable-alsa
-ac_add_options --enable-pulseaudio
-
-if test "$ZEN_RELEASE"; then
-    # Disable DMD and ELF hacks, enable linker lld
+# --------------------------- Release Configuration ---------------------------
+configure_release() {
     ac_add_options --disable-dmd
     ac_add_options --enable-linker=lld
     ac_add_options --disable-elf-hack
     ac_add_options --disable-necko-wifi
 
-    # Stripping options for release builds
+    # Stripping configuration
     ac_add_options --enable-install-strip
     ac_add_options --enable-strip
     export STRIP_FLAGS="--strip-debug --strip-unneeded"
 
-    # Using sccache if available
-    if [ -f /home/runner/.mozbuild/sccache/sccache ]; then
-        mk_add_options 'export RUSTC_WRAPPER=/home/runner/.mozbuild/sccache/sccache'
+    # SCCache configuration
+    if [ -x "${SCCACHE_PATH}" ]; then
+        mk_add_options 'export RUSTC_WRAPPER=${SCCACHE_PATH}'
         mk_add_options 'export CCACHE_CPP2=yes'
-        ac_add_options --with-ccache=/home/runner/.mozbuild/sccache/sccache
+        ac_add_options --with-ccache="${SCCACHE_PATH}"
         mk_add_options 'export SCCACHE_GHA_ENABLED=on'
     fi
-fi
+}
+
+# --------------------------- Main Execution Flow -----------------------------
+main() {
+    validate_architecture
+    configure_compiler
+
+    case "${SURFER_COMPAT}" in
+        x86_64)
+            configure_x86_64
+            configure_pgo
+            ;;
+        aarch64)
+            configure_aarch64
+            ;;
+    esac
+
+    # Common audio configuration
+    ac_add_options --enable-alsa
+    ac_add_options --enable-pulseaudio
+
+    # Release-specific configuration
+    if [ -n "${ZEN_RELEASE:-}" ]; then
+        configure_release
+    fi
+
+    export VERBOSE=1
+}
+
+main

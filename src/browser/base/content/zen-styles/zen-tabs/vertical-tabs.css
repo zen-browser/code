@@ -995,7 +995,7 @@
   }
 
   &:hover .tab-background {
-    background: color-mix(in srgb, var(--zen-toolbar-element-bg) 50%, var(--tab-selected-bgcolor) 50%);
+    background: var(--tab-selected-bgcolor);
   }
 
   @media (-moz-bool-pref: 'zen.theme.essentials-favicon-bg') {

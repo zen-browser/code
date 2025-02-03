@@ -1136,15 +1136,6 @@ class ZenViewSplitter extends ZenDOMOperatedFeature {
       : [gBrowser.selectedTab, tabs[nextTabIndex]];
     this.splitTabs(selected_tabs, gridType);
   }
-
-  /**
-   * Gets all the tabs in the current view.
-   * @returns {Tab[]} The tabs in the current view.
-   */
-  getTabsInCurrentView() {
-    if (this.currentView < 0) return [gBrowser.selectedTab];
-    return this._data[this.currentView].tabs;
-  }
 }
 
 window.gZenViewSplitter = new ZenViewSplitter();

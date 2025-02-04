@@ -35,7 +35,7 @@ jobs:
         arch: [x86_64, aarch64]
 
     steps:
-      - name: Free Disk Space (Ubuntu)
+      - name: Free disk space
         uses: jlumbroso/free-disk-space@main
         if: ${{ !(inputs.generate-gpo && matrix.arch == 'aarch64') }}
         with:
@@ -160,6 +160,7 @@ jobs:
           ls ~/win-cross/wine || true
           ls ~/win-cross/vs2022 || true
 
+      # MIGRATE THIS TO dtolnay/rust-toolchain
       - name: Setup Rust
         if: ${{ !(inputs.generate-gpo && matrix.arch == 'aarch64') }}
         run: |

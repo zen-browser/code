@@ -63,8 +63,7 @@ def update_l10n_last_commit_hash():
     os.system(f"git clone {L10N_REPO} l10n-temp")
     if not os.path.exists("firefox-cache"):
       os.mkdir("firefox-cache")
-    with open("l10n-last-commit-hash", "w") as f:
-      os.system("cat l10n-temp/.git/refs/heads/main > firefox-cache/l10n-last-commit-hash")
+    os.system("cat l10n-temp/.git/refs/heads/main > firefox-cache/l10n-last-commit-hash")
   except KeyboardInterrupt:
     print("Exiting...")
   shutil.rmtree("l10n-temp")

@@ -36,10 +36,8 @@ jobs:
 
     steps:
       - name: Free disk space
-        uses: jlumbroso/free-disk-space@main
+        run: src/free_disk_space.sh
         if: ${{ !(inputs.generate-gpo && matrix.arch == 'aarch64') }}
-        with:
-          tool-cache: false
 
       - name: Checkout repository
         uses: actions/checkout@v4

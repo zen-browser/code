@@ -810,6 +810,20 @@ class ZenKeyboardShortcutsVersioner {
     return this.migrateIfNeeded(data);
   }
 
+  fillDefaultIfNotPresent(data) {
+    for (let shortcut of ZenKeyboardShortcutsLoader.zenGetDefaultShortcuts()) {
+      // If it has an ID and we dont find it in the data, we add it
+      if (shortcut.getID() && !data.find((s) => s.getID() == shortcut.getID())) {
+        data.push(shortcut);
+      }
+    }
+    return data;
+  }
+
+  fixedKeyboardShortcuts(data) {
+    return this.fillDefaultIfNotPresent(this.migrateIfNeeded(data));
+  }
+
   migrate(data, version) {
     if (version < 1) {
       // Migrate from 0 to 1
@@ -950,7 +964,7 @@ var gZenKeyboardShortcutsManager = {
     if (this.inBrowserView) {
       const loadedShortcuts = await this._loadSaved();
 
-      this._currentShortcutList = this.versioner.migrateIfNeeded(loadedShortcuts);
+      this._currentShortcutList = this.versioner.fixedKeyboardShortcuts(loadedShortcuts);
       this._applyShortcuts();
 
       await this._saveShortcuts();

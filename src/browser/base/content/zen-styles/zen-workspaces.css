@@ -141,14 +141,6 @@
 
   & #zen-workspaces-button .zen-workspace-sidebar-icon {
     margin-inline-end: 5px;
-
-    & [no-icon='true'] {
-      display: none;
-    }
-  }
-
-  & #zen-workspaces-button .zen-workspace-sidebar-icon[no-icon='true'] + .zen-workspace-sidebar-name {
-    margin-left: 0;
   }
 
   & #zen-workspaces-button {
@@ -431,8 +423,8 @@
   min-height: 1px !important;
   padding: 3px;
   border-radius: 4px;
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
 }
 
 #PanelUI-zen-workspaces-create-footer,
@@ -477,7 +469,7 @@
   &:hover,
   &[open='true'] {
     &::before {
-      background: var(--zen-toolbar-element-bg);
+      background: var(--tab-hover-background-color);
     }
   }
 

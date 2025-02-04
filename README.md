@@ -117,7 +117,7 @@ Some components used by @zen-browser as an attempt to make firefox forks a bette
 
 #### `Run Locally`
 
-In order to download and run zen locally, please follow [these instructions](https://docs.zen-browser.app/contribute/desktop).
+In order to download and run zen locally, please follow [these instructions](https://docs.zen-browser.app/building).
 
 #### `Special Thanks`
 

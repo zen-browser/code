@@ -413,12 +413,14 @@ button.popup-notification-dropmarker {
   font-size: 1.15em !important;
   top: calc(var(--zen-toolbar-height) * 2) !important;
 
+  --zen-urlbar-center: calc(var(--zen-urlbar-offset, 0px) + 28vw);
+
   :root[zen-right-side='true'] & {
-    right: 28vw !important;
+    right: var(--zen-urlbar-center) !important;
   }
 
   :root:not([zen-right-side='true']) & {
-    left: 28vw !important;
+    left: var(--zen-urlbar-center) !important;
   }
 
   #urlbar-container:has(&) {

@@ -109,6 +109,11 @@
         background-size: 2000px !important; /* Dont ask me why */
         backdrop-filter: blur(5px) !important;
       }
+
+      & #urlbar[open][zen-floating-urlbar='true'] {
+        --zen-urlbar-offset: var(--zen-sidebar-width);
+        transition: left 0.1s ease;
+      }
     }
 
     #navigator-toolbox:hover,
@@ -120,8 +125,8 @@
     #navigator-toolbox:has(.tabbrowser-tab:active),
     #navigator-toolbox:has(
         *:is([panelopen='true'], [open='true'], #urlbar:not([zen-floating-urlbar='true']):focus-within):not(tab):not(.zen-compact-mode-ignore)
-      ):not(:has(#urlbar[zen-floating-urlbar='true']:hover)) {
-      &:not([animate='true']) {
+      ) {
+      &:not([animate='true']):not(:has(#urlbar[zen-floating-urlbar='true']:hover)) {
         --zen-compact-mode-func: linear(
           0 0%,
           0.002748 1%,
@@ -233,6 +238,10 @@
         :root[zen-right-side='true'] & {
           right: -1px;
           left: auto;
+        }
+
+        & #urlbar[open][zen-floating-urlbar='true'] {
+          --zen-urlbar-offset: 0px;
         }
       }
     }

@@ -342,7 +342,7 @@ var gZenCompactModeManager = {
           return;
         }
 
-        if (this.hoverableElements[i].keepHoverDuration) {
+        if (this.hoverableElements[i].keepHoverDuration && !event.target.querySelector('#urlbar[zen-floating-urlbar]')) {
           this.flashElement(target, this.hoverableElements[i].keepHoverDuration, 'has-hover' + target.id, 'zen-has-hover');
         } else {
           this._removeHoverFrames[target.id] = window.requestAnimationFrame(() => target.removeAttribute('zen-has-hover'));

@@ -1,5 +1,5 @@
 diff --git a/browser/components/urlbar/UrlbarInput.sys.mjs b/browser/components/urlbar/UrlbarInput.sys.mjs
-index 50968dc04b527438acf30151f0c2e92f8b45097c..3db8b6c04ec5a1b88dc05d4ff04721cf61913dcc 100644
+index 50968dc04b527438acf30151f0c2e92f8b45097c..f8e8e9c06613c5d5f33333fd9e128a726c67e873 100644
 --- a/browser/components/urlbar/UrlbarInput.sys.mjs
 +++ b/browser/components/urlbar/UrlbarInput.sys.mjs
 @@ -67,6 +67,13 @@ XPCOMUtils.defineLazyPreferenceGetter(
@@ -52,18 +52,19 @@ index 50968dc04b527438acf30151f0c2e92f8b45097c..3db8b6c04ec5a1b88dc05d4ff04721cf
      // Enable the animation only after the first extend call to ensure it
      // doesn't run when opening a new window.
      if (!this.hasAttribute("breakout-extend-animate")) {
-@@ -2163,6 +2183,10 @@ export class UrlbarInput {
+@@ -2163,6 +2183,11 @@ export class UrlbarInput {
        return;
      }
  
 +    if (this._zenHandleUrlbarClose) {
 +      this._zenHandleUrlbarClose();
 +    }
++    this.removeAttribute("zen-floating-urlbar");
 +
      this.removeAttribute("breakout-extend");
      this.#updateTextboxPosition();
    }
-@@ -3305,7 +3329,7 @@ export class UrlbarInput {
+@@ -3305,7 +3330,7 @@ export class UrlbarInput {
      } else {
        where = lazy.BrowserUtils.whereToOpenLink(event, false, false);
      }
@@ -72,7 +73,7 @@ index 50968dc04b527438acf30151f0c2e92f8b45097c..3db8b6c04ec5a1b88dc05d4ff04721cf
        if (where == "current") {
          where = "tab";
        } else if (where == "tab") {
-@@ -3859,6 +3883,11 @@ export class UrlbarInput {
+@@ -3859,6 +3884,11 @@ export class UrlbarInput {
    }
  
    _on_click(event) {
@@ -84,7 +85,7 @@ index 50968dc04b527438acf30151f0c2e92f8b45097c..3db8b6c04ec5a1b88dc05d4ff04721cf
      if (
        event.target == this.inputField ||
        event.target == this._inputContainer ||
-@@ -3930,7 +3959,7 @@ export class UrlbarInput {
+@@ -3930,7 +3960,7 @@ export class UrlbarInput {
        }
      }
  
@@ -93,7 +94,7 @@ index 50968dc04b527438acf30151f0c2e92f8b45097c..3db8b6c04ec5a1b88dc05d4ff04721cf
        this.view.autoOpen({ event });
      } else {
        if (this._untrimOnFocusAfterKeydown) {
-@@ -3970,9 +3999,12 @@ export class UrlbarInput {
+@@ -3970,9 +4000,12 @@ export class UrlbarInput {
    }
  
    _on_mousedown(event) {
@@ -107,7 +108,7 @@ index 50968dc04b527438acf30151f0c2e92f8b45097c..3db8b6c04ec5a1b88dc05d4ff04721cf
  
          if (
            event.target != this.inputField &&
-@@ -3982,8 +4014,8 @@ export class UrlbarInput {
+@@ -3982,8 +4015,8 @@ export class UrlbarInput {
            break;
          }
  

@@ -8,7 +8,7 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
 
   _swipeState = {
     isGestureActive: true,
-    cumulativeDelta: 0,
+    lastDelta: 0,
     direction: null,
   };
   _lastScrollTime = 0;
@@ -207,7 +207,10 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     element.addEventListener('MozSwipeGestureMayStart', this._handleSwipeMayStart.bind(this), true);
     element.addEventListener('MozSwipeGestureStart', this._handleSwipeStart.bind(this), true);
     element.addEventListener('MozSwipeGestureUpdate', this._handleSwipeUpdate.bind(this), true);
-    element.addEventListener('MozSwipeGestureEnd', this._handleSwipeEnd.bind(this), true);
+
+    // Use MozSwipeGesture instead of MozSwipeGestureEnd because MozSwipeGestureEnd is fired after animation ends,
+    // while MozSwipeGesture is fired immediately after swipe ends.
+    element.addEventListener('MozSwipeGesture', this._handleSwipeEnd.bind(this), true);
   }
 
   _handleSwipeMayStart(event) {
@@ -231,7 +234,7 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
 
     this._swipeState = {
       isGestureActive: true,
-      cumulativeDelta: 0,
+      lastDelta: 0,
       direction: null,
     };
   }
@@ -242,23 +245,17 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     event.preventDefault();
     event.stopPropagation();
 
-    // Update cumulative delta
-    this._swipeState.cumulativeDelta += event.delta;
+    const delta = event.delta * 500;
+    this._swipeState.lastDelta = delta;
 
-    // Determine swipe direction based on cumulative delta
-    if (Math.abs(this._swipeState.cumulativeDelta) > 1) {
-      this._swipeState.direction = this._swipeState.cumulativeDelta > 0 ? 'left' : 'right';
+    if (Math.abs(delta) > 1) {
+      this._swipeState.direction = delta > 0 ? 'left' : 'right';
     }
 
     // Apply a translateX to the tab strip to give the user feedback on the swipe
     const stripWidth = document.getElementById('tabbrowser-tabs').scrollWidth;
-    // To make the animation larger, we multiply the delta by 5
-    let translateX = this._swipeState.cumulativeDelta * 10;
-    if (this._swipeState.direction === 'left') {
-      translateX = Math.min(translateX, stripWidth);
-    } else {
-      translateX = Math.max(translateX, -stripWidth);
-    }
+    const translateX = Math.max(-stripWidth, Math.min(delta, stripWidth));
+
     for (const element of this._animateTabsElements) {
       element.style.transform = `translateX(${translateX}px)`;
     }
@@ -282,7 +279,7 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     // Reset swipe state
     this._swipeState = {
       isGestureActive: false,
-      cumulativeDelta: 0,
+      lastDelta: 0,
       direction: null,
     };
   }

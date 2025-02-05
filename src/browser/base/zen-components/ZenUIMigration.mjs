@@ -1,6 +1,5 @@
-
 {
-  const PREF_NAME = "zen.migration.version";
+  const PREF_NAME = 'zen.migration.version';
   const MIGRATION_VERSION = 1;
 
   class ZenUIMigration {
@@ -48,10 +47,10 @@
             },
           },
           {
-            link: "https://docs.zen-browser.app/user-manual/urlbar/",
-            'l10n-id': "zen-learn-more-text",
-          }
-        ],
+            link: 'https://docs.zen-browser.app/user-manual/urlbar/',
+            'l10n-id': 'zen-learn-more-text',
+          },
+        ]
       );
       notification.persistence = -1;
     }

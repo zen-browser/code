@@ -75,4 +75,6 @@
 
         # JS Vendor
         content/browser/zen-vendor/tsparticles.confetti.bundle.min.js (content/zen-vendor/tsparticles.confetti.bundle.min.js)
-        content/browser/zen-vendor/motion.min.mjs                      (content/zen-vendor/motion.min.mjs)
+        content/browser/zen-vendor/motion.min.mjs                     (content/zen-vendor/motion.min.mjs)
+        content/browser/zen-vendor/css-houdini-squircle.min.mjs       (content/zen-vendor/css-houdini-squircle.min.mjs)
+        content/browser/zen-vendor/css-paint-polyfill.min.mjs         (content/zen-vendor/css-paint-polyfill.min.mjs)

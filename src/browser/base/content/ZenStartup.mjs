@@ -40,6 +40,8 @@
         gZenVerticalTabsManager.init();
         gZenUIManager.init();
 
+        this._initSquircles();
+
         document.l10n.setAttributes(document.getElementById('tabs-newtab-button'), 'tabs-toolbar-new-tab');
       } catch (e) {
         console.error('ZenThemeModifier: Error initializing browser layout', e);
@@ -121,6 +123,12 @@
       gURLBar._initPasteAndGo();
       gURLBar._initStripOnShare();
     },
+
+    _initSquircles() {
+      CSS.paintWorklet.addModule(
+        `chrome://browser/content/zen-vendor/css-houdini-squircle.min.mjs`
+      );
+    }
   };
 
   ZenStartup.init();

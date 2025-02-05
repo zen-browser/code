@@ -43,11 +43,9 @@
         z-index: 10;
         transition:
           left 0.25s ease,
-          right 0.25s ease,
-          opacity 1.5s ease;
+          right 0.25s ease;
         top: 0;
         bottom: var(--zen-element-separation);
-        opacity: 0;
         padding: 0 var(--zen-compact-float) !important;
 
         :root[zen-single-toolbar='true'] & {
@@ -59,7 +57,7 @@
         margin-left: 0 !important;
       }
 
-      & #urlbar[open] {
+      & #urlbar[open]:not([zen-floating-urlbar='true']) {
         top: 0 !important;
       }
     }
@@ -111,6 +109,11 @@
         background-size: 2000px !important; /* Dont ask me why */
         backdrop-filter: blur(5px) !important;
       }
+
+      & #urlbar[open][zen-floating-urlbar='true'] {
+        --zen-urlbar-offset: var(--zen-sidebar-width);
+        transition: left 0.1s ease;
+      }
     }
 
     #navigator-toolbox:hover,
@@ -121,9 +124,9 @@
     #navigator-toolbox[movingtab],
     #navigator-toolbox:has(.tabbrowser-tab:active),
     #navigator-toolbox:has(
-        *:is([panelopen='true'], [open='true'], #nav-bar:focus-within):not(tab):not(.zen-compact-mode-ignore)
+        *:is([panelopen='true'], [open='true'], #urlbar:not([zen-floating-urlbar='true']):focus-within):not(tab):not(.zen-compact-mode-ignore)
       ) {
-      &:not([animate='true']) {
+      &:not([animate='true']):not(:has(#urlbar[zen-floating-urlbar='true']:hover)) {
         --zen-compact-mode-func: linear(
           0 0%,
           0.002748 1%,
@@ -230,12 +233,15 @@
         transition:
           left 0.3s var(--zen-compact-mode-func),
           right 0.3s var(--zen-compact-mode-func);
-        opacity: 1;
 
         left: -1px;
         :root[zen-right-side='true'] & {
           right: -1px;
           left: auto;
+        }
+
+        & #urlbar[open][zen-floating-urlbar='true'] {
+          --zen-urlbar-offset: 0px;
         }
       }
     }

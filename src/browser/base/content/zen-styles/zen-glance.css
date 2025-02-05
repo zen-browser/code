@@ -23,12 +23,12 @@
 
   padding: 5px;
   gap: 12px;
-  left: 3%;
+  left: 2%;
 
   & toolbarbutton {
     width: 32px;
     height: 32px;
-    background: light-dark(rgba(0, 0, 0, 0.9), rgba(255, 255, 255, 0.9));
+    background: light-dark(rgb(24, 24, 24), rgb(231, 231, 231));
     transition: background 0.2s ease;
     border-radius: 999px;
     appearance: none;
@@ -36,7 +36,7 @@
     opacity: 0;
 
     &:hover {
-      background: light-dark(rgba(0, 0, 0, 0.8), rgba(255, 255, 255, 0.8));
+      background: light-dark(rgb(41, 41, 41), rgb(204, 204, 204));
     }
 
     & label {

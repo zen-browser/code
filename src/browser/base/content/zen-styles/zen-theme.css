@@ -131,6 +131,8 @@
   --toolbarbutton-border-radius: 6px;
   --urlbar-margin-inline: 1px !important;
 
+  --tab-icon-overlay-stroke: light-dark(white, black) !important;
+
   --fp-contextmenu-border-radius: 8px;
   --fp-contextmenu-padding: calc(4px - var(--fp-contextmenu-menuitem-border-width)) 0;
   --fp-contextmenu-menuitem-border-radius: calc(4px + var(--fp-contextmenu-menuitem-border-width));

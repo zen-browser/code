@@ -100,8 +100,6 @@ var gZenCompactModeManager = {
   },
 
   updateCompactModeContext(isSingleToolbar) {
-    this.getAndApplySidebarWidth(); // Ignore return value
-
     const IDs = [
       'zen-context-menu-compact-mode-hide-sidebar',
       'zen-context-menu-compact-mode-hide-toolbar',
@@ -176,21 +174,20 @@ var gZenCompactModeManager = {
             {
               ease: 'easeIn',
               type: 'spring',
-              stiffness: 3000,
-              damping: 150,
-              mass: 1,
+              bounce: 0,
+              duration: 0.2,
             }
           )
           .then(() => {
             this.sidebar.removeAttribute('animate');
-            this.sidebar.style.transition = 'none';
             this.sidebar.style.removeProperty('margin-right');
             this.sidebar.style.removeProperty('margin-left');
             this.sidebar.style.removeProperty('transform');
-            this._animating = false;
+            this.sidebar.style.transition = 'none';
             setTimeout(() => {
+              this._animating = false;
               this.sidebar.style.removeProperty('transition');
-            });
+            }, 100);
           });
       } else if (canHideSidebar && !isCompactMode) {
         document.getElementById('browser').style.overflow = 'hidden';
@@ -211,9 +208,8 @@ var gZenCompactModeManager = {
             {
               ease: 'easeOut',
               type: 'spring',
-              stiffness: 3000,
-              damping: 150,
-              mass: 1,
+              bounce: 0,
+              duration: 0.2,
             }
           )
           .then(() => {

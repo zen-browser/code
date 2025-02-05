@@ -33,6 +33,8 @@
 
         this._initSidebarScrolling();
 
+        gZenUIMigration.init();
+
         gZenCompactModeManager.init();
         ZenWorkspaces.init();
         gZenVerticalTabsManager.init();

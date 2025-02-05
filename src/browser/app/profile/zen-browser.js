@@ -84,7 +84,7 @@ pref('zen.theme.accent-color', "#ffb787");
 pref('zen.theme.content-element-separation', 6); // In pixels
 pref('zen.theme.pill-button', false);
 pref('zen.theme.gradient', true);
-pref('zen.theme.essentials-favicon-bg', false);
+pref('zen.theme.essentials-favicon-bg', true);
 
 pref('zen.tabs.show-newtab-vertical', true);
 pref('zen.view.show-newtab-button-border-top', false);
@@ -176,8 +176,8 @@ pref('zen.pinned-tab-manager.debug', false);
 pref('zen.pinned-tab-manager.restore-pinned-tabs-to-pinned-url', false);
 pref('zen.pinned-tab-manager.close-shortcut-behavior', 'switch');
 
-// Pref to enable the new profiles (TODO: Check this out!)
-//pref("browser.profiles.enabled", true);
+// TODO: Check this out!
+pref("browser.profiles.enabled", false);
 
 // Zen webpanels (calling it sidebar due to legacy reasons)
 pref('zen.sidebar.data', "{\"data\":\n {\"p1\":{\n   \"url\":\"https://www.wikipedia.org/\"\n  },\n\"p2\":{\n   \"url\":\"https://m.twitter.com/\",\n\"ua\": true\n  },\n\"p3\": {\n   \"url\": \"https://www.youtube.com/\",\n\"ua\": true\n},\n\"p4\": {\n   \"url\": \"https://translate.google.com/\",\n\"ua\": true\n},\n\"p5\": {\n   \"url\": \"https://todoist.com/\",\n\"ua\": true\n}},\n\"index\":[\"p1\",\"p2\",\"p3\",\"p4\",\"p5\"]}");

@@ -10,6 +10,7 @@ cd $CURRENT_DIR
 LAST_FIREFOX_L10N_COMMIT=$(cat ./firefox-cache/l10n-last-commit-hash)
 
 cd ./l10n
+rm -rf firefox-l10n
 # clone only from LAST_FIREFOX_L10N_COMMIT
 git clone https://github.com/mozilla-l10n/firefox-l10n
 cd firefox-l10n

@@ -63,7 +63,7 @@
     }
 
     &:not([zen-right-side='true']) #navigator-toolbox {
-      left: calc(-1 * var(--zen-sidebar-width) + var(--zen-element-separation));
+      left: calc(-1 * var(--zen-sidebar-width) + 1px);
     }
 
     /* When we have multiple toolbars and the top-toolbar is NOT being hidden,
@@ -80,7 +80,7 @@
         --zen-compact-float: calc(var(--zen-element-separation) + 1px);
 
         &:not([animate='true']) {
-          right: calc(-1 * var(--zen-sidebar-width) + var(--zen-element-separation));
+          right: calc(-1 * var(--zen-sidebar-width) + 1px);
         }
       }
 

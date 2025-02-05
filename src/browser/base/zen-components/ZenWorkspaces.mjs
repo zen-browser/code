@@ -1338,7 +1338,7 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     const visibleTabs = this._processTabVisibility(window.uuid, containerId, workspaces);
 
     // Second pass: Handle tab selection
-    await this._handleTabSelection(window, onInit, visibleTabs, containerId, workspaces);
+    await this._handleTabSelection(window, onInit, visibleTabs, containerId, workspaces, previousWorkspace.uuid);
 
     // Update UI and state
     await this._updateWorkspaceState(window, onInit);
@@ -1454,9 +1454,9 @@ var ZenWorkspaces = new (class extends ZenMultiWindowFeature {
     return tabWorkspaceId === workspaceUuid;
   }
 
-  async _handleTabSelection(window, onInit, visibleTabs, containerId, workspaces) {
+  async _handleTabSelection(window, onInit, visibleTabs, containerId, workspaces, previousWorkspaceId) {
     const currentSelectedTab = gBrowser.selectedTab;
-    const oldWorkspaceId = currentSelectedTab.getAttribute('zen-workspace-id');
+    const oldWorkspaceId = previousWorkspaceId;
     const lastSelectedTab = this._lastSelectedWorkspaceTabs[window.uuid];
 
     // Save current tab as last selected for old workspace if it shouldn't be visible in new workspace

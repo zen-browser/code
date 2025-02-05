@@ -4,6 +4,7 @@
         content/browser/ZenStartup.mjs                          (content/ZenStartup.mjs)
         content/browser/ZenUIManager.mjs                        (content/ZenUIManager.mjs)
         content/browser/ZenCustomizableUI.sys.mjs               (content/ZenCustomizableUI.sys.mjs)
+        content/browser/zen-components/ZenUIMigration.mjs       (zen-components/ZenUIMigration.mjs)
         content/browser/zen-components/ZenCompactMode.mjs       (zen-components/ZenCompactMode.mjs)
         content/browser/zen-components/ZenViewSplitter.mjs      (zen-components/ZenViewSplitter.mjs)
         content/browser/zen-components/ZenThemesCommon.mjs      (zen-components/ZenThemesCommon.mjs)

@@ -135,8 +135,10 @@ var gZenCompactModeManager = {
     this.animateCompactMode();
   },
 
-  getAndApplySidebarWidth() {
-    let sidebarWidth = this.sidebar.getBoundingClientRect().width;
+  async getAndApplySidebarWidth() {
+    let sidebarWidth = await window.promiseDocumentFlushed(() =>
+      window.windowUtils.getBoundsWithoutFlushing(this.sidebar).width
+    );
     if (sidebarWidth > 1) {
       this.sidebar.style.setProperty('--zen-sidebar-width', `${sidebarWidth}px`);
     }
@@ -155,8 +157,11 @@ var gZenCompactModeManager = {
     if (canAnimate) {
       this.sidebar.setAttribute('animate', 'true');
     }
-    window.requestAnimationFrame(() => {
-      let sidebarWidth = this.getAndApplySidebarWidth();
+    this.sidebar.style.removeProperty('margin-right');
+    this.sidebar.style.removeProperty('margin-left');
+    this.sidebar.style.removeProperty('transform');
+    window.requestAnimationFrame(async () => {
+      let sidebarWidth = await this.getAndApplySidebarWidth();
       if (!canAnimate) {
         this.sidebar.removeAttribute('animate');
         this._animating = false;
@@ -187,10 +192,10 @@ var gZenCompactModeManager = {
             setTimeout(() => {
               this._animating = false;
               this.sidebar.style.removeProperty('transition');
-            }, 100);
+            });
           });
       } else if (canHideSidebar && !isCompactMode) {
-        document.getElementById('browser').style.overflow = 'hidden';
+        document.getElementById('browser').style.overflow = 'clip';
         if (this.sidebarIsOnRight) {
           this.sidebar.style.marginRight = `-${sidebarWidth}px`;
         } else {
@@ -201,7 +206,7 @@ var gZenCompactModeManager = {
             this.sidebar,
             this.sidebarIsOnRight
               ? {
-                  marginRight: 0,
+                  marginRight: [`-${sidebarWidth}px`, 0],
                   transform: ['translateX(100%)', 'translateX(0)'],
                 }
               : { marginLeft: 0 },

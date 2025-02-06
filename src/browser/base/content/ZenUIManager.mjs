@@ -597,16 +597,6 @@ var gZenVerticalTabsManager = {
     target.appendChild(child);
   },
 
-
-  //_insertItemsIntoTabContextMenu() {
-  //  const element = window.MozXULElement.parseXULToFragment(`
-  //    <menuitem id="context_zen-rename-tab"
-  //              data-l10n-id="tab-context-zen-rename-tab"
-  //              oncommand="gZenVerticalTabsManager.contextRenameTab();" />
-  //  `);
-  //  document.getElementById('context_duplicateTabs').after(element);
-  //},
-
   _insertDoubleClickListenerPinnedTabs() {
     const tabs = gBrowser.tabs;
     for (const tab of tabs) {
@@ -618,7 +608,7 @@ var gZenVerticalTabsManager = {
 
   contextRenameTabKeydown(event) {
     if (event.key === 'Enter') {
-      let label = this._tabEdited.querySelector(".tab-label-container-editing");
+      let label = this._tabEdited.querySelector('.tab-label-container-editing');
       let input = this._tabEdited.querySelector('#tab-label-input');
       let newName = input.value;
       this._tabEdited.setAttribute('label', newName);
@@ -627,8 +617,8 @@ var gZenVerticalTabsManager = {
       label.className = label.className.replace(' tab-label-container-editing', '');
       document.removeEventListener('click', this.contextRenameTabHalt.bind(this));
       this._tabEdited = null;
-    } else if (event.key === "Escape") {
-      let label = this._tabEdited.querySelector(".tab-label-container-editing");
+    } else if (event.key === 'Escape') {
+      let label = this._tabEdited.querySelector('.tab-label-container-editing');
       this._tabEdited.querySelector('.tab-editor-container').remove();
 
       label.style.display = '';
@@ -637,13 +627,14 @@ var gZenVerticalTabsManager = {
       this._tabEdited = null;
     }
   },
+
   contextRenameTabStart(event) {
     if (event.target.closest('.tab-label-container-editing')) {
       return;
     }
     this._tabEdited = event.target.closest('.tabbrowser-tab');
-    console.log(this._tabEdited)
-    const label = this._tabEdited.querySelector(".tab-label-container")
+    console.log(this._tabEdited);
+    const label = this._tabEdited.querySelector('.tab-label-container');
     label.style.display = 'none';
     label.className += ' tab-label-container-editing';
 
@@ -656,16 +647,15 @@ var gZenVerticalTabsManager = {
     input.id = 'tab-label-input';
     input.value = this._tabEdited.label;
     input.addEventListener('keydown', this.contextRenameTabKeydown.bind(this));
-    input.style["white-space"] = "nowrap";
-    input.style["overflow-x"] = "scroll";
-    input.style["margin"] = "0";
+    input.style['white-space'] = 'nowrap';
+    input.style['overflow-x'] = 'scroll';
+    input.style['margin'] = '0';
 
     containerHtml.appendChild(input);
     input.focus();
-    input.select()
+    input.select();
 
     document.addEventListener('click', this.contextRenameTabHalt.bind(this));
-
   },
 
   contextRenameTabHalt(event) {
@@ -673,7 +663,7 @@ var gZenVerticalTabsManager = {
       return;
     }
     this._tabEdited.querySelector('.tab-editor-container').remove();
-    const label = this._tabEdited.querySelector(".tab-label-container-editing");
+    const label = this._tabEdited.querySelector('.tab-label-container-editing');
     label.style.display = '';
     label.className = label.className.replace(' tab-label-container-editing', '');
 

@@ -135,10 +135,8 @@ var gZenCompactModeManager = {
     this.animateCompactMode();
   },
 
-  async getAndApplySidebarWidth() {
-    let sidebarWidth = await window.promiseDocumentFlushed(() =>
-      window.windowUtils.getBoundsWithoutFlushing(this.sidebar).width
-    );
+  getAndApplySidebarWidth() {
+    let sidebarWidth = this.sidebar.getBoundingClientRect().width;
     if (sidebarWidth > 1) {
       this.sidebar.style.setProperty('--zen-sidebar-width', `${sidebarWidth}px`);
     }
@@ -160,8 +158,8 @@ var gZenCompactModeManager = {
     this.sidebar.style.removeProperty('margin-right');
     this.sidebar.style.removeProperty('margin-left');
     this.sidebar.style.removeProperty('transform');
-    window.requestAnimationFrame(async () => {
-      let sidebarWidth = await this.getAndApplySidebarWidth();
+    window.requestAnimationFrame(() => {
+      let sidebarWidth = this.getAndApplySidebarWidth();
       if (!canAnimate) {
         this.sidebar.removeAttribute('animate');
         this._animating = false;

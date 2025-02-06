@@ -1,5 +1,5 @@
 diff --git a/browser/components/tabbrowser/content/tabs.js b/browser/components/tabbrowser/content/tabs.js
-index 8aeb244ffca9f48661805f5b7d860b5896055562..ad28d73fe7cc6eadc4b4724c75d54857a82ff94c 100644
+index 8aeb244ffca9f48661805f5b7d860b5896055562..d5ac2cf891ec928bec4f95fd5ff0ee8d91294f78 100644
 --- a/browser/components/tabbrowser/content/tabs.js
 +++ b/browser/components/tabbrowser/content/tabs.js
 @@ -94,7 +94,7 @@
@@ -28,6 +28,17 @@ index 8aeb244ffca9f48661805f5b7d860b5896055562..ad28d73fe7cc6eadc4b4724c75d54857
          }
  
          /* Protects from close-tab-button errant doubleclick:
+@@ -455,8 +456,8 @@
+           let winUtils = window.windowUtils;
+           let endOfTab =
+             winUtils.getBoundsWithoutFlushing(lastTab)[
+-              (this.verticalMode && "bottom") ||
+-                (this.#rtlMode ? "left" : "right")
++            (this.verticalMode && "bottom") ||
++            (this.#rtlMode ? "left" : "right")
+             ];
+           if (
+             (this.verticalMode && event.clientY > endOfTab) ||
 @@ -659,7 +660,7 @@
        if (this.#isContainerVerticalPinnedExpanded(tab)) {
          // In expanded vertical mode, the max number of pinned tabs per row is dynamic
@@ -78,7 +89,7 @@ index 8aeb244ffca9f48661805f5b7d860b5896055562..ad28d73fe7cc6eadc4b4724c75d54857
                  tab.removeAttribute("tabdrop-samewindow");
  
 -                this._finishAnimateTabMove();
-+              this._finishAnimateTabMove(true);
++                this._finishAnimateTabMove(true);
                  if (dropIndex !== false) {
                    gBrowser.moveTabTo(tab, dropIndex);
                    if (!directionForward) {
@@ -87,10 +98,19 @@ index 8aeb244ffca9f48661805f5b7d860b5896055562..ad28d73fe7cc6eadc4b4724c75d54857
                  gBrowser.syncThrobberAnimations(tab);
                };
 -              if (gReduceMotion) {
-+            if (gReduceMotion || true) {
++              if (gReduceMotion || true) {
                  postTransitionCleanup();
                } else {
                  let onTransitionEnd = transitionendEvent => {
+@@ -1191,7 +1203,7 @@
+         let links;
+         try {
+           links = browserDragAndDrop.dropLinks(event, true);
+-        } catch (ex) {}
++        } catch (ex) { }
+ 
+         if (!links || links.length === 0) {
+           return;
 @@ -1263,7 +1275,8 @@
        if (
          dt.mozUserCancelled ||
@@ -101,6 +121,33 @@ index 8aeb244ffca9f48661805f5b7d860b5896055562..ad28d73fe7cc6eadc4b4724c75d54857
        ) {
          delete draggedTab._dragData;
          return;
+@@ -1346,7 +1359,7 @@
+       var left = Math.min(
+         Math.max(
+           event.screenX * ourCssToDesktopScale -
+-            draggedTab._dragData.offsetX * screenCssToDesktopScale,
++          draggedTab._dragData.offsetX * screenCssToDesktopScale,
+           availX
+         ),
+         availX + availWidth - winWidth
+@@ -1354,7 +1367,7 @@
+       var top = Math.min(
+         Math.max(
+           event.screenY * ourCssToDesktopScale -
+-            draggedTab._dragData.offsetY * screenCssToDesktopScale,
++          draggedTab._dragData.offsetY * screenCssToDesktopScale,
+           availY
+         ),
+         availY + availHeight - winHeight
+@@ -1467,7 +1480,7 @@
+       // Normal tab title is used also in the permanent private browsing mode.
+       const l10nId =
+         PrivateBrowsingUtils.isWindowPrivate(window) &&
+-        !Services.prefs.getBoolPref("browser.privatebrowsing.autostart")
++          !Services.prefs.getBoolPref("browser.privatebrowsing.autostart")
+           ? "tabbrowser-empty-private-tab-title"
+           : "tabbrowser-empty-tab-title";
+       return gBrowser.tabLocalization.formatValueSync(l10nId);
 @@ -1512,9 +1525,18 @@
        }
  
@@ -140,6 +187,15 @@ index 8aeb244ffca9f48661805f5b7d860b5896055562..ad28d73fe7cc6eadc4b4724c75d54857
        );
      }
  
+@@ -1684,7 +1707,7 @@
+       // The height we got may be incorrect if a flush is pending so re-check it after
+       // a flush completes.
+       window
+-        .promiseDocumentFlushed(() => {})
++        .promiseDocumentFlushed(() => { })
+         .then(
+           () => {
+             height =
 @@ -1816,7 +1839,7 @@
            let rect = ele => {
              return window.windowUtils.getBoundsWithoutFlushing(ele);
@@ -184,12 +240,18 @@ index 8aeb244ffca9f48661805f5b7d860b5896055562..ad28d73fe7cc6eadc4b4724c75d54857
            if (!isEndTab) {
              // keep tabs the same width
              tab.style.transition = "none";
-@@ -1963,13 +1987,13 @@
-       let verticalTabsContainer = document.getElementById(
-         "vertical-pinned-tabs-container"
+@@ -1904,7 +1928,7 @@
+ 
+         if (tabsToReset.length) {
+           window
+-            .promiseDocumentFlushed(() => {})
++            .promiseDocumentFlushed(() => { })
+             .then(() => {
+               window.requestAnimationFrame(() => {
+                 for (let tab of tabsToReset) {
+@@ -1965,11 +1989,11 @@
        );
--      let numPinned = gBrowser.pinnedTabCount;
-+      let numPinned = gBrowser._numVisiblePinTabs;
+       let numPinned = gBrowser.pinnedTabCount;
  
 -      if (gBrowser.pinnedTabCount !== verticalTabsContainer.children.length) {
 -        let tabs = this.visibleTabs;
@@ -235,6 +297,26 @@ index 8aeb244ffca9f48661805f5b7d860b5896055562..ad28d73fe7cc6eadc4b4724c75d54857
          pinned ? numPinned : undefined
        );
  
+@@ -2367,8 +2391,8 @@
+       };
+       let moveOverThreshold = gBrowser._tabGroupsEnabled
+         ? Services.prefs.getIntPref(
+-            "browser.tabs.dragdrop.moveOverThresholdPercent"
+-          ) / 100
++          "browser.tabs.dragdrop.moveOverThresholdPercent"
++        ) / 100
+         : 0.5;
+       moveOverThreshold = Math.min(1, Math.max(0, moveOverThreshold));
+       let newIndex = getDragOverIndex(moveOverThreshold);
+@@ -2420,7 +2444,7 @@
+         if (
+           groupDropIndex in this.allTabs &&
+           this.allTabs[groupDropIndex] ==
+-            this.allTabs[groupDropIndex].group?.tabs.at(-1)
++          this.allTabs[groupDropIndex].group?.tabs.at(-1)
+         ) {
+           dragData.groupDropIndex = groupDropIndex;
+           dragData.groupDropAction = GROUP_DROP_ACTION_APPEND;
 @@ -2502,8 +2526,9 @@
        );
      }
@@ -247,7 +329,27 @@ index 8aeb244ffca9f48661805f5b7d860b5896055562..ad28d73fe7cc6eadc4b4724c75d54857
          return;
        }
  
-@@ -2668,9 +2693,9 @@
+@@ -2552,7 +2577,7 @@
+ 
+         let movingTabSize =
+           movingTab.getBoundingClientRect()[
+-            this.verticalMode ? "height" : "width"
++          this.verticalMode ? "height" : "width"
+           ];
+         let shift = (movingTabNewIndex - movingTabOldIndex) * movingTabSize;
+ 
+@@ -2659,18 +2684,17 @@
+           let translatePos =
+             (this.#rtlMode ? -1 : 1) *
+             t._moveTogetherSelectedTabsData.translatePos;
+-          t.style.transform = `translate${
+-            this.verticalMode ? "Y" : "X"
+-          }(${translatePos}px)`;
++          t.style.transform = `translate${this.verticalMode ? "Y" : "X"
++            }(${translatePos}px)`;
+         }
+       }
+ 
        function newIndex(aTab, index) {
          // Don't allow mixing pinned and unpinned tabs.
          if (aTab.pinned) {
@@ -259,7 +361,7 @@ index 8aeb244ffca9f48661805f5b7d860b5896055562..ad28d73fe7cc6eadc4b4724c75d54857
        }
      }
  
-@@ -2754,7 +2779,7 @@
+@@ -2754,7 +2778,7 @@
      }
  
      _notifyBackgroundTab(aTab) {
@@ -268,7 +370,7 @@ index 8aeb244ffca9f48661805f5b7d860b5896055562..ad28d73fe7cc6eadc4b4724c75d54857
          return;
        }
  
-@@ -2772,12 +2797,14 @@
+@@ -2772,12 +2796,14 @@
                selectedTab = {
                  left: selectedTab.left,
                  right: selectedTab.right,
@@ -284,7 +386,7 @@ index 8aeb244ffca9f48661805f5b7d860b5896055562..ad28d73fe7cc6eadc4b4724c75d54857
                selectedTab,
              ];
            })
-@@ -2794,8 +2821,11 @@
+@@ -2794,8 +2820,11 @@
              delete this._lastTabToScrollIntoView;
              // Is the new tab already completely visible?
              if (
@@ -292,13 +394,13 @@ index 8aeb244ffca9f48661805f5b7d860b5896055562..ad28d73fe7cc6eadc4b4724c75d54857
 -              tabRect.right <= scrollRect.right
 +              this.verticalMode
 +                ? scrollRect.top <= tabRect.top &&
-+                  tabRect.bottom <= scrollRect.bottom
++                tabRect.bottom <= scrollRect.bottom
 +                : scrollRect.left <= tabRect.left &&
-+                  tabRect.right <= scrollRect.right
++                tabRect.right <= scrollRect.right
              ) {
                return;
              }
-@@ -2803,21 +2833,29 @@
+@@ -2803,21 +2832,29 @@
              if (this.arrowScrollbox.smoothScroll) {
                // Can we make both the new tab and the selected tab completely visible?
                if (
@@ -309,13 +411,13 @@ index 8aeb244ffca9f48661805f5b7d860b5896055562..ad28d73fe7cc6eadc4b4724c75d54857
 -                ) <= scrollRect.width
 +                !selectedRect || (this.verticalMode
 +                  ? Math.max(
-+                      tabRect.bottom - selectedRect.top,
-+                      selectedRect.bottom - tabRect.top
-+                    ) <= scrollRect.height
++                    tabRect.bottom - selectedRect.top,
++                    selectedRect.bottom - tabRect.top
++                  ) <= scrollRect.height
 +                  : Math.max(
-+                      tabRect.right - selectedRect.left,
-+                      selectedRect.right - tabRect.left
-+                    ) <= scrollRect.width)
++                    tabRect.right - selectedRect.left,
++                    selectedRect.right - tabRect.left
++                  ) <= scrollRect.width)
                ) {
                  this.arrowScrollbox.ensureElementIsVisible(tabToScrollIntoView);
                  return;
@@ -338,3 +440,12 @@ index 8aeb244ffca9f48661805f5b7d860b5896055562..ad28d73fe7cc6eadc4b4724c75d54857
              }
  
              if (!this._animateElement.hasAttribute("highlight")) {
+@@ -2904,7 +2941,7 @@
+           sourceNode.localName == "tab" &&
+           sourceNode.ownerGlobal.isChromeWindow &&
+           sourceNode.ownerDocument.documentElement.getAttribute("windowtype") ==
+-            "navigator:browser" &&
++          "navigator:browser" &&
+           sourceNode.ownerGlobal.gBrowser.tabContainer == sourceNode.container
+         ) {
+           // Do not allow transfering a private tab to a non-private window

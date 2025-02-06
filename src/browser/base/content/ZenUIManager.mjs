@@ -600,9 +600,7 @@ var gZenVerticalTabsManager = {
   _insertDoubleClickListenerPinnedTabs() {
     const tabs = gBrowser.tabs;
     for (const tab of tabs) {
-      if (tab.pinned) {
-        tab.addEventListener('dblclick', this.contextRenameTabStart.bind(this));
-      }
+      tab.addEventListener('dblclick', this.contextRenameTabStart.bind(this));
     }
   },
 
@@ -629,11 +627,12 @@ var gZenVerticalTabsManager = {
   },
 
   contextRenameTabStart(event) {
-    if (event.target.closest('.tab-label-container-editing')) {
+    if (this._tabEdited) return;
+    this._tabEdited = event.target.closest('.tabbrowser-tab');
+    if (!this._tabEdited.pinned) {
+      this._tabEdited = null;
       return;
     }
-    this._tabEdited = event.target.closest('.tabbrowser-tab');
-    console.log(this._tabEdited);
     const label = this._tabEdited.querySelector('.tab-label-container');
     label.style.display = 'none';
     label.className += ' tab-label-container-editing';
@@ -662,11 +661,15 @@ var gZenVerticalTabsManager = {
     if (event.target.closest('#tab-label-input')) {
       return;
     }
+    if (!this._tabEdited) {
+      return;
+    }
     this._tabEdited.querySelector('.tab-editor-container').remove();
     const label = this._tabEdited.querySelector('.tab-label-container-editing');
     label.style.display = '';
     label.className = label.className.replace(' tab-label-container-editing', '');
 
     document.removeEventListener('click', this.contextRenameTabHalt.bind(this));
+    this._tabEdited = null;
   },
 };

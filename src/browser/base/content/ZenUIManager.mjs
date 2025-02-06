@@ -601,6 +601,23 @@ var gZenVerticalTabsManager = {
     const tabs = gBrowser.tabs;
     for (const tab of tabs) {
       tab.addEventListener('dblclick', this.contextRenameTabStart.bind(this));
+      tab.renamedName = null;
+      tab.originalName = null;
+
+      // Persist tab label and store changes for resetting
+      let observer = new MutationObserver((mutations) => {
+        if (!tab.renamedName) {
+          return;
+        }
+        mutations.forEach((mutation) => {
+          if (tab.label !== tab.renamedName) {
+            tab.originalName = tab.label;
+            tab.label = tab.renamedName;
+          }
+        });
+      });
+      // Run on all changes of label
+      observer.observe(tab, { attributes: true, attributeFilter: ['label'] });
     }
   },
 
@@ -608,12 +625,24 @@ var gZenVerticalTabsManager = {
     if (event.key === 'Enter') {
       let label = this._tabEdited.querySelector('.tab-label-container-editing');
       let input = this._tabEdited.querySelector('#tab-label-input');
-      let newName = input.value;
-      this._tabEdited.setAttribute('label', newName);
+      let newName = input.value.trim();
+
+      // Check if name is blank, reset if so
+      if (newName) {
+        this._tabEdited.originalName = this._tabEdited.label;
+        this._tabEdited.label = newName;
+        this._tabEdited.renamedName = newName;
+      } else {
+        this._tabEdited.label = this._tabEdited.originalName;
+        this._tabEdited.originalName = null;
+        this._tabEdited.renamedName = null;
+      }
+
       this._tabEdited.querySelector('.tab-editor-container').remove();
       label.style.display = '';
       label.className = label.className.replace(' tab-label-container-editing', '');
       document.removeEventListener('click', this.contextRenameTabHalt.bind(this));
+
       this._tabEdited = null;
     } else if (event.key === 'Escape') {
       let label = this._tabEdited.querySelector('.tab-label-container-editing');
@@ -658,6 +687,7 @@ var gZenVerticalTabsManager = {
   },
 
   contextRenameTabHalt(event) {
+    // Ignore click event if it's clicking the input
     if (event.target.closest('#tab-label-input')) {
       return;
     }

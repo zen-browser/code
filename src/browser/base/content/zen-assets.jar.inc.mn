@@ -16,7 +16,6 @@
         content/browser/zen-components/ZenKeyboardShortcuts.mjs (zen-components/ZenKeyboardShortcuts.mjs)
         content/browser/zen-components/ZenThemesImporter.mjs    (zen-components/ZenThemesImporter.mjs)
         content/browser/zen-components/ZenTabUnloader.mjs       (zen-components/ZenTabUnloader.mjs)
-        content/browser/zen-components/ZenTabManager.mjs        (zen-components/ZenTabManager.mjs)
         content/browser/zen-components/ZenPinnedTabsStorage.mjs (zen-components/ZenPinnedTabsStorage.mjs)
         content/browser/zen-components/ZenPinnedTabManager.mjs  (zen-components/ZenPinnedTabManager.mjs)
         content/browser/zen-components/ZenCommonUtils.mjs       (zen-components/ZenCommonUtils.mjs)

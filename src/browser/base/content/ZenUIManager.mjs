@@ -29,6 +29,7 @@ var gZenUIManager = {
     });
 
     window.addEventListener('TabClose', this.onTabClose.bind(this));
+    this.tabsWrapper.addEventListener('scroll', this.saveScrollbarState.bind(this));
   },
 
   updateTabsToolbar() {
@@ -68,10 +69,13 @@ var gZenUIManager = {
     this._scrollbarState = this.tabsWrapper.scrollTop;
   },
 
+  restoreScrollbarState() {
+    this.tabsWrapper.scrollTop = this._scrollbarState;
+  },
+
   onTabClose(event) {
     this.updateTabsToolbar();
-    this.tabsWrapper.scrollTop = this._scrollbarState;
-    this._scrollbarState = 0;
+    this.restoreScrollbarState();
   },
 
   openAndChangeToTab(url, options) {

@@ -144,6 +144,7 @@ var gZenCompactModeManager = {
   getAndApplySidebarWidth() {
     let sidebarWidth = this.sidebar.getBoundingClientRect().width;
     if (sidebarWidth > 1) {
+      gZenUIManager.restoreScrollbarState();
       this.sidebar.style.setProperty('--zen-sidebar-width', `${sidebarWidth}px`);
     }
     return sidebarWidth;

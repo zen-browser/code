@@ -600,28 +600,11 @@ var gZenVerticalTabsManager = {
   _insertDoubleClickListenerPinnedTabs() {
     const tabs = gBrowser.tabs;
     for (const tab of tabs) {
-      tab.addEventListener('dblclick', this.contextRenameTabStart.bind(this));
-      tab.renamedName = null;
-      tab.originalName = null;
-
-      // Persist tab label and store changes for resetting
-      let observer = new MutationObserver((mutations) => {
-        if (!tab.renamedName) {
-          return;
-        }
-        mutations.forEach((mutation) => {
-          if (tab.label !== tab.renamedName) {
-            tab.originalName = tab.label;
-            tab.label = tab.renamedName;
-          }
-        });
-      });
-      // Run on all changes of label
-      observer.observe(tab, { attributes: true, attributeFilter: ['label'] });
+      tab.addEventListener('dblclick', this.renameTabStart.bind(this));
     }
   },
 
-  contextRenameTabKeydown(event) {
+  renameTabKeydown(event) {
     if (event.key === 'Enter') {
       let label = this._tabEdited.querySelector('.tab-label-container-editing');
       let input = this._tabEdited.querySelector('#tab-label-input');
@@ -629,19 +612,21 @@ var gZenVerticalTabsManager = {
 
       // Check if name is blank, reset if so
       if (newName) {
-        this._tabEdited.originalName = this._tabEdited.label;
         this._tabEdited.label = newName;
-        this._tabEdited.renamedName = newName;
+        this._tabEdited.setAttribute('zen-has-static-label', 'true');
       } else {
-        this._tabEdited.label = this._tabEdited.originalName;
-        this._tabEdited.originalName = null;
-        this._tabEdited.renamedName = null;
+        // If the page is loaded, get the title of the page. Otherwise, keep name as is
+        this._tabEdited.label = gBrowser.getBrowserForTab(this._tabEdited).contentTitle || this._tabEdited.label;
+        // If the page had a title, reset the zen-has-static-label attribute
+        if (gBrowser.getBrowserForTab(this._tabEdited).contentTitle) {
+          this._tabEdited.removeAttribute('zen-has-static-label');
+        }
       }
 
       this._tabEdited.querySelector('.tab-editor-container').remove();
       label.style.display = '';
       label.className = label.className.replace(' tab-label-container-editing', '');
-      document.removeEventListener('click', this.contextRenameTabHalt.bind(this));
+      document.removeEventListener('click', this.renameTabHalt.bind(this));
 
       this._tabEdited = null;
     } else if (event.key === 'Escape') {
@@ -650,12 +635,12 @@ var gZenVerticalTabsManager = {
 
       label.style.display = '';
       label.className = label.className.replace(' tab-label-container-editing', '');
-      document.removeEventListener('click', this.contextRenameTabHalt.bind(this));
+      document.removeEventListener('click', this.renameTabHalt.bind(this));
       this._tabEdited = null;
     }
   },
 
-  contextRenameTabStart(event) {
+  renameTabStart(event) {
     if (this._tabEdited) return;
     this._tabEdited = event.target.closest('.tabbrowser-tab');
     if (!this._tabEdited.pinned) {
@@ -674,7 +659,7 @@ var gZenVerticalTabsManager = {
     const input = document.createElement('input');
     input.id = 'tab-label-input';
     input.value = this._tabEdited.label;
-    input.addEventListener('keydown', this.contextRenameTabKeydown.bind(this));
+    input.addEventListener('keydown', this.renameTabKeydown.bind(this));
     input.style['white-space'] = 'nowrap';
     input.style['overflow-x'] = 'scroll';
     input.style['margin'] = '0';
@@ -683,10 +668,10 @@ var gZenVerticalTabsManager = {
     input.focus();
     input.select();
 
-    document.addEventListener('click', this.contextRenameTabHalt.bind(this));
+    document.addEventListener('click', this.renameTabHalt.bind(this));
   },
 
-  contextRenameTabHalt(event) {
+  renameTabHalt(event) {
     // Ignore click event if it's clicking the input
     if (event.target.closest('#tab-label-input')) {
       return;
@@ -699,7 +684,7 @@ var gZenVerticalTabsManager = {
     label.style.display = '';
     label.className = label.className.replace(' tab-label-container-editing', '');
 
-    document.removeEventListener('click', this.contextRenameTabHalt.bind(this));
+    document.removeEventListener('click', this.renameTabHalt.bind(this));
     this._tabEdited = null;
   },
 };

@@ -50,7 +50,7 @@
         padding: 0 var(--zen-compact-float) !important;
         opacity: 0;
 
-        @media (prefers-reduced-motion) {
+        @media (prefers-reduced-motion) or (not (-moz-bool-pref: 'zen.view.compact.animate-sidebar')) {
           transition: none;
         }
 
@@ -249,7 +249,7 @@
           right 0.3s var(--zen-compact-mode-func);
         opacity: 1;
 
-        @media (prefers-reduced-motion) {
+        @media (prefers-reduced-motion) or (not (-moz-bool-pref: 'zen.view.compact.animate-sidebar')) {
           transition: none;
         }
 

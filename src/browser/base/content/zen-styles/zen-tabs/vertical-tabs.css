@@ -1016,7 +1016,7 @@
       position: relative;
 
       &::before {
-        background: light-dark(rgba(255, 255, 255, 0.85), rgba(68, 64, 64, 0.85));
+        backdrop-filter: invert(0.5);
         margin: 2px;
         border-radius: calc(var(--border-radius-medium) - 2px);
         position: absolute;

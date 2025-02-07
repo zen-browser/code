@@ -1,5 +1,5 @@
 diff --git a/browser/base/content/browser-init.js b/browser/base/content/browser-init.js
-index 63100defacf66c6b3232b9e0a783a5fd14e3a46a..eb7ed966628a595847b850f981418d425b78f14b 100644
+index 63100defacf66c6b3232b9e0a783a5fd14e3a46a..22b79b021ff0baab4dac602447a124308208c828 100644
 --- a/browser/base/content/browser-init.js
 +++ b/browser/base/content/browser-init.js
 @@ -162,13 +162,15 @@ var gBrowserInit = {
@@ -19,12 +19,11 @@ index 63100defacf66c6b3232b9e0a783a5fd14e3a46a..eb7ed966628a595847b850f981418d42
      if (isVerticalTabs) {
        // Show the vertical tabs toolbar
        setToolbarVisibility(
-@@ -287,6 +289,11 @@ var gBrowserInit = {
+@@ -287,6 +289,10 @@ var gBrowserInit = {
      gPrivateBrowsingUI.init();
      BrowserSearch.init();
      BrowserPageActions.init();
 +
-+Services.scriptloader.loadSubScript("chrome://browser/content/zen-components/ZenUIMigration.mjs", window);
 +Services.scriptloader.loadSubScript("chrome://browser/content/ZenStartup.mjs", window);
 +Services.scriptloader.loadSubScript("chrome://browser/content/zenThemeModifier.js", window);
 +

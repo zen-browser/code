@@ -129,7 +129,7 @@
 :root[zen-single-toolbar='true'] {
   .urlbar-page-action:not([open]),
   #tracking-protection-icon-container {
-    margin-inline-end: calc(-16px - 2 * var(--urlbar-icon-padding)) !important;
+    margin-inline-end: calc(-14px - 2 * var(--urlbar-icon-padding)) !important;
     opacity: 0;
     transition: all 0.1s ease;
   }
@@ -243,7 +243,7 @@ button.popup-notification-dropmarker {
   }
 
   #userContext-indicator {
-    margin-inline-end: 2px;
+    margin-inline-end: 4px;
   }
 
   #urlbar:hover:not([breakout-extend='true']) #userContext-icons {
@@ -288,7 +288,7 @@ button.popup-notification-dropmarker {
 #urlbar .urlbar-page-action,
 #urlbar #tracking-protection-icon-container,
 #urlbar:not([breakout-extend='true']) #identity-box:is(:not(.chromeUI), [pageproxystate='invalid']) #identity-icon-box {
-  border-radius: 10px !important;
+  border-radius: 8px !important;
 }
 
 /* Extensions or similar */

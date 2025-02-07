@@ -52,7 +52,6 @@
           },
         ]
       );
-      notification.persistence = -1;
     }
   }
 

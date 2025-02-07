@@ -1,8 +1,24 @@
 diff --git a/browser/components/BrowserGlue.sys.mjs b/browser/components/BrowserGlue.sys.mjs
-index 2de73e75bf98b21dde9ec05213a66f9e9039200f..04ab3ea4c47d674778e8965654867c4cf0f99161 100644
+index b888a753a7f23a9800fe04da51a4e6b898314ff2..35eea774e1ea4b1807ec65ebc767f423d81602bd 100644
 --- a/browser/components/BrowserGlue.sys.mjs
 +++ b/browser/components/BrowserGlue.sys.mjs
-@@ -4643,6 +4643,7 @@ BrowserGlue.prototype = {
+@@ -121,6 +121,7 @@ ChromeUtils.defineESModuleGetters(lazy, {
+   WindowsGPOParser: "resource://gre/modules/policies/WindowsGPOParser.sys.mjs",
+   clearTimeout: "resource://gre/modules/Timer.sys.mjs",
+   setTimeout: "resource://gre/modules/Timer.sys.mjs",
++  gZenUIMigration: "chrome://browser/content/zen-components/ZenUIMigration.mjs",
+ });
+ 
+ if (AppConstants.MOZ_UPDATER) {
+@@ -1951,6 +1952,7 @@ BrowserGlue.prototype = {
+ 
+     lazy.UrlbarPrefs.updateFirefoxSuggestScenario();
+ 
++    lazy.gZenUIMigration.init(this._isNewProfile, aWindow);
+     // A channel for "remote troubleshooting" code...
+     let channel = new lazy.WebChannel(
+       "remote-troubleshooting",
+@@ -4761,6 +4763,7 @@ BrowserGlue.prototype = {
    },
  
    async _maybeShowDefaultBrowserPrompt() {
@@ -10,7 +26,7 @@ index 2de73e75bf98b21dde9ec05213a66f9e9039200f..04ab3ea4c47d674778e8965654867c4c
      // Highest priority is about:welcome window modal experiment
      // Second highest priority is the upgrade dialog, which can include a "primary
      // browser" request and is limited in various ways, e.g., major upgrades.
-@@ -5169,6 +5170,16 @@ BrowserGlue.prototype = {
+@@ -5302,6 +5305,16 @@ BrowserGlue.prototype = {
      "nsIObserver",
      "nsISupportsWeakReference",
    ]),

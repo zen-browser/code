@@ -41,9 +41,15 @@ var gZenCompactModeManager = {
 
   get preference() {
     if (!document.documentElement.hasAttribute('zen-compact-mode')) {
-      document.documentElement.setAttribute(
-        'zen-compact-mode',
-        lazyCompactMode.mainAppWrapper.getAttribute('zen-compact-mode')
+      window.addEventListener(
+        'MozAfterPaint',
+        () => {
+          document.documentElement.setAttribute(
+            'zen-compact-mode',
+            lazyCompactMode.mainAppWrapper.getAttribute('zen-compact-mode')
+          );
+        },
+        { once: true }
       );
     }
     return lazyCompactMode.mainAppWrapper.getAttribute('zen-compact-mode') === 'true';
@@ -138,6 +144,7 @@ var gZenCompactModeManager = {
   getAndApplySidebarWidth() {
     let sidebarWidth = this.sidebar.getBoundingClientRect().width;
     if (sidebarWidth > 1) {
+      gZenUIManager.restoreScrollbarState();
       this.sidebar.style.setProperty('--zen-sidebar-width', `${sidebarWidth}px`);
     }
     return sidebarWidth;
@@ -155,6 +162,9 @@ var gZenCompactModeManager = {
     if (canAnimate) {
       this.sidebar.setAttribute('animate', 'true');
     }
+    this.sidebar.style.removeProperty('margin-right');
+    this.sidebar.style.removeProperty('margin-left');
+    this.sidebar.style.removeProperty('transform');
     window.requestAnimationFrame(() => {
       let sidebarWidth = this.getAndApplySidebarWidth();
       if (!canAnimate) {
@@ -187,10 +197,10 @@ var gZenCompactModeManager = {
             setTimeout(() => {
               this._animating = false;
               this.sidebar.style.removeProperty('transition');
-            }, 100);
+            });
           });
       } else if (canHideSidebar && !isCompactMode) {
-        document.getElementById('browser').style.overflow = 'hidden';
+        document.getElementById('browser').style.overflow = 'clip';
         if (this.sidebarIsOnRight) {
           this.sidebar.style.marginRight = `-${sidebarWidth}px`;
         } else {
@@ -201,7 +211,7 @@ var gZenCompactModeManager = {
             this.sidebar,
             this.sidebarIsOnRight
               ? {
-                  marginRight: 0,
+                  marginRight: [`-${sidebarWidth}px`, 0],
                   transform: ['translateX(100%)', 'translateX(0)'],
                 }
               : { marginLeft: 0 },

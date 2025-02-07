@@ -472,6 +472,9 @@
             this._resetTabToStoredState(selectedTab);
           }
           if (behavior.includes('unload')) {
+            if (selectedTab.hasAttribute('glance-id')) {
+              break;
+            }
             gBrowser.explicitUnloadTabs([selectedTab]);
             selectedTab.removeAttribute('linkedpanel');
           }

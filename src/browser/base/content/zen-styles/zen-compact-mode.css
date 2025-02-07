@@ -42,11 +42,13 @@
         position: absolute;
         z-index: 10;
         transition:
-          left 0.25s ease,
-          right 0.25s ease;
+          left 0.15s ease,
+          right 0.15s ease,
+          opacity 1.5s ease;
         top: 0;
         bottom: var(--zen-element-separation);
         padding: 0 var(--zen-compact-float) !important;
+        opacity: 0;
 
         :root[zen-single-toolbar='true'] & {
           top: var(--zen-element-separation);
@@ -112,7 +114,11 @@
 
       & #urlbar[open][zen-floating-urlbar='true'] {
         --zen-urlbar-offset: var(--zen-sidebar-width);
-        transition: left 0.1s ease;
+        transition: left 0.05s ease;
+
+        #navigator-toolbox:has(&) {
+          opacity: 1;
+        }
       }
     }
 
@@ -233,15 +239,18 @@
         transition:
           left 0.3s var(--zen-compact-mode-func),
           right 0.3s var(--zen-compact-mode-func);
+        opacity: 1;
 
-        left: -1px;
-        :root[zen-right-side='true'] & {
-          right: -1px;
-          left: auto;
-        }
+        &:not([supress-primary-adjustment='true']) {
+          left: -1px;
+          :root[zen-right-side='true'] & {
+            right: -1px;
+            left: auto;
+          }
 
-        & #urlbar[open][zen-floating-urlbar='true'] {
-          --zen-urlbar-offset: 0px;
+          & #urlbar[open][zen-floating-urlbar='true'] {
+            --zen-urlbar-offset: 0px;
+          }
         }
       }
     }

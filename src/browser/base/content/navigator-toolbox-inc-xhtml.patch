@@ -1,5 +1,5 @@
 diff --git a/browser/base/content/navigator-toolbox.inc.xhtml b/browser/base/content/navigator-toolbox.inc.xhtml
-index 00391af141d9015fe5839534e5e6b22a91ba65d9..b68767d0fef6cea2756376bbcfe00603d5d1a655 100644
+index a0a382643a2f74b6d789f3641ef300eed202d5e9..8b7b2ae3e7764d5dd77cd344f0cf67aea54a6f47 100644
 --- a/browser/base/content/navigator-toolbox.inc.xhtml
 +++ b/browser/base/content/navigator-toolbox.inc.xhtml
 @@ -2,7 +2,7 @@
@@ -86,7 +86,7 @@ index 00391af141d9015fe5839534e5e6b22a91ba65d9..b68767d0fef6cea2756376bbcfe00603
    <toolbar id="nav-bar"
             class="browser-toolbar chromeclass-location"
             data-l10n-id="navbar-accessible"
-@@ -487,10 +495,12 @@
+@@ -490,10 +498,12 @@
                       consumeanchor="PanelUI-button"
                       data-l10n-id="appmenu-menu-button-closed2"/>
      </toolbaritem>

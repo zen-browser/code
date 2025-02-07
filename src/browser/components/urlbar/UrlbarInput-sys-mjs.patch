@@ -1,5 +1,5 @@
 diff --git a/browser/components/urlbar/UrlbarInput.sys.mjs b/browser/components/urlbar/UrlbarInput.sys.mjs
-index 50968dc04b527438acf30151f0c2e92f8b45097c..f3539ff3a74474f2833800ae140b0384b21a7fb0 100644
+index 50968dc04b527438acf30151f0c2e92f8b45097c..0d4c899a8a0d98d6cac41ecdd1c40df52bd050be 100644
 --- a/browser/components/urlbar/UrlbarInput.sys.mjs
 +++ b/browser/components/urlbar/UrlbarInput.sys.mjs
 @@ -67,6 +67,13 @@ XPCOMUtils.defineLazyPreferenceGetter(
@@ -39,7 +39,20 @@ index 50968dc04b527438acf30151f0c2e92f8b45097c..f3539ff3a74474f2833800ae140b0384
      // We only need to update the searchModeUI on tab switch conditionally
      // as we only persist searchMode with ScotchBonnet enabled.
      if (
-@@ -1087,7 +1102,11 @@ export class UrlbarInput {
+@@ -697,8 +712,11 @@ export class UrlbarInput {
+         return;
+       }
+     }
+-
++    this.document.getElementById("navigator-toolbox").setAttribute("supress-primary-adjustment", true);
+     this.handleNavigation({ event });
++    this.document.ownerGlobal.setTimeout(() => {
++      this.document.getElementById("navigator-toolbox").removeAttribute("supress-primary-adjustment");
++    }, 200);
+   }
+ 
+   /**
+@@ -1087,11 +1105,14 @@ export class UrlbarInput {
      }
  
      if (!result.payload.providesSearchMode) {
@@ -52,7 +65,11 @@ index 50968dc04b527438acf30151f0c2e92f8b45097c..f3539ff3a74474f2833800ae140b0384
      }
  
      this.controller.recordSelectedResult(event, result);
-@@ -2144,6 +2163,11 @@ export class UrlbarInput {
+-
+     if (isCanonized) {
+       this.controller.engagementEvent.record(event, {
+         result,
+@@ -2144,6 +2165,11 @@ export class UrlbarInput {
  
      this.setAttribute("breakout-extend", "true");
  
@@ -64,7 +81,7 @@ index 50968dc04b527438acf30151f0c2e92f8b45097c..f3539ff3a74474f2833800ae140b0384
      // Enable the animation only after the first extend call to ensure it
      // doesn't run when opening a new window.
      if (!this.hasAttribute("breakout-extend-animate")) {
-@@ -2163,6 +2187,11 @@ export class UrlbarInput {
+@@ -2163,6 +2189,11 @@ export class UrlbarInput {
        return;
      }
  
@@ -76,7 +93,7 @@ index 50968dc04b527438acf30151f0c2e92f8b45097c..f3539ff3a74474f2833800ae140b0384
      this.removeAttribute("breakout-extend");
      this.#updateTextboxPosition();
    }
-@@ -3305,7 +3334,7 @@ export class UrlbarInput {
+@@ -3305,7 +3336,7 @@ export class UrlbarInput {
      } else {
        where = lazy.BrowserUtils.whereToOpenLink(event, false, false);
      }
@@ -85,7 +102,7 @@ index 50968dc04b527438acf30151f0c2e92f8b45097c..f3539ff3a74474f2833800ae140b0384
        if (where == "current") {
          where = "tab";
        } else if (where == "tab") {
-@@ -3859,6 +3888,11 @@ export class UrlbarInput {
+@@ -3859,6 +3890,11 @@ export class UrlbarInput {
    }
  
    _on_click(event) {
@@ -97,7 +114,7 @@ index 50968dc04b527438acf30151f0c2e92f8b45097c..f3539ff3a74474f2833800ae140b0384
      if (
        event.target == this.inputField ||
        event.target == this._inputContainer ||
-@@ -3930,7 +3964,7 @@ export class UrlbarInput {
+@@ -3930,7 +3966,7 @@ export class UrlbarInput {
        }
      }
  
@@ -106,7 +123,7 @@ index 50968dc04b527438acf30151f0c2e92f8b45097c..f3539ff3a74474f2833800ae140b0384
        this.view.autoOpen({ event });
      } else {
        if (this._untrimOnFocusAfterKeydown) {
-@@ -3970,9 +4004,12 @@ export class UrlbarInput {
+@@ -3970,9 +4006,12 @@ export class UrlbarInput {
    }
  
    _on_mousedown(event) {
@@ -120,7 +137,7 @@ index 50968dc04b527438acf30151f0c2e92f8b45097c..f3539ff3a74474f2833800ae140b0384
  
          if (
            event.target != this.inputField &&
-@@ -3982,8 +4019,8 @@ export class UrlbarInput {
+@@ -3982,8 +4021,8 @@ export class UrlbarInput {
            break;
          }
  

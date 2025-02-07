@@ -241,14 +241,16 @@
           right 0.3s var(--zen-compact-mode-func);
         opacity: 1;
 
-        left: -1px;
-        :root[zen-right-side='true'] & {
-          right: -1px;
-          left: auto;
-        }
+        &:not([supress-primary-adjustment='true']) {
+          left: -1px;
+          :root[zen-right-side='true'] & {
+            right: -1px;
+            left: auto;
+          }
 
-        & #urlbar[open][zen-floating-urlbar='true'] {
-          --zen-urlbar-offset: 0px;
+          & #urlbar[open][zen-floating-urlbar='true'] {
+            --zen-urlbar-offset: 0px;
+          }
         }
       }
     }

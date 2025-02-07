@@ -1,5 +1,5 @@
 diff --git a/browser/components/tabbrowser/content/tabs.js b/browser/components/tabbrowser/content/tabs.js
-index 8aeb244ffca9f48661805f5b7d860b5896055562..1d630f0f402610e70e4e17f11813fddbd141cb9e 100644
+index 8aeb244ffca9f48661805f5b7d860b5896055562..bffa5e0be62e73f380adf558c5df3441bde7b604 100644
 --- a/browser/components/tabbrowser/content/tabs.js
 +++ b/browser/components/tabbrowser/content/tabs.js
 @@ -94,7 +94,7 @@
@@ -185,17 +185,14 @@ index 8aeb244ffca9f48661805f5b7d860b5896055562..1d630f0f402610e70e4e17f11813fddb
            if (!isEndTab) {
              // keep tabs the same width
              tab.style.transition = "none";
-@@ -1963,13 +1988,13 @@
-       let verticalTabsContainer = document.getElementById(
-         "vertical-pinned-tabs-container"
+@@ -1965,11 +1990,11 @@
        );
--      let numPinned = gBrowser.pinnedTabCount;
-+      let numPinned = gBrowser._numVisiblePinTabs;
+       let numPinned = gBrowser.pinnedTabCount;
  
 -      if (gBrowser.pinnedTabCount !== verticalTabsContainer.children.length) {
 -        let tabs = this.visibleTabs;
 +      if (gBrowser.pinnedTabCount !== (verticalTabsContainer.children.length + document.getElementById("zen-essentials-container").children.length)) {
-+        let tabs = this.visibleTabs.filter(tab => !tab.hasAttribute("zen-glance-tab"));
++        let tabs = this.allTabs.filter(tab => !tab.hasAttribute("zen-glance-tab"));
          for (let i = 0; i < numPinned; i++) {
            tabs[i].style.marginInlineStart = "";
 -          verticalTabsContainer.appendChild(tabs[i]);

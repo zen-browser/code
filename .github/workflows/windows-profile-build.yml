@@ -96,7 +96,7 @@ jobs:
 
       - name: Debug session
         if: ${{ failure() }}
-        uses: WarpBuilds/action-debugger@v1.3
+        uses: WarpBuilds/action-debugger@v1
         timeout-minutes: 15
 
       - name: Move profile data

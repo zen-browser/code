@@ -1,17 +1,18 @@
 name: Monthly issue metrics
+
 on:
   workflow_dispatch:
   schedule:
-    - cron: '3 2 1 * *'
+    - cron: '0 0 1 * *'
 
 jobs:
   build:
-    name: issue metrics
+    name: Issue metrics
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
           token: ${{ secrets.DEPLOY_KEY }}
 
@@ -39,7 +40,7 @@ jobs:
           echo "last_month_year=$previous_year" >> "$GITHUB_ENV"
 
       - name: Run issue-metrics tool
-        uses: github/issue-metrics@v2
+        uses: github/issue-metrics@v3
         env:
           GH_TOKEN: ${{ secrets.DEPLOY_KEY }}
           HIDE_AUTHOR: true
@@ -52,7 +53,7 @@ jobs:
           rm -f docs/issue-metrics/${{ env.last_month_year }}_${{ env.last_month }}.md
           mv issue_metrics.md docs/issue-metrics/${{ env.last_month_year }}_${{ env.last_month }}.md
 
-      - name: Remove metrisc JSON
+      - name: Remove metrics JSON
         run: |
           rm -f issue_metrics.json
 

@@ -999,7 +999,7 @@
   }
 
   @media (-moz-bool-pref: 'zen.theme.essentials-favicon-bg') {
-    &[selected] .tab-background {
+    &[visuallyselected] .tab-background {
       &::after {
         content: "";
         inset: -50%;
@@ -1027,7 +1027,7 @@
       }
     }
 
-    &[selected]:hover .tab-background::before {
+    &[visuallyselected]:hover .tab-background::before {
       background: light-dark(rgba(255, 255, 255, 0.80), rgba(68, 64, 64, 0.80));
     }
   }

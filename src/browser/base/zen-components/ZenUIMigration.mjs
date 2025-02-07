@@ -9,7 +9,6 @@ class ZenUIMigration {
   MIGRATION_VERSION = 1;
 
   init(isNewProfile, win) {
-    console.log(isNewProfile, win);
     if (!isNewProfile) {
       this._migrate(win);
     }

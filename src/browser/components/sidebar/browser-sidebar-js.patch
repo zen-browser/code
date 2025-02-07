@@ -1,5 +1,5 @@
 diff --git a/browser/components/sidebar/browser-sidebar.js b/browser/components/sidebar/browser-sidebar.js
-index 1937a01b9940c79782cc2ad002b09ea5938b89e0..0846ab4b3750a556617ff8d4546d9131cda35296 100644
+index 1937a01b9940c79782cc2ad002b09ea5938b89e0..a702e8c520fad651a98615215f94657b7e1c58eb 100644
 --- a/browser/components/sidebar/browser-sidebar.js
 +++ b/browser/components/sidebar/browser-sidebar.js
 @@ -671,7 +671,7 @@ var SidebarController = {
@@ -11,3 +11,12 @@ index 1937a01b9940c79782cc2ad002b09ea5938b89e0..0846ab4b3750a556617ff8d4546d9131
      [...browser.children].forEach((node, i) => {
        node.style.order = i + 1;
      });
+@@ -681,7 +681,7 @@ var SidebarController = {
+       // DOM ordering is:     sidebar-main |  launcher-splitter | sidebar-box  | splitter | tabbrowser-tabbox |
+       // Want to display as:  |   tabbrowser-tabbox  | splitter |  sidebar-box  | launcher-splitter | sidebar-main
+       // So we just swap box and tabbrowser-tabbox ordering and move sidebar-main to the end
+-      let tabbox = document.getElementById("tabbrowser-tabbox");
++      let tabbox = document.getElementById("tabbrowser-tabpanels");
+       let boxOrdinal = this._box.style.order;
+       this._box.style.order = tabbox.style.order;
+ 

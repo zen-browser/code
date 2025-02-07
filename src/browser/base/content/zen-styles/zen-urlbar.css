@@ -10,7 +10,7 @@
 }
 
 #urlbar {
-  --toolbarbutton-border-radius: 10px;
+  --toolbarbutton-border-radius: 8px;
   --urlbarView-separator-color: var(--zen-colors-border);
   --urlbarView-hover-background: var(--toolbarbutton-hover-background);
   --urlbarView-highlight-background: var(--toolbarbutton-hover-background);

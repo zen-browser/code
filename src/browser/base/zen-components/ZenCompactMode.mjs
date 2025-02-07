@@ -41,9 +41,15 @@ var gZenCompactModeManager = {
 
   get preference() {
     if (!document.documentElement.hasAttribute('zen-compact-mode')) {
-      document.documentElement.setAttribute(
-        'zen-compact-mode',
-        lazyCompactMode.mainAppWrapper.getAttribute('zen-compact-mode')
+      window.addEventListener(
+        'MozAfterPaint',
+        () => {
+          document.documentElement.setAttribute(
+            'zen-compact-mode',
+            lazyCompactMode.mainAppWrapper.getAttribute('zen-compact-mode')
+          );
+        },
+        { once: true }
       );
     }
     return lazyCompactMode.mainAppWrapper.getAttribute('zen-compact-mode') === 'true';

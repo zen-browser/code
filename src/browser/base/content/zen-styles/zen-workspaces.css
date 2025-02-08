@@ -367,6 +367,23 @@
   }
 }
 
+/* Rounded indicator for pill-button theme */
+@media (-moz-bool-pref: 'zen.theme.pill-button') {
+  #PanelUI-zen-workspaces-list toolbarbutton {
+    &.zen-workspace-button[active='true'] .zen-workspace-icon::before {
+      background-color: transparent;
+    }
+
+    &.zen-workspace-icon {
+      border: 3px solid var(--zen-colors-border);
+    }
+
+    &.zen-workspace-button[active='true'] .zen-workspace-icon {
+      border: 3px solid var(--toolbarbutton-icon-fill-attention);
+    }
+  }
+}
+
 .zen-workspace-button.dragging {
   opacity: 0.5;
 }

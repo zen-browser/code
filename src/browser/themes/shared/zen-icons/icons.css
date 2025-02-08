@@ -68,9 +68,12 @@
 }
 
 #sidebar-button:-moz-locale-dir(ltr):not([positionend]),
-#sidebar-button:-moz-locale-dir(rtl)[positionend],
-#zen-sidepanel-button {
+#sidebar-button:-moz-locale-dir(rtl)[positionend] {
   list-style-image: url('chrome://browser/skin/sidebars.svg') !important;
+}
+
+#zen-sidepanel-button {
+  list-style-image: url('sidebar.svg');
 }
 
 #downloads-button,
@@ -390,7 +393,7 @@
 }
 
 #zen-expand-sidebar-button {
-  list-style-image: url('sidebar.svg') !important;
+  list-style-image: url('expand-sidebar.svg') !important;
 }
 
 .panel-header > .subviewbutton-back {
@@ -931,7 +934,7 @@ menuitem[contexttype='fullscreen'][label*='Exit'] {
 }
 
 #zen-context-menu-compact-mode {
-  --menu-image: url('chrome://browser/skin/sidebars.svg');
+  --menu-image: url('sidebar.svg');
 }
 
 #context_bookmarkTab,

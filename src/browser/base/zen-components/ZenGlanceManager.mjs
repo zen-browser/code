@@ -67,7 +67,7 @@
     }
 
     getTabPosition(tab) {
-      return Math.max(gBrowser.pinnedTabCount, tab._tPos) + 1;
+      return Math.max(gBrowser.pinnedTabCount, tab._tPos);
     }
 
     createBrowserElement(url, currentTab, existingTab = null) {

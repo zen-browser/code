@@ -888,6 +888,28 @@ class ZenKeyboardShortcutsVersioner {
           'code:gZenVerticalTabsManager.toggleExpand()',
           'zen-sidebar-shortcut-toggle'
         )
+      // Here, we are adding shortcuts to switch to prev/next tabs in a workspace
+      data.push(
+        ...[
+          new KeyShortcut(
+            'zen-advance-selected-tab-shortcut',
+            '',
+            '',
+            ZEN_OTHER_SHORTCUTS_GROUP,
+            KeyShortcutModifiers.fromObject({}),
+            'code:gBrowser.tabContainer.advanceSelectedTab(1, true)',
+            'zen-advance-selected-tab-shortcut'
+          ),
+          new KeyShortcut(
+            'zen-reverse-selected-tab-shortcut',
+            '',
+            '',
+            ZEN_OTHER_SHORTCUTS_GROUP,
+            KeyShortcutModifiers.fromObject({}),
+            'code:gBrowser.tabContainer.advanceSelectedTab(-1, true)',
+            'zen-reverse-selected-tab-shortcut'
+          ),
+        ]
       );
     }
     if (version < 6) {

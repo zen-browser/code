@@ -28,7 +28,8 @@ var gZenUIManager = {
       this._hasLoadedDOM = true;
     });
 
-    window.addEventListener('TabClose', this.updateTabsToolbar.bind(this));
+    window.addEventListener('TabClose', this.onTabClose.bind(this));
+    this.tabsWrapper.addEventListener('scroll', this.saveScrollbarState.bind(this));
   },
 
   updateTabsToolbar() {
@@ -56,6 +57,27 @@ var gZenUIManager = {
     tabs.style.maxHeight = height + 'px';
   },
 
+  get tabsWrapper() {
+    if (this._tabsWrapper) {
+      return this._tabsWrapper;
+    }
+    this._tabsWrapper = document.getElementById('zen-browser-tabs-wrapper');
+    return this._tabsWrapper;
+  },
+
+  saveScrollbarState() {
+    this._scrollbarState = this.tabsWrapper.scrollTop;
+  },
+
+  restoreScrollbarState() {
+    this.tabsWrapper.scrollTop = this._scrollbarState;
+  },
+
+  onTabClose(event) {
+    this.updateTabsToolbar();
+    this.restoreScrollbarState();
+  },
+
   openAndChangeToTab(url, options) {
     if (window.ownerGlobal.parent) {
       const tab = window.ownerGlobal.parent.gBrowser.addTrustedTab(url, options);
@@ -68,9 +90,7 @@ var gZenUIManager = {
   },
 
   generateUuidv4() {
-    return '10000000-1000-4000-8000-100000000000'.replace(/[018]/g, (c) =>
-      (+c ^ (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (+c / 4)))).toString(16)
-    );
+    return Services.uuid.generateUUID().toString();
   },
 
   toogleBookmarksSidebar() {
@@ -125,6 +145,43 @@ var gZenUIManager = {
     }
     this.__currentPopup = null;
     this.__currentPopupTrackElement = null;
+  },
+
+  _prevUrlbarLabel: null,
+  _lastSearch: '',
+
+  handleNewTab(werePassedURL, searchClipboard, where) {
+    const shouldOpenURLBar =
+      Services.prefs.getBoolPref('zen.urlbar.replace-newtab') && !werePassedURL && !searchClipboard && where === 'tab';
+    if (shouldOpenURLBar) {
+      this._prevUrlbarLabel = gURLBar._untrimmedValue;
+      gURLBar._zenHandleUrlbarClose = this.handleUrlbarClose.bind(this);
+      gURLBar.setAttribute('zen-newtab', true);
+      document.getElementById('Browser:OpenLocation').doCommand();
+      gURLBar.search(this._lastSearch);
+      return true;
+    }
+    return false;
+  },
+
+  handleUrlbarClose(onSwitch) {
+    gURLBar._zenHandleUrlbarClose = null;
+    gURLBar.removeAttribute('zen-newtab');
+    if (onSwitch) {
+      this._prevUrlbarLabel = null;
+      this._lastSearch = '';
+    } else {
+      this._lastSearch = gURLBar._untrimmedValue;
+    }
+    gURLBar.setURI(this._prevUrlbarLabel, false, false, false, true);
+    gURLBar.handleRevert();
+    if (gURLBar.focused) {
+      gURLBar.view.close({ elementPicked: onSwitch });
+      gURLBar.updateTextOverflow();
+      if (gBrowser.selectedTab.linkedBrowser && onSwitch) {
+        gURLBar.getBrowserState(gBrowser.selectedTab.linkedBrowser).urlbarFocused = false;
+      }
+    }
   },
 };
 
@@ -248,7 +305,7 @@ var gZenVerticalTabsManager = {
         aTab.style.removeProperty('opacity');
       });
     gZenUIManager.motion
-      .animate(aTab.querySelector('.tab-stack'), {
+      .animate(aTab.querySelector('.tab-content'), {
         filter: ['blur(1px)', 'blur(0px)'],
       })
       .then(() => {

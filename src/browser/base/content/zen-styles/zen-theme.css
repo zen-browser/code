@@ -131,6 +131,8 @@
   --toolbarbutton-border-radius: 6px;
   --urlbar-margin-inline: 1px !important;
 
+  --tab-icon-overlay-stroke: light-dark(white, black) !important;
+
   --fp-contextmenu-border-radius: 8px;
   --fp-contextmenu-padding: calc(4px - var(--fp-contextmenu-menuitem-border-width)) 0;
   --fp-contextmenu-menuitem-border-radius: calc(4px + var(--fp-contextmenu-menuitem-border-width));
@@ -145,6 +147,8 @@
   --fp-contextmenu-separator-horizontal: 0;
   --fp-contextmenu-bgcolor: light-dark(Menu, rgb(43 42 51 / 0.95));
   --toolbar-bgcolor: transparent;
+
+  --tab-close-button-padding: 5px !important;
 
   --toolbarbutton-active-background: var(--zen-toolbar-element-bg);
 
@@ -179,7 +183,7 @@
       * 1. If the native radius - the separation is less than 4px, use 4px.
       * 2. Otherwise, use the the calculated value (inner radius = outer radius - separation).
     */
-      max(5px, calc(var(--zen-native-content-radius) - var(--zen-element-separation)))
+      max(5px, calc(var(--zen-native-content-radius) - var(--zen-element-separation) / 2))
   );
 
   /** Other theme-related styles */

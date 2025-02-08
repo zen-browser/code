@@ -18,8 +18,8 @@ def update_rc(last_version: str):
     with open("surfer.json", "w") as f:
       data["version"]["candidate"] = rc_version
       json.dump(data, f, indent=2)
-    print("Download the new engine by running 'pnpm download'.")
-    os.system("pnpm download")
+    print("Download the new engine by running 'npm run download'.")
+    os.system("npm run download")
   else:
     print("No new Firefox RC version available.")
 
@@ -28,7 +28,7 @@ def update_ff(is_rc: bool = False, last_version: str = ""):
   """Runs the npm command to update the 'ff' component."""
   if is_rc:
     return update_rc(last_version)
-  result = os.system("pnpm update-ff:raw")
+  result = os.system("npm run update-ff:raw")
   if result != 0:
     raise RuntimeError("Failed to update 'ff' component.")
 
@@ -63,8 +63,7 @@ def update_l10n_last_commit_hash():
     os.system(f"git clone {L10N_REPO} l10n-temp")
     if not os.path.exists("firefox-cache"):
       os.mkdir("firefox-cache")
-    with open("l10n-last-commit-hash", "w") as f:
-      os.system("cat l10n-temp/.git/refs/heads/main > firefox-cache/l10n-last-commit-hash")
+    os.system("cat l10n-temp/.git/refs/heads/main > firefox-cache/l10n-last-commit-hash")
   except KeyboardInterrupt:
     print("Exiting...")
   shutil.rmtree("l10n-temp")

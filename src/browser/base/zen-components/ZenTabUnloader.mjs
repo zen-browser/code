@@ -173,7 +173,7 @@
     }
 
     handleTabClose(tab) {
-      // Nothing yet
+      tab.lastActivity = null;
     }
 
     handleTabOpen(tab) {
@@ -226,7 +226,7 @@
     unloadTab() {
       const tabs = TabContextMenu.contextTab.multiselected ? gBrowser.selectedTabs : [TabContextMenu.contextTab];
       for (let i = 0; i < tabs.length; i++) {
-        if (this.canUnloadTab(tabs[i], Date.now(), [], true)) {
+        if (this.canUnloadTab(tabs[i], Date.now(), this.intervalUnloader.excludedUrls, true)) {
           this.unload(tabs[i]);
         }
       }
@@ -258,6 +258,7 @@
         !tab.linkedPanel ||
         tab.splitView ||
         tab.attention ||
+        tab.hasAttribute('glance-id') ||
         tab.linkedBrowser?.zenModeActive ||
         (tab.pictureinpicture && !ignoreTimestamp) ||
         (tab.soundPlaying && !ignoreTimestamp) ||

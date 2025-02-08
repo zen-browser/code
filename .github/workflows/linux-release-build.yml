@@ -81,24 +81,15 @@ jobs:
           path: /home/runner/.cache/sccache
           key: ${{ runner.os }}-sccache
 
-      - name: Setup pnpm
-        run: npm install -g pnpm
-
-      - name: Get pnpm store directory
-        id: pnpm-cache
-        shell: bash
-        run: |
-          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
-
       - name: Install dependencies
         run: |
-          pnpm install
+          npm install
 
       - name: Load Surfer CI setup
-        run: pnpm surfer ci --brand ${{ inputs.release-branch }} --display-version ${{ inputs.build-version }}
+        run: npm run surfer -- ci --brand ${{ inputs.release-branch }} --display-version ${{ inputs.build-version }}
 
       - name: Download Firefox source and dependencies
-        run: pnpm surfer download
+        run: npm run download
 
       - name: Fix Rust version
         run: |
@@ -115,7 +106,7 @@ jobs:
       - name: Import
         env:
           SURFER_COMPAT: ${{ matrix.arch }}
-        run: pnpm surfer import
+        run: npm run import
 
       - name: Build language packs
         run: sh scripts/download-language-packs.sh
@@ -146,19 +137,19 @@ jobs:
         run: |
           export SURFER_PLATFORM="linux"
           export ZEN_RELEASE=1
-          pnpm package
+          npm run package
 
       - name: Rename artifacts
         run: |
-          mv dist/zen-*.tar.bz2 "zen.linux-${{ matrix.arch }}.tar.bz2"
+          mv dist/zen-*.tar.xz "zen.linux-${{ matrix.arch }}.tar.xz"
           mv dist/output.mar linux${{ matrix.arch == 'aarch64' && '-aarch64' || '' }}.mar
 
       - name: Upload build artifact (binary)
         uses: actions/upload-artifact@v4
         with:
           retention-days: 5
-          name: zen.linux-${{ matrix.arch }}.tar.bz2
-          path: ./zen.linux-${{ matrix.arch }}.tar.bz2
+          name: zen.linux-${{ matrix.arch }}.tar.xz
+          path: ./zen.linux-${{ matrix.arch }}.tar.xz
 
       - name: Upload build artifact (.mar)
         uses: actions/upload-artifact@v4

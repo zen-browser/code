@@ -719,6 +719,8 @@ var zenMissingKeyboardShortcutL10n = {
   goHome: 'zen-key-go-home',
   key_redo: 'zen-key-redo',
 
+  key_inspectorMac: 'zen-key-inspector-mac',
+
   // Devtools
   key_toggleToolbox: 'zen-devtools-toggle-shortcut',
   key_browserToolbox: 'zen-devtools-toggle-browser-toolbox-shortcut',

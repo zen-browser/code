@@ -10,7 +10,7 @@
 }
 
 #urlbar {
-  --toolbarbutton-border-radius: 10px;
+  --toolbarbutton-border-radius: 8px;
   --urlbarView-separator-color: var(--zen-colors-border);
   --urlbarView-hover-background: var(--toolbarbutton-hover-background);
   --urlbarView-highlight-background: var(--toolbarbutton-hover-background);
@@ -129,9 +129,9 @@
 :root[zen-single-toolbar='true'] {
   .urlbar-page-action:not([open]),
   #tracking-protection-icon-container {
-    margin-inline-end: calc(-16px - 2 * var(--urlbar-icon-padding)) !important;
+    margin-inline-end: calc(-14px - 2 * var(--urlbar-icon-padding)) !important;
     opacity: 0;
-    transition: all 0.2s;
+    transition: all 0.1s ease;
   }
 
   #identity-permission-box > *:not(#permissions-granted-icon) {
@@ -234,8 +234,22 @@ button.popup-notification-dropmarker {
 }
 
 @container urlbar-container (width < 350px) {
+  #userContext-icons {
+    transition: all 0.1s ease;
+  }
+
   #userContext-label {
     display: none;
+  }
+
+  #userContext-indicator {
+    margin-inline-end: 4px;
+  }
+
+  #urlbar:hover:not([breakout-extend='true']) #userContext-icons {
+    margin-inline-end: calc(-16px - 2 * var(--urlbar-icon-padding)) !important;
+    opacity: 0;
+    pointer-events: none;
   }
 }
 
@@ -274,7 +288,7 @@ button.popup-notification-dropmarker {
 #urlbar .urlbar-page-action,
 #urlbar #tracking-protection-icon-container,
 #urlbar:not([breakout-extend='true']) #identity-box:is(:not(.chromeUI), [pageproxystate='invalid']) #identity-icon-box {
-  border-radius: 10px !important;
+  border-radius: 8px !important;
 }
 
 /* Extensions or similar */
@@ -379,7 +393,7 @@ button.popup-notification-dropmarker {
 
 :root[zen-single-toolbar='true'] {
   #urlbar[open] {
-    min-width: 30vw;
+    min-width: 40vw;
   }
 
   &[zen-right-side='true'] #urlbar[open]:not([zen-floating-urlbar='true']) {
@@ -399,12 +413,14 @@ button.popup-notification-dropmarker {
   font-size: 1.15em !important;
   top: calc(var(--zen-toolbar-height) * 2) !important;
 
+  --zen-urlbar-center: calc(var(--zen-urlbar-offset, 0px) + 28vw);
+
   :root[zen-right-side='true'] & {
-    right: 28vw !important;
+    right: var(--zen-urlbar-center) !important;
   }
 
   :root:not([zen-right-side='true']) & {
-    left: 28vw !important;
+    left: var(--zen-urlbar-center) !important;
   }
 
   #urlbar-container:has(&) {

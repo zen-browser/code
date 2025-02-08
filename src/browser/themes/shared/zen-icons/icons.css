@@ -45,6 +45,10 @@
   list-style-image: url('reload.svg') !important;
 }
 
+.tab-reset-button {
+  list-style-image: url('unpin.svg') !important;
+}
+
 #sidebar-button {
   list-style-image: url('sidebars-right.svg') !important;
 }
@@ -64,9 +68,12 @@
 }
 
 #sidebar-button:-moz-locale-dir(ltr):not([positionend]),
-#sidebar-button:-moz-locale-dir(rtl)[positionend],
-#zen-sidepanel-button {
+#sidebar-button:-moz-locale-dir(rtl)[positionend] {
   list-style-image: url('chrome://browser/skin/sidebars.svg') !important;
+}
+
+#zen-sidepanel-button {
+  list-style-image: url('sidebar.svg');
 }
 
 #downloads-button,
@@ -98,10 +105,6 @@
 
 #zen-rice-share-options .options-header {
   list-style-image: url('arrow-right.svg');
-}
-
-#PanelUI-menu-button > * {
-  padding: var(--zen-toolbar-button-inner-padding);
 }
 
 #PanelUI-menu-button,
@@ -164,7 +167,7 @@
 
 #context_zenEditWorkspace,
 #zenToolbarThemePicker {
-  --menu-image: url('edit.svg') !important;
+  --menu-image: url('edit-theme.svg') !important;
 }
 
 #add-ons-button,
@@ -390,7 +393,7 @@
 }
 
 #zen-expand-sidebar-button {
-  list-style-image: url('move-tab.svg') !important;
+  list-style-image: url('expand-sidebar.svg') !important;
 }
 
 .panel-header > .subviewbutton-back {
@@ -931,7 +934,7 @@ menuitem[contexttype='fullscreen'][label*='Exit'] {
 }
 
 #zen-context-menu-compact-mode {
-  --menu-image: url('chrome://browser/skin/sidebars.svg');
+  --menu-image: url('sidebar.svg');
 }
 
 #context_bookmarkTab,

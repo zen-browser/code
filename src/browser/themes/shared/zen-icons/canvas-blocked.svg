@@ -3,7 +3,7 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/.
    -->
-<svg width="16" height="16" xmlns="http://www.w3.org/2000/svg" fill="context-fill" fill-opacity="context-fill-opacity">
+<svg width="16" height="16" xmlns="http://www.w3.org/2000/svg" fill="currentColor" fill-opacity="context-fill-opacity">
   <defs><clipPath id="a"><path d="M2.1 0 16 13.9V0zM0 .7V16h15.3z"/></clipPath></defs>
   <path clip-path="url(#a)" d="M4 1a3 3 0 0 0-3 3v8a3 3 0 0 0 3 3h8a3 3 0 0 0 3-3V4a3 3 0 0 0-3-3H4zm0 1h8a2 2 0 0 1 2 2v8c0 .373-.102.72-.28 1.02L9.05 8.432a1.5 1.5 0 0 0-2.101 0l-4.67 4.588a1.988 1.988 0 0 1-.28-1.02V4a2 2 0 0 1 2-2zm6.5 2a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm0 1a.5.5 0 1 1 0 1 .5.5 0 0 1 0-1zM8 9.002c.127 0 .252.047.35.143l4.662 4.582A1.99 1.99 0 0 1 12 14H4c-.37 0-.715-.099-1.012-.273L7.65 9.145A.496.496 0 0 1 8 9.002z"/>
   <path d="M.5 0a.5.5 0 0 0-.354.146.5.5 0 0 0 0 .707l15 15a.5.5 0 0 0 .707 0 .5.5 0 0 0 0-.707l-15-15A.5.5 0 0 0 .499 0z"/>

@@ -42,14 +42,13 @@
 #zen-tabbox-wrapper {
   & #sidebar-splitter {
     opacity: 0;
-    margin-inline-end: -4px;
+    margin: 0 calc(-1 * var(--zen-element-separation));
   }
 
   & #sidebar-box {
     border-radius: var(--zen-native-inner-radius);
     box-shadow: var(--zen-big-shadow);
     overflow: hidden;
-    border: 1px solid var(--zen-colors-border);
 
     :root:not([zen-right-side='true']) &[positionend='true'] {
       margin-right: var(--zen-element-separation);

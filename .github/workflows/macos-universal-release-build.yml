@@ -68,24 +68,15 @@ jobs:
           echo 'export PATH="/usr/local/opt/gnu-tar/libexec/gnubin:$PATH"' >> ~/.zsh
           source ~/.bash_profile
 
-      - name: Setup pnpm
-        run: npm install -g pnpm
-
-      - name: Get pnpm store directory
-        id: pnpm-cache
-        shell: bash
-        run: |
-          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
-
       - name: Install dependencies
         run: |
-          pnpm install
+          npm install
 
       - name: Load surfer CI setup
-        run: pnpm surfer ci --brand ${{ inputs.release-branch }} --display-version ${{ inputs.build-version }}
+        run: npm run surfer -- ci --brand ${{ inputs.release-branch }} --display-version ${{ inputs.build-version }}
 
       - name: Download Firefox source and dependencies
-        run: pnpm surfer download
+        run: npm run download
 
       - name: Bootstrap
         run: |
@@ -96,13 +87,13 @@ jobs:
           cd ..
 
       - name: Import
-        run: pnpm surfer import
+        run: npm run import
 
       - name: Populate mozconfig
         env:
           SURFER_MOZCONFIG_ONLY: true
         run: |
-          pnpm build
+          npm run build
           cd engine
           ./mach configure
 
@@ -252,7 +243,7 @@ jobs:
           export MAR=$(pwd)/zen-macos-host-mar
           chmod +x $MAR
           echo "MAR=$MAR"
-          pnpm package --verbose
+          npm run package -- --verbose
           mv ./dist/output.mar ./macos.mar
 
       - name: Upload build artifact (.mar)

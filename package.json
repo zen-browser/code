@@ -23,7 +23,8 @@
     "pretty": "prettier . --write && autopep8 -r --in-place scripts/ src/",
     "lint": "npx prettier . --check && autopep8 --diff scripts/ src/",
     "prepare": "husky",
-    "reset-ff": "surfer reset"
+    "reset-ff": "surfer reset",
+    "surfer": "surfer"
   },
   "repository": {
     "type": "git",

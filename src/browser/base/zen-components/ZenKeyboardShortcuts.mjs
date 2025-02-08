@@ -80,6 +80,7 @@ const defaultKeyboardGroups = {
     'zen-search-find-again-shortcut-prev',
   ],
   pageOperations: [
+    'zen-text-action-copy-url-markdown-shortcut',
     'zen-text-action-copy-url-shortcut',
     'zen-location-open-shortcut',
     'zen-location-open-shortcut-alt',
@@ -755,7 +756,7 @@ class ZenKeyboardShortcutsLoader {
 }
 
 class ZenKeyboardShortcutsVersioner {
-  static LATEST_KBS_VERSION = 7;
+  static LATEST_KBS_VERSION = 8;
 
   constructor() {}
 
@@ -807,6 +808,20 @@ class ZenKeyboardShortcutsVersioner {
     console.error('Unknown keyboar shortcuts version');
     this.version = 0;
     return this.migrateIfNeeded(data);
+  }
+
+  fillDefaultIfNotPresent(data) {
+    for (let shortcut of ZenKeyboardShortcutsLoader.zenGetDefaultShortcuts()) {
+      // If it has an ID and we dont find it in the data, we add it
+      if (shortcut.getID() && !data.find((s) => s.getID() == shortcut.getID())) {
+        data.push(shortcut);
+      }
+    }
+    return data;
+  }
+
+  fixedKeyboardShortcuts(data) {
+    return this.fillDefaultIfNotPresent(this.migrateIfNeeded(data));
   }
 
   migrate(data, version) {
@@ -907,6 +922,21 @@ class ZenKeyboardShortcutsVersioner {
       gZenKeyboardShortcutsManager._hasToLoadDefaultDevtools = true;
       window.addEventListener('zen-devtools-keyset-added', listener);
     }
+    if (version < 8) {
+      // Migrate from 7 to 8
+      // In this new version, we add the "Copy URL as Markdown" shortcut to the default shortcuts
+      data.push(
+        new KeyShortcut(
+          'zen-copy-url-markdown',
+          'C',
+          '',
+          ZEN_OTHER_SHORTCUTS_GROUP,
+          KeyShortcutModifiers.fromObject({ accel: true, shift: true, alt: true }),
+          'code:gZenCommonActions.copyCurrentURLAsMarkdownToClipboard()',
+          'zen-text-action-copy-url-markdown-shortcut'
+        )
+      );
+    }
     return data;
   }
 }
@@ -934,7 +964,7 @@ var gZenKeyboardShortcutsManager = {
     if (this.inBrowserView) {
       const loadedShortcuts = await this._loadSaved();
 
-      this._currentShortcutList = this.versioner.migrateIfNeeded(loadedShortcuts);
+      this._currentShortcutList = this.versioner.fixedKeyboardShortcuts(loadedShortcuts);
       this._applyShortcuts();
 
       await this._saveShortcuts();

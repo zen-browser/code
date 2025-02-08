@@ -1,10 +1,1 @@
-<!--
-   - This Source Code Form is subject to the terms of the Mozilla Public
-   - License, v. 2.0. If a copy of the MPL was not distributed with this
-   - file, You can obtain one at http://mozilla.org/MPL/2.0/.
-   -->
-<svg width="16" height="16" xmlns="http://www.w3.org/2000/svg" fill="context-fill" fill-opacity="context-fill-opacity">
-  <defs><clipPath id="a"><path d="M2.1 0 16 13.9V0zM0 .7V16h15.3z"/></clipPath></defs>
-  <path clip-path="url(#a)" d="M12.94.182c-.08.004-.162.017-.242.043l-7 2.188a1 1 0 0 0-.701.955V11.5a2.5 2.5 0 1 0 1 2V6.368l7-2.188V9.5a2.5 2.5 0 1 0 1 2V1.18c0-.59-.5-1.032-1.057-.998zm.057.998v1.953l-7 2.188V3.368l7-2.188zm-1.5 8.82a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3zm-8 2a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3z"/>
-  <path d="M.5 0a.5.5 0 0 0-.354.146.5.5 0 0 0 0 .707l15 15a.5.5 0 0 0 .707 0 .5.5 0 0 0 0-.707l-15-15A.5.5 0 0 0 .499 0z"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" height="18" width="18" viewBox="0 0 18 18"><g stroke-linecap="round" stroke-width="1.5" fill="none" stroke="currentColor" stroke-linejoin="round" class="nc-icon-wrapper"><path d="M9.25,8.75V1.75s1.303,2.048,3.427,3.573"></path><path d="M5.406,16.13c.268,.078,.551,.12,.844,.12,1.657,0,3-1.343,3-3,0-.293-.042-.577-.12-.844"></path><path d="M7.485,10.515c-.377-.17-.795-.265-1.235-.265-1.657,0-3,1.343-3,3,0,.44,.095,.858,.265,1.235"></path><line x1="2" y1="16" x2="16" y2="2" data-color="color-2"></line></g></svg>

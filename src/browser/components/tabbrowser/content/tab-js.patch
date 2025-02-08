@@ -1,8 +1,8 @@
 diff --git a/browser/components/tabbrowser/content/tab.js b/browser/components/tabbrowser/content/tab.js
-index 60061540d79843281f3ee2ce905824b224da6f46..c01f8a7f18921588ecdc635c281cf01041ef627b 100644
+index d41c486c02a6f09dcff5741a59ad8b617294c481..0328460c7eb45d8ffb9de4f9b8d4a7bdd7a5b7b3 100644
 --- a/browser/components/tabbrowser/content/tab.js
 +++ b/browser/components/tabbrowser/content/tab.js
-@@ -39,6 +39,7 @@
+@@ -37,6 +37,7 @@
              </hbox>
            </vbox>
            <image class="tab-close-button close-icon" role="button" data-l10n-id="tabbrowser-close-tabs-button" data-l10n-args='{"tabCount": 1}' keyNav="false"/>
@@ -10,7 +10,16 @@ index 60061540d79843281f3ee2ce905824b224da6f46..c01f8a7f18921588ecdc635c281cf010
          </hbox>
        </stack>
        `;
-@@ -447,6 +448,7 @@
+@@ -168,7 +169,7 @@
+     }
+ 
+     set _visuallySelected(val) {
+-      if (val == this.hasAttribute("visuallyselected")) {
++      if (val == this.hasAttribute("visuallyselected") || (!val && this.linkedBrowser?.closest('.browserSidebarContainer').classList.contains('zen-glance-background'))) {
+         return;
+       }
+ 
+@@ -451,6 +452,7 @@
          this.style.MozUserFocus = "ignore";
        } else if (
          event.target.classList.contains("tab-close-button") ||
@@ -18,13 +27,21 @@ index 60061540d79843281f3ee2ce905824b224da6f46..c01f8a7f18921588ecdc635c281cf010
          event.target.classList.contains("tab-icon-overlay")
        ) {
          eventMaySelectTab = false;
-@@ -549,6 +551,11 @@
+@@ -544,6 +546,7 @@
+         if (this.multiselected) {
+           gBrowser.removeMultiSelectedTabs();
+         } else {
++          gZenPinnedTabManager._removePinnedAttributes(this, true);
+           gBrowser.removeTab(this, {
+             animate: true,
+             triggeringEvent: event,
+@@ -553,6 +556,11 @@
          // (see tabbrowser-tabs 'click' handler).
          gBrowser.tabContainer._blockDblClick = true;
        }
 +
 +      if (event.target.classList.contains("tab-reset-button")) {
-+        gZenPinnedTabManager._resetTabToStoredState(this);
++        gZenPinnedTabManager._onCloseTabShortcut(event, this, 'unload-switch');
 +        gBrowser.tabContainer._blockDblClick = true;
 +      }
      }

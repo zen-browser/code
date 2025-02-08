@@ -101,7 +101,8 @@
         // to how Gecko internally rounds in those cases, we allow for some
         // minor differences (the internal Gecko layout size is 1/60th of a
         // pixel, so 0.02 should cover it).
-        let overflowing = contentSize - tabContainer.arrowScrollbox.scrollClientSize > 0.02;
+        //let overflowing = contentSize - tabContainer.arrowScrollbox.scrollClientSize > 0.02;
+        let overflowing = true; // cheatign the system, because we want to always show make the element overflowing
 
         window.requestAnimationFrame(() => {
           tabContainer.arrowScrollbox.toggleAttribute('overflowing', overflowing);
@@ -109,9 +110,6 @@
         });
       });
       observer.observe(tabsWrapper);
-      tabsWrapper.addEventListener('dblclick', (event) => {
-        // DO NOT REMOVE, THIS IS TO FIX "OPEN NEW TAB" ON DOUBLE CLICK
-      });
     },
 
     _initSearchBar() {

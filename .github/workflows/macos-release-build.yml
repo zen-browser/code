@@ -81,24 +81,15 @@ jobs:
           echo 'export PATH="/usr/local/opt/gnu-tar/libexec/gnubin:$PATH"' >> ~/.zsh
           source ~/.bash_profile
 
-      - name: Setup pnpm
-        run: npm install -g pnpm
-
-      - name: Get pnpm store directory
-        id: pnpm-cache
-        shell: bash
-        run: |
-          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
-
       - name: Install dependencies
         run: |
-          pnpm install
+          npm install
 
       - name: Load surfer CI setup
-        run: pnpm surfer ci --brand ${{ inputs.release-branch }} --display-version ${{ inputs.build-version }}
+        run: npm run surfer -- ci --brand ${{ inputs.release-branch }} --display-version ${{ inputs.build-version }}
 
       - name: Download Firefox source and dependencies
-        run: pnpm surfer download
+        run: npm run download
 
       - name: Bootstrap
         run: |
@@ -111,7 +102,7 @@ jobs:
       - name: Import
         env:
           SURFER_COMPAT: ${{ matrix.arch }}
-        run: pnpm surfer import --verbose
+        run: npm run import -- --verbose
 
       - name: Build language packs
         run: sh scripts/download-language-packs.sh
@@ -134,7 +125,7 @@ jobs:
         run: |
           export SURFER_PLATFORM="darwin"
           export ZEN_RELEASE=1
-          pnpm package
+          npm run package
 
       - name: Rename artifacts
         run: |

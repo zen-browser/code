@@ -1,8 +1,1 @@
-<!--
-   - This Source Code Form is subject to the terms of the Mozilla Public
-   - License, v. 2.0. If a copy of the MPL was not distributed with this
-   - file, You can obtain one at http://mozilla.org/MPL/2.0/.
-   -->
-<svg width="16" height="16" xmlns="http://www.w3.org/2000/svg" fill="context-fill" fill-opacity="context-fill-opacity">
-  <path d="M8 0a7.005 7.005 0 0 0-4.949 11.955l1.52 1.498 2.043 1.986.133.117c.775.628 1.91.59 2.64-.117l2.437-2.371 1.127-1.113A7.005 7.005 0 0 0 8 0zm0 .998a5.98 5.98 0 0 1 4.244 1.758 6.009 6.009 0 0 1 .176 8.311l-.176.184-1.32 1.305-2.23 2.168-.094.08a.995.995 0 0 1-1.199 0l-.094-.08-2.98-2.906-.57-.567-.176-.183a6.008 6.008 0 0 1 .176-8.311A5.979 5.979 0 0 1 8.001.999zM8 4a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm0 1a2 2 0 1 1 0 4 2 2 0 0 1 0-4z"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" height="18" width="18" viewBox="0 0 18 18"><g stroke-linecap="round" stroke-width="1.5" fill="none" stroke="currentColor" stroke-linejoin="round" class="nc-icon-wrapper"><path d="M14.779,7.266c0,2.622-3.428,6.833-5.004,8.631-.413,.471-1.139,.471-1.551,0-1.576-1.797-5.004-6.008-5.004-8.631C3.221,3.776,6.207,1.75,9,1.75s5.779,2.026,5.779,5.516Z"></path><circle cx="9" cy="7.5" r="1.75" data-color="color-2"></circle></g></svg>

@@ -52,9 +52,6 @@ jobs:
         with:
           node-version-file: '.nvmrc'
 
-      - name: Setup pnpm
-        run: npm install -g pnpm
-
       - name: Setup Git
         run: |
           git config --global user.email "mauro-balades@users.noreply.github.com"
@@ -62,16 +59,16 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pnpm install
+          npm install
           sudo apt-get update
           sudo apt-get install -y python3 python3-pip dos2unix yasm nasm build-essential libgtk2.0-dev libpython3-dev m4 uuid libasound2-dev libcurl4-openssl-dev libdbus-1-dev libdrm-dev libdbus-glib-1-dev libgtk-3-dev libpulse-dev libx11-xcb-dev libxt-dev xvfb lld llvm --fix-missing
 
       - name: Load Surfer CI setup
-        run: pnpm surfer ci --brand ${{ inputs.release-branch }} --display-version ${{ inputs.build-version }}
+        run: npm run surfer -- ci --brand ${{ inputs.release-branch }} --display-version ${{ inputs.build-version }}
 
       - name: Download Firefox and dependencies
         if: ${{ !(inputs.generate-gpo && matrix.arch == 'aarch64') }}
-        run: pnpm surfer download
+        run: npm run download
 
       - name: win-cross Cache
         env:
@@ -152,9 +149,8 @@ jobs:
           cd engine/
           chmod -R +x "$(echo ~)/win-cross/vs2022" || true
           cd ..
-          npm install -g pnpm
           export SURFER_PLATFORM="win32"
-          pnpm surfer bootstrap
+          npm run bootstrap
           cd engine/
           ls ~/.mozbuild/clang/lib/clang/
           echo "export LIB=\"$(cd ~/.mozbuild/clang/lib/clang/* && cd lib/windows && pwd)\"" >> ../configs/common/mozconfig
@@ -185,7 +181,7 @@ jobs:
         if: ${{ !(inputs.generate-gpo && matrix.arch == 'aarch64') }}
         env:
           SURFER_COMPAT: ${{ matrix.arch }}
-        run: pnpm surfer import --verbose
+        run: npm run import -- --verbose
 
       - name: Build language packs
         if: ${{ !(inputs.generate-gpo && matrix.arch == 'aarch64') }}
@@ -235,8 +231,8 @@ jobs:
           export SURFER_PLATFORM="win32"
           export ZEN_CROSS_COMPILING=1
           export ZEN_RELEASE=1
-          pnpm package
-          mv ./dist/zen-$(pnpm surfer get version | xargs).en-US.win64${{ matrix.arch == 'aarch64' && '-aarch64' || '' }}.zip zen.win64.zip
+          npm run package
+          mv ./dist/zen-$(npm run --silent surfer -- get version | xargs).en-US.win64${{ matrix.arch == 'aarch64' && '-aarch64' || '' }}.zip zen.win64.zip
           ls ./dist
           ls .
 

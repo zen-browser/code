@@ -1,11 +1,11 @@
 diff --git a/browser/base/content/browser-init.js b/browser/base/content/browser-init.js
-index 9df41bb3c82919839ee1408aa4d177ea7ee40a56..e37c64fa2c2ea39762be4285a1a7055463ded537 100644
+index 63100defacf66c6b3232b9e0a783a5fd14e3a46a..22b79b021ff0baab4dac602447a124308208c828 100644
 --- a/browser/base/content/browser-init.js
 +++ b/browser/base/content/browser-init.js
-@@ -152,13 +152,15 @@ var gBrowserInit = {
-        elem.setAttribute("skipintoolbarset", "true");
-      }
-    }
+@@ -162,13 +162,15 @@ var gBrowserInit = {
+         elem.setAttribute("skipintoolbarset", "true");
+       }
+     }
 +    ZenCustomizableUI.init(window);
      for (let area of CustomizableUI.areas) {
        let type = CustomizableUI.getAreaType(area);
@@ -16,10 +16,10 @@ index 9df41bb3c82919839ee1408aa4d177ea7ee40a56..e37c64fa2c2ea39762be4285a1a70554
        }
      }
 +    ZenCustomizableUI.registerToolbarNodes(window);
-    if (isVerticalTabs) {
-      // Show the vertical tabs toolbar
-      setToolbarVisibility(
-@@ -253,6 +255,10 @@ var gBrowserInit = {
+     if (isVerticalTabs) {
+       // Show the vertical tabs toolbar
+       setToolbarVisibility(
+@@ -287,6 +289,10 @@ var gBrowserInit = {
      gPrivateBrowsingUI.init();
      BrowserSearch.init();
      BrowserPageActions.init();

@@ -1,8 +1,8 @@
 diff --git a/browser/base/content/browser-box.inc.xhtml b/browser/base/content/browser-box.inc.xhtml
-index 7f71abe7d80e4c09dd088517ec9ef106c7cb8654..7e764f08346a048fd352d7f7c06ea434f9b19903 100644
+index 7f71abe7d80e4c09dd088517ec9ef106c7cb8654..715029fe126cac7b0d89e108415569d5742f4be9 100644
 --- a/browser/base/content/browser-box.inc.xhtml
 +++ b/browser/base/content/browser-box.inc.xhtml
-@@ -22,7 +22,14 @@
+@@ -22,7 +22,16 @@
      <browser id="sidebar" autoscroll="false" disablehistory="true" disablefullscreen="true" tooltip="aHTMLTooltip"/>
    </vbox>
    <splitter id="sidebar-splitter" class="chromeclass-extrachrome sidebar-splitter" resizebefore="sibling" resizeafter="none" hidden="true"/>
@@ -11,8 +11,11 @@ index 7f71abe7d80e4c09dd088517ec9ef106c7cb8654..7e764f08346a048fd352d7f7c06ea434
 +<html:div id="zen-appcontent-navbar-container"></html:div>
 +<hbox id="zen-tabbox-wrapper" flex="1">
    <tabbox id="tabbrowser-tabbox" flex="1" tabcontainer="tabbrowser-tabs">
-+    #include zen-tabbrowser-elements.inc.xhtml
-     <tabpanels id="tabbrowser-tabpanels" flex="1" selectedIndex="0"/>
+-    <tabpanels id="tabbrowser-tabpanels" flex="1" selectedIndex="0"/>
++    #include zen-glance.inc.xhtml
++    <tabpanels id="tabbrowser-tabpanels" flex="1" selectedIndex="0">
++      #include zen-splitview-overlay.inc.xhtml
++    </tabpanels>
    </tabbox>
  </hbox>
 +</vbox>

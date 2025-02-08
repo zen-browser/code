@@ -186,6 +186,7 @@ var gZenUIManager = {
 };
 
 var gZenVerticalTabsManager = {
+  _tabEdited: null,
   init() {
     this._multiWindowFeature = new ZenMultiWindowFeature();
     this._initWaitPromise();
@@ -230,6 +231,8 @@ var gZenVerticalTabsManager = {
     if (tabs) {
       tabs.addEventListener('mouseup', this.openNewTabOnTabsMiddleClick.bind(this));
     }
+
+    this._insertDoubleClickListenerPinnedTabs();
   },
 
   openNewTabOnTabsMiddleClick(event) {
@@ -596,5 +599,96 @@ var gZenVerticalTabsManager = {
       return this._topButtonsSeparatorElement.before(child);
     }
     target.appendChild(child);
+  },
+
+  _insertDoubleClickListenerPinnedTabs() {
+    const tabs = gBrowser.tabs;
+    for (const tab of tabs) {
+      tab.addEventListener('dblclick', this.renameTabStart.bind(this));
+    }
+  },
+
+  renameTabKeydown(event) {
+    if (event.key === 'Enter') {
+      let label = this._tabEdited.querySelector('.tab-label-container-editing');
+      let input = this._tabEdited.querySelector('#tab-label-input');
+      let newName = input.value.trim();
+
+      // Check if name is blank, reset if so
+      if (newName) {
+        this._tabEdited.label = newName;
+        this._tabEdited.setAttribute('zen-has-static-label', 'true');
+      } else {
+        // If the page is loaded, get the title of the page. Otherwise, keep name as is
+        this._tabEdited.label = gBrowser.getBrowserForTab(this._tabEdited).contentTitle || this._tabEdited.label;
+        // If the page had a title, reset the zen-has-static-label attribute
+        if (gBrowser.getBrowserForTab(this._tabEdited).contentTitle) {
+          this._tabEdited.removeAttribute('zen-has-static-label');
+        }
+      }
+
+      this._tabEdited.querySelector('.tab-editor-container').remove();
+      label.style.display = '';
+      label.className = label.className.replace(' tab-label-container-editing', '');
+      document.removeEventListener('click', this.renameTabHalt.bind(this));
+
+      this._tabEdited = null;
+    } else if (event.key === 'Escape') {
+      let label = this._tabEdited.querySelector('.tab-label-container-editing');
+      this._tabEdited.querySelector('.tab-editor-container').remove();
+
+      label.style.display = '';
+      label.className = label.className.replace(' tab-label-container-editing', '');
+      document.removeEventListener('click', this.renameTabHalt.bind(this));
+      this._tabEdited = null;
+    }
+  },
+
+  renameTabStart(event) {
+    if (this._tabEdited) return;
+    this._tabEdited = event.target.closest('.tabbrowser-tab');
+    if (!this._tabEdited.pinned) {
+      this._tabEdited = null;
+      return;
+    }
+    const label = this._tabEdited.querySelector('.tab-label-container');
+    label.style.display = 'none';
+    label.className += ' tab-label-container-editing';
+
+    const container = window.MozXULElement.parseXULToFragment(`
+      <vbox class="tab-label-container tab-editor-container" flex="1" align="start" pack="center"></vbox>
+    `);
+    label.after(container);
+    const containerHtml = this._tabEdited.querySelector('.tab-editor-container');
+    const input = document.createElement('input');
+    input.id = 'tab-label-input';
+    input.value = this._tabEdited.label;
+    input.addEventListener('keydown', this.renameTabKeydown.bind(this));
+    input.style['white-space'] = 'nowrap';
+    input.style['overflow-x'] = 'scroll';
+    input.style['margin'] = '0';
+
+    containerHtml.appendChild(input);
+    input.focus();
+    input.select();
+
+    document.addEventListener('click', this.renameTabHalt.bind(this));
+  },
+
+  renameTabHalt(event) {
+    // Ignore click event if it's clicking the input
+    if (event.target.closest('#tab-label-input')) {
+      return;
+    }
+    if (!this._tabEdited) {
+      return;
+    }
+    this._tabEdited.querySelector('.tab-editor-container').remove();
+    const label = this._tabEdited.querySelector('.tab-label-container-editing');
+    label.style.display = '';
+    label.className = label.className.replace(' tab-label-container-editing', '');
+
+    document.removeEventListener('click', this.renameTabHalt.bind(this));
+    this._tabEdited = null;
   },
 };

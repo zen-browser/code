@@ -1,0 +1,17 @@
+diff --git a/toolkit/components/extensions/parent/ext-toolkit.js b/toolkit/components/extensions/parent/ext-toolkit.js
+index 637c1e5aa3495717c35ec8d4812582820eeae17c..b0f94358f210017df73a7988d9516da47dd60b21 100644
+--- a/toolkit/components/extensions/parent/ext-toolkit.js
++++ b/toolkit/components/extensions/parent/ext-toolkit.js
+@@ -27,9 +27,9 @@ var { ExtensionError } = ExtensionUtils;
+ global.EventEmitter = ExtensionCommon.EventEmitter;
+ global.EventManager = ExtensionCommon.EventManager;
+ 
+-global.DEFAULT_STORE = "firefox-default";
+-global.PRIVATE_STORE = "firefox-private";
+-global.CONTAINER_STORE = "firefox-container-";
++global.DEFAULT_STORE = "zen-default";
++global.PRIVATE_STORE = "zen-private";
++global.CONTAINER_STORE = "zen-container-";
+ 
+ global.getCookieStoreIdForTab = function (data, tab) {
+   if (data.incognito) {

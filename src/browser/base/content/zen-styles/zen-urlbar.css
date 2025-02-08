@@ -393,7 +393,7 @@ button.popup-notification-dropmarker {
 
 :root[zen-single-toolbar='true'] {
   #urlbar[open] {
-    min-width: 40vw;
+    min-width: 30vw;
   }
 
   &[zen-right-side='true'] #urlbar[open]:not([zen-floating-urlbar='true']) {

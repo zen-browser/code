@@ -1,5 +1,5 @@
 diff --git a/tools/signing/macos/mach_commands.py b/tools/signing/macos/mach_commands.py
-index a513ad723805459c194d27b42dac68e9babba468..be74acbfe16a4eb389bc7d0ba32820b82fe2819c 100644
+index a513ad723805459c194d27b42dac68e9babba468..3a08bb0987f9d6cf01c05f8ebb56efa91a5b9d0e 100644
 --- a/tools/signing/macos/mach_commands.py
 +++ b/tools/signing/macos/mach_commands.py
 @@ -37,7 +37,6 @@ from mozbuild.base import MachCommandConditions as conditions
@@ -10,15 +10,18 @@ index a513ad723805459c194d27b42dac68e9babba468..be74acbfe16a4eb389bc7d0ba32820b8
  )
  @CommandArgument(
      "-v",
-@@ -342,6 +341,7 @@ def macos_sign(
+@@ -342,6 +341,10 @@ def macos_sign(
      cs_reset_cmd = ["find", app, "-exec", "codesign", "--remove-signature", "{}", ";"]
      run(command_context, cs_reset_cmd, capture_output=not verbose_arg)
  
-+    run(command_context, ["mv", "./embedded.provisionprofile", os.path.join(app, "Contents")], capture_output=not verbose_arg)
++    originProfile = os.path.join(os.curdir, "embedded.provisionprofile")
++    endProfile = os.path.join(app, "Contents", "embedded.provisionprofile")
++    print(f"ZEN: Moving {originProfile} to {endProfile}")
++    os.rename(originProfile, endProfile)
      if use_rcodesign_arg is True:
          sign_with_rcodesign(
              command_context,
-@@ -567,7 +567,7 @@ def sign_with_rcodesign(
+@@ -567,7 +570,7 @@ def sign_with_rcodesign(
      # input path and its options are specified as standard arguments.
      ctx.log(logging.INFO, "macos-sign", {}, "Signing with rcodesign")
  

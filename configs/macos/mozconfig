@@ -8,17 +8,7 @@ export MOZ_MACBUNDLE_NAME="Zen Browser.app"
 
 # override LTO settings
 # TODO: Dont
-export MOZ_LTO=cross,thin
-ac_add_options --enable-lto=cross,thin
 
-if test "$ZEN_RELEASE"; then
-  if test "$ZEN_GA_DISABLE_PGO"; then
-    export ZEN_DUMMY=1
-  else
-    export MOZ_PGO=1
-    ac_add_options MOZ_PGO=1
-  fi
-fi
 
 if test "$SURFER_COMPAT" = "x86_64"; then
     ac_add_options --target=x86_64-apple-darwin

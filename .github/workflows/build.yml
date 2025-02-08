@@ -629,6 +629,32 @@ jobs:
       - name: Wait 2 minutes for the Flatpak repo to update
         run: sleep 120
 
+  release-winget:
+    if: ${{ inputs.create_release && (inputs.update_branch == 'release' || inputs.update_branch == 'twilight') }}
+    permissions: write-all
+    name: Release Winget
+    needs: [release, build-data]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Publish Stable build
+        if: ${{ inputs.update_branch == 'release' }}
+        uses: vedantmgoyal9/winget-releaser@main
+        with:
+          identifier: Zen-Team.Zen-Browser
+          version: ${{ needs.build-data.outputs.version }}
+          release-tag: ${{ needs.build-data.outputs.version }}
+          token: ${{ secrets.DEPLOY_KEY }}
+      - name: Publish Twilight build
+        if: ${{ inputs.update_branch == 'twilight' }}
+        uses: vedantmgoyal9/winget-releaser@main
+        with:
+          identifier: Zen-Team.Zen-Browser.Twilight
+          version: ${{ needs.build-data.outputs.version }}
+          release-tag: ${{ needs.build-data.outputs.version }}
+          max-versions-to-keep: 1
+          token: ${{ secrets.DEPLOY_KEY }}
+
   release-flatpak:
     if: ${{ inputs.create_release && inputs.update_branch == 'release' }}
     permissions: write-all

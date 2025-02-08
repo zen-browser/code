@@ -50,6 +50,10 @@
         padding: 0 var(--zen-compact-float) !important;
         opacity: 0;
 
+        @media (prefers-reduced-motion) or (not (-moz-bool-pref: 'zen.view.compact.animate-sidebar')) {
+          transition: none;
+        }
+
         :root[zen-single-toolbar='true'] & {
           top: var(--zen-element-separation);
         }
@@ -115,6 +119,10 @@
       & #urlbar[open][zen-floating-urlbar='true'] {
         --zen-urlbar-offset: var(--zen-sidebar-width);
         transition: left 0.05s ease;
+
+        @media (prefers-reduced-motion) {
+          transition: none;
+        }
 
         #navigator-toolbox:has(&) {
           opacity: 1;
@@ -241,6 +249,10 @@
           right 0.3s var(--zen-compact-mode-func);
         opacity: 1;
 
+        @media (prefers-reduced-motion) or (not (-moz-bool-pref: 'zen.view.compact.animate-sidebar')) {
+          transition: none;
+        }
+
         &:not([supress-primary-adjustment='true']) {
           left: -1px;
           :root[zen-right-side='true'] & {
@@ -300,6 +312,10 @@
         max-height: var(--zen-toolbar-height);
         overflow: hidden;
 
+        @media (prefers-reduced-motion) {
+          transition: none;
+        }
+
         & > * {
           position: relative !important;
         }
@@ -307,6 +323,10 @@
         & #urlbar {
           transform: translateY(-50%);
           transition: transform 0.1s ease-in-out;
+
+          @media (prefers-reduced-motion) {
+            transition: none;
+          }
         }
 
         @media (-moz-bool-pref: 'zen.view.compact.color-toolbar') {

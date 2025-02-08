@@ -220,6 +220,9 @@ pref('zen.watermark.enabled', true, sticky);
 pref('zen.watermark.enabled', false, sticky);
 #endif
 
+// Zen Urlbar
+pref('zen.urlbar.disable-initial-focus', false);
+
 // Privacy
 pref('dom.private-attribution.submission.enabled', false);
 pref('dom.security.https_only_mode', true);

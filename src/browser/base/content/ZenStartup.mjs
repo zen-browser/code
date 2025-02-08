@@ -1,5 +1,7 @@
 {
   const lazy = {};
+  XPCOMUtils.defineLazyPreferenceGetter(lazy, 'sidebarHeightThrottle', 'zen.view.sidebar-height-throttle', 500);
+  XPCOMUtils.defineLazyPreferenceGetter(lazy, 'disableInitialUrlBarFocus', 'zen.urlbar.disable-initial-focus', false);
   var ZenStartup = {
     init() {
       this.openWatermark();
@@ -113,8 +115,10 @@
     },
 
     _initSearchBar() {
-      // Only focus the url bar
-      gURLBar.focus();
+      // Check if focus should stay on page or switch to url bar
+      if (!lazy.disableInitialUrlBarFocus) {
+        gURLBar.focus();
+      }
 
       gURLBar._initCopyCutController();
       gURLBar._initPasteAndGo();
